@@ -68,7 +68,7 @@ class AdvancedItemSearchController extends AbstractController
             $managerRegistry->getManager()->flush();
         }
 
-        return $this->render('App/AdvancedItemSearch/index.html.twig', [
+        return $this->render('App/AdvancedItemSearch/show.html.twig', [
             'form' => $form,
             'search' => $search,
             'results' => $results,

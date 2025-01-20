@@ -1,0 +1,64 @@
+<div class="content-block">
+    {{ form_start(form, {'method': 'POST'}) }}
+
+    <ul>
+        {% for search in searches %}
+            <li><a href="{{ path('app_advanced_item_search_show', {id: search.id}) }}">{{ search.name }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <div data-controller="search-blocks"
+         data-prototype="{% apply escape %} {% include 'App/AdvancedItemSearch/_prototype_block.html.twig' with { 'form': form.blocks.vars.prototype } only %} {% endapply %}"
+    >
+        <div data-search-blocks-target="blocksContainer">
+            {% for block in form.blocks %}
+                {{ include('App/AdvancedItemSearch/_prototype_block.html.twig', { 'form': block }) }}
+            {% endfor %}
+
+            {% do form.blocks.setRendered %}
+        </div>
+
+        <div class="row">
+            <a data-search-filters-target="button"
+               data-action="click->search-blocks#add"
+               href="#"
+               class="waves-effect waves-light btn s12 l2 offset-l4 xl1 offset-xl5"
+            >{{ 'btn.add_block'|trans }}</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="error-helper s12">
+            {{ form_errors(form) }}
+        </div>
+    </div>
+
+    <button name="submit" type="submit" class="btn waves-effect waves-light">{{ 'btn.submit'|trans }}</button>
+    <a href="#save-and-submit" class="modal-trigger btn waves-effect waves-light">
+        {{ 'btn.save_and_submit'|trans }}
+    </a>
+
+    <div id="save-and-submit" data-controller="modal--default" class="modal modal-custom" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title"></span>{{ 'title.save_and_submit'|trans }}
+                </div>
+                <div>
+                    <div class="modal-body">
+                        {{ form_row(form.name) }}
+                    </div>
+
+                    <div class="modal-footer">
+                        <div class="right">
+                            {{ form_row(form.saveAndSubmit, {'label': 'btn.save_and_submit'|trans, 'attr': {'class': 'btn waves-effect waves-light'}}) }}
+                            <a class="modal-close waves-effect waves-light btn btn-cancel">{{ 'btn.cancel'|trans }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+</div>

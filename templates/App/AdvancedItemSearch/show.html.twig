@@ -1,6 +1,6 @@
 {% extends 'layout.html.twig' %}
 
-{% set breadcrumb = buildBreadcrumb([{'route': 'app_advanced_item_search_index', 'trans': 'menu.advanced_item_search'}], null, null) %}
+{% set breadcrumb = buildBreadcrumb([{'route': 'app_advanced_item_search_index', 'trans': 'menu.advanced_item_search'}], search, null) %}
 
 {% block title %}
     {{ renderTitle(breadcrumb) }}

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Interfaces\BreadcrumbableInterface;
 use App\Enum\DisplayModeEnum;
 use App\Repository\SearchRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,7 +16,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: SearchRepository::class)]
 #[ORM\Table(name: 'koi_search')]
-class Search
+class Search implements BreadcrumbableInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: Types::STRING, length: 36, unique: true, options: ['fixed' => true])]
@@ -42,6 +43,11 @@ class Search
 
         $block->addFilter($filter);
         $this->addBlock($block);
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 
     public function getId(): ?string

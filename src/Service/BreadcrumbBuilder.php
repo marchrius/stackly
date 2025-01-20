@@ -8,6 +8,7 @@ use App\Entity\Collection;
 use App\Entity\Interfaces\BreadcrumbableInterface;
 use App\Entity\Item;
 use App\Entity\Scraper;
+use App\Entity\Search;
 use App\Entity\Tag;
 use App\Entity\User;
 use App\Enum\ScraperTypeEnum;
@@ -55,6 +56,7 @@ class BreadcrumbBuilder
             $entity instanceof Scraper && $entity->getType() === ScraperTypeEnum::TYPE_ITEM => 'app_scraper_item_index',
             $entity instanceof Scraper && $entity->getType() === ScraperTypeEnum::TYPE_COLLECTION => 'app_scraper_collection_index',
             $entity instanceof Scraper && $entity->getType() === ScraperTypeEnum::TYPE_WISH => 'app_scraper_wish_index',
+            $entity instanceof Search => 'app_advanced_item_search_index',
             default => 'app_' . $class . '_show',
         };
     }
