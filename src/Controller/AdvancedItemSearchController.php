@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use _PHPStan_4afa27bf8\Nette\Utils\Type;
+use App\Entity\Search;
 use App\Enum\AdvancedItemSearch\OperatorEnum;
 use App\Enum\AdvancedItemSearch\TypeEnum;
 use App\Enum\DatumTypeEnum;
 use App\Enum\DisplayModeEnum;
-use App\Form\Type\Model\AdvancedItemSearch\AdvancedItemSearchType;
-use App\Model\AdvancedItemSearch\AdvancedItemSearch;
+use App\Form\Type\Entity\SearchType;
 use App\Repository\DatumRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,9 +24,9 @@ class AdvancedItemSearchController extends AbstractController
     ): Response {
         $results = [];
 
-        $search = new AdvancedItemSearch();
+        $search = new Search();
         $search->setDisplayMode($this->getUser()?->getSearchResultsDisplayMode() ?? DisplayModeEnum::DISPLAY_MODE_GRID);
-        $form = $this->createForm(AdvancedItemSearchType::class, $search);
+        $form = $this->createForm(SearchType::class, $search);
 
         $form->handleRequest($request);
 

@@ -2,18 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Form\Type\Model\AdvancedItemSearch;
+namespace App\Form\Type\Entity;
 
+use App\Entity\SearchFilter;
 use App\Enum\AdvancedItemSearch\ConditionEnum;
 use App\Enum\AdvancedItemSearch\OperatorEnum;
 use App\Enum\AdvancedItemSearch\TypeEnum;
-use App\Enum\DatumTypeEnum;
-use App\Model\AdvancedItemSearch\Block;
-use App\Model\AdvancedItemSearch\Filter;
 use App\Repository\DatumRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -21,7 +18,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FilterType extends AbstractType
+class SearchFilterType extends AbstractType
 {
     public function __construct(private readonly DatumRepository $datumRepository)
     {
@@ -83,14 +80,14 @@ class FilterType extends AbstractType
                             'choices' => $labels,
                             'required' => true,
                             'label' => false,
-                            'getter' => function (Filter $filter, FormInterface $form): ?string {
+                            'getter' => function (SearchFilter $filter, FormInterface $form): ?string {
                                 if ($filter->getDatumLabel() && $filter->getDatumType()) {
                                     return "{$filter->getDatumLabel()}_koillection_separator_({$filter->getDatumType()})";
                                 }
 
                                 return null;
                             },
-                            'setter' => function (Filter $filter, ?string $value, FormInterface $form): void {
+                            'setter' => function (SearchFilter $filter, ?string $value, FormInterface $form): void {
                                 list($label, $type) = explode('_koillection_separator_', $value);
 
                                 $filter
@@ -109,7 +106,7 @@ class FilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Filter::class
+            'data_class' => SearchFilter::class
         ]);
     }
 }

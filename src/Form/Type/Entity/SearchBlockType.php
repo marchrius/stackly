@@ -2,33 +2,29 @@
 
 declare(strict_types=1);
 
-namespace App\Form\Type\Model\AdvancedItemSearch;
+namespace App\Form\Type\Entity;
 
-use App\Enum\DateFormatEnum;
-use App\Enum\DisplayModeEnum;
-use App\Enum\VisibilityEnum;
-use App\Model\AdvancedItemSearch\AdvancedItemSearch;
-use App\Model\Search\Search;
-use Symfony\Bundle\SecurityBundle\Security;
+use App\Entity\SearchBlock;
+use App\Enum\AdvancedItemSearch\ConditionEnum;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AdvancedItemSearchType extends AbstractType
+class SearchBlockType extends AbstractType
 {
     #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('blocks', CollectionType::class, [
-                'entry_type' => BlockType::class,
+            ->add('condition', ChoiceType::class, [
+                'choices' => array_flip(ConditionEnum::getConditionLabels()),
+                'required' => true
+            ])
+            ->add('filters', CollectionType::class, [
+                'entry_type' => SearchFilterType::class,
                 'entry_options' => ['label' => false],
-                'prototype_name' => '__block_name__',
                 'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true
@@ -40,7 +36,7 @@ class AdvancedItemSearchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => AdvancedItemSearch::class
+            'data_class' => SearchBlock::class
         ]);
     }
 }
