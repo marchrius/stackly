@@ -11,6 +11,7 @@ use App\Enum\DatumTypeEnum;
 use App\Enum\DisplayModeEnum;
 use App\Form\Type\Entity\SearchType;
 use App\Repository\DatumRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +21,8 @@ class AdvancedItemSearchController extends AbstractController
 {
     #[Route(path: '/advanced-item-search', name: 'app_advanced_item_search_index', methods: ['GET', 'POST'])]
     public function index(
-        Request $request
+        Request $request,
+        ManagerRegistry $managerRegistry
     ): Response {
         $results = [];
 
@@ -31,10 +33,36 @@ class AdvancedItemSearchController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-             //dd($search, $request);
+            if ($form->get('saveAndSubmit')->isClicked()) {
+                $managerRegistry->getManager()->persist($search);
+                $managerRegistry->getManager()->flush();
+            }
+
+            return $this->redirectToRoute('app_advanced_item_search_show', ['id' => $search->getId()]);
         }
 
-        //dd($form->createView()->children['blocks']->children[0]->children['filters']->children[0]);
+        return $this->render('App/AdvancedItemSearch/index.html.twig', [
+            'form' => $form,
+            'search' => $search,
+            'results' => $results
+        ]);
+    }
+
+    #[Route(path: '/advanced-item-search/{id}', name: 'app_advanced_item_search_show', methods: ['GET', 'POST'])]
+    public function show(
+        Request $request,
+        ManagerRegistry $managerRegistry,
+        Search $search
+    ): Response {
+        $results = [];
+        $form = $this->createForm(SearchType::class, $search);
+
+        //dd($form->createView()->children['blocks']->children[0]->children['filters']->children[1]);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $managerRegistry->getManager()->flush();
+        }
 
         return $this->render('App/AdvancedItemSearch/index.html.twig', [
             'form' => $form,

@@ -3751,5 +3751,17 @@
         <target>Add block</target>
       </segment>
     </unit>
+    <unit id="QZjl6ru" name="btn.save_and_submit">
+      <segment state="translated">
+        <source>Save and submit</source>
+        <target>Save and submit</target>
+      </segment>
+    </unit>
+    <unit id="HbtmbsF" name="title.save_and_submit">
+      <segment state="translated">
+        <source>Save and submit</source>
+        <target>Save and submit</target>
+      </segment>
+    </unit>
   </file>
 </xliff>
