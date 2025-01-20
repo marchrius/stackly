@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: SearchRepository::class)]
@@ -27,6 +28,9 @@ class Search
 
     #[ORM\OneToMany(targetEntity: SearchBlock::class, mappedBy: 'search', cascade: ['persist'], orphanRemoval: true)]
     private DoctrineCollection $blocks;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private ?User $owner = null;
 
     public function __construct()
     {
@@ -89,6 +93,18 @@ class Search
         if ($this->blocks->contains($block)) {
             $this->blocks->removeElement($block);
         }
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): Search
+    {
+        $this->owner = $owner;
 
         return $this;
     }

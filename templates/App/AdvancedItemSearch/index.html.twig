@@ -18,6 +18,12 @@
     <div class="content-block">
         {{ form_start(form, {'method': 'POST'}) }}
 
+        <ul>
+            {% for search in searches %}
+                <li><a href="{{ path('app_advanced_item_search_show', {id: search.id}) }}">{{ search.name }}</a></li>
+            {% endfor %}
+        </ul>
+
         <div data-controller="search-blocks"
              data-prototype="{% apply escape %} {% include 'App/AdvancedItemSearch/_prototype_block.html.twig' with { 'form': form.blocks.vars.prototype } only %} {% endapply %}"
         >

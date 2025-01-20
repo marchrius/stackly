@@ -11,6 +11,7 @@ use App\Enum\DatumTypeEnum;
 use App\Enum\DisplayModeEnum;
 use App\Form\Type\Entity\SearchType;
 use App\Repository\DatumRepository;
+use App\Repository\SearchRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +23,8 @@ class AdvancedItemSearchController extends AbstractController
     #[Route(path: '/advanced-item-search', name: 'app_advanced_item_search_index', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
-        ManagerRegistry $managerRegistry
+        ManagerRegistry $managerRegistry,
+        SearchRepository $searchRepository
     ): Response {
         $results = [];
 
@@ -44,7 +46,8 @@ class AdvancedItemSearchController extends AbstractController
         return $this->render('App/AdvancedItemSearch/index.html.twig', [
             'form' => $form,
             'search' => $search,
-            'results' => $results
+            'results' => $results,
+            'searches' => $searchRepository->findAll()
         ]);
     }
 
@@ -52,7 +55,8 @@ class AdvancedItemSearchController extends AbstractController
     public function show(
         Request $request,
         ManagerRegistry $managerRegistry,
-        Search $search
+        Search $search,
+        SearchRepository $searchRepository
     ): Response {
         $results = [];
         $form = $this->createForm(SearchType::class, $search);
@@ -67,7 +71,8 @@ class AdvancedItemSearchController extends AbstractController
         return $this->render('App/AdvancedItemSearch/index.html.twig', [
             'form' => $form,
             'search' => $search,
-            'results' => $results
+            'results' => $results,
+            'searches' => $searchRepository->findAll()
         ]);
     }
 
