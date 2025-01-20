@@ -1,0 +1,34 @@
+<div class="block">
+    <div class="row">
+        <div class="s12 l2 offset-l4 xl1 offset-xl5 {% if loop is defined and loop.first %}hidden{% endif %}">
+            {% set required = loop is defined and loop.first ? false : true %}
+            {{ form_row(form.condition, {'label' : 'label.condition', 'required': required ? 'required': '', 'attr': {'data-controller' : 'select--default'}}) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="search-block s12 l9 offset-l1" data-search-blocks-target="block">
+            <div data-controller="search-filters"
+                 data-prototype="{% apply escape %} {% include 'App/AdvancedItemSearch/_prototype_filter.html.twig' with { 'form': form.children.filters.vars.prototype } only %} {% endapply %}"
+            >
+                <div data-search-filters-target="filtersContainer">
+                    {% for filter in form.children.filters %}
+                        {{ include('App/AdvancedItemSearch/_prototype_filter.html.twig', { 'form': filter }) }}
+                    {% endfor %}
+                </div>
+
+                <a data-search-filters-target="button"
+                   data-action="click->search-filters#add"
+                   href="#"
+                   class="waves-effect waves-light btn right"
+                >{{ 'btn.add_filter'|trans }}</a>
+
+                {% do form.children.filters.setRendered %}
+            </div>
+        </div>
+
+        <div class="s12 l1 icon-holder {% if loop is defined and loop.first %}visibility-none{% endif %}">
+            <i class="fa fa-trash fa-fw" data-action="click->search-blocks#remove"></i>
+        </div>
+    </div>
+</div>

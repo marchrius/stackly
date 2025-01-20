@@ -2315,3 +2315,7 @@ tr {
 .search-block .icon-holder {
     margin-top: -25px;
 }
+
+.block {
+    margin-bottom: 20px;
+}

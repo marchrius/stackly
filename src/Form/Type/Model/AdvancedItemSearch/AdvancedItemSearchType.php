@@ -28,6 +28,7 @@ class AdvancedItemSearchType extends AbstractType
             ->add('blocks', CollectionType::class, [
                 'entry_type' => BlockType::class,
                 'entry_options' => ['label' => false],
+                'prototype_name' => '__block_name__',
                 'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true

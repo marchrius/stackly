@@ -3745,5 +3745,11 @@
         <target>Advanced item search</target>
       </segment>
     </unit>
+    <unit id="JidyJQJ" name="btn.add_block">
+      <segment state="translated">
+        <source>Add block</source>
+        <target>Add block</target>
+      </segment>
+    </unit>
   </file>
 </xliff>
