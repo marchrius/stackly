@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Form\Type\Entity;
 
 use App\Entity\Search;
+use App\Enum\DisplayModeEnum;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -29,6 +31,10 @@ class SearchType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false
+            ])
+            ->add('displayMode', ChoiceType::class, [
+                'choices' => array_flip(DisplayModeEnum::getDisplayModeLabels()),
+                'empty_data' => $builder->getData()->getDisplayMode()
             ])
             ->add('saveAndSubmit', SubmitType::class)
         ;

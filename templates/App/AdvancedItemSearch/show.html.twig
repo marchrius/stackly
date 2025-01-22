@@ -15,5 +15,24 @@
         <h1>{{ 'menu.advanced_item_search'|trans }}</h1>
     </div>
 
-    {{ include('App/AdvancedItemSearch/_form.html.twig') }}
+    <div class="content-block" data-controller="advanced-search">
+        <div class="block-element">
+            {% if results is not null %}
+                <a href="#" data-advanced-search-target="showFiltersBtn" data-action="click->advanced-search#showFilters">{{ 'btn.show_filters'|trans }}</a>
+                <a href="#" class="hidden" data-advanced-search-target="hideFiltersBtn" data-action="click->advanced-search#hideFilters">{{ 'btn.hide_filters'|trans }}</a>
+            {% endif %}
+
+            <div data-advanced-search-target="filters" {% if results is not null %} class="hidden" {% endif %}>
+                {{ include('App/AdvancedItemSearch/_form.html.twig') }}
+            </div>
+        </div>
+
+        <div class="block-element">
+            <h2 class="header">{{ 'title.results'|trans }}</h2>
+            {{ include('App/Collection/_items_' ~ search.displayMode ~ '.html.twig', {
+                'items': results,
+                'displayConfiguration': getContextUser().itemsDisplayConfiguration
+            }) }}
+        </div>
+    </div>
 {% endblock %}

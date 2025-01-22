@@ -1,12 +1,6 @@
 <div class="content-block">
     {{ form_start(form, {'method': 'POST'}) }}
 
-    <ul>
-        {% for search in searches %}
-            <li><a href="{{ path('app_advanced_item_search_show', {id: search.id}) }}">{{ search.name }}</a></li>
-        {% endfor %}
-    </ul>
-
     <div data-controller="search-blocks"
          data-prototype="{% apply escape %} {% include 'App/AdvancedItemSearch/_prototype_block.html.twig' with { 'form': form.blocks.vars.prototype } only %} {% endapply %}"
     >
@@ -33,10 +27,13 @@
         </div>
     </div>
 
-    <button name="submit" type="submit" class="btn waves-effect waves-light">{{ 'btn.submit'|trans }}</button>
-    <a href="#save-and-submit" class="modal-trigger btn waves-effect waves-light">
-        {{ 'btn.save_and_submit'|trans }}
-    </a>
+    <div class="advanced-search-buttons row">
+        <span class="s12 l2 offset-l6 xl1 offset-xl7">{{ form_row(form.displayMode, {'attr': {'data-controller': 'select--default'}}) }}</span>
+        <button name="submit" type="submit" class="btn waves-effect waves-light">{{ 'btn.submit'|trans }}</button>
+        <a href="#save-and-submit" class="s6 l1  modal-trigger btn waves-effect waves-light">
+            {{ 'btn.save_and_submit'|trans }}
+        </a>
+    </div>
 
     <div id="save-and-submit" data-controller="modal--default" class="modal modal-custom" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">

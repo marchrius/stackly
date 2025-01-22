@@ -15,6 +15,8 @@
         <h1>{{ 'menu.search'|trans }}</h1>
     </div>
 
+    <a href="{{ path('app_advanced_item_search_index') }}">{{ 'menu.advanced_item_search'|trans }}</a>
+
     <div class="content-block">
         {{ form_start(form, {'method': 'GET'}) }}
 

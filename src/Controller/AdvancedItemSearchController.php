@@ -11,7 +11,9 @@ use App\Enum\DatumTypeEnum;
 use App\Enum\DisplayModeEnum;
 use App\Form\Type\Entity\SearchType;
 use App\Repository\DatumRepository;
+use App\Repository\ItemRepository;
 use App\Repository\SearchRepository;
+use App\Service\AdvancedItemSearcher;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,9 +26,10 @@ class AdvancedItemSearchController extends AbstractController
     public function index(
         Request $request,
         ManagerRegistry $managerRegistry,
-        SearchRepository $searchRepository
+        SearchRepository $searchRepository,
+        AdvancedItemSearcher $advancedItemSearcher
     ): Response {
-        $results = [];
+        $results = null;
 
         $search = new Search();
         $search->setDisplayMode($this->getUser()?->getSearchResultsDisplayMode() ?? DisplayModeEnum::DISPLAY_MODE_GRID);
@@ -38,9 +41,11 @@ class AdvancedItemSearchController extends AbstractController
             if ($form->get('saveAndSubmit')->isClicked()) {
                 $managerRegistry->getManager()->persist($search);
                 $managerRegistry->getManager()->flush();
+
+                return $this->redirectToRoute('app_advanced_item_search_show', ['id' => $search->getId()]);
             }
 
-            return $this->redirectToRoute('app_advanced_item_search_show', ['id' => $search->getId()]);
+            $results = $advancedItemSearcher->search($search);
         }
 
         return $this->render('App/AdvancedItemSearch/index.html.twig', [
@@ -56,17 +61,17 @@ class AdvancedItemSearchController extends AbstractController
         Request $request,
         ManagerRegistry $managerRegistry,
         Search $search,
-        SearchRepository $searchRepository
+        SearchRepository $searchRepository,
+        AdvancedItemSearcher $advancedItemSearcher
     ): Response {
-        $results = [];
         $form = $this->createForm(SearchType::class, $search);
-
-        //dd($form->createView()->children['blocks']->children[0]->children['filters']->children[1]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $managerRegistry->getManager()->flush();
         }
+
+        $results = $advancedItemSearcher->search($search);
 
         return $this->render('App/AdvancedItemSearch/show.html.twig', [
             'form' => $form,
