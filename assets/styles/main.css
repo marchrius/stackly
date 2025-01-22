@@ -2329,3 +2329,7 @@ tr {
 .advanced-search-buttons .btn {
     margin-top: 8px;
 }
+
+#save-and-submit .modal-footer .right {
+    display: flex;
+}
