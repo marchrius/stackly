@@ -3787,5 +3787,29 @@
         <target>Hide filters</target>
       </segment>
     </unit>
+    <unit id="Ak8IE4a" name="tooltip.saved-searches">
+      <segment state="translated">
+        <source>Saved searches</source>
+        <target>Saved searches</target>
+      </segment>
+    </unit>
+    <unit id="cH7cMc2" name="menu.saved_searches">
+      <segment state="translated">
+        <source>Saved searches</source>
+        <target>Saved searches</target>
+      </segment>
+    </unit>
+    <unit id="JyETMRr" name="message.search_deleted">
+      <segment state="translated">
+        <source>Search {search} has been deleted</source>
+        <target>Search {search} has been deleted</target>
+      </segment>
+    </unit>
+    <unit id="8uIiviK" name="message.delete.search">
+      <segment state="translated">
+        <source>Are you sure you want to delete this search ? It will be permanently lost...</source>
+        <target>Are you sure you want to delete this search ? It will be permanently lost...</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

@@ -19,9 +19,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AdvancedItemSearchController extends AbstractController
 {
+    #[Route(path: '/advanced-item-search/saved-searches', name: 'app_advanced_item_search_saved_searches', methods: ['GET'])]
+    public function savedSearches(SearchRepository $searchRepository): Response
+    {
+        return $this->render('App/AdvancedItemSearch/saved_searches.html.twig', [
+            'searches' => $searchRepository->findAll()
+        ]);
+    }
+
     #[Route(path: '/advanced-item-search', name: 'app_advanced_item_search_index', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
@@ -79,6 +88,25 @@ class AdvancedItemSearchController extends AbstractController
             'results' => $results,
             'searches' => $searchRepository->findAll()
         ]);
+    }
+
+    #[Route(path: '/advanced-item-search/{id}/delete', name: 'app_advanced_item_search_delete', methods: ['POST'])]
+    public function delete(
+        Request $request,
+        ManagerRegistry $managerRegistry,
+        Search $search,
+        TranslatorInterface $translator
+    ): Response {
+        $form = $this->createDeleteForm('app_advanced_item_search_delete', $search);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $managerRegistry->getManager()->remove($search);
+            $managerRegistry->getManager()->flush();
+            $this->addFlash('notice', $translator->trans('message.search_deleted', ['search' => $search->getName()]));
+        }
+
+        return $this->redirectToRoute('app_advanced_item_search_saved_searches');
     }
 
     #[Route(path: '/advanced-item-search/load-type-inputs/{type}', name: 'app_advanced_item_search_load_type_inputs', methods: ['GET', 'POST'])]

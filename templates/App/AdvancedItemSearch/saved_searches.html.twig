@@ -1,0 +1,47 @@
+{% extends 'layout.html.twig' %}
+
+{% set breadcrumb = buildBreadcrumb([{'route': 'app_advanced_item_search_index', 'trans': 'menu.advanced_item_search'}], null, 'menu.saved_searches'|trans) %}
+
+{% block title %}
+    {{ renderTitle(breadcrumb) }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ renderBreadcrumb(breadcrumb) }}
+{% endblock %}
+
+{% block content %}
+    <div class="title-block">
+        <h1>{{ 'menu.saved_searches'|trans }}</h1>
+    </div>
+
+    <div class="content-block">
+        <div class="block-element">
+            <table class="striped">
+                <thead>
+                <tr>
+                    <th>{{ 'label.name'|trans }}</th>
+                    {% if context == 'default' %}
+                        <th>{{ 'label.actions'|trans }}</th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for search in searches %}
+                    <tr class="list-element">
+                        <td><a href="{{ path('app_advanced_item_search_show', {id: search.id}) }}">{{ search.name }}</a></td>
+                        {% if context == 'default' %}
+                            <td>
+                                {{ include('App/_partials/_icon/_delete.html.twig', {
+                                    path: path('app_advanced_item_search_delete', {id: search.id}),
+                                    message: 'message.delete.search'
+                                }) }}
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

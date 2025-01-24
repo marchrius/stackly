@@ -11,17 +11,24 @@
 {% endblock %}
 
 {% block content %}
-    <div class="title-block">
-        <h1>{{ 'menu.advanced_item_search'|trans }}</h1>
+    <div class="collection-header">
+        <div class="title-block">
+            <div>
+                <h1>{{ 'menu.advanced_item_search'|trans }}</h1>
+            </div>
+        </div>
+
+        <div class="btn-holder">
+            <div>
+                <a href="{{ path('app_advanced_item_search_saved_searches') }}" class="button"
+                   title="{{ 'tooltip.saved-searches'|trans }}">
+                    <i class="fa fa-save fa-fw"></i>
+                </a>
+            </div>
+        </div>
     </div>
 
     <div class="content-block" data-controller="advanced-search">
-        <ul>
-            {% for search in searches %}
-                <li><a href="{{ path('app_advanced_item_search_show', {id: search.id}) }}">{{ search.name }}</a></li>
-            {% endfor %}
-        </ul>
-
         <div class="block-element">
             {% if results is not null %}
                 <a href="#" data-advanced-search-target="showFiltersBtn" data-action="click->advanced-search#showFilters">{{ 'btn.show_filters'|trans }}</a>
