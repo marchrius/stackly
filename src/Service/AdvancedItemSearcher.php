@@ -14,6 +14,7 @@ use App\Entity\User;
 use App\Enum\AdvancedItemSearch\ConditionEnum;
 use App\Enum\AdvancedItemSearch\OperatorEnum;
 use App\Enum\AdvancedItemSearch\TypeEnum;
+use App\Enum\DatumTypeEnum;
 use App\Enum\ScraperTypeEnum;
 use App\Model\BreadcrumbElement;
 use App\Repository\ItemRepository;
@@ -94,8 +95,13 @@ class AdvancedItemSearcher
         $sql = '';
 
         if ($operator === OperatorEnum::OPERATOR_EQUAL) {
-            $queryBuilder->setParameter($paramValue, $value);
-            $sql = "LOWER(datum.value) = LOWER(:{$paramValue})";
+            if ($datumType === DatumTypeEnum::TYPE_NUMBER || $datumType === DatumTypeEnum::TYPE_RATING) {
+                $queryBuilder->setParameter($paramValue, $value);
+                $sql = "CAST(datum.value AS INTEGER) = CAST(:{$paramValue} AS INTEGER)";
+            } else {
+                $queryBuilder->setParameter($paramValue, $value);
+                $sql = "LOWER(datum.value) = LOWER(:{$paramValue})";
+            }
         }
 
         if ($operator === OperatorEnum::OPERATOR_CONTAINS) {
@@ -105,22 +111,22 @@ class AdvancedItemSearcher
 
         if ($operator === OperatorEnum::OPERATOR_SUPERIOR) {
             $queryBuilder->setParameter($paramValue, $value);
-            $sql = "datum.value > :{$paramValue}";
+            $sql = "CAST(datum.value AS INTEGER) > CAST(:{$paramValue} AS INTEGER)";
         }
 
         if ($operator === OperatorEnum::OPERATOR_SUPERIOR_OR_EQUAL) {
             $queryBuilder->setParameter($paramValue, $value);
-            $sql = "datum.value >= :{$paramValue}";
+            $sql = "CAST(datum.value AS INTEGER) >= CAST(:{$paramValue} AS INTEGER)";
         }
 
         if ($operator === OperatorEnum::OPERATOR_INFERIOR) {
             $queryBuilder->setParameter($paramValue, $value);
-            $sql = "datum.value < :{$paramValue}";
+            $sql = "CAST(datum.value AS INTEGER) < CAST(:{$paramValue} AS INTEGER)";
         }
 
         if ($operator === OperatorEnum::OPERATOR_INFERIOR_OR_EQUAL) {
             $queryBuilder->setParameter($paramValue, $value);
-            $sql = "datum.value <= :{$paramValue}";
+            $sql = "CAST(datum.value AS INTEGER) <= CAST(:{$paramValue} AS INTEGER)";
         }
 
         return "(datum.label = :{$paramLabel} AND datum.type = :{$paramType} AND {$sql})";

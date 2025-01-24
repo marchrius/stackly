@@ -11,7 +11,6 @@ use App\Enum\DatumTypeEnum;
 use App\Enum\DisplayModeEnum;
 use App\Form\Type\Entity\SearchType;
 use App\Repository\DatumRepository;
-use App\Repository\ItemRepository;
 use App\Repository\SearchRepository;
 use App\Service\AdvancedItemSearcher;
 use Doctrine\Persistence\ManagerRegistry;

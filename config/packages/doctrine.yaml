@@ -28,6 +28,9 @@ doctrine:
             visibility: App\Doctrine\Filter\VisibilityFilter
         controller_resolver:
             auto_mapping: true
+        dql:
+            string_functions:
+                cast: App\Doctrine\Query\AST\Functions\Cast
 
 when@dev:
     doctrine:

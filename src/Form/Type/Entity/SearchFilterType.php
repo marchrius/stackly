@@ -8,8 +8,11 @@ use App\Entity\SearchFilter;
 use App\Enum\AdvancedItemSearch\ConditionEnum;
 use App\Enum\AdvancedItemSearch\OperatorEnum;
 use App\Enum\AdvancedItemSearch\TypeEnum;
+use App\Enum\DatumTypeEnum;
 use App\Repository\DatumRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -105,12 +108,29 @@ class SearchFilterType extends AbstractType
             function (FormEvent $event): void {
                 $form = $event->getForm();
                 $data = $event->getData();
+                list($label, $type) = explode('_koillection_separator_', $data['datum']);
 
-                $form
-                    ->add('value', TextType::class, [
-                        'required' => true,
-                    ])
-                ;
+                if ($type === DatumTypeEnum::TYPE_CHECKBOX) {
+                    $form
+                        ->add('value', TextType::class, [
+                            'required' => false,
+                            'model_transformer' => new CallbackTransformer(
+                                static function ($value) {
+                                    return $value === true ? 'on' : null;
+                                },
+                                static function ($value) {
+                                    return $value === 'on' ? '1' : '0';
+                                }
+                            ),
+                        ])
+                    ;
+                } else {
+                    $form
+                        ->add('value', TextType::class, [
+                            'required' => true,
+                        ])
+                    ;
+                }
 
                 if ($data['type'] === TypeEnum::TYPE_NAME) {
                     $form
@@ -128,8 +148,6 @@ class SearchFilterType extends AbstractType
                     foreach ($this->datumRepository->findAllUniqueLabels() as $datum) {
                         $labels["{$datum['label']} <i>({$datum['type']})</i>"] = "{$datum['label']}_koillection_separator_{$datum['type']}";
                     }
-
-                    list($label, $type) = explode('_koillection_separator_', $data['datum']);
 
                     $form
                         ->add('operator', ChoiceType::class, [
