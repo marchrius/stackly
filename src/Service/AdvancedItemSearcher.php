@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\Datum;
 use App\Entity\Search;
 use App\Enum\AdvancedItemSearch\ConditionEnum;
 use App\Enum\AdvancedItemSearch\OperatorEnum;
@@ -95,7 +94,7 @@ class AdvancedItemSearcher
 
         if ($operator === OperatorEnum::OPERATOR_NOT_EQUAL) {
             $queryBuilder->setParameter($paramValue, $value);
-            return "item.collection = :{$paramValue}";
+            return "item.collection != :{$paramValue}";
         }
 
         return '';
