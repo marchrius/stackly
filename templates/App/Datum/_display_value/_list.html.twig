@@ -14,5 +14,7 @@
 {% endif %}
 
 {% macro url(url, value) %}
-    <a href="{{ url }}">{{ value }}</a>
+    {% apply spaceless %}
+        <a href="{{ url }}">{{ value }}</a>
+    {% endapply %}
 {% endmacro %}

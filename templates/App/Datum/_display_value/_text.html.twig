@@ -3,12 +3,14 @@
 {% if underlinedTags is defined %}
     {% for value in datum.value|split(',') %}
         {% set value = value|trim %}
-        {{ underlinedTags[value] is defined ? _self.url(underlinedTags[value], value) }}{{ not loop.last ? ',' }}
+        {{ underlinedTags[value] is defined ? _self.url(underlinedTags[value], value): value }}{{ not loop.last ? ',' }}
     {% endfor %}
 {% else %}
     {{ datum.value }}
 {% endif %}
 
 {% macro url(url, value) %}
-    <a href="{{ url }}">{{ value }}</a>
+    {% apply spaceless %}
+        <a href="{{ url }}">{{ value }}</a>
+    {% endapply %}
 {% endmacro %}
