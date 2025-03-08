@@ -162,9 +162,7 @@ readonly class AppRuntime implements RuntimeExtensionInterface
             if ($matchingTag instanceof Tag) {
                 $route = $this->contextHandler->getRouteContext('app_tag_show');
                 $url = $this->router->generate($route, ['id' => $matchingTag->getId()]);
-                $results[$text] = '<a href="' . $url . '">' . $text . '</a>';
-            } else {
-                $results[$text] = $text;
+                $results[$text] = $url;
             }
         }
 

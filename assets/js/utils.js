@@ -1,9 +1,15 @@
-export function htmlStringToDomElement(html) {
+export function htmlStringToDomElement(html, text = null) {
     let template = document.createElement('template');
     html = html.trim();
     template.innerHTML = html;
 
-    return template.content.firstChild;
+    let element = template.content.firstChild;
+
+    if (text) {
+        element.lastElementChild.textContent = text;
+    }
+
+    return element;
 }
 
 export function getFlagFromCountryCode(countryCode) {

@@ -4,9 +4,15 @@
 {% if values|length > 1 %}
     <ul class="datum-list">
         {% for value in values %}
-            <li>{{ underlinedTags[value|trim] is defined ? underlinedTags[value|trim]|raw : value }}</li>
+            {% set value = value|trim %}
+            <li>{{ underlinedTags[value] is defined ? _self.url(underlinedTags[value], value) : value }}</li>
         {% endfor %}
     </ul>
 {% else %}
-    {{ underlinedTags[values|first|trim] is defined ? underlinedTags[values|first|trim]|raw : values|first }}
+    {% set value = values|first|trim %}
+    {{ underlinedTags[value] is defined ? _self.url(underlinedTags[value], value) : values|first }}
 {% endif %}
+
+{% macro url(url, value) %}
+    <a href="{{ url }}">{{ value }}</a>
+{% endmacro %}

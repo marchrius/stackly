@@ -18,7 +18,7 @@ export default class extends Controller {
         if (this.formInputTarget.value.length > 0) {
             let values = JSON.parse(this.formInputTarget.value);
             for (const item of values) {
-                this.resultTarget.insertAdjacentHTML('beforeend', this.getChip(item));
+                this.resultTarget.appendChild(this.getChip(item));
             }
         }
     }
@@ -82,7 +82,7 @@ export default class extends Controller {
         let index = existingElements.indexOf(value);
         if (index === -1) {
             existingElements.push(value);
-            this.resultTarget.insertAdjacentHTML('beforeend', this.getChip(value));
+            this.resultTarget.appendChild(this.getChip(value));
         }
 
         this.formInputTarget.value = JSON.stringify(existingElements);
@@ -90,8 +90,19 @@ export default class extends Controller {
     }
 
     getChip(label) {
-        return '<div class="chip" data-id="' + label + '" data-text="' + label + '">'
-            + label + '<i data-action="click->autocomplete--tag#remove" class="fa fa-times close"></i>' +
-        '</div>';
+        const div = document.createElement('div');
+
+        div.setAttribute('class', 'chip');
+        div.setAttribute('data-id', label);
+        div.setAttribute('data-text', label);
+        div.textContent = label;
+
+        const i = document.createElement('i');
+        i.setAttribute('class', 'fa fa-times close');
+        i.setAttribute('data-action', 'click->autocomplete--tag#remove');
+
+        div.appendChild(i);
+
+        return div;
     }
 }

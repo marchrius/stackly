@@ -55,18 +55,18 @@ export default class extends Controller {
 
     templateSelection(element) {
         if (!element.text) {
-            return htmlStringToDomElement('<span class="select-placeholder">' + Translator.trans('select2.none') + '</span>');
+            return htmlStringToDomElement('<div><span class="select-placeholder"></span></div>', Translator.trans('select2.none'));
         }
 
-        return htmlStringToDomElement('<div><span>' + element.text + '</span></div>');
+        return htmlStringToDomElement('<div><span></span></div>', element.text);
     }
 
     templateResult(element) {
         if (!element.text && !element.children) {
-            return htmlStringToDomElement('<div><span class="select-placeholder">' + Translator.trans('select2.none') + '</span></div>');
+            return htmlStringToDomElement('<div><span class="select-placeholder"></span></div>', Translator.trans('select2.none'));
         }
 
-        return htmlStringToDomElement('<div><span>' + element.text + '</span></div>');
+        return htmlStringToDomElement('<div><span></span></div>', element.text);
     }
 
     minimumResultsForSearch() {
