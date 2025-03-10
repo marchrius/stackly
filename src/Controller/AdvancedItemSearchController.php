@@ -136,7 +136,8 @@ class AdvancedItemSearchController extends AbstractController
         if ($type === TypeEnum::TYPE_DATUM) {
             $labels = [];
             foreach ($datumRepository->findAllUniqueLabels() as $datum) {
-                $labels["{$datum['label']}_koillection_separator_{$datum['type']}"] = "{$datum['label']} <i>({$datum['type']})</i>";
+                $labels["{$datum['label']}_koillection_separator_{$datum['type']}"]['value'] = $datum['label'];
+                $labels["{$datum['label']}_koillection_separator_{$datum['type']}"]['type'] = $datum['type'];
             }
 
             $datumInput = $this->render('App/AdvancedItemSearch/_input_datum.html.twig', ['labels' => $labels])->getContent();
