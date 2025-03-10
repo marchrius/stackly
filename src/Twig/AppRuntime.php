@@ -30,11 +30,6 @@ readonly class AppRuntime implements RuntimeExtensionInterface
     ) {
     }
 
-    public function safeContent(string $string): string
-    {
-        return $string;
-    }
-
     public function bytes(float $bytes, int $precision = 2): string
     {
         $base = $bytes > 0 ? log($bytes, 1024) : $bytes;

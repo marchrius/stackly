@@ -7,7 +7,7 @@
         <option value=""></option>
         {% for inputValue, label in labels %}
             <option value="{{ inputValue }}" {% if value is defined and value == inputValue %}selected{% endif %}>
-                {{ label.value }} <i>({{ label.type }})</i>
+                {{ label.value }} ({{ label.type }})
             </option>
         {% endfor %}
     </select>

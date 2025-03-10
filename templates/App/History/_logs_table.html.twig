@@ -21,7 +21,7 @@
                     <td>
                         <ul class="log">
                             {% for message in getLogMessages(log) %}
-                                <li>{{ message|safeContent }}</li>
+                                <li>{{ message|raw }}</li>
                             {% endfor %}
                         </ul>
                     </td>

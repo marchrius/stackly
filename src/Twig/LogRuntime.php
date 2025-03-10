@@ -34,7 +34,7 @@ class LogRuntime implements RuntimeExtensionInterface
             $class = 'choice_list';
         }
 
-        $objectLabel = $log->getObjectLabel();
+        $objectLabel = htmlspecialchars($log->getObjectLabel());
 
         switch ($log->getType()) {
             case LogTypeEnum::TYPE_CREATE:
