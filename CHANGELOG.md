@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.12] / 2025-03-11
+Security update, see https://github.com/benjaminjonard/koillection/issues/1329
+### Fixes
+- Fix XSS on history page (benjaminjonard)
+- Fix choice list display in advanced search (benjaminjonard)
+
 ## [1.6.11] / 2025-03-09
 Security update, see https://github.com/benjaminjonard/koillection/issues/1329
 ### Fixes
