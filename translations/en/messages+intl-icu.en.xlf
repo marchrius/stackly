@@ -3859,5 +3859,35 @@
         <target>Collection</target>
       </segment>
     </unit>
+    <unit id="QbmRe76" name="btn.add_blank_line">
+      <segment>
+        <source>Blank line</source>
+        <target>Blank line</target>
+      </segment>
+    </unit>
+    <unit id="JfCCmZr" name="btn.add_section">
+      <segment>
+        <source>Section</source>
+        <target>Section</target>
+      </segment>
+    </unit>
+    <unit id="2LQgUOM" name="label.blank_line">
+      <segment>
+        <source>Blank line</source>
+        <target>Blank line</target>
+      </segment>
+    </unit>
+    <unit id="dnmyVOm" name="label.section">
+      <segment>
+        <source>Section</source>
+        <target>Section</target>
+      </segment>
+    </unit>
+    <unit id="sNi8iHJ" name="label.video">
+      <segment>
+        <source>Video</source>
+        <target>Video</target>
+      </segment>
+    </unit>
   </file>
 </xliff>
