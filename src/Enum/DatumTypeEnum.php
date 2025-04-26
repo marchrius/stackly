@@ -36,6 +36,10 @@ class DatumTypeEnum
 
     public const string TYPE_VIDEO = 'video';
 
+    public const string TYPE_BLANK_LINE = 'blank-line';
+
+    public const string TYPE_SECTION = 'section';
+
     public const array TYPES = [
         self::TYPE_TEXT,
         self::TYPE_TEXTAREA,
@@ -52,6 +56,8 @@ class DatumTypeEnum
         self::TYPE_FILE,
         self::TYPE_SIGN,
         self::TYPE_VIDEO,
+        self::TYPE_BLANK_LINE,
+        self::TYPE_SECTION,
     ];
 
     public const array TEXT_TYPES = [
@@ -73,6 +79,11 @@ class DatumTypeEnum
         self::TYPE_IMAGE,
         self::TYPE_SIGN,
         self::TYPE_VIDEO,
+    ];
+
+    public const array STRUCTURE_TYPES = [
+        self::TYPE_BLANK_LINE,
+        self::TYPE_SECTION
     ];
 
     public const array AVAILABLE_FOR_SCRAPING = [
@@ -113,6 +124,8 @@ class DatumTypeEnum
         self::TYPE_CHOICE_LIST => 'label.choice_list',
         self::TYPE_CHECKBOX => 'label.checkbox',
         self::TYPE_VIDEO => 'label.video',
+        self::TYPE_BLANK_LINE => 'label.blank_line',
+        self::TYPE_SECTION => 'label.section',
     ];
 
     public static function getTypesLabels(): array

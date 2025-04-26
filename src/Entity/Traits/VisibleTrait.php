@@ -13,8 +13,12 @@ trait VisibleTrait
         return $this->visibility;
     }
 
-    public function setVisibility(string $visibility): self
+    public function setVisibility(?string $visibility): self
     {
+        if ($visibility === null) {
+            $visibility = VisibilityEnum::VISIBILITY_PUBLIC;
+        }
+
         $this->visibility = $visibility;
         $this->setFinalVisibility();
         $this->updateDescendantsVisibility();

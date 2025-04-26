@@ -206,6 +206,14 @@ class Item implements BreadcrumbableInterface, LoggableInterface, CacheableInter
         return $this->data->matching($criteria);
     }
 
+    public function getDataTextsAndStructures(): DoctrineCollection
+    {
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->in('type', array_merge(DatumTypeEnum::TEXT_TYPES, DatumTypeEnum::STRUCTURE_TYPES)))->orderBy(['position' => Order::Ascending]);
+
+        return $this->data->matching($criteria);
+    }
+
     public function hasTag(Tag $tag): bool
     {
         return $this->tags->contains($tag);

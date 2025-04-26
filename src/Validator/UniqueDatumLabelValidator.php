@@ -9,6 +9,7 @@ use App\Entity\Datum;
 use App\Entity\Field;
 use App\Entity\Item;
 use App\Entity\Path;
+use App\Enum\DatumTypeEnum;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -34,6 +35,10 @@ class UniqueDatumLabelValidator extends ConstraintValidator
         }
 
         foreach ($value as $element) {
+            if ($element->getType() === DatumTypeEnum::TYPE_BLANK_LINE) {
+                continue;
+            }
+
             $label = match (true) {
                 $element instanceof Field => $element->getName(),
                 $element instanceof Datum => $element->getLabel(),

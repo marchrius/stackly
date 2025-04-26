@@ -127,11 +127,15 @@
                 </ul>
             {% endif %}
         </div>
+
         <div class="data">
             {% set underlinedTags = getUnderlinedTags(item.dataTexts) %}
-            {% for datum in item.dataTexts %}
+            {% for datum in item.dataTextsAndStructures %}
                 <div class="datum-row">
-                    <span class="label">{{ datum.label }} :</span>
+                    {% if datum.label %}
+                        <span class="label">{{ datum.label }} :</span>
+                    {% endif %}
+
                     {{ include('App/Datum/_display_value/_' ~ datum.type ~ '.html.twig', {'datum': datum}) }}
                 </div>
             {% endfor %}
