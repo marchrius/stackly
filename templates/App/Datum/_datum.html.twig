@@ -17,7 +17,7 @@
             <i class="fa fa-arrows-v fa-fw"></i>
         </div>
 
-        {% if type != 'blank-line' %}
+        {% if type != 'blank-line' and type != 'section' %}
             <div class="s10 m4">
                 <div class="input-field outlined ">
                     <input
@@ -65,10 +65,6 @@
                     <label for="data_{{ iteration }}_visibility">{{ 'label.visibility'|trans }}</label>
                 </div>
             </div>
-        {% endif %}
-
-        {% if type == 'blank-line' %}
-            <div class="s9"></div>
         {% endif %}
 
         <div class="s1 icon-holder">

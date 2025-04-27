@@ -3889,5 +3889,11 @@
         <target>Video</target>
       </segment>
     </unit>
+    <unit id="KupkSAg" name="label.add_structure">
+      <segment>
+        <source>Add structure element :</source>
+        <target>Add structure element :</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

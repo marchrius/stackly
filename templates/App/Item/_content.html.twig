@@ -132,7 +132,7 @@
             {% set underlinedTags = getUnderlinedTags(item.dataTexts) %}
             {% for datum in item.dataTextsAndStructures %}
                 <div class="datum-row">
-                    {% if datum.label %}
+                    {% if datum.type != 'blank-line' and datum.type != 'section' %}
                         <span class="label">{{ datum.label }} :</span>
                     {% endif %}
 
