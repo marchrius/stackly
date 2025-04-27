@@ -27,7 +27,7 @@ class TagCategoryController extends AbstractController
         $categoriesCount = $tagCategoryRepository->count([]);
 
         return $this->render('App/TagCategory/index.html.twig', [
-            'categories' => $tagCategoryRepository->findBy([], [], 10, ($page - 1) * 10),
+            'categories' => $tagCategoryRepository->findBy([], [], 15, ($page - 1) * 15),
             'search' => $search,
             'categoriesCount' => $categoriesCount,
             'paginator' => $paginatorFactory->generate($categoriesCount),
