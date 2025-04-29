@@ -65,6 +65,8 @@ abstract class HtmlScraper
                 });
             }
 
+
+
             foreach ($results as $key => $result) {
                 if (isset($values[$key])) {
                     $values[$key] = str_replace("#{$xPath}#", $result, $values[$key]);
@@ -150,6 +152,10 @@ abstract class HtmlScraper
         }
 
         if ($type === DatumTypeEnum::TYPE_IMAGE) {
+            return $this->guessHost($values[0], $scraping);
+        }
+
+        if ($type === DatumTypeEnum::TYPE_LINK) {
             return $this->guessHost($values[0], $scraping);
         }
 

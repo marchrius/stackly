@@ -90,6 +90,7 @@ class DatumTypeEnum
         self::TYPE_TEXT,
         self::TYPE_TEXTAREA,
         self::TYPE_LIST,
+        self::TYPE_LINK,
         self::TYPE_COUNTRY,
     ];
 
@@ -98,6 +99,7 @@ class DatumTypeEnum
         self::TYPE_TEXTAREA,
         self::TYPE_LIST,
         self::TYPE_COUNTRY,
+        self::TYPE_LINK,
         self::TYPE_IMAGE,
     ];
 
