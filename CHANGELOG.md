@@ -1,6 +1,20 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.13] / 2025-04-30
+### Features
+- Add blank line field type (benjaminjonard)
+- Add section field type (benjaminjonard)
+- Add link field type in scrappers (benjaminjonard)
+
+### Fixes
+- Fix tag category list pagination (benjaminjonard)
+- Fix wish scraper (benjaminjonard)
+
+### Miscellaneous
+- Upgrade PHP and JS dependencies (benjaminjonard)
+- Update translations, thanks to all contributors on [Crowdin](https://crowdin.com/project/koillection)
+
 ## [1.6.12] / 2025-03-11
 Security update, see https://github.com/benjaminjonard/koillection/issues/1329
 ### Fixes
