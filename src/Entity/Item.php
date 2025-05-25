@@ -219,6 +219,11 @@ class Item implements BreadcrumbableInterface, LoggableInterface, CacheableInter
         return $this->tags->contains($tag);
     }
 
+    public function isCurrentlyLoaned(): bool
+    {
+        return array_any($this->loans->toArray(), fn($loan) => $loan->getReturnedAt() === null);
+    }
+
     #[\Override]
     public function getId(): ?string
     {

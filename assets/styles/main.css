@@ -2372,3 +2372,7 @@ div[data-datum-list-target] {
 .datum-row:first-of-type .datum-section {
   margin-top: 0;
 }
+
+.loaned {
+    filter: grayscale(100%);
+}

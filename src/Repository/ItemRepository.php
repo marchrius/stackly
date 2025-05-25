@@ -242,6 +242,8 @@ class ItemRepository extends ServiceEntityRepository
         $qb = $this
             ->createQueryBuilder('item')
             ->where('item.collection = :collection')
+            ->leftJoin('item.loans', 'loan', 'WITH', 'loan.returnedAt IS NULL')
+            ->addSelect('loan')
             ->setParameter('collection', $collection->getId())
         ;
 

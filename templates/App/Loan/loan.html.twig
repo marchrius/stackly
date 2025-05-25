@@ -19,7 +19,11 @@
         {{ form_start(form) }}
         <div class="row">
             <div class="s12 l5 offset-l1 xl4 offset-xl2">
-                {{ form_row(form.lentAt, {'label' : 'label.loaned_at', 'attr': {'data-controller' : 'datepicker' }} ) }}
+                {{ form_row(form.lentAt, {'label' : 'label.loaned_at', 'attr': {
+                    'data-controller' : 'datepicker',
+                    'data-action': 'click->datepicker#open',
+                    'data-datepicker-target': "input"
+                }} ) }}
             </div>
             <div class="s12 l5 xl4">
                 {{ form_row(form.lentTo, {'label' : 'label.loaned_to'} ) }}
