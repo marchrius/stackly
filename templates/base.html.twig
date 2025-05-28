@@ -48,15 +48,15 @@
                 {{ encore_entry_link_tags("light", null, '_default', {media: '(prefers-color-scheme: light)'}) }}
                 {{ encore_entry_link_tags("dark", null, '_default', {media: '(prefers-color-scheme: dark)'}) }}
 
-                <style media="(prefers-color-scheme: dark)">{{ getConfigurationValue('custom-dark-theme-css') }}</style>
-                <style media="(prefers-color-scheme: light)">{{ getConfigurationValue('custom-light-theme-css') }}</style>
+                <style media="(prefers-color-scheme: dark)">{{ getConfigurationValue('custom-dark-theme-css')|raw }}</style>
+                <style media="(prefers-color-scheme: light)">{{ getConfigurationValue('custom-light-theme-css')|raw }}</style>
             {% else %}
                 {{ encore_entry_link_tags(app.user.theme) }}
 
                 {% if app.user.theme == 'dark' %}
-                    <style>{{ getConfigurationValue('custom-dark-theme-css') }}</style>
+                    <style>{{ getConfigurationValue('custom-dark-theme-css')|raw  }}</style>
                 {% else %}
-                    <style>{{ getConfigurationValue('custom-light-theme-css') }}</style>
+                    <style>{{ getConfigurationValue('custom-light-theme-css')|raw }}</style>
                 {% endif %}
             {% endif %}
         {% endblock %}
