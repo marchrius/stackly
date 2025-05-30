@@ -56,7 +56,7 @@ class PhotoApiNotOwnerTest extends ApiTestCase
 
         // Act
         $this->createClientWithCredentials($user)->request('POST', '/api/photos/', ['json' => [
-            'album' => '/api/albums/' . $album,
+            'album' => '/api/albums/' . $album->_real(),
             'title' => 'Collection',
         ]]);
 

@@ -59,7 +59,12 @@ class ItemTest extends AppTestCase
         ]);
         $tag = TagFactory::createOne(['owner' => $user, 'label' => 'Abe Tsukasa'])->_real();
         $item->addTag($tag);
-        $item->addTag(TagFactory::createOne(['owner' => $user, 'label' => 'Yamada Kanehito'])->_real());
+        $item->_save();
+
+        $tag2 = TagFactory::createOne(['owner' => $user, 'label' => 'Yamada Kanehito'])->_real();
+        $item->addTag($tag2);
+        $item->_save();
+        
         $item->addRelatedItem($relatedItem);
         $item->_save();
 

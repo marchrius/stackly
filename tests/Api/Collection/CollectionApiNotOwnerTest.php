@@ -116,7 +116,7 @@ class CollectionApiNotOwnerTest extends ApiTestCase
 
         // Act
         $this->createClientWithCredentials($user)->request('POST', '/api/collections/', ['json' => [
-            'parent' => '/api/collections/' . $collection,
+            'parent' => '/api/collections/' . $collection->_real(),
             'name' => 'Berserk',
         ]]);
 

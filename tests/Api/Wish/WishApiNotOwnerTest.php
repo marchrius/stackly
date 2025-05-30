@@ -58,7 +58,7 @@ class WishApiNotOwnerTest extends ApiTestCase
 
         // Act
         $this->createClientWithCredentials($user)->request('POST', '/api/wishes/', ['json' => [
-            'wishlist' => '/api/wishlists/' . $wishlist,
+            'wishlist' => '/api/wishlists/' . $wishlist->_real(),
             'name' => 'Elden Ring',
         ]]);
 

@@ -80,7 +80,7 @@
         "symfony/stopwatch": "7.3.0",
         "symfony/var-dumper": "7.3.0",
         "symfony/web-profiler-bundle": "7.3.0",
-        "zenstruck/foundry": "2.5.2"
+        "zenstruck/foundry": "2.4.3"
     },
     "config": {
         "allow-plugins": {
@@ -137,7 +137,7 @@
         "symfony": {
             "allow-contrib": false,
             "docker": false,
-            "require": "7.2.*"
+            "require": "7.3.*"
         },
         "runtime": {
             "class": "Runtime\\FrankenPhpSymfony\\Runtime"

@@ -143,7 +143,7 @@ class ItemApiNotOwnerTest extends ApiTestCase
 
         // Act
         $this->createClientWithCredentials($user)->request('POST', '/api/items/', ['json' => [
-            'collection' => '/api/collections/' . $collection,
+            'collection' => '/api/collections/' . $collection->_real(),
             'name' => 'Berserk',
         ]]);
 
@@ -161,7 +161,7 @@ class ItemApiNotOwnerTest extends ApiTestCase
 
         // Act
         $this->createClientWithCredentials($user)->request('POST', '/api/items/', ['json' => [
-            'collection' => '/api/collections/' . $collection,
+            'collection' => '/api/collections/' . $collection->_real(),
             'name' => 'Berserk',
             'tags' => [$tag]
         ]]);
@@ -180,7 +180,7 @@ class ItemApiNotOwnerTest extends ApiTestCase
 
         // Act
         $this->createClientWithCredentials($user)->request('POST', '/api/items/', ['json' => [
-            'collection' => '/api/collections/' . $collection,
+            'collection' => '/api/collections/' . $collection->_real(),
             'name' => 'Berserk',
             'data' => [$datum]
         ]]);
