@@ -4,17 +4,27 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use App\Repository\CollectionRepository;
+use App\Repository\DatumRepository;
+use Twig\Attribute\AsTwigFunction;
 
-class AdvancedItemSearchExtension extends AbstractExtension
+class AdvancedItemSearchExtension
 {
-    #[\Override]
-    public function getFunctions(): array
+    public function __construct(
+        private readonly DatumRepository $datumRepository,
+        private readonly CollectionRepository $collectionRepository
+    ) {
+    }
+    
+    #[AsTwigFunction('getListValuesFromDatumLabelAndType')]
+    public function getListValuesFromDatumLabelAndType(?string $label, string $type): array
     {
-        return [
-            new TwigFunction('getListValuesFromDatumLabelAndType', [AdvancedItemSearchRuntime::class, 'getListValuesFromDatumLabelAndType']),
-            new TwigFunction('getUserCollections', [AdvancedItemSearchRuntime::class, 'getUserCollections']),
-        ];
+        return $this->datumRepository->findAllUniqueListValues($label, $type);
+    }
+
+    #[AsTwigFunction('getUserCollections')]
+    public function getUserCollections(): array
+    {
+        return $this->collectionRepository->findBy([], ['title' => 'ASC']);
     }
 }

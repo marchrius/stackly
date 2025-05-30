@@ -4,19 +4,24 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
+use Twig\Attribute\AsTwigFunction;
 use Twig\Environment;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
 
-class FooterExtension extends AbstractExtension
+class FooterExtension
 {
-    #[\Override]
-    public function getFunctions(): array
+    #[AsTwigFunction('renderFooter')]
+    public function renderFooter(Environment $environment, $object): string
     {
-        return [
-            new TwigFunction('renderFooter', static function (Environment $environment, $object): string {
-                return (new FooterRuntime())->renderFooter($environment, $object);
-            }, ['needs_environment' => true, 'is_safe' => ['html']]),
-        ];
+        if (property_exists($object, 'createdAt') && property_exists($object, 'updatedAt') && property_exists($object, 'seenCounter')) {
+            $class = $object::class;
+            $class = strtolower(substr($class, strrpos($class, '\\') + 1));
+
+            return $environment->render('App/_partials/_footer.html.twig', [
+                'object' => $object,
+                'class' => $class,
+            ]);
+        }
+
+        return '';
     }
 }

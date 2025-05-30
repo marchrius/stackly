@@ -4,36 +4,229 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
-use Twig\TwigFunction;
+use App\Entity\Tag;
+use App\Enum\DatumTypeEnum;
+use App\Model\BreadcrumbElement;
+use App\Repository\TagRepository;
+use App\Service\ConfigurationHelper;
+use App\Service\ContextHandler;
+use App\Service\FeatureChecker;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Attribute\AsTwigFilter;
+use Twig\Attribute\AsTwigFunction;
 
-class AppExtension extends AbstractExtension
+readonly class AppExtension
 {
-    #[\Override]
-    public function getFilters(): array
-    {
-        return [
-            new TwigFilter('bytes', [AppRuntime::class, 'bytes']),
-            new TwigFilter('highlightTags', [AppRuntime::class, 'highlightTags'], ['is_safe' => ['html']]),
-            new TwigFilter('jsonDecode', [AppRuntime::class, 'jsonDecode']),
-            new TwigFilter('base64Encode', [AppRuntime::class, 'base64Encode']),
-            new TwigFilter('mimetype', [AppRuntime::class, 'mimetype']),
-            new TwigFilter('unique', [AppRuntime::class, 'unique']),
-        ];
+    public function __construct(
+        private TranslatorInterface $translator,
+        private RouterInterface $router,
+        private TagRepository $tagRepository,
+        private ContextHandler $contextHandler,
+        private FeatureChecker $featureChecker,
+        private ConfigurationHelper $configurationHelper,
+        #[Autowire('%kernel.project_dir%/public')] private string $publicPath,
+        #[Autowire('%kernel.project_dir%/assets/styles/themes')] private string $themesPath,
+    ) {
     }
 
-    #[\Override]
-    public function getFunctions(): array
+    #[AsTwigFilter('bytes')]
+    public function bytes(float $bytes, int $precision = 2): string
     {
-        return [
-            new TwigFunction('renderTitle', [AppRuntime::class, 'renderTitle']),
-            new TwigFunction('getUnderlinedTags', [AppRuntime::class, 'getUnderlinedTags'], ['is_safe' => ['html']]),
-            new TwigFunction('isFeatureEnabled', [AppRuntime::class, 'isFeatureEnabled']),
-            new TwigFunction('fileSize', [AppRuntime::class, 'fileSize']),
-            new TwigFunction('getDefaultLightThemeColors', [AppRuntime::class, 'getDefaultLightThemeColors']),
-            new TwigFunction('getDefaultDarkThemeColors', [AppRuntime::class, 'getDefaultDarkThemeColors']),
-            new TwigFunction('getConfigurationValue', [AppRuntime::class, 'getConfigurationValue']),
-        ];
+        $base = $bytes > 0 ? log($bytes, 1024) : $bytes;
+
+        $suffixes = ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'];
+
+        return round(pow(1024, $base - floor($base)), $precision) . ' ' . $suffixes[floor($base)] . $this->translator->trans('global.byte_abbreviation');
+    }
+
+    #[AsTwigFunction('renderTitle')]
+    public function renderTitle(array $breadcrumb): string
+    {
+        $element = array_shift($breadcrumb);
+
+        if ($element instanceof BreadcrumbElement && isset($element->getParams()['username'])) {
+            return $this->translator->trans($element->getLabel(), ['username' => $element->getParams()['username']]);
+        }
+
+        $element = [] === $breadcrumb ? $element : array_pop($breadcrumb);
+
+        if ($element instanceof BreadcrumbElement) {
+            if ('action' === $element->getType()) {
+                $entityElement = array_pop($breadcrumb);
+
+                if ($entityElement instanceof BreadcrumbElement && null !== $entityElement->getEntity()) {
+                    $class = (new \ReflectionClass($entityElement->getEntity()))->getShortName();
+
+                    return $this->translator->trans('global.entities.' . strtolower($class)) . ' · ' . $entityElement->getLabel() . ' · ' . $this->translator->trans($element->getLabel());
+                } elseif (str_contains($element->getLabel(), 'breadcrumb.')) {
+                    return $this->translator->trans($element->getLabel());
+                }
+
+                return $this->translator->trans('label.search') . ' · ' . $element->getLabel();
+            }
+
+            if ('entity' === $element->getType()) {
+                $class = (new \ReflectionClass($element->getEntity()))->getShortName();
+                $pieces = preg_split('/(?=[A-Z])/', lcfirst($class));
+                $class = implode('_', $pieces);
+                $class = strtolower($class);
+
+                return $this->translator->trans('global.entities.' . strtolower($class)) . ' · ' . $element->getLabel();
+            }
+
+            if ('root' === $element->getType()) {
+                if ('shared' === $this->contextHandler->getContext()) {
+                    return $this->translator->trans($element->getLabel() . '_shared', ['username' => $this->contextHandler->getUsername()]);
+                }
+
+                return $this->translator->trans($element->getLabel());
+            }
+        }
+
+        return $this->translator->trans('global.koillection');
+    }
+
+    #[AsTwigFilter('highlightTags', isSafe: ['html'])]
+    public function highlightTags(?string $text): array|string|null
+    {
+        if (null === $text) {
+            return null;
+        }
+
+        $tags = $this->tagRepository->findAllForHighlight();
+
+        $words = [];
+        foreach ($tags as $tag) {
+            $id = \is_string($tag['id']) ? $tag['id'] : $tag['id']->toString();
+            $words[$id] = preg_quote($tag['label'], '/');
+        }
+
+        return preg_replace_callback(
+            "/\b(" . implode('|', $words) . ")\b/ui",
+            function ($matches) use ($words) {
+                $id = array_search(preg_quote(strtolower($matches[1]), '/'), array_map('strtolower', $words), true);
+
+                $route = $this->contextHandler->getRouteContext('app_tag_show');
+                $route = $this->router->generate($route, ['id' => $id]);
+
+                return "<a href='{$route}'>$matches[1]</a>";
+            },
+            $text
+        );
+    }
+
+    #[AsTwigFilter('jsonDecode')]
+    public function jsonDecode(?string $string): array
+    {
+        if ($string === null || $string === '') {
+            return [];
+        }
+
+        return json_decode($string, true);
+    }
+
+    #[AsTwigFunction('getUnderlinedTags', isSafe: ['html'])]
+    public function getUnderlinedTags(?iterable $data): array
+    {
+        if (!$this->isFeatureEnabled('tags') || empty($data)) {
+            return [];
+        }
+
+        $texts = [];
+        foreach ($data as $datum) {
+            if (null !== $datum->getValue()) {
+                if ($datum->getType() === DatumTypeEnum::TYPE_CHOICE_LIST || $datum->getType() === DatumTypeEnum::TYPE_LIST) {
+                    $texts = array_merge($texts, json_decode($datum->getValue(), true));
+                } else {
+                    $texts = array_merge($texts, explode(',', $datum->getValue()));
+                }
+            }
+        }
+
+        $texts = array_map(static function ($text): string {
+            return trim($text);
+        }, $texts);
+        $tags = $this->tagRepository->findBy(['label' => $texts]);
+
+        $results = [];
+        foreach ($texts as $text) {
+            $matchingTag = null;
+            foreach ($tags as $tag) {
+                if ($text === $tag->getLabel()) {
+                    $matchingTag = $tag;
+                    break;
+                }
+            }
+
+            if ($matchingTag instanceof Tag) {
+                $route = $this->contextHandler->getRouteContext('app_tag_show');
+                $url = $this->router->generate($route, ['id' => $matchingTag->getId()]);
+                $results[$text] = $url;
+            }
+        }
+
+        return $results;
+    }
+
+    #[AsTwigFunction('isFeatureEnabled')]
+    public function isFeatureEnabled(string $feature): bool
+    {
+        return $this->featureChecker->isFeatureEnabled($feature);
+    }
+
+    #[AsTwigFunction('fileSize')]
+    public function fileSize(string $path): int
+    {
+        return is_file($path) ? filesize($path) : 0;
+    }
+
+    #[AsTwigFilter('base64Encode')]
+    public function base64Encode(string $path): string
+    {
+        return base64_encode(file_get_contents($this->publicPath . '/' . $path));
+    }
+
+    #[AsTwigFunction('getDefaultLightThemeColors')]
+    public function getDefaultLightThemeColors(): ?string
+    {
+        $path = $this->themesPath . '/light.css';
+        $content = file_get_contents($path);
+        preg_match('/:root {(.*?)}/ms', $content, $matches);
+
+        return $matches[0];
+    }
+
+    #[AsTwigFunction('getDefaultDarkThemeColors')]
+    public function getDefaultDarkThemeColors(): ?string
+    {
+        $path = $this->themesPath . '/dark.css';
+        $content = file_get_contents($path);
+        preg_match('/:root {(.*?)}/ms', $content, $matches);
+
+        return $matches[0];
+    }
+
+    #[AsTwigFunction('getConfigurationValue')]
+    public function getConfigurationValue(string $label): ?string
+    {
+        return $this->configurationHelper->getValue($label);
+    }
+
+    #[AsTwigFilter('mimetype')]
+    public function mimetype(string $path): string
+    {
+        return mime_content_type($path);
+    }
+
+    #[AsTwigFilter('unique')]
+    public function unique(?array $array): array
+    {
+        if ($array === null) {
+            return [];
+        }
+
+        return array_unique($array);
     }
 }

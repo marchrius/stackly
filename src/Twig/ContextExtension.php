@@ -4,27 +4,50 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
-use Twig\TwigFunction;
+use App\Entity\Album;
+use App\Entity\Collection;
+use App\Entity\User;
+use App\Entity\Wishlist;
+use App\Service\CachedValuesGetter;
+use App\Service\ContextHandler;
+use Twig\Attribute\AsTwigFilter;
+use Twig\Attribute\AsTwigFunction;
 
-class ContextExtension extends AbstractExtension
+class ContextExtension
 {
-    #[\Override]
-    public function getFilters(): array
-    {
-        return [
-            new TwigFilter('applyContext', [ContextRuntime::class, 'applyContext']),
-            new TwigFilter('applyContextTrans', [ContextRuntime::class, 'applyContextTrans']),
-        ];
+    public function __construct(
+        private readonly ContextHandler $contextHandler,
+        private readonly CachedValuesGetter $cachedValuesGetter
+    ) {
     }
 
-    #[\Override]
-    public function getFunctions(): array
+    #[AsTwigFunction('getContextUser')]
+    public function getContextUser(): User
     {
-        return [
-            new TwigFunction('getContextUser', [ContextRuntime::class, 'getContextUser']),
-            new TwigFunction('getCachedValues', [ContextRuntime::class, 'getCachedValues'])
-        ];
+        return $this->contextHandler->getContextUser();
+    }
+
+    #[AsTwigFilter('applyContext')]
+    public function applyContext(string $route): string
+    {
+        return $this->contextHandler->getRouteContext($route);
+    }
+
+    #[AsTwigFilter('applyContextTrans')]
+    public function applyContextTrans(string $trans): string
+    {
+        $context = $this->contextHandler->getContext();
+
+        if ('shared' === $context) {
+            $trans .= '_' . $context;
+        }
+
+        return $trans;
+    }
+
+    #[AsTwigFunction('getCachedValues')]
+    public function getCachedValues(Collection|Album|Wishlist $entity)
+    {
+        return $this->cachedValuesGetter->getCachedValues($entity);
     }
 }

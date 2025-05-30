@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
+use App\Entity\DisplayConfiguration;
+use App\Service\ArraySorter;
+use Twig\Attribute\AsTwigFilter;
 
-class ArrayExtension extends AbstractExtension
+class ArrayExtension
 {
-    #[\Override]
-    public function getFilters(): array
-    {
-        return [
-            new TwigFilter('naturalSorting', [ArrayRuntime::class, 'naturalSorting']),
-        ];
+    public function __construct(
+        private readonly ArraySorter $arraySorter
+    ) {
+    }
+
+    #[AsTwigFilter('naturalSorting')]
+    public function naturalSorting(
+        iterable $array, ?DisplayConfiguration $displayConfiguration = null
+    ): array {
+        return $this->arraySorter->sort($array, $displayConfiguration);
     }
 }

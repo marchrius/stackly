@@ -4,27 +4,76 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use App\Enum\CurrencyEnum;
+use Symfony\Component\Intl\Countries;
+use Twig\Attribute\AsTwigFunction;
 
-class IntlExtension extends AbstractExtension
+class IntlExtension
 {
-    #[\Override]
-    public function getFunctions(): array
+    private readonly array $countries;
+
+    public function __construct()
     {
-        return [
-            new TwigFunction('getCurrenciesList', static function (): array {
-                return (new IntlRuntime())->getCurrenciesList();
-            }),
-            new TwigFunction('getCountriesList', static function (): array {
-                return (new IntlRuntime())->getCountriesList();
-            }),
-            new TwigFunction('getCountryName', static function (string $code): string {
-                return (new IntlRuntime())->getCountryName($code);
-            }),
-            new TwigFunction('getCountryFlag', static function (string $code): string {
-                return (new IntlRuntime())->getCountryFlag($code);
-            }),
-        ];
+        $this->countries = Countries::getNames();
+    }
+
+    #[AsTwigFunction('getCurrenciesList')]
+    public function getCurrenciesList(): array
+    {
+        $currencies = [];
+
+        foreach (CurrencyEnum::getCurrencyLabels() as $currencyCode => $name) {
+            $currencies[] = [
+                'name' => $name,
+                'code' => $currencyCode,
+            ];
+        }
+
+        return $currencies;
+    }
+
+    public function getEmojiFlag(string $countryCode): string
+    {
+        $countryCode = mb_strtoupper($countryCode);
+        if ($countryCode === 'EN') {
+            $countryCode = 'US';
+        }
+
+        if (\strlen($countryCode) > 2) {
+            $countryCode = substr($countryCode, -2);
+        }
+
+        $regionalOffset = 0x1F1A5;
+
+        return mb_chr($regionalOffset + mb_ord($countryCode[0], 'UTF-8'), 'UTF-8')
+            . mb_chr($regionalOffset + mb_ord($countryCode[1], 'UTF-8'), 'UTF-8');
+    }
+
+    #[AsTwigFunction('getCountriesList')]
+    public function getCountriesList(): array
+    {
+        $countries = [];
+
+        foreach ($this->countries as $countryCode => $name) {
+            $countries[] = [
+                'name' => $name,
+                'code' => $countryCode,
+                'flag' => $this->getEmojiFlag($countryCode),
+            ];
+        }
+
+        return $countries;
+    }
+
+    #[AsTwigFunction('getCountryName')]
+    public function getCountryName(string $code): string
+    {
+        return $this->countries[$code];
+    }
+
+    #[AsTwigFunction('getCountryFlag')]
+    public function getCountryFlag(string $code): string
+    {
+        return $this->getEmojiFlag($code);
     }
 }

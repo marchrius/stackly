@@ -4,17 +4,26 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use App\Entity\User;
+use App\Service\DiskUsageCalculator;
+use Twig\Attribute\AsTwigFunction;
 
-class DiskUsageExtension extends AbstractExtension
+class DiskUsageExtension
 {
-    #[\Override]
-    public function getFunctions(): array
+    public function __construct(
+        private readonly DiskUsageCalculator $diskUsageCalculator
+    ) {
+    }
+
+    #[AsTwigFunction('getSpaceUsedByUser')]
+    public function getSpaceUsedByUser(User $user): float
     {
-        return [
-            new TwigFunction('getSpaceUsedByUser', [DiskUsageRuntime::class, 'getSpaceUsedByUser']),
-            new TwigFunction('getSpaceUsedByUsers', [DiskUsageRuntime::class, 'getSpaceUsedByUsers']),
-        ];
+        return $this->diskUsageCalculator->getSpaceUsedByUser($user);
+    }
+
+    #[AsTwigFunction('getSpaceUsedByUsers')]
+    public function getSpaceUsedByUsers(): float
+    {
+        return $this->diskUsageCalculator->getSpaceUsedByUsers();
     }
 }

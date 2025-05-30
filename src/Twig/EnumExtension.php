@@ -4,19 +4,41 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use App\Enum\CurrencyEnum;
+use App\Enum\RoleEnum;
+use App\Service\LocaleHelper;
+use Twig\Attribute\AsTwigFunction;
 
-class EnumExtension extends AbstractExtension
+readonly class EnumExtension
 {
-    #[\Override]
-    public function getFunctions(): array
+    public function __construct(
+        private LocaleHelper $localeHelper
+    ) {
+    }
+
+    #[AsTwigFunction('getCurrencySymbol')]
+    public function getCurrencySymbol(string $code): ?string
     {
-        return [
-            new TwigFunction('getCurrencySymbol', [EnumRuntime::class, 'getCurrencySymbol']),
-            new TwigFunction('getRoleLabel', [EnumRuntime::class, 'getRoleLabel']),
-            new TwigFunction('getLocales', [EnumRuntime::class, 'getLocales']),
-            new TwigFunction('getLocaleLabel', [EnumRuntime::class, 'getLocaleLabel'])
-        ];
+        return CurrencyEnum::getSymbolFromCode($code);
+    }
+
+    #[AsTwigFunction('getRoleLabel')]
+    public function getRoleLabel(string $role): string
+    {
+        return RoleEnum::getRoleLabel($role);
+    }
+
+    #[AsTwigFunction('getLocales')]
+    public function getLocales(): array
+    {
+        return $this->localeHelper->getLocaleLabels();
+    }
+
+    #[AsTwigFunction('getLocaleLabel')]
+    public function getLocaleLabel(string $code): string
+    {
+        $this->localeHelper->getLocaleLabels();
+
+        return $this->localeHelper->getLocaleLabels()[$code] ?? $this->localeHelper->getLocaleLabels()[$this->localeHelper->getDefaultLocale()];
     }
 }
