@@ -33,8 +33,7 @@ abstract class HtmlScraper
         } else {
             $response = $this->client->request(
                 'GET',
-                $scraping->getUrl(),
-                ['timeout' => 2.5]
+                $scraping->getUrl()                
             );
 
             if (200 !== $response->getStatusCode()) {
