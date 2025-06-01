@@ -53,7 +53,7 @@ class BreadcrumbExtension
         return $breadcrumb;
     }
 
-    #[AsTwigFunction('renderBreadcrumb')]
+    #[AsTwigFunction('renderBreadcrumb', isSafe: ['html'])]
     public function renderBreadcrumb(Environment $environment, array $breadcrumb): string
     {
         return $environment->render('App/_partials/_breadcrumb/_base.html.twig', [

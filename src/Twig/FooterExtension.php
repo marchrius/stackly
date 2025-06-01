@@ -9,7 +9,7 @@ use Twig\Environment;
 
 class FooterExtension
 {
-    #[AsTwigFunction('renderFooter')]
+    #[AsTwigFunction('renderFooter', isSafe: ['html'])]
     public function renderFooter(Environment $environment, $object): string
     {
         if (property_exists($object, 'createdAt') && property_exists($object, 'updatedAt') && property_exists($object, 'seenCounter')) {
