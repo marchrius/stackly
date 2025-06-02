@@ -35,4 +35,4 @@ jobs:
           file: Dockerfile.frankenphp
           push: true
           tags: docker.io/koillection/koillection:frankenphp,docker.io/koillection/koillection:latest-frankenphp,docker.io/koillection/koillection:1.6.13-frankenphp
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64,linux/riscv64
