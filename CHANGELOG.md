@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.14] / 2025-06-05
+### Fixes
+- Allow special characters in custom CSS (benjaminjonard)
+- Remove restrictive timeout on scraper (benjaminjonard)
+
+### Miscellaneous
+- Grayscale thumbnail when item is loaned
+- Upgrade PHP and JS dependencies, upgrade to Symfony 7.3 (benjaminjonard)
+- Update translations, thanks to all contributors on [Crowdin](https://crowdin.com/project/koillection)
+
 ## [1.6.13] / 2025-04-30
 ### Features
 - Add blank line field type (benjaminjonard)
