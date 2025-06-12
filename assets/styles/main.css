@@ -1533,6 +1533,7 @@ html.loading:before {
 @media (max-width: 600px) {
     .data-holder .input-field.datum-input-field {
         margin: 0 10px;
+        min-height: 55px;
     }
 }
 
