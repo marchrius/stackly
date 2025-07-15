@@ -73,12 +73,13 @@ class CollectionCountersTest extends AppTestCase
 
         // Act
         $newParentCollection = CollectionFactory::createOne(['owner' => $user]);
-        $collectionLevel3->_withoutAutoRefresh(
-            function (Collection $collectionLevel3) use ($newParentCollection) {
-                $collectionLevel3->setParent($newParentCollection->_real());
-            }
-        );
+        $collectionLevel3->setParent($newParentCollection->_real());
         $collectionLevel3->_save();
+
+        $collectionLevel1->_refresh();
+        $collectionLevel2->_refresh();
+        $collectionLevel3->_refresh();
+        $collectionLevel4->_refresh();
 
         $this->refreshCachedValuesQueue->process();
 

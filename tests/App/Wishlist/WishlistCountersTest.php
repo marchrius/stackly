@@ -72,12 +72,13 @@ class WishlistCountersTest extends AppTestCase
 
         // Act
         $newParentWishlist = WishlistFactory::createOne(['owner' => $user]);
-        $wishlistLevel3->_withoutAutoRefresh(
-            function (Wishlist $wishlistLevel3) use ($newParentWishlist) {
-                $wishlistLevel3->setParent($newParentWishlist->_real());
-            }
-        );
+        $wishlistLevel3->setParent($newParentWishlist->_real());
         $wishlistLevel3->_save();
+
+        $wishlistLevel1->_refresh();
+        $wishlistLevel2->_refresh();
+        $wishlistLevel3->_refresh();
+        $wishlistLevel4->_refresh();
 
         $this->refreshCachedValuesQueue->process();
 

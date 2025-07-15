@@ -73,12 +73,13 @@ class AlbumCountersTest extends AppTestCase
         // Act
         $user = UserFactory::createOne()->_real();
         $newParentAlbum = AlbumFactory::createOne(['owner' => $user]);
-        $albumLevel3->_withoutAutoRefresh(
-            function (Album $albumLevel3) use ($newParentAlbum) {
-                $albumLevel3->setParent($newParentAlbum->_real());
-            }
-        );
+        $albumLevel3->setParent($newParentAlbum->_real());
         $albumLevel3->_save();
+
+        $albumLevel1->_refresh();
+        $albumLevel2->_refresh();
+        $albumLevel3->_refresh();
+        $albumLevel4->_refresh();
 
         $this->refreshCachedValuesQueue->process();
 
