@@ -86,7 +86,7 @@ class SearchFilterType extends AbstractType
                     $labels[''] = '';
 
                     foreach ($this->datumRepository->findAllUniqueLabels() as $datum) {
-                        $labels["{$datum['label']} <i>({$datum['type']})</i>"] = "{$datum['label']}_koillection_separator_{$datum['type']}";
+                        $labels["{$datum['label']} ({$datum['type']})"] = "{$datum['label']}_koillection_separator_{$datum['type']}";
                     }
 
                     $form
@@ -168,7 +168,7 @@ class SearchFilterType extends AbstractType
                     $labels[''] = '';
 
                     foreach ($this->datumRepository->findAllUniqueLabels() as $datum) {
-                        $labels["{$datum['label']} <i>({$datum['type']})</i>"] = "{$datum['label']}_koillection_separator_{$datum['type']}";
+                        $labels["{$datum['label']} ({$datum['type']})"] = "{$datum['label']}_koillection_separator_{$datum['type']}";
                     }
 
                     list($label, $type) = explode('_koillection_separator_', $data['datum']);
