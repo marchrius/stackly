@@ -15,6 +15,17 @@
         <h1>{{ 'menu.saved_searches'|trans }}</h1>
     </div>
 
+    <div class="btn-holder">
+        <div>
+            {% if context == 'default' %}
+                <a href="{{ path('app_advanced_item_search_index') }}" class="button"
+                   title="{{ 'tooltip.add_item_search'|trans }}">
+                    <i class="fa fa-plus fa-fw"></i>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
     <div class="content-block">
         <div class="block-element">
             <table class="striped">

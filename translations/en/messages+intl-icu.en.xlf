@@ -3901,5 +3901,11 @@
         <target>Tag</target>
       </segment>
     </unit>
+    <unit id="pDLfiA7" name="tooltip.add_item_search">
+      <segment state="translated">
+        <source>Create a new item search</source>
+        <target>Create a new item search</target>
+      </segment>
+    </unit>
   </file>
 </xliff>
