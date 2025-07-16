@@ -87,6 +87,8 @@ class ItemRepository extends ServiceEntityRepository
     {
         $qb = $this
             ->createQueryBuilder('i')
+            ->leftJoin('i.loans', 'l')
+            ->addSelect('l')
             ->orderBy('i.name', Criteria::ASC)
         ;
 
@@ -142,6 +144,8 @@ class ItemRepository extends ServiceEntityRepository
 
         $qb = $this
             ->createQueryBuilder('i')
+            ->leftJoin('i.loans' , 'l')
+            ->addSelect('l')
             ->where('i.collection IN (:collectionsIds)')
             ->setParameter('collectionsIds', $collectionsIds)
         ;

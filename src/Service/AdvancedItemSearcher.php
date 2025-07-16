@@ -22,6 +22,8 @@ class AdvancedItemSearcher
     {
         $qb = $this->itemRepository
             ->createQueryBuilder('item')
+            ->addSelect('loan')
+            ->leftJoin('item.loans', 'loan')
         ;
 
         foreach ($search->getBlocks() as $blockKey => $block) {
@@ -35,6 +37,7 @@ class AdvancedItemSearcher
                 $filterParts[] = match ($filter->getType()) {
                     TypeEnum::TYPE_NAME => $this->buildNameFilter($qb, $filter->getOperator(), $filter->getValue()),
                     TypeEnum::TYPE_COLLECTION => $this->buildCollectionFilter($qb, $filter->getOperator(), $filter->getValue()),
+                    TypeEnum::TYPE_TAG => $this->buildTagFilter($qb, $filter->getOperator(), $filter->getValue()),
                     TypeEnum::TYPE_DATUM => $this->buildDatumFilter($qb, $filter->getOperator(), $filter->getValue(), $filter->getDatumLabel(), $filter->getDatumType()),
                 };
 
@@ -95,6 +98,37 @@ class AdvancedItemSearcher
         if ($operator === OperatorEnum::OPERATOR_NOT_EQUAL) {
             $queryBuilder->setParameter($paramValue, $value);
             return "item.collection != :{$paramValue}";
+        }
+
+        return '';
+    }
+
+    private function buildTagFilter(QueryBuilder $queryBuilder, string $operator, string $value): string
+    {
+        $paramValue = uniqid('tag_value_');
+        $tagAlias = uniqid('tag_');
+
+        if ($operator === OperatorEnum::OPERATOR_EQUAL) {
+            $queryBuilder->leftJoin('item.tags', $tagAlias, 'WITH', "$tagAlias.id = :{$paramValue}");
+            $queryBuilder->setParameter($paramValue, $value);
+            return "$tagAlias.id IS NOT NULL";
+        }
+
+        if ($operator === OperatorEnum::OPERATOR_NOT_EQUAL) {
+            $tagSubqueryAlias = uniqid('tag_subquery_');
+            $itemSubqueryAlias = uniqid('item_subquery_');
+
+            $sub = $this->itemRepository->createQueryBuilder($itemSubqueryAlias)
+                ->select('1')
+                ->join("$itemSubqueryAlias.tags", "$tagSubqueryAlias")
+                ->where("$itemSubqueryAlias = item")
+                ->andWhere("$tagSubqueryAlias.id = :{$paramValue}")
+                ->getDQL()
+            ;
+
+            $queryBuilder->setParameter($paramValue, $value);
+
+            return "NOT EXISTS ($sub)";
         }
 
         return '';

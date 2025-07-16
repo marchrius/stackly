@@ -97,6 +97,13 @@
             </a>
         </li>
     {% endif %}
+
+    <li class="{{ 'advanced-item-search' in route ? 'current' }} sidebar-element">
+        <a href="{{ path('app_advanced_item_search_saved_searches') }}">
+            <i class="fa fa-search fa-fw"></i>
+            <span>{{ 'menu.saved_searches'|trans }}</span>
+        </a>
+    </li>
 {% endif %}
 
 {% if isFeatureEnabled('history') or isFeatureEnabled('statistics') %}

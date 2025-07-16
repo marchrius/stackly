@@ -133,6 +133,14 @@ class AdvancedItemSearchController extends AbstractController
             $valueInput = $this->render('App/AdvancedItemSearch/_input_collection.html.twig')->getContent();
         }
 
+        if ($type === TypeEnum::TYPE_TAG) {
+            $operatorInput = $this->render('App/AdvancedItemSearch/_input_operator.html.twig', [
+                'operators' => OperatorEnum::getOperatorsByType('tag_name')
+            ])->getContent();
+
+            $valueInput = $this->render('App/AdvancedItemSearch/_input_tag.html.twig')->getContent();
+        }
+
         if ($type === TypeEnum::TYPE_DATUM) {
             $labels = [];
             foreach ($datumRepository->findAllUniqueLabels() as $datum) {

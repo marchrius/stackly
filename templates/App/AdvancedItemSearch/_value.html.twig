@@ -2,6 +2,8 @@
     {{ include('/App/AdvancedItemSearch/_input_text.html.twig') }}
 {% elseif type == 'collection' %}
     {{ include('/App/AdvancedItemSearch/_input_collection.html.twig') }}
+{% elseif type == 'tag' %}
+    {{ include('/App/AdvancedItemSearch/_input_tag.html.twig') }}
 {% elseif datumType == 'country' %}
     {{ include('/App/AdvancedItemSearch/_input_country.html.twig') }}
 {% elseif datumType == 'date' %}

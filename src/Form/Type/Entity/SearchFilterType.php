@@ -72,6 +72,15 @@ class SearchFilterType extends AbstractType
                     ;
                 }
 
+                if ($data->getType() === TypeEnum::TYPE_TAG) {
+                    $form
+                        ->add('operator', ChoiceType::class, [
+                            'choices' => array_flip(OperatorEnum::getOperatorsByType('tag_name')),
+                            'required' => true,
+                        ])
+                    ;
+                }
+
                 if ($data->getType() === TypeEnum::TYPE_DATUM) {
                     $labels = [];
                     $labels[''] = '';
@@ -134,6 +143,18 @@ class SearchFilterType extends AbstractType
                     $form
                         ->add('operator', ChoiceType::class, [
                             'choices' => array_flip(OperatorEnum::getOperatorsByType('collection_name')),
+                            'required' => true,
+                        ])
+                        ->add('value', TextType::class, [
+                            'required' => true,
+                        ])
+                    ;
+                }
+
+                if ($data['type'] === TypeEnum::TYPE_TAG) {
+                    $form
+                        ->add('operator', ChoiceType::class, [
+                            'choices' => array_flip(OperatorEnum::getOperatorsByType('tag_name')),
                             'required' => true,
                         ])
                         ->add('value', TextType::class, [

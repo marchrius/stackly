@@ -64,7 +64,7 @@ class OperatorEnum
                 OperatorEnum::OPERATOR_CONTAINS => OperatorEnum::getLabelFromName(OperatorEnum::OPERATOR_CONTAINS),
                 OperatorEnum::OPERATOR_DOES_NOT_CONTAIN => OperatorEnum::getLabelFromName(OperatorEnum::OPERATOR_DOES_NOT_CONTAIN),
             ],
-            DatumTypeEnum::TYPE_COUNTRY, DatumTypeEnum::TYPE_CHECKBOX, 'collection_name' => [
+            DatumTypeEnum::TYPE_COUNTRY, DatumTypeEnum::TYPE_CHECKBOX, 'collection_name', 'tag_name' => [
                 OperatorEnum::OPERATOR_EQUAL => OperatorEnum::getLabelFromName(OperatorEnum::OPERATOR_EQUAL),
                 OperatorEnum::OPERATOR_NOT_EQUAL => OperatorEnum::getLabelFromName(OperatorEnum::OPERATOR_NOT_EQUAL)
             ],
@@ -83,7 +83,7 @@ class OperatorEnum
             default => []
         };
 
-        if ($type !== 'item_name' && $type !== 'collection_name') {
+        if ($type !== 'item_name' && $type !== 'collection_name' && $type !== 'tag_name') {
             $operators[OperatorEnum::OPERATOR_EMPTY] = OperatorEnum::getLabelFromName(OperatorEnum::OPERATOR_EMPTY);
             $operators[OperatorEnum::OPERATOR_NOT_EMPTY] = OperatorEnum::getLabelFromName(OperatorEnum::OPERATOR_NOT_EMPTY);
             $operators[OperatorEnum::OPERATOR_EXISTS] = OperatorEnum::getLabelFromName(OperatorEnum::OPERATOR_EXISTS);
