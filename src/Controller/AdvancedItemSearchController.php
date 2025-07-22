@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\DisplayConfiguration;
 use App\Entity\Search;
 use App\Enum\AdvancedItemSearch\OperatorEnum;
 use App\Enum\AdvancedItemSearch\TypeEnum;
@@ -83,11 +84,17 @@ class AdvancedItemSearchController extends AbstractController
         $search->setNumberOfResults(\count($results));
         $managerRegistry->getManager()->flush();
 
+        $displayConfiguration = new DisplayConfiguration()
+            ->setColumns($search->getColumns())
+            ->setShowActions(false)
+        ;
+
         return $this->render('App/AdvancedItemSearch/show.html.twig', [
             'form' => $form,
             'search' => $search,
             'results' => $results,
-            'searches' => $searchRepository->findAll()
+            'searches' => $searchRepository->findAll(),
+            'displayConfiguration' => $displayConfiguration
         ]);
     }
 

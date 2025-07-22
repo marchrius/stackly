@@ -28,12 +28,15 @@ class Search implements BreadcrumbableInterface
     #[ORM\Column(type: Types::BIGINT, nullable: true)]
     private ?int $numberOfResults = null;
 
-    #[ORM\Column(type: Types::STRING, nullable: true, options: ['default' => DisplayModeEnum::DISPLAY_MODE_GRID])]
-    private ?string $displayMode = DisplayModeEnum::DISPLAY_MODE_GRID;
-
     #[ORM\OneToMany(targetEntity: SearchBlock::class, mappedBy: 'search', cascade: ['persist'], orphanRemoval: true)]
     #[ORM\OrderBy(['id' => Order::Ascending->value])]
     private DoctrineCollection $blocks;
+
+    #[ORM\Column(type: Types::STRING, nullable: true, options: ['default' => DisplayModeEnum::DISPLAY_MODE_GRID])]
+    private ?string $displayMode = DisplayModeEnum::DISPLAY_MODE_GRID;
+
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $columns = [];
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $owner = null;
@@ -128,6 +131,18 @@ class Search implements BreadcrumbableInterface
     public function setNumberOfResults(?int $numberOfResults): Search
     {
         $this->numberOfResults = $numberOfResults;
+
+        return $this;
+    }
+
+    public function getColumns(): ?array
+    {
+        return $this->columns;
+    }
+
+    public function setColumns(?array $columns): Search
+    {
+        $this->columns = $columns;
 
         return $this;
     }

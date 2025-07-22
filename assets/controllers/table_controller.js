@@ -7,7 +7,7 @@ export default class extends Controller {
         const column = event.target.dataset.column;
         const direction = event.target.dataset.direction;
         const values = this.element.querySelectorAll(`tbody td[data-column="${column}"] span[data-value]`);
-        const type = values[0].dataset.type;
+        const type = (Array.from(values).find(el => el.dataset.type) || {}).dataset?.type || null;
 
         let orderedValues;
         if (type === 'string') {

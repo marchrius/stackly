@@ -44,7 +44,7 @@
             <h2 class="header">{{ 'title.results'|trans }} ({{ results|length }})</h2>
             {{ include('App/Collection/_items_' ~ search.displayMode ~ '.html.twig', {
                 'items': results,
-                'displayConfiguration': getContextUser().itemsDisplayConfiguration
+                'displayConfiguration': displayConfiguration
             }) }}
         </div>
     </div>

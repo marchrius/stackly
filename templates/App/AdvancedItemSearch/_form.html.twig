@@ -28,6 +28,7 @@
     </div>
 
     <div class="advanced-search-buttons row">
+        <span class="s12 l3 offset-l4 xl2 offset-xl5">{{ form_row(form.columns, {'attr': {'data-controller': 'select--default'}}) }}</span>
         <span class="s12 l2 offset-l6 xl1 offset-xl7">{{ form_row(form.displayMode, {'attr': {'data-controller': 'select--default'}}) }}</span>
         <button name="submit" type="submit" class="btn waves-effect waves-light">{{ 'btn.submit'|trans }}</button>
         <a href="#save-and-submit" class="s6 l1  modal-trigger btn waves-effect waves-light">
