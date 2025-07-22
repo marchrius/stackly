@@ -78,7 +78,7 @@ jobs:
     needs: [ build_docker_ci_container ]
     strategy:
       matrix:
-        mysql: [ 8 ]
+        mysql: [ 8, 9 ]
     services:
       mysql:
         image: mysql:${{ matrix.mysql }}
