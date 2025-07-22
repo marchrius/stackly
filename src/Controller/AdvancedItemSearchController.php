@@ -41,7 +41,6 @@ class AdvancedItemSearchController extends AbstractController
         $results = null;
 
         $search = new Search();
-        $search->setDisplayMode($this->getUser()?->getSearchResultsDisplayMode() ?? DisplayModeEnum::DISPLAY_MODE_GRID);
         $form = $this->createForm(SearchType::class, $search);
 
         $form->handleRequest($request);
