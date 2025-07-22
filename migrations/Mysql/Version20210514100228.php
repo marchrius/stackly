@@ -17,7 +17,7 @@ final class Version20210514100228 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof MySQLPlatform, 'Migration can only be executed safely on \'mysql\' or \'mariadb\'.');
+        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof MySQLPlatform, 'Mysql or Mariadb migration only. Skipped.');
 
         $this->addSql('UPDATE koi_album SET visibility = "internal" WHERE visibility = "authenticated-users-only";');
         $this->addSql('UPDATE koi_collection SET visibility = "internal" WHERE visibility = "authenticated-users-only";');

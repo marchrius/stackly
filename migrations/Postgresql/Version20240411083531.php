@@ -19,7 +19,7 @@ final class Version20240411083531 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Migration can only be executed safely on \'postgresql\'.');
+        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Postgresql migration only. Skipped.');
 
         $id = Uuid::v7()->toRfc4122();
         $label = ConfigurationEnum::ENABLE_METRICS;

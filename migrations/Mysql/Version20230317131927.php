@@ -17,7 +17,7 @@ final class Version20230317131927 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof MySQLPlatform, 'Migration can only be executed safely on \'mysql\' or \'mariadb\'.');
+        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof MySQLPlatform, 'Mysql or Mariadb migration only. Skipped.');
 
         $this->addSql('ALTER TABLE koi_user ADD theme VARCHAR(255) DEFAULT \'browser\' NOT NULL, DROP dark_mode_enabled, DROP automatic_dark_mode_start_at, DROP automatic_dark_mode_end_at');
     }

@@ -17,7 +17,7 @@ final class Version20250120214033 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof MySQLPlatform, 'Migration can only be executed safely on \'mysql\' or \'mariadb\'.');
+        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof MySQLPlatform, 'Mysql or Mariadb migration only. Skipped.');
 
         $this->addSql('CREATE TABLE koi_search (id CHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, owner_id CHAR(36) DEFAULT NULL, INDEX IDX_565C814E7E3C61F9 (owner_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci`');
         $this->addSql('CREATE TABLE koi_search_block (id CHAR(36) NOT NULL, `condition` VARCHAR(255) DEFAULT NULL, search_id CHAR(36) DEFAULT NULL, INDEX IDX_591D6B98650760A9 (search_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci`');

@@ -17,7 +17,7 @@ final class Version20250120213359 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Migration can only be executed safely on \'postgresql\'.');
+        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Postgresql migration only. Skipped.');
 
         $this->addSql('CREATE TABLE koi_search (id CHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, owner_id CHAR(36) DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_565C814E7E3C61F9 ON koi_search (owner_id)');

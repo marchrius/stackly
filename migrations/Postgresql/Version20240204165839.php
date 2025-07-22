@@ -17,7 +17,7 @@ final class Version20240204165839 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Migration can only be executed safely on \'postgresql\'.');
+        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Postgresql migration only. Skipped.');
 
         $this->convertValueFromArrayToJson('koi_choice_list', 'choices');
         $this->addSql('ALTER TABLE koi_choice_list ALTER choices TYPE JSON USING choices::json');

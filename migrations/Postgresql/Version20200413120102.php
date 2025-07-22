@@ -17,7 +17,7 @@ final class Version20200413120102 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Migration can only be executed safely on \'postgresql\'.');
+        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Postgresql migration only. Skipped.');
 
         $this->addSql('ALTER TABLE koi_wishlist DROP CONSTRAINT fk_98e338d23da5256d');
         $this->addSql('ALTER TABLE koi_wish DROP CONSTRAINT fk_f670f2d53da5256d');

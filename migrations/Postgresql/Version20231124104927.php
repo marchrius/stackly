@@ -18,7 +18,7 @@ final class Version20231124104927 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Migration can only be executed safely on \'postgresql\'.');
+        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Postgresql migration only. Skipped.');
 
         $this->addSql('ALTER TABLE koi_scraper ADD type VARCHAR(15)');
         $this->addSql('UPDATE koi_scraper SET type = ?', [ScraperTypeEnum::TYPE_ITEM]);

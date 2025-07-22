@@ -17,7 +17,7 @@ final class Version20220829085551 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof MySQLPlatform, 'Migration can only be executed safely on \'mysql\' or \'mariadb\'.');
+        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof MySQLPlatform, 'Mysql or Mariadb migration only. Skipped.');
 
         $this->addSql('UPDATE koi_user SET locale = \'en\' WHERE locale = \'en-GB\';');
         $this->addSql('UPDATE koi_user SET locale = \'fr\' WHERE locale = \'fr-FR\';');

@@ -17,7 +17,7 @@ final class Version20220909073714 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Migration can only be executed safely on \'postgresql\'.');
+        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Postgresql migration only. Skipped.');
 
         $this->addSql('ALTER TABLE koi_collection ADD items_list_show_visibility BOOLEAN DEFAULT true NOT NULL');
         $this->addSql('ALTER TABLE koi_collection ADD items_list_show_actions BOOLEAN DEFAULT true NOT NULL');

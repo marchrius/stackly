@@ -18,7 +18,7 @@ final class Version20220630095604 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Migration can only be executed safely on \'postgresql\'.');
+        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Postgresql migration only. Skipped.');
 
         $this->addSql('ALTER TABLE koi_collection ADD items_display_mode VARCHAR(4)');
         $this->addSql('UPDATE koi_collection SET items_display_mode = ?', [DisplayModeEnum::DISPLAY_MODE_GRID]);

@@ -17,7 +17,7 @@ final class Version20241227132820 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Migration can only be executed safely on \'postgresql\'.');
+        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Postgresql migration only. Skipped.');
 
         $this->addSql('ALTER TABLE koi_error ADD count INT NOT NULL');
         $this->addSql('ALTER TABLE koi_error ADD last_occurrence_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL');

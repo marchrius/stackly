@@ -17,7 +17,7 @@ final class Version20220922183351 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof MySQLPlatform, 'Migration can only be executed safely on \'mysql\' or \'mariadb\'.');
+        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof MySQLPlatform, 'Mysql or Mariadb migration only. Skipped.');
 
         $this->addSql('ALTER TABLE koi_album ADD cached_values JSON NOT NULL');
         $this->addSql('ALTER TABLE koi_collection ADD cached_values JSON NOT NULL');

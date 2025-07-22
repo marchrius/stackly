@@ -17,7 +17,7 @@ final class Version20230726074848 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof MySQLPlatform, 'Migration can only be executed safely on \'mysql\' or \'mariadb\'.');
+        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof MySQLPlatform, 'Mysql or Mariadb migration only. Skipped.');
 
         $this->addSql('ALTER TABLE koi_datum CHANGE type type VARCHAR(15) NOT NULL');
         $this->addSql('ALTER TABLE koi_display_configuration CHANGE sorting_type sorting_type VARCHAR(15) DEFAULT NULL');

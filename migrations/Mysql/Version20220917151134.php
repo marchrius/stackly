@@ -19,7 +19,7 @@ final class Version20220917151134 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof MySQLPlatform, 'Migration can only be executed safely on \'mysql\' or \'mariadb\'.');
+        $this->skipIf(!$this->connection->getDatabasePlatform() instanceof MySQLPlatform, 'Mysql or Mariadb migration only. Skipped.');
 
         $this->addSql('ALTER TABLE koi_album ADD photos_display_configuration_id CHAR(36) DEFAULT NULL');
         $this->addSql('ALTER TABLE koi_album ADD CONSTRAINT FK_2DB8938A5DC99D4D FOREIGN KEY (photos_display_configuration_id) REFERENCES koi_display_configuration (id)');
