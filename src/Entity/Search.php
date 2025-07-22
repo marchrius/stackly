@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use App\Entity\Interfaces\BreadcrumbableInterface;
-use App\Enum\DisplayModeEnum;
 use App\Repository\SearchRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Order;
@@ -32,11 +32,9 @@ class Search implements BreadcrumbableInterface
     #[ORM\OrderBy(['id' => Order::Ascending->value])]
     private DoctrineCollection $blocks;
 
-    #[ORM\Column(type: Types::STRING, nullable: true, options: ['default' => DisplayModeEnum::DISPLAY_MODE_GRID])]
-    private ?string $displayMode = DisplayModeEnum::DISPLAY_MODE_GRID;
-
-    #[ORM\Column(type: Types::JSON, nullable: true)]
-    private ?array $columns = [];
+    #[ApiProperty(readableLink: false, writableLink: false)]
+    #[ORM\OneToOne(targetEntity: DisplayConfiguration::class, cascade: ['all'])]
+    private ?DisplayConfiguration $displayConfiguration = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $owner = null;
@@ -51,6 +49,8 @@ class Search implements BreadcrumbableInterface
 
         $block->addFilter($filter);
         $this->addBlock($block);
+
+        $this->displayConfiguration = new DisplayConfiguration();
     }
 
     public function __toString(): string
@@ -71,18 +71,6 @@ class Search implements BreadcrumbableInterface
     public function setName(?string $name): Search
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getDisplayMode(): string
-    {
-        return $this->displayMode;
-    }
-
-    public function setDisplayMode(string $displayMode): Search
-    {
-        $this->displayMode = $displayMode;
 
         return $this;
     }
@@ -135,14 +123,14 @@ class Search implements BreadcrumbableInterface
         return $this;
     }
 
-    public function getColumns(): ?array
+    public function getDisplayConfiguration(): ?DisplayConfiguration
     {
-        return $this->columns;
+        return $this->displayConfiguration;
     }
 
-    public function setColumns(?array $columns): Search
+    public function setDisplayConfiguration(?DisplayConfiguration $displayConfiguration): Search
     {
-        $this->columns = $columns;
+        $this->displayConfiguration = $displayConfiguration;
 
         return $this;
     }

@@ -84,17 +84,11 @@ class AdvancedItemSearchController extends AbstractController
         $search->setNumberOfResults(\count($results));
         $managerRegistry->getManager()->flush();
 
-        $displayConfiguration = new DisplayConfiguration()
-            ->setColumns($search->getColumns())
-            ->setShowActions(false)
-        ;
-
         return $this->render('App/AdvancedItemSearch/show.html.twig', [
             'form' => $form,
             'search' => $search,
             'results' => $results,
             'searches' => $searchRepository->findAll(),
-            'displayConfiguration' => $displayConfiguration
         ]);
     }
 
