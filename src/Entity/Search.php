@@ -28,7 +28,8 @@ class Search implements BreadcrumbableInterface
     #[ORM\Column(type: Types::BIGINT, nullable: true)]
     private ?int $numberOfResults = null;
 
-    private string $displayMode = DisplayModeEnum::DISPLAY_MODE_GRID;
+    #[ORM\Column(type: Types::STRING, nullable: true, options: ['default' => DisplayModeEnum::DISPLAY_MODE_GRID])]
+    private ?string $displayMode = DisplayModeEnum::DISPLAY_MODE_GRID;
 
     #[ORM\OneToMany(targetEntity: SearchBlock::class, mappedBy: 'search', cascade: ['persist'], orphanRemoval: true)]
     #[ORM\OrderBy(['id' => Order::Ascending->value])]
