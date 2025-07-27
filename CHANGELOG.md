@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.16] / 2025-07-27
+### Features
+- Add list display options on advanced search results page (benjaminjonard)
+- Add Dutch locale (jorne-tremani)
+### Miscellaneous
+- Add possibility to edit a Collection display configurations with API (benjaminjonard)
+- Update translations, thanks to all contributors on [Crowdin](https://crowdin.com/project/koillection)
+
 ## [1.6.15] / 2025-07-16
 ### Features 
 - Add tag search in advanced item search 
@@ -13,7 +21,7 @@ All notable changes to this project will be documented in this file.
 - Upgrade PHP and JS dependencies (benjaminjonard)
 - Update translations, thanks to all contributors on [Crowdin](https://crowdin.com/project/koillection)
 
-## [1.6.15] / 2025-06-05
+## [1.6.14] / 2025-06-05
 ### Fixes
 - Allow special characters in custom CSS (benjaminjonard)
 - Remove restrictive timeout on scraper (benjaminjonard)
