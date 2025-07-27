@@ -4,19 +4,26 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Put;
 use App\Enum\DatumTypeEnum;
 use App\Enum\DisplayModeEnum;
 use App\Enum\SortingDirectionEnum;
 use App\Repository\DisplayConfigurationRepository;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Order;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DisplayConfigurationRepository::class)]
 #[ORM\Table(name: 'koi_display_configuration')]
+#[ApiResource(
+    operations: []
+)]
 class DisplayConfiguration
 {
     #[ORM\Id]
@@ -27,39 +34,50 @@ class DisplayConfiguration
     private ?User $owner = null;
 
     #[ORM\Column(type: Types::STRING, nullable: true)]
+    #[Groups(['collection:read', 'collection:write'])]
     private ?string $label = null;
 
     #[ORM\Column(type: Types::STRING, length: 4)]
     #[Assert\Choice(choices: DisplayModeEnum::DISPLAY_MODES)]
+    #[Groups(['collection:read', 'collection:write'])]
     private string $displayMode = DisplayModeEnum::DISPLAY_MODE_GRID;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    #[Groups(['collection:read', 'collection:write'])]
     private ?string $sortingProperty = null;
 
     #[ORM\Column(type: Types::STRING, length: 15, nullable: true)]
     #[Assert\Choice(choices: DatumTypeEnum::TEXT_TYPES)]
+    #[Groups(['collection:read', 'collection:write'])]
     private ?string $sortingType = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\Choice(choices: SortingDirectionEnum::SORTING_DIRECTIONS)]
+    #[Groups(['collection:read', 'collection:write'])]
     private ?string $sortingDirection = Order::Ascending->value;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => 1])]
+    #[Groups(['collection:read', 'collection:write'])]
     private bool $showVisibility = true;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => 1])]
+    #[Groups(['collection:read', 'collection:write'])]
     private bool $showActions = true;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => 1])]
+    #[Groups(['collection:read', 'collection:write'])]
     private bool $showNumberOfChildren = true;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => 1])]
+    #[Groups(['collection:read', 'collection:write'])]
     private bool $showNumberOfItems = true;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => 0])]
+    #[Groups(['collection:read', 'collection:write'])]
     private bool $showItemQuantities = false;
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[Groups(['collection:read', 'collection:write'])]
     private ?array $columns = [];
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]

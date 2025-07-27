@@ -74,7 +74,7 @@ class Collection implements LoggableInterface, BreadcrumbableInterface, Cacheabl
     #[ORM\OrderBy(['title' => Order::Ascending->value])]
     private DoctrineCollection $children;
 
-    #[ApiProperty(readableLink: false, writableLink: false)]
+    #[Groups(['collection:read', 'collection:write'])]
     #[ORM\OneToOne(targetEntity: DisplayConfiguration::class, cascade: ['all'])]
     private DisplayConfiguration $childrenDisplayConfiguration;
 
@@ -90,8 +90,9 @@ class Collection implements LoggableInterface, BreadcrumbableInterface, Cacheabl
     #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'collection', cascade: ['all'])]
     private DoctrineCollection $items;
 
-    #[ApiProperty(readableLink: false, writableLink: false)]
+    #[Groups(['collection:read', 'collection:write'])]
     #[ORM\OneToOne(targetEntity: DisplayConfiguration::class, cascade: ['all'])]
+    #[Assert\Valid]
     private DisplayConfiguration $itemsDisplayConfiguration;
 
     #[ORM\OneToMany(targetEntity: Datum::class, mappedBy: 'collection', cascade: ['persist'], orphanRemoval: true)]
@@ -100,7 +101,7 @@ class Collection implements LoggableInterface, BreadcrumbableInterface, Cacheabl
     private DoctrineCollection $data;
 
     #[ORM\Column(type: Types::STRING, length: 6)]
-    #[Groups(['collection:read'])]
+    #[Groups(['collection:read', 'collection:write'])]
     private ?string $color = null;
 
     #[Upload(pathProperty: 'image', deleteProperty: 'deleteImage', maxWidth: 200, maxHeight: 200)]
@@ -388,9 +389,23 @@ class Collection implements LoggableInterface, BreadcrumbableInterface, Cacheabl
         return $this->childrenDisplayConfiguration;
     }
 
+    public function setChildrenDisplayConfiguration(DisplayConfiguration $childrenDisplayConfiguration): Collection
+    {
+        $this->childrenDisplayConfiguration = $childrenDisplayConfiguration;
+
+        return $this;
+    }
+
     public function getItemsDisplayConfiguration(): DisplayConfiguration
     {
         return $this->itemsDisplayConfiguration;
+    }
+
+    public function setItemsDisplayConfiguration(DisplayConfiguration $itemsDisplayConfiguration): Collection
+    {
+        $this->itemsDisplayConfiguration = $itemsDisplayConfiguration;
+
+        return $this;
     }
 
     public function getOrderingValue(): ?string
