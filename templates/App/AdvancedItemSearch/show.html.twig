@@ -31,8 +31,8 @@
     <div class="content-block" data-controller="advanced-search">
         <div class="block-element">
             {% if results is not null %}
-                <a href="#" data-advanced-search-target="showFiltersBtn" data-action="click->advanced-search#showFilters">{{ 'btn.show_filters'|trans }}</a>
-                <a href="#" class="hidden" data-advanced-search-target="hideFiltersBtn" data-action="click->advanced-search#hideFilters">{{ 'btn.hide_filters'|trans }}</a>
+                <a href="#" class="btn btn-grey" data-advanced-search-target="showFiltersBtn" data-action="click->advanced-search#showFilters">{{ 'btn.show_filters'|trans }}</a>
+                <a href="#" class="btn btn-grey hidden" data-advanced-search-target="hideFiltersBtn" data-action="click->advanced-search#hideFilters">{{ 'btn.hide_filters'|trans }}</a>
             {% endif %}
 
             <div data-advanced-search-target="filters" {% if results is not null %} class="hidden" {% endif %}>

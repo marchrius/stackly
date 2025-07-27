@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Put;
 use App\Enum\DatumTypeEnum;
 use App\Enum\DisplayModeEnum;
 use App\Enum\SortingDirectionEnum;
@@ -49,7 +46,7 @@ class DisplayConfiguration
     #[ORM\Column(type: Types::STRING, length: 15, nullable: true)]
     #[Assert\Choice(choices: DatumTypeEnum::TEXT_TYPES)]
     #[Groups(['collection:read', 'collection:write'])]
-    private ?string $sortingType = null;
+    private ?string $sortingType = DatumTypeEnum::TYPE_TEXT;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\Choice(choices: SortingDirectionEnum::SORTING_DIRECTIONS)]

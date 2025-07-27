@@ -88,7 +88,6 @@ table img {
     font-size: 13px !important;
     font-weight: 500 !important;
     line-height: 32px !important;
-    margin-bottom: 0px !important;
     margin-right: 5px !important;
     padding: 0 3px 0 12px !important;
 }
@@ -128,7 +127,8 @@ table img {
 }
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
-    margin-top: 11px;
+    margin-top: 10px;
+    margin-bottom: 9px;
 }
 
 a {
@@ -1768,6 +1768,10 @@ form[name="search"] input[type="checkbox"] + span, form[name="search_history"] i
     margin: 0 5px;
 }
 
+.icon-holder .fa-trash {
+    cursor: pointer;
+}
+
 .icon-holder {
     display: flex;
     text-align: center;
@@ -1825,7 +1829,8 @@ form[name="search"] input[type="checkbox"] + span, form[name="search_history"] i
 }
 
 .select2 {
-    height: 56px;
+    height: auto;
+    min-height: 56px;
 }
 
 .select2-selection {

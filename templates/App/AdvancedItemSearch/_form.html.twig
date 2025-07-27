@@ -27,24 +27,35 @@
         </div>
     </div>
 
-    <div class="row">
-        <span class="s12 l3 offset-l1 xl2 offset-xl1">{{ form_row(form.displayConfiguration.columns, {'attr': {'data-controller': 'select--default'}}) }}</span>
-        <span class="s12 l2 offset-l3 xl1 offset-xl3">{{ form_row(form.displayConfiguration.displayMode, {'attr': {'data-controller': 'select--default'}}) }}</span>
-    </div>
-
     <br>
 
-    <div class="row">
-        <span class="s12 l3 offset-l1 xl2 offset-xl1">{{ form_row(form.displayConfiguration.showActions, {'label' : 'label.list_show_actions'}) }}</span>
-        <span class="s12 l3 offset-l3 xl2 offset-xl3">{{ form_row(form.displayConfiguration.showVisibility, {'label' : 'label.list_show_visibility'}) }}</span>
-        <span class="s12 l3 offset-l5 xl2 offset-xl5">{{ form_row(form.displayConfiguration.showItemQuantities, {'label' : 'label.show_item_quantities'}) }}</span>
+    <div data-controller="list-properties">
+        <div class="row">
+            <span class="s12 l3 offset-l1 xl2 offset-xl1">
+                {{ form_row(form.displayConfiguration.displayMode, {'attr': {
+                    'data-controller': 'select--display-mode',
+                    'data-action': 'change->list-properties#displayProperties'
+                }}) }}
+            </span>
+            <span class="s12 l7 offset-l3 xl7 offset-xl3 {% if search.displayConfiguration.displayMode != 'list' %}hidden{% endif %}" data-list-properties-target="property">
+                {{ form_row(form.displayConfiguration.columns, {'attr': {'data-controller': 'select--default'}}) }}
+            </span>
+        </div>
 
-        <span class="s12 l3 offset-l6 xl2 offset-xl8">
-            <button name="submit" type="submit" class="btn waves-effect waves-light">{{ 'btn.submit'|trans }}</button>
-            <a href="#save-and-submit" class="s6 l1  modal-trigger btn waves-effect waves-light">
-                {{ 'btn.save_and_submit'|trans }}
-            </a>
-        </span>
+        <div class="row {% if search.displayConfiguration.displayMode != 'list' %}hidden{% endif %}" data-list-properties-target="property">
+            <span class="s12 l3 offset-l1 xl2 offset-xl1">{{ form_row(form.displayConfiguration.showActions, {'label' : 'label.list_show_actions'}) }}</span>
+            <span class="s12 l3 offset-l3 xl2 offset-xl3">{{ form_row(form.displayConfiguration.showVisibility, {'label' : 'label.list_show_visibility'}) }}</span>
+            <span class="s12 l3 offset-l5 xl2 offset-xl5">{{ form_row(form.displayConfiguration.showItemQuantities, {'label' : 'label.show_item_quantities'}) }}</span>
+        </div>
+
+        <div class="row">
+            <span class="s12 l3 offset-l7 xl2 offset-xl9">
+                <button name="submit" type="submit" class="btn waves-effect waves-light">{{ 'btn.submit'|trans }}</button>
+                <a href="#save-and-submit" class="s6 l1  modal-trigger btn waves-effect waves-light">
+                    {{ 'btn.save_and_submit'|trans }}
+                </a>
+            </span>
+        </div>
     </div>
 
     <div id="save-and-submit" data-controller="modal--default" class="modal modal-custom" tabindex="-1" role="dialog">
