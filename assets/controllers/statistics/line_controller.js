@@ -10,6 +10,12 @@ export default class extends Controller {
     chart = null;
 
     connect() {
+        setTimeout(() => {
+            this.initChart()
+        }, 0)
+    }
+
+    initChart() {
         let data = JSON.parse(this.element.dataset.json);
 
         let primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');

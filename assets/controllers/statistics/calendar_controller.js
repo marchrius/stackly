@@ -25,6 +25,12 @@ export default class extends Controller {
     ];
 
     connect() {
+        setTimeout(() => {
+            this.initChart()
+        }, 0)
+    }
+
+    initChart() {
         let json = JSON.parse(this.element.dataset.json);
         let year = this.element.dataset.year;
         let data = [];
