@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.17] / 2025-07-30
+### Fixes
+- Fix broken item search page (benjaminjonard)
+- Tentative fix to graph not being rendered (benjaminjonard)
+### Miscellaneous
+- Update translations, thanks to all contributors on [Crowdin](https://crowdin.com/project/koillection)
+
 ## [1.6.16] / 2025-07-27
 ### Features
 - Add list display options on advanced search results page (benjaminjonard)
