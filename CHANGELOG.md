@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.18] / 2025-08-03
+### Fixes
+- Fix tree graph when using special characters (benjaminjonard)
+### Miscellaneous
+- Upgrade PHP and JS dependencies (benjaminjonard)
+- Update translations, thanks to all contributors on [Crowdin](https://crowdin.com/project/koillection)
+
 ## [1.6.17] / 2025-07-30
 ### Fixes
 - Fix broken item search page (benjaminjonard)
