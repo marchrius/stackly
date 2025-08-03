@@ -46,12 +46,13 @@ class TreeBuilder
         $name = '';
         if ($collection instanceof Collection) {
             $title = $collection->getTitle();
-            $name = \strlen($title) > 21 ? substr($title, 0, 18) . '...' : $title;
+            $name = \mb_strlen($title) > 21 ? \mb_substr($title, 0, 18) . '...' : $title;
         }
 
         return [
             'id' => $collection instanceof Collection ? $collection->getId() : '',
             'name' => $name,
-            'children' => [], ];
+            'children' => []
+        ];
     }
 }

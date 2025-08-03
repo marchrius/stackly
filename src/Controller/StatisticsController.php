@@ -38,7 +38,7 @@ class StatisticsController extends AbstractController
         return $this->render('App/Statistics/index.html.twig', [
             'counters' => $userRepository->getCounters($user),
             'calendarData' => $calendar,
-            'treeJson' => json_encode($treeBuilder->buildCollectionTree()),
+            'treeJson' => $treeBuilder->buildCollectionTree(),
             'hoursChartData' => $chartBuilder->buildActivityByHour($user),
             'monthsChartData' => $chartBuilder->buildActivityByMonth($user),
             'monthDaysChartData' => $chartBuilder->buildActivityByMonthDay($user),

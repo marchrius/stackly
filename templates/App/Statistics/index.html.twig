@@ -125,7 +125,7 @@
                 <h2 class="statistics-title">{{ 'title.charts.radial_tree'|trans }}</h2>
                 <div data-controller="statistics--tree"
                      class="tree"
-                     data-json='{{ treeJson }}'
+                     data-json='{{ treeJson|json_encode() }}'
                      data-action="resize@window->statistics--bar#resize"
                 ></div>
             </div>
