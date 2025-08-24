@@ -1,0 +1,12 @@
+<div class="row header" data-scraper-header-target="header">
+    <div class="s5 offset-l1">
+        {{ form_row(form.header, {'label':'label.header'}) }}
+    </div>
+    <div class="s5">
+        {{ form_row(form.value, {'label':'label.value'}) }}
+    </div>
+
+    <div class="s1 icon-holder">
+        <i class="fa fa-remove fa-fw removeDatum" data-action="click->scraper-header#remove"></i>
+    </div>
+</div>

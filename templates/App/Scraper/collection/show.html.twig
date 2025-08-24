@@ -38,7 +38,18 @@
 
     <div class="content-block">
         <div class="block-element">
-            <b class="label">{{ 'label.url_pattern'|trans }} : </b>{{ scraper.urlPattern|default("-") }}
+            <div>
+                <b class="label">{{ 'label.url_pattern'|trans }} : </b>{{ scraper.urlPattern|default("-") }}
+            </div>
+
+            <br>
+
+            <div>
+                <b class="label">{{ 'label.headers'|trans }} : </b>
+                {% for header in scraper.headers %}
+                    {{ header.header }}: {{ header.value }} {{ loop.last == false ? ', ' }}
+                {% endfor %}
+            </div>
 
             <h2 class="header">{{ 'title.fields'|trans }}</h2>
 

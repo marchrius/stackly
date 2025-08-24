@@ -31,10 +31,14 @@ abstract class HtmlScraper
         if ($scraping->getFile() instanceof UploadedFile) {
             $content = $scraping->getFile()->getContent();
         } else {
-            $response = $this->client->request(
-                'GET',
-                $scraping->getUrl()                
-            );
+            $headers = [];
+            foreach ($scraping->getScraper()->getHeaders() as $header) {
+                $headers[$header['header']] = $header['value'];
+            }
+
+            $response = $this->client->request('GET', $scraping->getUrl(), [
+                'headers' => $headers
+            ]);
 
             if (200 !== $response->getStatusCode()) {
                 throw new \Exception('Api error: ' . $response->getStatusCode() . ' - ' . $response->getContent());

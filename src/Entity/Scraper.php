@@ -43,6 +43,9 @@ class Scraper implements BreadcrumbableInterface, \Stringable
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $pricePath = null;
 
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $headers = [];
+
     #[ORM\OneToMany(targetEntity: Path::class, mappedBy: 'scraper', cascade: ['all'], orphanRemoval: true)]
     #[ORM\OrderBy(['position' => Order::Ascending->value])]
     #[Assert\Valid]
@@ -209,6 +212,18 @@ class Scraper implements BreadcrumbableInterface, \Stringable
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): Scraper
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getHeaders(): ?array
+    {
+        return $this->headers;
+    }
+
+    public function setHeaders(?array $headers): Scraper
+    {
+        $this->headers = $headers;
 
         return $this;
     }
