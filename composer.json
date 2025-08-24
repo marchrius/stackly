@@ -140,7 +140,8 @@
             "require": "7.3.*"
         },
         "runtime": {
-            "class": "Runtime\\FrankenPhpSymfony\\Runtime"
+            "class": "Runtime\\FrankenPhpSymfony\\Runtime",
+            "dotenv_overload": true
         }
     }
 }

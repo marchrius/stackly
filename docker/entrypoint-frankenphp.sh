@@ -34,7 +34,8 @@ echo "DB_VERSION=${DB_VERSION:-}" >> "/app/public/.env.local"
 
 echo "CORS_ALLOW_ORIGIN=${CORS_ALLOW_ORIGIN:-'^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'}" >> "/app/public/.env.local"
 
-echo "DB_VERSION=${DB_VERSION:-}" >> "/app/public/.env.local"
+echo "SYMFONY_TRUSTED_PROXIES=${SYMFONY_TRUSTED_PROXIES:-private_ranges}" >> "/app/public/.env.local"
+echo "SYMFONY_TRUSTED_HEADERS=${SYMFONY_TRUSTED_HEADERS:-forwarded,x-forwarded-for,x-forwarded-host,x-forwarded-proto,x-forwarded-port,x-forwarded-prefix}" >> "/app/public/.env.local"
 
 echo "session.cookie_secure=${HTTPS_ENABLED}" >> /usr/local/etc/php/conf.d/php.ini
 echo "date.timezone=${PHP_TZ}" >> /usr/local/etc/php/conf.d/php.ini
@@ -45,15 +46,15 @@ echo "post_max_size=${UPLOAD_MAX_FILESIZE:-'100M'}" >> /usr/local/etc/php/conf.d
 
 echo "**** 4/10 - Migrate the database ****"
 cd /app/public && \
-php bin/console doctrine:migration:migrate --no-interaction --allow-no-migration --env=prod
+php bin/console doctrine:migration:migrate --no-interaction --allow-no-migration
 
 echo "**** 5/10 - Refresh cached values ****"
 cd /app/public && \
-php bin/console app:refresh-cached-values --env=prod
+php bin/console app:refresh-cached-values
 
 echo "**** 6/10 - Create API keys ****"
 cd /app/public && \
-php bin/console lexik:jwt:generate-keypair --skip-if-exists --env=prod
+php bin/console lexik:jwt:generate-keypair --skip-if-exists
 
 echo "**** 7/10 - Create user and use PUID/PGID ****"
 PUID=${PUID:-1000}
@@ -79,6 +80,7 @@ echo "**** 9/10 - Create symfony log files ****" && \
 
 chown -R "$USER":"$USER" /app/public/var/log
 chown -R "$USER":"$USER" /app/public/var/log/prod.log
+chown -R "$USER":"$USER" /app/public/.env.local
 
 echo "**** 10/10 - Setup complete, starting the server. ****"
 LD_PRELOAD=/opt/libcurl-impersonate-ff.so CURL_IMPERSONATE=ff117 frankenphp run --config /etc/caddy/Caddyfile
