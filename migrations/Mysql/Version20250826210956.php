@@ -21,7 +21,7 @@ final class Version20250826210956 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $this->skipIf(!$this->connection->getDatabasePlatform() instanceof MySQLPlatform, 'Mysql or Mariadb migration only. Skipped.');
-        
+
         $this->addSql('ALTER TABLE koi_scraper ADD headers JSON DEFAULT NULL');
     }
 
