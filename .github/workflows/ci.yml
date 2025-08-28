@@ -104,7 +104,6 @@ jobs:
           options: |
             --add-host=host.docker.internal:host-gateway
           run: |
-      
             sed -i "s|APP_ENV=.*|APP_ENV=test|i" ".env"
             sed -i "s|APP_DEBUG=.*|APP_DEBUG=1|i" ".env"
             sed -i "s|APP_SECRET=.*|APP_SECRET=aRandomSecret|i" ".env"

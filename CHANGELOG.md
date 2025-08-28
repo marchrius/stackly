@@ -1,6 +1,23 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.7.0] / 2025-08-28
+:warning: Potential BC:
+
+This release primarily aim to fix a security issue with certain versions of Firefox (details here: https://github.com/benjaminjonard/koillection/issues/1393)
+
+For most people this update should work seamlessly, but if you are using a reverse you may have to add some env variables (`SYMFONY_TRUSTED_PROXIES` and `SYMFONY_TRUSTED_HEADERS` see here: https://github.com/benjaminjonard/koillection/wiki/Configuration#reverse-proxy)
+
+If your reverse proxy uses a private IP to communicate with Koillection, you shouldn't have any changes to make.
+
+If you get an error 'CSRF token valid', you need to update your configuration.
+
+### Features
+- Add custom headers to scrapers (benjaminjonard)
+### Miscellaneous
+- Update to new Symfony CSRF token handling (benjaminjonard)
+- Update translations, thanks to all contributors on [Crowdin](https://crowdin.com/project/koillection)
+
 ## [1.6.18] / 2025-08-03
 ### Fixes
 - Fix tree graph when using special characters (benjaminjonard)
