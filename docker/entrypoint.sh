@@ -85,6 +85,7 @@ echo "**** 10/11 - Create symfony log files ****"
 chown -R "$USER":"$USER" /var/www/koillection/var/log
 chown -R "$USER":"$USER" /var/www/koillection/var/log/prod.log
 chown -R "$USER":"$USER" /var/www/koillection/.env.local
+chown -R "$USER":"$USER" /var/www/koillection/cache
 
 echo "**** 11/11 - Setup complete, starting the server. ****"
 LD_PRELOAD=/opt/libcurl-impersonate-ff.so CURL_IMPERSONATE=ff117 php-fpm8.4
