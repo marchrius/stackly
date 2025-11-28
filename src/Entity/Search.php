@@ -36,7 +36,7 @@ class Search implements BreadcrumbableInterface
     #[ORM\OneToOne(targetEntity: DisplayConfiguration::class, cascade: ['all'])]
     private ?DisplayConfiguration $displayConfiguration = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'searches')]
     private ?User $owner = null;
 
     public function __construct()
