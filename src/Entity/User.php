@@ -162,6 +162,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Breadcr
     #[ORM\OneToMany(targetEntity: Scraper::class, mappedBy: 'owner', cascade: ['remove'])]
     private DoctrineCollection $scrapers;
 
+    #[ORM\OneToMany(targetEntity: ChoiceList::class, mappedBy: 'owner', cascade: ['remove'])]
+    private DoctrineCollection $choiceLists;
+
+    #[ORM\OneToMany(targetEntity: Search::class, mappedBy: 'owner', cascade: ['remove'])]
+    private DoctrineCollection $searches;
+
+    #[ORM\OneToMany(targetEntity: DisplayConfiguration::class, mappedBy: 'owner', cascade: ['remove'])]
+    private DoctrineCollection $displayConfigurations;
+
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
     #[Groups(['user:read'])]
     private ?\DateTimeImmutable $lastDateOfActivity = null;

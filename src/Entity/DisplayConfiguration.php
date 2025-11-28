@@ -27,7 +27,7 @@ class DisplayConfiguration
     #[ORM\Column(type: Types::STRING, length: 36, unique: true, options: ['fixed' => true])]
     private string $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'displayConfigurations')]
     private ?User $owner = null;
 
     #[ORM\Column(type: Types::STRING, nullable: true)]
