@@ -207,6 +207,20 @@
     {% endapply %}
 {% endblock %}
 
+{% block _scraper_headers_entry_row %}
+    {% apply spaceless %}
+        {{ include('App/Scraper/_header_prototype.html.twig', { 'form': form }) }}
+    {% endapply %}
+{% endblock %}
+
+{% block _scraper_headers_row %}
+    {% apply spaceless %}
+        {% for child in form %}
+            {{ form_row(child) }}
+        {% endfor %}
+    {% endapply %}
+{% endblock %}
+
 {# MAPPING #}
 {% block _import_mapping_mapping_entry_row %}
     {% apply spaceless %}
@@ -223,8 +237,6 @@
         {% endfor %}
     {% endapply %}
 {% endblock %}
-
-
 
 {% block _tag_category_widget %}
     <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}{% if choices|length <= 10 %} data-minimum-results-for-search="-1"{% endif %}>

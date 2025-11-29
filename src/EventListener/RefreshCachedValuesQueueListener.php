@@ -30,7 +30,17 @@ final readonly class RefreshCachedValuesQueueListener
      */
     public function onKernelResponse(): void
     {
-        if ($this->managerRegistry->getManager()->isOpen()) {
+        $em = $this->managerRegistry->getManager();
+        if ($em->isOpen()) {
+            $uow = $em->getUnitOfWork();
+            foreach ($uow->getIdentityMap() as $entities) {
+                foreach ($entities as $entity) {
+                    if ($uow->isScheduledForInsert($entity) || $uow->isScheduledForUpdate($entity)) {
+                        $em->detach($entity);
+                    }
+                }
+            }
+
             foreach ($this->refreshCachedValuesQueue->getEntities() as $entity) {
                 if ($entity instanceof Album) {
                     $this->cachedValuesCalculator->computeForAlbum($entity);

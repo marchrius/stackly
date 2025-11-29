@@ -49,8 +49,8 @@ RUN apt-get update && \
 #Install composer dependencies
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     cd /var/www/koillection && \
-    composer install --classmap-authoritative && \
-    composer clearcache && \
+    COMPOSER_MEMORY_LIMIT=-1 composer install --classmap-authoritative && \
+    COMPOSER_MEMORY_LIMIT=-1 composer clearcache && \
 # Dump translation files for javascript
     cd /var/www/koillection/ && \
     php bin/console app:translations:dump && \

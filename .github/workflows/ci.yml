@@ -24,7 +24,7 @@ jobs:
           outputs: type=docker,dest=/tmp/ci-container.tar
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ci-container
           path: /tmp/ci-container.tar
@@ -57,7 +57,7 @@ jobs:
     needs: [ build_docker_ci_container ]
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: ci-container
           path: /tmp
@@ -89,7 +89,7 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: ci-container
           path: /tmp
@@ -114,9 +114,9 @@ jobs:
             sed -i "s|DB_USER=.*|DB_USER=root|i" ".env"
             sed -i "s|DB_PASSWORD=.*|DB_PASSWORD=root|i" ".env"
             sed -i "s|DB_VERSION=.*|DB_VERSION=${{ matrix.mysql }}|i" ".env"      
-            bin/console lexik:jwt:generate-keypair --env=test
-            bin/console doctrine:database:create --env=test
-            bin/console doctrine:migration:migrate --no-interaction --allow-no-migration --env=test            
+            bin/console lexik:jwt:generate-keypair
+            bin/console doctrine:database:create
+            bin/console doctrine:migration:migrate --no-interaction --allow-no-migration            
             php ./vendor/bin/paratest --runner=WrapperRunner
 
   phpunit_mariadb:
@@ -137,7 +137,7 @@ jobs:
     
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: ci-container
           path: /tmp
@@ -151,7 +151,8 @@ jobs:
           image: ci-image
           options: |
             --add-host=host.docker.internal:host-gateway
-          run: |          
+          run: |
+            sed -i "s|APP_ENV=.*|APP_ENV=test|i" ".env"
             sed -i "s|APP_DEBUG=.*|APP_DEBUG=1|i" ".env"
             sed -i "s|APP_SECRET=.*|APP_SECRET=aRandomSecret|i" ".env"
             sed -i "s|DB_DRIVER=.*|DB_DRIVER=pdo_mysql|i" ".env"
@@ -161,9 +162,9 @@ jobs:
             sed -i "s|DB_USER=.*|DB_USER=root|i" ".env"
             sed -i "s|DB_PASSWORD=.*|DB_PASSWORD=root|i" ".env"
             sed -i "s|DB_VERSION=.*|DB_VERSION=${{ matrix.mariadb }}|i" ".env"      
-            bin/console lexik:jwt:generate-keypair --env=test
-            bin/console doctrine:database:create --env=test
-            bin/console doctrine:migration:migrate --no-interaction --allow-no-migration --env=test            
+            bin/console lexik:jwt:generate-keypair
+            bin/console doctrine:database:create
+            bin/console doctrine:migration:migrate --no-interaction --allow-no-migration            
             php ./vendor/bin/paratest --runner=WrapperRunner
 
   phpunit_postgres:
@@ -172,7 +173,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        postgres: [ 10, 11, 12, 13, 14, 15, 16, 17 ]
+        postgres: [ 10, 11, 12, 13, 14, 15, 16, 17, 18 ]
     services:
       postgres:
         image: postgres:${{ matrix.postgres }}
@@ -184,7 +185,7 @@ jobs:
     
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: ci-container
           path: /tmp
@@ -209,7 +210,7 @@ jobs:
             sed -i "s|DB_USER=.*|DB_USER=postgres|i" ".env"
             sed -i "s|DB_PASSWORD=.*|DB_PASSWORD=root|i" ".env"
             sed -i "s|DB_VERSION=.*|DB_VERSION=${{ matrix.postgres }}|i" ".env"      
-            bin/console lexik:jwt:generate-keypair --env=test
-            bin/console doctrine:database:create --env=test
-            bin/console doctrine:migration:migrate --no-interaction --allow-no-migration --env=test            
+            bin/console lexik:jwt:generate-keypair 
+            bin/console doctrine:database:create
+            bin/console doctrine:migration:migrate --no-interaction --allow-no-migration            
             php ./vendor/bin/paratest --runner=WrapperRunner

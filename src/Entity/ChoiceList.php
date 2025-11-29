@@ -50,7 +50,7 @@ class ChoiceList implements BreadcrumbableInterface, LoggableInterface, \Stringa
     #[Assert\Unique]
     private array $choices = [];
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'choiceLists')]
     #[Groups(['choiceList:read'])]
     private ?User $owner = null;
 

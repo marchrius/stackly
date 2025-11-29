@@ -34,6 +34,9 @@ echo "DB_VERSION=${DB_VERSION:-}" >> "/var/www/koillection/.env.local"
 
 echo "CORS_ALLOW_ORIGIN=${CORS_ALLOW_ORIGIN:-'^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'}" >> "/var/www/koillection/.env.local"
 
+echo "SYMFONY_TRUSTED_PROXIES=${SYMFONY_TRUSTED_PROXIES:-private_ranges}" >> "/var/www/koillection/.env.local"
+echo "SYMFONY_TRUSTED_HEADERS=${SYMFONY_TRUSTED_HEADERS:-forwarded,x-forwarded-for,x-forwarded-host,x-forwarded-proto,x-forwarded-port,x-forwarded-prefix}" >> "/var/www/koillection/.env.local"
+
 echo "session.cookie_secure=${HTTPS_ENABLED}" >> /etc/php/8.4/fpm/conf.d/php.ini
 echo "date.timezone=${PHP_TZ}" >> /etc/php/8.4/fpm/conf.d/php.ini
 echo "memory_limit=${PHP_MEMORY_LIMIT:-'512M'}" >> /etc/php/8.4/fpm/conf.d/php.ini
@@ -44,14 +47,14 @@ sed -i "s/client_max_body_size 100M;/client_max_body_size ${UPLOAD_MAX_FILESIZE:
 
 echo "**** 4/11 - Migrate the database ****"
 cd /var/www/koillection && \
-php bin/console doctrine:migration:migrate --no-interaction --allow-no-migration --env=prod
+php bin/console doctrine:migration:migrate --no-interaction --allow-no-migration
 
 echo "**** 5/11 - Create API keys ****"
 cd /var/www/koillection && \
-php bin/console lexik:jwt:generate-keypair --skip-if-exists --env=prod
+php bin/console lexik:jwt:generate-keypair --skip-if-exists
 
 echo "**** 6/11 - Refresh caches ****"
-php bin/console app:refresh-cached-values --env=prod
+php bin/console app:refresh-cached-values
 
 echo "**** 7/11 - Create user and use PUID/PGID ****"
 PUID=${PUID:-1000}
@@ -81,6 +84,8 @@ echo "**** 10/11 - Create symfony log files ****"
 
 chown -R "$USER":"$USER" /var/www/koillection/var/log
 chown -R "$USER":"$USER" /var/www/koillection/var/log/prod.log
+chown -R "$USER":"$USER" /var/www/koillection/.env.local
+chown -R "$USER":"$USER" /var/www/koillection/var/cache
 
 echo "**** 11/11 - Setup complete, starting the server. ****"
 LD_PRELOAD=/opt/libcurl-impersonate-ff.so CURL_IMPERSONATE=ff117 php-fpm8.4

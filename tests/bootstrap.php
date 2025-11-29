@@ -15,10 +15,4 @@ if (file_exists(\dirname(__DIR__) . '/config/bootstrap.php')) {
     (new Dotenv())->bootEnv(\dirname(__DIR__) . '/.env');
 }
 
-if (!(bool) $_SERVER['APP_DEBUG']) {
-    (new Symfony\Component\Filesystem\Filesystem())->remove(__DIR__ . '/../var/cache/test');
-}
-
-if ($_SERVER['APP_DEBUG']) {
-    umask(0000);
-}
+(new Symfony\Component\Filesystem\Filesystem())->remove(__DIR__ . '/../var/cache/test');
