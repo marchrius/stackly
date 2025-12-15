@@ -18,6 +18,15 @@
     <server name="SYMFONY_PHPUNIT_VERSION" value="11"/>
     <server name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
     <server name="KERNEL_CLASS" value="App\Kernel"/>
+<<<<<<< ours
+=======
+
+        <!-- ###+ symfony/routing ### -->
+        <!-- Configure how to generate URLs in non-HTTP contexts, such as CLI commands. -->
+        <!-- See https://symfony.com/doc/current/routing.html#generating-urls-in-commands -->
+        <env name="DEFAULT_URI" value="http://localhost"/>
+        <!-- ###- symfony/routing ### -->
+>>>>>>> theirs
   </php>
   <testsuites>
     <testsuite name="Project Test Suite">
