@@ -49,7 +49,9 @@ class TagCategoryTest extends AppTestCase
         $user = UserFactory::createOne()->_real();
         $this->client->loginUser($user);
         $tagCategory = TagCategoryFactory::createOne(['owner' => $user])->_real();
-        TagFactory::createMany(3, ['category' => $tagCategory, 'owner' => $user]);
+        TagFactory::createOne(['category' => $tagCategory, 'owner' => $user]);
+        TagFactory::createOne(['category' => $tagCategory, 'owner' => $user]);
+        TagFactory::createOne(['category' => $tagCategory, 'owner' => $user]);
 
         // Act
         $crawler = $this->client->request(Request::METHOD_GET, '/tag-categories/' . $tagCategory->getId());

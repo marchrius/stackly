@@ -110,13 +110,21 @@ class CollectionCountersTest extends AppTestCase
         // Arrange
         $user = UserFactory::createOne()->_real();
         $collectionLevel1 = CollectionFactory::createOne(['owner' => $user]);
-        ItemFactory::createMany(3, ['collection' => $collectionLevel1, 'owner' => $user]);
+        ItemFactory::createOne(['collection' => $collectionLevel1, 'owner' => $user]);
+        ItemFactory::createOne(['collection' => $collectionLevel1, 'owner' => $user]);
+        ItemFactory::createOne(['collection' => $collectionLevel1, 'owner' => $user]);
         $collectionLevel2 = CollectionFactory::createOne(['parent' => $collectionLevel1, 'owner' => $user]);
-        ItemFactory::createMany(3, ['collection' => $collectionLevel2, 'owner' => $user]);
+        ItemFactory::createOne(['collection' => $collectionLevel2, 'owner' => $user]);
+        ItemFactory::createOne(['collection' => $collectionLevel2, 'owner' => $user]);
+        ItemFactory::createOne(['collection' => $collectionLevel2, 'owner' => $user]);
         $collectionLevel3 = CollectionFactory::createOne(['parent' => $collectionLevel2, 'owner' => $user]);
-        ItemFactory::createMany(3, ['collection' => $collectionLevel3, 'owner' => $user]);
+        ItemFactory::createOne(['collection' => $collectionLevel3, 'owner' => $user]);
+        ItemFactory::createOne(['collection' => $collectionLevel3, 'owner' => $user]);
+        ItemFactory::createOne(['collection' => $collectionLevel3, 'owner' => $user]);
         $collectionLevel4 = CollectionFactory::createOne(['parent' => $collectionLevel3, 'owner' => $user]);
-        ItemFactory::createMany(3, ['collection' => $collectionLevel4, 'owner' => $user]);
+        ItemFactory::createOne(['collection' => $collectionLevel4, 'owner' => $user]);
+        ItemFactory::createOne(['collection' => $collectionLevel4, 'owner' => $user]);
+        ItemFactory::createOne(['collection' => $collectionLevel4, 'owner' => $user]);
 
         // Act
         $collectionLevel3->_delete();

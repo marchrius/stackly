@@ -110,13 +110,21 @@ class AlbumCountersTest extends AppTestCase
         // Arrange
         $user = UserFactory::createOne()->_real();
         $albumLevel1 = AlbumFactory::createOne(['owner' => $user]);
-        PhotoFactory::createMany(3, ['album' => $albumLevel1, 'owner' => $user]);
+        PhotoFactory::createOne(['album' => $albumLevel1, 'owner' => $user]);
+        PhotoFactory::createOne(['album' => $albumLevel1, 'owner' => $user]);
+        PhotoFactory::createOne(['album' => $albumLevel1, 'owner' => $user]);
         $albumLevel2 = AlbumFactory::createOne(['parent' => $albumLevel1, 'owner' => $user]);
-        PhotoFactory::createMany(3, ['album' => $albumLevel2, 'owner' => $user]);
+        PhotoFactory::createOne(['album' => $albumLevel2, 'owner' => $user]);
+        PhotoFactory::createOne(['album' => $albumLevel2, 'owner' => $user]);
+        PhotoFactory::createOne(['album' => $albumLevel2, 'owner' => $user]);
         $albumLevel3 = AlbumFactory::createOne(['parent' => $albumLevel2, 'owner' => $user]);
-        PhotoFactory::createMany(3, ['album' => $albumLevel3, 'owner' => $user]);
+        PhotoFactory::createOne(['album' => $albumLevel3, 'owner' => $user]);
+        PhotoFactory::createOne(['album' => $albumLevel3, 'owner' => $user]);
+        PhotoFactory::createOne(['album' => $albumLevel3, 'owner' => $user]);
         $albumLevel4 = AlbumFactory::createOne(['parent' => $albumLevel3, 'owner' => $user]);
-        PhotoFactory::createMany(3, ['album' => $albumLevel4, 'owner' => $user]);
+        PhotoFactory::createOne(['album' => $albumLevel4, 'owner' => $user]);
+        PhotoFactory::createOne(['album' => $albumLevel4, 'owner' => $user]);
+        PhotoFactory::createOne(['album' => $albumLevel4, 'owner' => $user]);
 
         // Act
         $albumLevel3->_delete();

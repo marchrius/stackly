@@ -109,13 +109,21 @@ class WishlistCountersTest extends AppTestCase
         // Arrange
         $user = UserFactory::createOne()->_real();
         $wishlistLevel1 = WishlistFactory::createOne(['owner' => $user]);
-        WishFactory::createMany(3, ['wishlist' => $wishlistLevel1, 'owner' => $user]);
+        WishFactory::createOne(['wishlist' => $wishlistLevel1, 'owner' => $user]);
+        WishFactory::createOne(['wishlist' => $wishlistLevel1, 'owner' => $user]);
+        WishFactory::createOne(['wishlist' => $wishlistLevel1, 'owner' => $user]);
         $wishlistLevel2 = WishlistFactory::createOne(['parent' => $wishlistLevel1, 'owner' => $user]);
-        WishFactory::createMany(3, ['wishlist' => $wishlistLevel2, 'owner' => $user]);
+        WishFactory::createOne(['wishlist' => $wishlistLevel2, 'owner' => $user]);
+        WishFactory::createOne(['wishlist' => $wishlistLevel2, 'owner' => $user]);
+        WishFactory::createOne(['wishlist' => $wishlistLevel2, 'owner' => $user]);
         $wishlistLevel3 = WishlistFactory::createOne(['parent' => $wishlistLevel2, 'owner' => $user]);
-        WishFactory::createMany(3, ['wishlist' => $wishlistLevel3, 'owner' => $user]);
+        WishFactory::createOne(['wishlist' => $wishlistLevel3, 'owner' => $user]);
+        WishFactory::createOne(['wishlist' => $wishlistLevel3, 'owner' => $user]);
+        WishFactory::createOne(['wishlist' => $wishlistLevel3, 'owner' => $user]);
         $wishlistLevel4 = WishlistFactory::createOne(['parent' => $wishlistLevel3, 'owner' => $user]);
-        WishFactory::createMany(3, ['wishlist' => $wishlistLevel4, 'owner' => $user]);
+        WishFactory::createOne(['wishlist' => $wishlistLevel4, 'owner' => $user]);
+        WishFactory::createOne(['wishlist' => $wishlistLevel4, 'owner' => $user]);
+        WishFactory::createOne(['wishlist' => $wishlistLevel4, 'owner' => $user]);
 
         // Act
         $wishlistLevel3->_delete();

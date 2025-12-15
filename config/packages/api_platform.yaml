@@ -14,7 +14,6 @@ api_platform:
     html: [ 'text/html' ]
 
   defaults:
-    stateless: true
     cache_headers:
       vary: [ 'Content-Type', 'Authorization', 'Origin' ]
     extra_properties:
