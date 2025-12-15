@@ -1,4 +1,4 @@
-api_platform:
+api_platform: 
   title: 'Koillection API'
   version: 1.7.0
   show_webby: false
@@ -14,6 +14,7 @@ api_platform:
     html: [ 'text/html' ]
 
   defaults:
+    stateless: true
     cache_headers:
       vary: [ 'Content-Type', 'Authorization', 'Origin' ]
     extra_properties:
@@ -21,4 +22,3 @@ api_platform:
     normalization_context:
       skip_null_values: false
   use_symfony_listeners: true
-
