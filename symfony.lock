@@ -310,12 +310,12 @@
         "version": "v5.0.2"
     },
     "symfony/framework-bundle": {
-        "version": "6.4",
+        "version": "7.4",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "6.4",
-            "ref": "a91c965766ad3ff2ae15981801643330eb42b6a5"
+            "version": "7.4",
+            "ref": "09f6e081c763a206802674ce0cb34a022f0ffc6d"
         },
         "files": [
             "config/packages/cache.yaml",
@@ -325,7 +325,8 @@
             "config/services.yaml",
             "public/index.php",
             "src/Controller/.gitignore",
-            "src/Kernel.php"
+            "src/Kernel.php",
+            ".editorconfig"
         ]
     },
     "symfony/http-client": {
