@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.7.1] / 2025-12-21
+### Fixes
+- Enable javascript translations (jorne-tremani)
+- Fix error when deleting a user (benjaminjonard)
+- Explicitly declare trusted_proxies and trusted_headers in the config files, trying to mitigate issues regarding error "Invalid CSRF token" (benjaminjonard)
+### Miscellaneous
+- Upgrade PHP (Symfony 7.4) and JS dependencies (benjaminjonard)
+- Update translations, thanks to all contributors on [Crowdin](https://crowdin.com/project/koillection)
+
 ## [1.7.0] / 2025-08-28
 :warning: Potential BC:
 
