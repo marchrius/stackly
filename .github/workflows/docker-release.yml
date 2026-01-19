@@ -1,4 +1,4 @@
-name: Build release image for Docker Hub
+name: Build release image using for Docker Hub
 on:
   workflow_dispatch:
   release:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   push_release_image:
-    name: Build release image for Docker Hub
+    name: Build release image using for Docker Hub
     runs-on: ubuntu-latest
 
     steps:
@@ -34,5 +34,5 @@ jobs:
         with:
           file: Dockerfile
           push: true
-          tags: docker.io/koillection/koillection:latest,docker.io/koillection/koillection:1.7.1
+          tags: docker.io/koillection/koillection,docker.io/koillection/koillection:latest,docker.io/koillection/koillection:1.7.1
           platforms: linux/amd64,linux/arm64
