@@ -105,7 +105,7 @@ RUN cd /opt tar xvzf libcurl-impersonate-v0.6.1.x86_64-linux-gnu.tar.gz rm libcu
 
 FROM koillection-base AS koillection-final
 
-COPY --from=build-node /app/public/build/ /var/www/koillection/public/build/
+COPY --from=build-node /app/public/build/ /app/public/public/build/
 COPY --from=download-env /opt/libcurl-impersonate* /opt/
 
 EXPOSE 80
