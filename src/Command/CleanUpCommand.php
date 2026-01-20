@@ -73,32 +73,35 @@ class CleanUpCommand extends Command
         }, $result->fetchAllAssociative());
 
         $output->writeln('Getting all files paths from /uploads...');
-        $rii = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->publicPath . '/uploads'));
-        $diskPaths = [];
-        foreach ($rii as $file) {
-            if (!$file->isDir() && '.gitkeep' !== $file->getFileName()) {
-                $diskPaths[] = str_replace($this->publicPath . '/', '', $file->getPathname());
-            }
-        }
-
-        // Compute the diff and delete the diff
-        $output->writeln('Computing diff and delete unused files...');
-        $diff = array_diff($diskPaths, $dbPaths);
-
-        if ($diff !== []) {
-            $progressBar = new ProgressBar($output, \count($diff));
-            foreach ($diff as $path) {
-                $progressBar->advance();
-                if (file_exists($this->publicPath . '/' . $path)) {
-                    unlink($this->publicPath . '/' . $path);
+        
+        if (is_dir($this->publicPath . '/uploads')) {
+            $rii = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->publicPath . '/uploads'));
+            $diskPaths = [];
+            foreach ($rii as $file) {
+                if (!$file->isDir() && '.gitkeep' !== $file->getFileName()) {
+                    $diskPaths[] = str_replace($this->publicPath . '/', '', $file->getPathname());
                 }
             }
 
-            $output->writeln('');
-        }
+            // Compute the diff and delete the diff
+            $output->writeln('Computing diff and delete unused files...');
+            $diff = array_diff($diskPaths, $dbPaths);
 
-        $output->writeln(\count($diff) . ' files deleted.');
-        $output->writeln('Done!');
+            if ($diff !== []) {
+                $progressBar = new ProgressBar($output, \count($diff));
+                foreach ($diff as $path) {
+                    $progressBar->advance();
+                    if (file_exists($this->publicPath . '/' . $path)) {
+                        unlink($this->publicPath . '/' . $path);
+                    }
+                }
+
+                $output->writeln('');
+            }
+
+            $output->writeln(\count($diff) . ' files deleted.');
+            $output->writeln('Done!');
+        }
 
         return Command::SUCCESS;
     }
