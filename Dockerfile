@@ -109,6 +109,9 @@ COPY --from=build-node /app/public/build/ /var/www/koillection/public/build/
 COPY --from=download-env /opt/libcurl-impersonate* /opt/
 
 EXPOSE 80
+EXPOSE 443
+
+WORKDIR /app/public
 
 HEALTHCHECK CMD curl --fail http://localhost:80/ || exit 1
 
