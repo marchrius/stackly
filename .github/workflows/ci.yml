@@ -117,7 +117,7 @@ jobs:
             bin/console lexik:jwt:generate-keypair
             bin/console doctrine:database:create
             bin/console doctrine:migration:migrate --no-interaction --allow-no-migration            
-            php -d memory_limit=512M ./vendor/bin/paratest --runner=WrapperRunner
+            php -d memory_limit=512M ./vendor/bin/paratest --runner=WrapperRunner --passthru-php='-d memory_limit=512M'
 
   phpunit_mariadb:
     name: PHPUnit tests with MariaDB ${{ matrix.mariadb }}
@@ -165,7 +165,7 @@ jobs:
             bin/console lexik:jwt:generate-keypair
             bin/console doctrine:database:create
             bin/console doctrine:migration:migrate --no-interaction --allow-no-migration            
-            php -d memory_limit=512M ./vendor/bin/paratest --runner=WrapperRunner
+            php -d memory_limit=512M ./vendor/bin/paratest --runner=WrapperRunner --passthru-php='-d memory_limit=512M'
 
   phpunit_postgres:
     name: PHPUnit tests with Postgres ${{ matrix.postgres }}
@@ -213,4 +213,4 @@ jobs:
             bin/console lexik:jwt:generate-keypair 
             bin/console doctrine:database:create
             bin/console doctrine:migration:migrate --no-interaction --allow-no-migration            
-            php -d memory_limit=512M ./vendor/bin/paratest --runner=WrapperRunner
+            php -d memory_limit=512M ./vendor/bin/paratest --runner=WrapperRunner --passthru-php='-d memory_limit=512M'
