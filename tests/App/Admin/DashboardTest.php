@@ -31,7 +31,7 @@ class DashboardTest extends AppTestCase
     public function test_admin_can_access_dashboard(): void
     {
         // Arrange
-        $admin = UserFactory::createOne(['roles' => [RoleEnum::ROLE_ADMIN]])->_real();
+        $admin = UserFactory::createOne(['roles' => [RoleEnum::ROLE_ADMIN]]);
         $this->client->loginUser($admin);
 
         // Act
@@ -44,12 +44,12 @@ class DashboardTest extends AppTestCase
     public function test_can_refresh_caches(): void
     {
         // Arrange
-        $admin = UserFactory::createOne(['roles' => [RoleEnum::ROLE_ADMIN]])->_real();
+        $admin = UserFactory::createOne(['roles' => [RoleEnum::ROLE_ADMIN]]);
         $this->client->loginUser($admin);
-        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $admin])->_real();
-        ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $admin])->_real();
-        ItemFactory::createOne(['name' => 'Frieren #2', 'collection' => $collection, 'owner' => $admin])->_real();
-        ItemFactory::createOne(['name' => 'Frieren #3', 'collection' => $collection, 'owner' => $admin])->_real();
+        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $admin]);
+        ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $admin]);
+        ItemFactory::createOne(['name' => 'Frieren #2', 'collection' => $collection, 'owner' => $admin]);
+        ItemFactory::createOne(['name' => 'Frieren #3', 'collection' => $collection, 'owner' => $admin]);
 
         // Act
         $this->client->request(Request::METHOD_GET, '/admin/refresh-caches');

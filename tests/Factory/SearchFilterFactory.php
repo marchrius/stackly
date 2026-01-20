@@ -7,7 +7,10 @@ namespace App\Tests\Factory;
 use App\Entity\SearchFilter;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class SearchFilterFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\SearchFilter>
+ */
+final class SearchFilterFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     public static function class(): string

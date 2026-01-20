@@ -39,7 +39,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_can_see_advanced_item_search_index(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         // Act
@@ -53,7 +53,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_can_see_advanced_item_search(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $search = SearchFactory::createOne(['owner' => $user]);
 
@@ -68,7 +68,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_can_see_saved_searches(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         SearchFactory::createMany(5, ['owner' => $user]);
 
@@ -83,7 +83,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_can_delete_saved_searches(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $search = SearchFactory::createOne(['owner' => $user]);
 
@@ -100,7 +100,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_search_by_name(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $search = SearchFactory::createOne(['owner' => $user]);
         $block = SearchBlockFactory::createOne(['search' => $search, 'condition' => ConditionEnum::CONDITION_AND]);
@@ -122,7 +122,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_search_with_or(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $search = SearchFactory::createOne(['owner' => $user]);
         $block = SearchBlockFactory::createOne(['search' => $search, 'condition' => ConditionEnum::CONDITION_AND]);
@@ -148,7 +148,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_search_with_different_datum_labels(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $search = SearchFactory::createOne(['owner' => $user]);
         $block = SearchBlockFactory::createOne(['search' => $search, 'condition' => ConditionEnum::CONDITION_AND]);
@@ -173,7 +173,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_search_with_country(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $search = SearchFactory::createOne(['owner' => $user]);
         $block = SearchBlockFactory::createOne(['search' => $search, 'condition' => ConditionEnum::CONDITION_AND]);
@@ -198,7 +198,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_search_with_choice_list(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $choiceList = ChoiceListFactory::createOne(['name' => 'Progress', 'choices' => ['New', 'In progress', 'Done'], 'owner' => $user]);
         $search = SearchFactory::createOne(['owner' => $user]);
@@ -224,7 +224,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_search_with_rating(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         $search = SearchFactory::createOne(['owner' => $user]);
@@ -251,7 +251,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_search_with_number(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         $search = SearchFactory::createOne(['owner' => $user]);
@@ -278,7 +278,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_search_with_checkbox(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         $search = SearchFactory::createOne(['owner' => $user]);
@@ -305,7 +305,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_search_multiple_blocks(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         $search = SearchFactory::createOne(['owner' => $user]);
@@ -340,7 +340,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_name_does_not_contain(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $search = SearchFactory::createOne(['owner' => $user]);
         $block = SearchBlockFactory::createOne(['search' => $search, 'condition' => ConditionEnum::CONDITION_AND]);
@@ -362,7 +362,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_name_not_equal(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $search = SearchFactory::createOne(['owner' => $user]);
         $block = SearchBlockFactory::createOne(['search' => $search, 'condition' => ConditionEnum::CONDITION_AND]);
@@ -384,7 +384,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_exists(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         $search = SearchFactory::createOne(['owner' => $user]);
@@ -410,7 +410,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_does_not_exists(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         $search = SearchFactory::createOne(['owner' => $user]);
@@ -436,7 +436,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_empty(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         $search = SearchFactory::createOne(['owner' => $user]);
@@ -463,7 +463,7 @@ class AdvancedItemSearchTest extends AppTestCase
     public function test_not_empty(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         $search = SearchFactory::createOne(['owner' => $user]);

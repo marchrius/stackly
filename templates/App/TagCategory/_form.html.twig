@@ -15,7 +15,7 @@
 </div>
 
 <div class="center-align form-btn-holder">
-    {% if app.request.get('_route') == 'app_tag_category_add' %}
+    {% if app.request.attributes.get('_route') == 'app_tag_category_add' %}
         {% set cancelUrl = path('app_tag_category_index') %}
     {% else %}
         {% set cancelUrl = path('app_tag_category_show', {id: category.id}) %}

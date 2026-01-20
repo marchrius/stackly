@@ -29,7 +29,7 @@ class UserTest extends AppTestCase
     public function test_admin_can_access_users_list(): void
     {
         // Arrange
-        $admin = UserFactory::createOne(['roles' => [RoleEnum::ROLE_ADMIN]])->_real();
+        $admin = UserFactory::createOne(['roles' => [RoleEnum::ROLE_ADMIN]]);
         $this->client->loginUser($admin);
 
         // Act
@@ -42,7 +42,7 @@ class UserTest extends AppTestCase
     public function test_admin_can_post_a_user(): void
     {
         // Arrange
-        $admin = UserFactory::createOne(['roles' => [RoleEnum::ROLE_ADMIN]])->_real();
+        $admin = UserFactory::createOne(['roles' => [RoleEnum::ROLE_ADMIN]]);
         $this->client->loginUser($admin);
 
         // Act
@@ -64,7 +64,7 @@ class UserTest extends AppTestCase
     public function test_admin_can_edit_a_user(): void
     {
         // Arrange
-        $admin = UserFactory::createOne(['roles' => [RoleEnum::ROLE_ADMIN]])->_real();
+        $admin = UserFactory::createOne(['roles' => [RoleEnum::ROLE_ADMIN]]);
         $this->client->loginUser($admin);
 
         // Act
@@ -86,9 +86,9 @@ class UserTest extends AppTestCase
     public function test_admin_can_delete_a_user(): void
     {
         // Arrange
-        $admin = UserFactory::createOne(['roles' => [RoleEnum::ROLE_ADMIN]])->_real();
+        $admin = UserFactory::createOne(['roles' => [RoleEnum::ROLE_ADMIN]]);
         $this->client->loginUser($admin);
-        $user = UserFactory::createOne(['roles' => [RoleEnum::ROLE_USER]])->_real();
+        $user = UserFactory::createOne(['roles' => [RoleEnum::ROLE_USER]]);
         $userId = $user->getId();
 
         // Act
@@ -104,7 +104,7 @@ class UserTest extends AppTestCase
     public function test_cant_delete_admin(): void
     {
         // Arrange
-        $admin = UserFactory::createOne(['roles' => [RoleEnum::ROLE_ADMIN]])->_real();
+        $admin = UserFactory::createOne(['roles' => [RoleEnum::ROLE_ADMIN]]);
         $this->client->loginUser($admin);
 
         // Act

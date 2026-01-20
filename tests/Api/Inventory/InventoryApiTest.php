@@ -20,7 +20,7 @@ class InventoryApiTest extends ApiTestCase
     public function test_get_inventories(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         InventoryFactory::createMany(3, ['owner' => $user]);
 
         // Act
@@ -37,7 +37,7 @@ class InventoryApiTest extends ApiTestCase
     public function test_get_inventory(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $inventory = InventoryFactory::createOne(['owner' => $user]);
 
         // Act
@@ -54,7 +54,7 @@ class InventoryApiTest extends ApiTestCase
     public function test_delete_inventory(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $inventory = InventoryFactory::createOne(['owner' => $user]);
 
         // Act

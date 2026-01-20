@@ -34,7 +34,7 @@ class DatumTest extends AppTestCase
     public function test_can_get_html_by_type(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         foreach (DatumTypeEnum::TYPES as $type) {
@@ -52,7 +52,7 @@ class DatumTest extends AppTestCase
     public function test_can_get_html_for_type_list(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $choiceList = ChoiceListFactory::createOne(['owner' => $user]);
 
@@ -72,7 +72,7 @@ class DatumTest extends AppTestCase
     public function test_can_get_common_fields(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $item1 = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);
@@ -103,7 +103,7 @@ class DatumTest extends AppTestCase
     public function test_can_get_collection_fields(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['owner' => $user]);
         DatumFactory::createOne(['owner' => $user, 'collection' => $collection, 'position' => 1, 'type' => DatumTypeEnum::TYPE_TEXT, 'label' => 'Authors', 'value' => 'Abe Tsukasa, Yamada Kanehito']);
@@ -129,7 +129,7 @@ class DatumTest extends AppTestCase
     public function test_unavailable_choice_from_choice_list_still_usable_on_item(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);

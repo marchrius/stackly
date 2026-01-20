@@ -11,7 +11,10 @@ use App\Enum\ThemeEnum;
 use App\Enum\VisibilityEnum;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class UserFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\User>
+ */
+final class UserFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     protected function defaults(): array|callable

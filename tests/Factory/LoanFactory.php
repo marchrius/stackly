@@ -7,7 +7,10 @@ namespace App\Tests\Factory;
 use App\Entity\Loan;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class LoanFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\Loan>
+ */
+final class LoanFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     protected function defaults(): array|callable

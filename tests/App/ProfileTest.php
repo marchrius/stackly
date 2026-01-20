@@ -28,7 +28,7 @@ class ProfileTest extends AppTestCase
     public function test_can_edit_profile(): void
     {
         // Arrange
-        $user = UserFactory::createOne(['avatar' => $this->createFile('png')->getRealPath()])->_real();
+        $user = UserFactory::createOne(['avatar' => $this->createFile('png')->getRealPath()]);
         $this->client->loginUser($user);
         $avatarPath = $user->getAvatar();
 
@@ -48,7 +48,7 @@ class ProfileTest extends AppTestCase
     public function test_can_delete_avatar_image(): void
     {
         // Arrange
-        $user = UserFactory::createOne(['username' => 'Stitch', 'avatar' => $this->createFile('png')->getRealPath()])->_real();
+        $user = UserFactory::createOne(['username' => 'Stitch', 'avatar' => $this->createFile('png')->getRealPath()]);
         $this->client->loginUser($user);
         $oldAvatarPath = $user->getAvatar();
 

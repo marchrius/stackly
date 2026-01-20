@@ -24,8 +24,8 @@ class CollectionApiNotOwnerTest extends ApiTestCase
     public function test_cant_get_another_user_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
-        $owner = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
+        $owner = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $owner]);
 
         // Act
@@ -38,8 +38,8 @@ class CollectionApiNotOwnerTest extends ApiTestCase
     public function test_cant_get_another_user_collection_children(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
-        $owner = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
+        $owner = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $owner]);
         CollectionFactory::createMany(3, ['parent' => $collection, 'owner' => $owner]);
 
@@ -57,8 +57,8 @@ class CollectionApiNotOwnerTest extends ApiTestCase
     public function test_cant_get_another_user_collection_parent(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
-        $owner = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
+        $owner = UserFactory::createOne();
         $parent = CollectionFactory::createOne(['owner' => $owner]);
         $collection = CollectionFactory::createOne(['parent' => $parent, 'owner' => $owner]);
 
@@ -72,8 +72,8 @@ class CollectionApiNotOwnerTest extends ApiTestCase
     public function test_cant_get_another_user_collection_items(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
-        $owner = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
+        $owner = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $owner]);
         ItemFactory::createMany(3, ['collection' => $collection, 'owner' => $owner]);
 
@@ -91,8 +91,8 @@ class CollectionApiNotOwnerTest extends ApiTestCase
     public function test_cant_get_another_user_collection_data(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
-        $owner = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
+        $owner = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $owner]);
         DatumFactory::createMany(3, ['collection' => $collection, 'owner' => $owner]);
 
@@ -110,13 +110,13 @@ class CollectionApiNotOwnerTest extends ApiTestCase
     public function test_cant_post_collection_in_another_user_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
-        $owner = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
+        $owner = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $owner]);
 
         // Act
         $this->createClientWithCredentials($user)->request('POST', '/api/collections/', ['json' => [
-            'parent' => '/api/collections/' . $collection->_real(),
+            'parent' => '/api/collections/' . $collection,
             'name' => 'Berserk',
         ]]);
 
@@ -127,9 +127,9 @@ class CollectionApiNotOwnerTest extends ApiTestCase
     public function test_cant_post_collection_with_another_user_datum(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         CollectionFactory::createOne(['owner' => $user]);
-        $owner = UserFactory::createOne()->_real();
+        $owner = UserFactory::createOne();
         $datum = DatumFactory::createOne(['owner' => $owner]);
 
         // Act
@@ -145,8 +145,8 @@ class CollectionApiNotOwnerTest extends ApiTestCase
     public function test_cant_put_another_user_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
-        $owner = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
+        $owner = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $owner]);
 
         // Act
@@ -161,8 +161,8 @@ class CollectionApiNotOwnerTest extends ApiTestCase
     public function test_cant_patch_another_user_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
-        $owner = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
+        $owner = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $owner]);
 
         // Act
@@ -180,8 +180,8 @@ class CollectionApiNotOwnerTest extends ApiTestCase
     public function test_cant_delete_another_user_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
-        $owner = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
+        $owner = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $owner]);
 
         // Act

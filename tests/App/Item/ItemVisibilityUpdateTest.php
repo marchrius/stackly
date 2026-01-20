@@ -42,7 +42,7 @@ class ItemVisibilityUpdateTest extends AppTestCase
     public function test_visibility_add_item(string $collection1Visibility, string $collection2Visibility, string $itemFinalVisibility): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collectionLevel1 = CollectionFactory::createOne(['owner' => $user, 'visibility' => $collection1Visibility]);
         $collectionLevel2 = CollectionFactory::createOne(['parent' => $collectionLevel1, 'owner' => $user, 'visibility' => $collection2Visibility]);
 
@@ -68,7 +68,7 @@ class ItemVisibilityUpdateTest extends AppTestCase
     public function test_visibility_change_item_collection(string $collection1Visibility, string $collection2Visibility, string $itemFinalVisibility): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $oldCollection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $oldCollection, 'owner' => $user]);
         $datum = DatumFactory::createOne(['item' => $item, 'owner' => $user]);
@@ -76,13 +76,8 @@ class ItemVisibilityUpdateTest extends AppTestCase
         $collectionLevel1 = CollectionFactory::createOne(['owner' => $user, 'visibility' => $collection1Visibility]);
         $collectionLevel2 = CollectionFactory::createOne(['parent' => $collectionLevel1, 'owner' => $user, 'visibility' => $collection2Visibility]);
 
-        // Act
-        $item->_withoutAutoRefresh(
-            function (Item $item) use ($collectionLevel2) {
-                $item->setCollection($collectionLevel2->_real());
-            }
-        );
-        $item->_save();
+        $item->setCollection($collectionLevel2);
+        \Zenstruck\Foundry\Persistence\save($item);
 
         // Assert
         ItemFactory::assert()->exists(['id' => $item->getId(), 'finalVisibility' => $itemFinalVisibility]);

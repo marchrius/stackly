@@ -37,16 +37,16 @@ class SearchTest extends AppTestCase
     public function test_can_use_search(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $now = new \DateTimeImmutable();
-        $collectionFrieren = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user, 'createdAt' => $now])->_real();
+        $collectionFrieren = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user, 'createdAt' => $now]);
         ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collectionFrieren, 'owner' => $user, 'createdAt' => $now]);
         TagFactory::createOne(['label' => 'Frieren', 'owner' => $user, 'createdAt' => $now]);
         WishlistFactory::createOne(['name' => 'Wishlist Frieren', 'owner' => $user, 'createdAt' => $now]);
         AlbumFactory::createOne(['title' => 'Frieren collection', 'owner' => $user, 'createdAt' => $now]);
 
-        $collectionBerserk = CollectionFactory::createOne(['title' => 'Berserk', 'owner' => $user, 'createdAt' => $now])->_real();
+        $collectionBerserk = CollectionFactory::createOne(['title' => 'Berserk', 'owner' => $user, 'createdAt' => $now]);
         ItemFactory::createOne(['name' => 'Berserk #1', 'collection' => $collectionBerserk, 'owner' => $user, 'createdAt' => $now]);
         TagFactory::createOne(['label' => 'Berserk', 'owner' => $user, 'createdAt' => $now]);
         WishlistFactory::createOne(['name' => 'Wishlist Berserk', 'owner' => $user, 'createdAt' => $now]);
@@ -80,10 +80,10 @@ class SearchTest extends AppTestCase
     public function test_can_use_search_without_data(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $now = new \DateTimeImmutable();
-        $collectionFrieren = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user, 'createdAt' => $now])->_real();
+        $collectionFrieren = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user, 'createdAt' => $now]);
         $item = ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collectionFrieren, 'owner' => $user, 'createdAt' => $now]);
         DatumFactory::createOne(['owner' => $user, 'item' => $item, 'position' => 1, 'type' => DatumTypeEnum::TYPE_TEXT, 'label' => 'ISBN', 'value' => '9791032710838']);
         ItemFactory::createOne(['name' => 'Frieren 9791032710838', 'collection' => $collectionFrieren, 'owner' => $user, 'createdAt' => $now]);
@@ -104,10 +104,10 @@ class SearchTest extends AppTestCase
     public function test_can_use_search_with_data(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $now = new \DateTimeImmutable();
-        $collectionFrieren = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user, 'createdAt' => $now])->_real();
+        $collectionFrieren = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user, 'createdAt' => $now]);
         $item = ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collectionFrieren, 'owner' => $user, 'createdAt' => $now]);
         DatumFactory::createOne(['owner' => $user, 'item' => $item, 'position' => 1, 'type' => DatumTypeEnum::TYPE_TEXT, 'label' => 'ISBN', 'value' => '9791032710838']);
         ItemFactory::createOne(['name' => 'Frieren 9791032710838', 'collection' => $collectionFrieren, 'owner' => $user, 'createdAt' => $now]);
@@ -129,7 +129,7 @@ class SearchTest extends AppTestCase
     public function test_search_need_at_least_one_field(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         // Act
@@ -146,8 +146,8 @@ class SearchTest extends AppTestCase
     public function test_anonymous_user_search_public(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
-        $collectionFrieren = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user])->_real();
+        $user = UserFactory::createOne();
+        $collectionFrieren = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user]);
         ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collectionFrieren, 'owner' => $user]);
         TagFactory::createOne(['label' => 'Frieren', 'owner' => $user]);
         WishlistFactory::createOne(['name' => 'Wishlist Frieren', 'owner' => $user]);
@@ -181,8 +181,8 @@ class SearchTest extends AppTestCase
     public function test_anonymous_user_search_entities_private(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
-        $collectionFrieren = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE])->_real();
+        $user = UserFactory::createOne();
+        $collectionFrieren = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
         ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collectionFrieren, 'owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
         TagFactory::createOne(['label' => 'Frieren', 'owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
         WishlistFactory::createOne(['name' => 'Wishlist Frieren', 'owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
@@ -206,7 +206,7 @@ class SearchTest extends AppTestCase
     public function test_anonymous_user_private(): void
     {
         // Arrange
-        $user = UserFactory::createOne(['visibility' => VisibilityEnum::VISIBILITY_PRIVATE])->_real();
+        $user = UserFactory::createOne(['visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
 
         // Act
         $this->client->request(Request::METHOD_GET, '/user/' . $user->getUsername() . '/search');
@@ -218,9 +218,9 @@ class SearchTest extends AppTestCase
     public function test_can_use_search_autocomplete(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user])->_real();
+        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user]);
         $item = ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $user]);
         $tag = TagFactory::createOne(['label' => 'Frieren', 'owner' => $user]);
         $wishlist = WishlistFactory::createOne(['name' => 'Wishlist Frieren', 'owner' => $user]);
@@ -244,10 +244,10 @@ class SearchTest extends AppTestCase
     public function test_can_use_search_autocomplete_without_data(): void
     {
         // Arrange
-        $user = UserFactory::createOne(['searchInDataByDefaultEnabled' => 0])->_real();
+        $user = UserFactory::createOne(['searchInDataByDefaultEnabled' => 0]);
         $this->client->loginUser($user);
         $now = new \DateTimeImmutable();
-        $collectionFrieren = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user, 'createdAt' => $now])->_real();
+        $collectionFrieren = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user, 'createdAt' => $now]);
         $item1 = ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collectionFrieren, 'owner' => $user, 'createdAt' => $now]);
         DatumFactory::createOne(['owner' => $user, 'item' => $item1, 'position' => 1, 'type' => DatumTypeEnum::TYPE_TEXT, 'label' => 'ISBN', 'value' => '9791032710838']);
         $item2 = ItemFactory::createOne(['name' => 'Frieren 9791032710838', 'collection' => $collectionFrieren, 'owner' => $user, 'createdAt' => $now]);
@@ -266,10 +266,10 @@ class SearchTest extends AppTestCase
     public function test_can_use_search_autocomplete_with_data(): void
     {
         // Arrange
-        $user = UserFactory::createOne(['searchInDataByDefaultEnabled' => 1])->_real();
+        $user = UserFactory::createOne(['searchInDataByDefaultEnabled' => 1]);
         $this->client->loginUser($user);
         $now = new \DateTimeImmutable();
-        $collectionFrieren = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user, 'createdAt' => $now])->_real();
+        $collectionFrieren = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user, 'createdAt' => $now]);
         $item1 = ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collectionFrieren, 'owner' => $user, 'createdAt' => $now]);
         DatumFactory::createOne(['owner' => $user, 'item' => $item1, 'position' => 1, 'type' => DatumTypeEnum::TYPE_TEXT, 'label' => 'ISBN', 'value' => '9791032710838']);
         $item2 = ItemFactory::createOne(['name' => 'Frieren 9791032710838', 'collection' => $collectionFrieren, 'owner' => $user, 'createdAt' => $now]);
@@ -289,8 +289,8 @@ class SearchTest extends AppTestCase
     public function test_anonymous_search_autocomplete_entities_public(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
-        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user])->_real();
+        $user = UserFactory::createOne();
+        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user]);
         $item = ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $user]);
         $tag = TagFactory::createOne(['label' => 'Frieren', 'owner' => $user]);
         $wishlist = WishlistFactory::createOne(['name' => 'Wishlist Frieren', 'owner' => $user]);
@@ -314,8 +314,8 @@ class SearchTest extends AppTestCase
     public function test_anonymous_search_autocomplete_entities_private(): void
     {
         // Arrange
-        $user = UserFactory::createOne(['searchInDataByDefaultEnabled' => 1])->_real();
-        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE])->_real();
+        $user = UserFactory::createOne(['searchInDataByDefaultEnabled' => 1]);
+        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
         $item = ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
         DatumFactory::createOne(['owner' => $user, 'item' => $item, 'position' => 1, 'type' => DatumTypeEnum::TYPE_TEXT, 'label' => 'Origin', 'value' => 'Frieren']);
         TagFactory::createOne(['label' => 'Frieren', 'owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
@@ -335,7 +335,7 @@ class SearchTest extends AppTestCase
     public function test_anonymous_search_autocomplete_user_private(): void
     {
         // Arrange
-        $user = UserFactory::createOne(['visibility' => VisibilityEnum::VISIBILITY_PRIVATE])->_real();
+        $user = UserFactory::createOne(['visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
 
         // Act
         $this->client->request(Request::METHOD_GET, '/user/' . $user->getUsername() . '/search/autocomplete');

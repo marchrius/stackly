@@ -8,7 +8,10 @@ use App\Entity\Tag;
 use App\Enum\VisibilityEnum;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class TagFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\Tag>
+ */
+final class TagFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     protected function defaults(): array|callable

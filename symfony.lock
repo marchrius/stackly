@@ -125,9 +125,6 @@
     "justinrainbow/json-schema": {
         "version": "5.2.11"
     },
-    "lcobucci/clock": {
-        "version": "2.1.0"
-    },
     "lcobucci/jwt": {
         "version": "4.1.5"
     },
@@ -145,9 +142,6 @@
     },
     "maennchen/zipstream-php": {
         "version": "1.2.0"
-    },
-    "masterminds/html5": {
-        "version": "2.7.5"
     },
     "monolog/monolog": {
         "version": "2.0.2"

@@ -62,11 +62,11 @@ class CommandTest extends KernelTestCase
         $command = $application->find('app:regenerate-logs');
         $commandTester = new CommandTester($command);
 
-        $user = UserFactory::createOne()->_real();
-        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user])->_real();
-        ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $user])->_real();
-        ItemFactory::createOne(['name' => 'Frieren #2', 'collection' => $collection, 'owner' => $user])->_real();
-        ItemFactory::createOne(['name' => 'Frieren #3', 'collection' => $collection, 'owner' => $user])->_real();
+        $user = UserFactory::createOne();
+        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user]);
+        ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $user]);
+        ItemFactory::createOne(['name' => 'Frieren #2', 'collection' => $collection, 'owner' => $user]);
+        ItemFactory::createOne(['name' => 'Frieren #3', 'collection' => $collection, 'owner' => $user]);
         LogFactory::truncate();
 
         // Act
@@ -86,8 +86,8 @@ class CommandTest extends KernelTestCase
         $commandTester = new CommandTester($command);
         $commandTester->setInputs(['yes']);
 
-        $user = UserFactory::createOne()->_real();
-        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user])->_real();
+        $user = UserFactory::createOne();
+        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user]);
         $item = ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $user]);
         $datum = DatumFactory::createOne(['owner' => $user, 'item' => $item, 'position' => 1, 'type' => DatumTypeEnum::TYPE_TEXT, 'label' => 'Japanese title', 'value' => '葬送のフリーレン']);
 
@@ -96,13 +96,13 @@ class CommandTest extends KernelTestCase
 
         $filesystem->copy(__DIR__ . '/../../assets/fixtures/nyancat.png', "/tmp/{$uniqId}.png");
         $uploadedFile = new UploadedFile("/tmp/{$uniqId}.png", "{$uniqId}.png", null, null, true);
-        $item->_real()->setFile($uploadedFile);
-        $item->_save();
+        $item->setFile($uploadedFile);
+        \Zenstruck\Foundry\Persistence\save($item);
 
         $filesystem->copy(__DIR__ . '/../../assets/fixtures/nyancat.png', "/tmp/{$uniqId}.png");
         $uploadedFile = new UploadedFile("/tmp/{$uniqId}.png", "{$uniqId}.png", null, null, true);
-        $datum->_real()->setFileImage($uploadedFile);
-        $datum->_save();
+        $datum->setFileImage($uploadedFile);
+        \Zenstruck\Foundry\Persistence\save($datum);
 
         // Act
         $commandTester->execute([]);

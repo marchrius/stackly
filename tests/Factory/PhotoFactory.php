@@ -8,7 +8,10 @@ use App\Entity\Photo;
 use App\Enum\VisibilityEnum;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class PhotoFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\Photo>
+ */
+final class PhotoFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     protected function defaults(): array|callable

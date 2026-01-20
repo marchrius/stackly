@@ -31,7 +31,7 @@ class InventoryTest extends AppTestCase
     public function test_can_add_inventory(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['title' => 'Friren #1', 'owner' => $user]);
         $artbookCollection = CollectionFactory::createOne(['title' => 'Artbook', 'parent' => $collection, 'owner' => $user]);
@@ -55,7 +55,7 @@ class InventoryTest extends AppTestCase
     public function test_can_delete_inventory(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $inventory = InventoryFactory::createOne(['owner' => $user]);
 
@@ -73,7 +73,7 @@ class InventoryTest extends AppTestCase
     public function test_can_get_inventory(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $inventory = InventoryFactory::createOne(['name' => 'Collection', 'owner' => $user]);
 
@@ -88,7 +88,7 @@ class InventoryTest extends AppTestCase
     public function test_can_check(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['title' => 'Friren #1', 'owner' => $user]);
         $item = ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $user]);

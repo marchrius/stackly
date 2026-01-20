@@ -38,7 +38,7 @@ class CollectionTest extends AppTestCase
     public function test_can_get_collection_list(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         CollectionFactory::createMany(3, ['owner' => $user]);
 
@@ -54,7 +54,7 @@ class CollectionTest extends AppTestCase
     public function test_can_edit_collection_index(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         CollectionFactory::createMany(3, ['owner' => $user]);
 
@@ -73,7 +73,7 @@ class CollectionTest extends AppTestCase
     public function test_can_get_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne(['currency' => 'EUR', 'dateFormat' => DateFormatEnum::FORMAT_SLASH_DMY])->_real();
+        $user = UserFactory::createOne(['currency' => 'EUR', 'dateFormat' => DateFormatEnum::FORMAT_SLASH_DMY]);
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
         CollectionFactory::createMany(3, ['parent' => $collection, 'owner' => $user]);
@@ -119,7 +119,7 @@ class CollectionTest extends AppTestCase
     public function test_can_get_collection_with_list_view(): void
     {
         // Arrange
-        $user = UserFactory::createOne(['currency' => 'EUR', 'dateFormat' => DateFormatEnum::FORMAT_SLASH_DMY])->_real();
+        $user = UserFactory::createOne(['currency' => 'EUR', 'dateFormat' => DateFormatEnum::FORMAT_SLASH_DMY]);
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['owner' => $user]);
 
@@ -130,7 +130,7 @@ class CollectionTest extends AppTestCase
             ->setSortingType(DatumTypeEnum::TYPE_TEXT)
             ->setSortingDirection(SortingDirectionEnum::DESCENDING)
         ;
-        $collection->_save();
+        \Zenstruck\Foundry\Persistence\save($collection);
         $collection->getChildrenDisplayConfiguration()
             ->setDisplayMode(DisplayModeEnum::DISPLAY_MODE_LIST)
             ->setColumns(['Author'])
@@ -138,7 +138,7 @@ class CollectionTest extends AppTestCase
             ->setSortingType(DatumTypeEnum::TYPE_TEXT)
             ->setSortingDirection(SortingDirectionEnum::DESCENDING)
         ;
-        $collection->_save();
+        \Zenstruck\Foundry\Persistence\save($collection);
 
         $child1 = CollectionFactory::createOne(['parent' => $collection, 'owner' => $user]);
         DatumFactory::createOne(['owner' => $user, 'collection' => $child1, 'type' => DatumTypeEnum::TYPE_TEXT, 'label' => 'Author']);
@@ -183,7 +183,7 @@ class CollectionTest extends AppTestCase
     public function test_can_post_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $parent = CollectionFactory::createOne(['owner' => $user]);
 
@@ -202,7 +202,7 @@ class CollectionTest extends AppTestCase
     public function test_can_edit_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         $collection = CollectionFactory::createOne(['owner' => $user, 'image' => $this->createFile('png')->getRealPath()]);
@@ -242,7 +242,7 @@ class CollectionTest extends AppTestCase
     public function test_can_delete_collection_image(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['title' => 'Berserk', 'owner' => $user, 'image' => $this->createFile('png')->getRealPath()]);
         $oldCollectionImagePath = $collection->getImage();
@@ -261,7 +261,7 @@ class CollectionTest extends AppTestCase
     public function test_can_get_collection_items_list(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $childCollection = CollectionFactory::createOne(['parent' => $collection, 'owner' => $user]);
@@ -280,7 +280,7 @@ class CollectionTest extends AppTestCase
     public function test_can_delete_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['owner' => $user]);
         ItemFactory::createMany(3, ['collection' => $collection, 'owner' => $user]);
@@ -300,7 +300,7 @@ class CollectionTest extends AppTestCase
     public function test_can_delete_child_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $childCollection = CollectionFactory::createOne(['parent' => $collection, 'owner' => $user]);
@@ -324,13 +324,13 @@ class CollectionTest extends AppTestCase
     public function test_can_batch_tag_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $childCollection = CollectionFactory::createOne(['parent' => $collection, 'owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);
         $childItem = ItemFactory::createOne(['collection' => $childCollection, 'owner' => $user]);
-        $tag = TagFactory::createOne(['label' => 'Frieren', 'owner' => $user])->_real();
+        $tag = TagFactory::createOne(['label' => 'Frieren', 'owner' => $user]);
 
         // Act
         $this->client->request(Request::METHOD_GET, '/collections/' . $collection->getId() . '/batch-tagging');

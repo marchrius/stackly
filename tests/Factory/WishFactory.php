@@ -8,7 +8,10 @@ use App\Entity\Wish;
 use App\Enum\VisibilityEnum;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class WishFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\Wish>
+ */
+final class WishFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     protected function defaults(): array|callable

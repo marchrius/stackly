@@ -19,12 +19,14 @@ class MetricsTest extends ApiTestCase
     public function test_can_see_metrics(): void
     {
         // Arrange
+        $client = static::createClient();
         $configurationMetrics = ConfigurationFactory::find(['label' => ConfigurationEnum::ENABLE_METRICS]);
         $configurationMetrics->setValue('1');
-        $configurationMetrics->_save();
+        \Zenstruck\Foundry\Persistence\save($configurationMetrics);
+        \Zenstruck\Foundry\Persistence\refresh($configurationMetrics);
 
         // Act
-        static::createClient()->request('GET', '/api/metrics');
+        $client->request('GET', '/api/metrics');
 
         // Assert
         $this->assertResponseIsSuccessful();
@@ -35,7 +37,8 @@ class MetricsTest extends ApiTestCase
         // Arrange
         $configurationMetrics = ConfigurationFactory::find(['label' => ConfigurationEnum::ENABLE_METRICS]);
         $configurationMetrics->setValue('test');
-        $configurationMetrics->_save();
+        \Zenstruck\Foundry\Persistence\save($configurationMetrics);
+        \Zenstruck\Foundry\Persistence\refresh($configurationMetrics);
 
         // Act
         static::createClient()->request('GET', '/api/metrics');

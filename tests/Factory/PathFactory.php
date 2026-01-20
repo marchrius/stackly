@@ -8,7 +8,10 @@ use App\Entity\Path;
 use App\Enum\DatumTypeEnum;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class PathFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\Path>
+ */
+final class PathFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     public function __construct()
     {

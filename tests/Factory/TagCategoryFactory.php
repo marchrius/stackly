@@ -7,7 +7,10 @@ namespace App\Tests\Factory;
 use App\Entity\TagCategory;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class TagCategoryFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\TagCategory>
+ */
+final class TagCategoryFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     protected function defaults(): array|callable

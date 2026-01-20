@@ -30,7 +30,7 @@ class ToolsTest extends AppTestCase
     public function test_can_see_tools(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         // Act
@@ -44,12 +44,12 @@ class ToolsTest extends AppTestCase
     public function test_can_export_printable_list(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user])->_real();
-        ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $user])->_real();
-        ItemFactory::createOne(['name' => 'Frieren #2', 'collection' => $collection, 'owner' => $user])->_real();
-        ItemFactory::createOne(['name' => 'Frieren #3', 'collection' => $collection, 'owner' => $user])->_real();
+        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user]);
+        ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $user]);
+        ItemFactory::createOne(['name' => 'Frieren #2', 'collection' => $collection, 'owner' => $user]);
+        ItemFactory::createOne(['name' => 'Frieren #3', 'collection' => $collection, 'owner' => $user]);
 
         // Act
         $crawler = $this->client->request(Request::METHOD_GET, '/tools/export/printable-list');
@@ -62,12 +62,12 @@ class ToolsTest extends AppTestCase
     public function test_can_export_csv(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user])->_real();
-        ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $user])->_real();
-        ItemFactory::createOne(['name' => 'Frieren #2', 'collection' => $collection, 'owner' => $user])->_real();
-        ItemFactory::createOne(['name' => 'Frieren #3', 'collection' => $collection, 'owner' => $user])->_real();
+        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user]);
+        ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $user]);
+        ItemFactory::createOne(['name' => 'Frieren #2', 'collection' => $collection, 'owner' => $user]);
+        ItemFactory::createOne(['name' => 'Frieren #3', 'collection' => $collection, 'owner' => $user]);
 
         // Act
         $this->client->request(Request::METHOD_GET, '/tools/export/csv');

@@ -18,15 +18,15 @@ final readonly class SeenListener
 
     public function onKernelResponse(ResponseEvent $event): void
     {
-        $route = $event->getRequest()->get('_route');
+        $route = $event->getRequest()->attributes->get('_route');
 
         [$type, $id] = match ($route) {
-            'app_item_show', 'app_shared_item_show' => ['item', $event->getRequest()->get('id')],
-            'app_tag_item_show', 'app_shared_tag_item_show' => ['item', $event->getRequest()->get('itemId')],
-            'app_collection_show', 'app_shared_collection_show' => ['collection', $event->getRequest()->get('id')],
-            'app_tag_show', 'app_shared_tag_show' => ['tag', $event->getRequest()->get('id')],
-            'app_album_show', 'app_shared_album_show' => ['album', $event->getRequest()->get('id')],
-            'app_wishlist_show', 'app_shared_wishlist_show' => ['wishlist', $event->getRequest()->get('id')],
+            'app_item_show', 'app_shared_item_show' => ['item', $event->getRequest()->attributes->get('id')],
+            'app_tag_item_show', 'app_shared_tag_item_show' => ['item', $event->getRequest()->attributes->get('itemId')],
+            'app_collection_show', 'app_shared_collection_show' => ['collection', $event->getRequest()->attributes->get('id')],
+            'app_tag_show', 'app_shared_tag_show' => ['tag', $event->getRequest()->attributes->get('id')],
+            'app_album_show', 'app_shared_album_show' => ['album', $event->getRequest()->attributes->get('id')],
+            'app_wishlist_show', 'app_shared_wishlist_show' => ['wishlist', $event->getRequest()->attributes->get('id')],
             default => [null, null]
         };
 

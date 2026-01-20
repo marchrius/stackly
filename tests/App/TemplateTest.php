@@ -32,7 +32,7 @@ class TemplateTest extends AppTestCase
     public function test_can_see_template_list(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         // Act
@@ -46,7 +46,7 @@ class TemplateTest extends AppTestCase
     public function test_can_get_template(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $template = TemplateFactory::createOne(['owner' => $user]);
 
@@ -61,7 +61,7 @@ class TemplateTest extends AppTestCase
     public function test_can_add_template(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         // Act
@@ -79,7 +79,7 @@ class TemplateTest extends AppTestCase
     public function test_can_edit_template(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $template = TemplateFactory::createOne(['owner' => $user]);
         FieldFactory::createOne(['template' => $template, 'owner' => $user]);
@@ -102,7 +102,7 @@ class TemplateTest extends AppTestCase
     public function test_can_delete_template(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $template = TemplateFactory::createOne(['owner' => $user]);
         CollectionFactory::createOne(['owner' => $user, 'itemsDefaultTemplate' => $template]);
@@ -122,7 +122,7 @@ class TemplateTest extends AppTestCase
     public function test_can_get_template_fields(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $template = TemplateFactory::createOne(['owner' => $user]);
         FieldFactory::createOne(['name' => 'Author', 'type' => DatumTypeEnum::TYPE_TEXT, 'position' => 1, 'template' => $template, 'owner' => $user]);

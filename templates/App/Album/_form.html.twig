@@ -25,7 +25,7 @@
 </div>
 
 <div class="center-align form-btn-holder">
-    {% if app.request.get('_route') == 'app_album_add' %}
+    {% if app.request.attributes.get('_route') == 'app_album_add' %}
         {% if app.request.query.has('parent') %}
             {% set cancelUrl = path('app_album_show', {id: app.request.query.get('parent')}) %}
         {% else %}

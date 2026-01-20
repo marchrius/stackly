@@ -7,10 +7,11 @@ ENV PGID=1001
 ENV USER=koillection
 ENV FRANKENPHP_CONFIG="worker /app/public/public/index.php"
 ENV FRANKENPHP_SERVER_NAME=":80"
+ENV APP_RUNTIME="Symfony\\Component\\Runtime\\SymfonyRuntime"
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 COPY ./docker/entrypoint-dev.sh /entrypoint.sh
-COPY ./docker/Caddyfile /etc/caddy/Caddyfile
+COPY ./docker/Caddyfile-dev /etc/caddy/Caddyfile
 
 # Install some basics dependencies
 RUN apt-get update && \
@@ -55,4 +56,4 @@ WORKDIR /app/public
 
 HEALTHCHECK CMD curl --fail http://localhost:80/ || exit 1
 
-ENTRYPOINT ["sh", "/app/public/docker/entrypoint-dev.sh" ]
+ENTRYPOINT ["sh", "/app/public/docker/entrypoint.sh" ]

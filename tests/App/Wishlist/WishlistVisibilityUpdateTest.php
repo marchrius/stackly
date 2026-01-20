@@ -40,7 +40,7 @@ class WishlistVisibilityUpdateTest extends AppTestCase
     public function test_visibility_add_nested_wishlist(string $wishlist1Visibility, string $wishlist3Visibility, string $wishlist2FinalVisibility): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $wishlistLevel1 = WishlistFactory::createOne(['owner' => $user, 'visibility' => $wishlist1Visibility]);
 
         // Act
@@ -64,7 +64,7 @@ class WishlistVisibilityUpdateTest extends AppTestCase
     public function test_visibility_change_parent_wishlist(string $newWishlistVisibility, string $wishlist2Visibility, string $wishlist1FinalVisibility): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $wishlistLevel1 = WishlistFactory::createOne(['parent' => null, 'owner' => $user]);
 
         $wishlistLevel2 = WishlistFactory::createOne(['parent' => $wishlistLevel1, 'owner' => $user, 'visibility' => $wishlist2Visibility]);
@@ -72,12 +72,8 @@ class WishlistVisibilityUpdateTest extends AppTestCase
 
         // Act
         $newParentWishlist = WishlistFactory::createOne(['owner' => $user, 'visibility' => $newWishlistVisibility]);
-        $wishlistLevel2->_withoutAutoRefresh(
-            function (Wishlist $wishlistLevel2) use ($newParentWishlist) {
-                $wishlistLevel2->setParent($newParentWishlist->_real());
-            }
-        );
-        $wishlistLevel2->_save();
+        $wishlistLevel2->setParent($newParentWishlist);
+        \Zenstruck\Foundry\Persistence\save($wishlistLevel2);
 
         // Assert
         WishlistFactory::assert()->exists(['id' => $wishlistLevel2->getId(), 'finalVisibility' => $wishlist1FinalVisibility]);
@@ -98,20 +94,15 @@ class WishlistVisibilityUpdateTest extends AppTestCase
     public function test_visibility_change_wishlist_visibility(string $wishlist1Visibility, string $wishlist2Visibility, string $level1Visibility, string $level2Visibility): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $wishlistLevel1 = WishlistFactory::createOne(['parent' => null, 'owner' => $user]);
         $wish1 = WishFactory::createOne(['wishlist' => $wishlistLevel1, 'owner' => $user]);
 
         $wishlistLevel2 = WishlistFactory::createOne(['parent' => $wishlistLevel1, 'owner' => $user, 'visibility' => $wishlist2Visibility]);
         $wish2 = WishFactory::createOne(['wishlist' => $wishlistLevel2, 'owner' => $user]);
 
-        // Act
-        $wishlistLevel1->_withoutAutoRefresh(
-            function (Wishlist $wishlistLevel1) use ($wishlist1Visibility) {
-                $wishlistLevel1->setVisibility($wishlist1Visibility);
-            }
-        );
-        $wishlistLevel1->_save();
+        $wishlistLevel1->setVisibility($wishlist1Visibility);
+        \Zenstruck\Foundry\Persistence\save($wishlistLevel1);
 
         // Assert
         WishlistFactory::assert()->exists(['id' => $wishlistLevel1->getId(), 'finalVisibility' => $level1Visibility]);

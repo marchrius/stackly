@@ -7,7 +7,10 @@ namespace App\Tests\Factory;
 use App\Entity\Template;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class TemplateFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\Template>
+ */
+final class TemplateFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     protected function defaults(): array|callable

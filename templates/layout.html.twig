@@ -2,7 +2,7 @@
 
 {% block body %}
     <div class="app">
-        {% set route = app.request.get('_route') %}
+        {% set route = app.request.attributes.get('_route') %}
         <div class="sidebar-wrapper">
             <div class="nav-wrapper">
                 <div class="header-logo">

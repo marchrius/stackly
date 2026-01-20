@@ -22,7 +22,7 @@ class TagCategoryApiTest extends ApiTestCase
     public function test_get_tag_categories(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         TagCategoryFactory::createMany(3, ['owner' => $user]);
 
         // Act
@@ -39,7 +39,7 @@ class TagCategoryApiTest extends ApiTestCase
     public function test_get_tag_category(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $category = TagCategoryFactory::createOne(['owner' => $user]);
 
         // Act
@@ -56,7 +56,7 @@ class TagCategoryApiTest extends ApiTestCase
     public function test_get_tag_category_tags(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $category = TagCategoryFactory::createOne(['owner' => $user]);
         TagFactory::createMany(3, ['category' => $category, 'owner' => $user]);
 
@@ -74,7 +74,7 @@ class TagCategoryApiTest extends ApiTestCase
     public function test_post_tag_category(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
 
         // Act
         $this->createClientWithCredentials($user)->request('POST', '/api/tag_categories', ['json' => [
@@ -92,7 +92,7 @@ class TagCategoryApiTest extends ApiTestCase
     public function test_put_tag_category(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $category = TagCategoryFactory::createOne(['owner' => $user]);
 
         // Act
@@ -112,7 +112,7 @@ class TagCategoryApiTest extends ApiTestCase
     public function test_patch_tag_category(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $category = TagCategoryFactory::createOne(['owner' => $user]);
 
         // Act
@@ -135,7 +135,7 @@ class TagCategoryApiTest extends ApiTestCase
     public function test_delete_tag_category(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $category = TagCategoryFactory::createOne(['owner' => $user]);
 
         // Act

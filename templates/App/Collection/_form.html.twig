@@ -205,7 +205,7 @@
         </div>
 
         <div class="center-align form-btn-holder">
-            {% if app.request.get('_route') == 'app_collection_add' %}
+            {% if app.request.attributes.get('_route') == 'app_collection_add' %}
                 {% if app.request.query.has('parent') %}
                     {% set cancelUrl = path('app_collection_show', {id: app.request.query.get('parent')}) %}
                 {% else %}

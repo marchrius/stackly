@@ -33,9 +33,9 @@ class WishTest extends AppTestCase
     public function test_can_create_wish(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $wishlist = WishlistFactory::createOne(['owner' => $user])->_real();
+        $wishlist = WishlistFactory::createOne(['owner' => $user]);
 
         // Act
         $this->client->request(Request::METHOD_GET, '/wishes/add?wishlist=' . $wishlist->getId());
@@ -66,7 +66,7 @@ class WishTest extends AppTestCase
     public function test_cant_create_wish_without_wishlist(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         // Act
@@ -79,9 +79,9 @@ class WishTest extends AppTestCase
     public function test_can_edit_wish(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $wishlist = WishlistFactory::createOne(['owner' => $user])->_real();
+        $wishlist = WishlistFactory::createOne(['owner' => $user]);
         $wish = WishFactory::createOne(['wishlist' => $wishlist, 'owner' => $user]);
 
         // Act
@@ -113,9 +113,9 @@ class WishTest extends AppTestCase
     public function test_can_delete_wish(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $wishlist = WishlistFactory::createOne(['owner' => $user])->_real();
+        $wishlist = WishlistFactory::createOne(['owner' => $user]);
         $wish = WishFactory::createOne(['wishlist' => $wishlist, 'owner' => $user]);
 
         // Act
@@ -132,11 +132,11 @@ class WishTest extends AppTestCase
     public function test_can_transform_wish_to_item(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $wishlist = WishlistFactory::createOne(['owner' => $user])->_real();
+        $wishlist = WishlistFactory::createOne(['owner' => $user]);
         $wish = WishFactory::createOne(['name' => 'Frieren #1', 'wishlist' => $wishlist, 'owner' => $user]);
-        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user])->_real();
+        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user]);
 
         // Act
         $this->client->request(Request::METHOD_GET, '/wishes/' . $wish->getId() . '/transfer');

@@ -8,7 +8,10 @@ use App\Entity\Scraper;
 use App\Enum\ScraperTypeEnum;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class ScraperFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\Scraper>
+ */
+final class ScraperFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     protected function defaults(): array|callable

@@ -32,14 +32,14 @@ class SignatureTest extends AppTestCase
     public function test_can_see_signature_list(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $items = ItemFactory::createMany(3, [
             'owner' => $user,
             'collection' => CollectionFactory::createOne(['owner' => $user]),
         ]);
         foreach ($items as $item) {
-            $item->_real()->addData(DatumFactory::createOne(['owner' => $user, 'type' => DatumTypeEnum::TYPE_SIGN])->_real());
+            $item->addData(DatumFactory::createOne(['owner' => $user, 'type' => DatumTypeEnum::TYPE_SIGN]));
         }
 
         // Act

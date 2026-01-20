@@ -33,7 +33,7 @@ class TagTest extends AppTestCase
     public function test_can_see_tag_list(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         TagFactory::createMany(3, ['owner' => $user]);
 
@@ -49,7 +49,7 @@ class TagTest extends AppTestCase
     public function test_ajax_tag_list(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         TagFactory::createMany(7, ['owner' => $user, 'label' => 'tests']);
         TagFactory::createMany(3, ['owner' => $user, 'label' => 'Manga']);
@@ -65,14 +65,14 @@ class TagTest extends AppTestCase
     public function test_can_see_tag(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $tag = TagFactory::createOne(['owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
         $tagRelated = TagFactory::createOne(['owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
         ItemFactory::createMany(3, [
             'owner' => $user,
             'tags' => [$tag, $tagRelated],
-            'collection' => CollectionFactory::createOne(['owner' => $user])->_real(),
+            'collection' => CollectionFactory::createOne(['owner' => $user]),
         ]);
 
         // Act
@@ -97,7 +97,7 @@ class TagTest extends AppTestCase
     public function test_can_edit_tag(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $tag = TagFactory::createOne(['owner' => $user]);
 
@@ -119,7 +119,7 @@ class TagTest extends AppTestCase
     public function test_can_delete_tag(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $tag = TagFactory::createOne(['owner' => $user]);
 
@@ -136,15 +136,15 @@ class TagTest extends AppTestCase
     public function test_can_delete_unused_tag(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $tag = TagFactory::createOne(['owner' => $user])->_real();
+        $tag = TagFactory::createOne(['owner' => $user]);
         TagFactory::createOne(['owner' => $user]);
         TagFactory::createOne(['owner' => $user]);
-        $collection = CollectionFactory::createOne(['owner' => $user])->_real();
+        $collection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);
         $item->addTag($tag);
-        $item->_save();
+        \Zenstruck\Foundry\Persistence\save($item);
 
         // Act
         $crawler = $this->client->request(Request::METHOD_GET, '/tags');
@@ -159,7 +159,7 @@ class TagTest extends AppTestCase
     public function test_can_use_tag_autocomplete(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         TagFactory::createOne(['label' => 'Frieren', 'owner' => $user]);
         TagFactory::createOne(['label' => 'Berserk', 'owner' => $user]);
@@ -179,13 +179,13 @@ class TagTest extends AppTestCase
     public function test_can_show_item_from_tag(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $tag = TagFactory::createOne(['label' => 'Frieren', 'owner' => $user])->_real();
-        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user])->_real();
+        $tag = TagFactory::createOne(['label' => 'Frieren', 'owner' => $user]);
+        $collection = CollectionFactory::createOne(['title' => 'Frieren', 'owner' => $user]);
         $item = ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $user]);
         $item->addTag($tag);
-        $item->_save();
+        \Zenstruck\Foundry\Persistence\save($item);
 
         // Act
         $crawler = $this->client->request(Request::METHOD_GET, '/tags/' . $tag->getId() . '/items/' . $item->getId());

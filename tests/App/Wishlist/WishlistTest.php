@@ -32,7 +32,7 @@ class WishlistTest extends AppTestCase
     public function test_can_get_wishlist_list(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         WishlistFactory::createMany(3, ['owner' => $user]);
 
@@ -48,7 +48,7 @@ class WishlistTest extends AppTestCase
     public function test_can_edit_wishlist_index(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         WishlistFactory::createMany(3, ['owner' => $user]);
 
@@ -67,7 +67,7 @@ class WishlistTest extends AppTestCase
     public function test_can_get_wishlist(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $wishlist = WishlistFactory::createOne(['owner' => $user]);
         WishlistFactory::createMany(3, ['owner' => $user, 'parent' => $wishlist]);
@@ -86,12 +86,12 @@ class WishlistTest extends AppTestCase
     public function test_can_get_wishlist_with_list_view(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         $wishlist = WishlistFactory::createOne(['owner' => $user]);
         $wishlist->getChildrenDisplayConfiguration()->setDisplayMode(DisplayModeEnum::DISPLAY_MODE_LIST);
-        $wishlist->_save();
+        \Zenstruck\Foundry\Persistence\save($wishlist);
 
         WishlistFactory::createMany(3, ['owner' => $user, 'parent' => $wishlist]);
         WishFactory::createMany(3, ['owner' => $user, 'wishlist' => $wishlist]);
@@ -110,7 +110,7 @@ class WishlistTest extends AppTestCase
     public function test_can_post_wishlist(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $parent = WishlistFactory::createOne(['owner' => $user]);
 
@@ -129,7 +129,7 @@ class WishlistTest extends AppTestCase
     public function test_can_edit_wishlist(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $wishlist = WishlistFactory::createOne(['owner' => $user, 'image' => $this->createFile('png')->getRealPath()]);
         $imagePath = $wishlist->getImage();
@@ -149,7 +149,7 @@ class WishlistTest extends AppTestCase
     public function test_can_delete_wishlist_image(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $album = WishlistFactory::createOne(['name' => 'Books', 'owner' => $user, 'image' => $this->createFile('png')->getRealPath()]);
         $oldImagePath = $album->getImage();
@@ -168,7 +168,7 @@ class WishlistTest extends AppTestCase
     public function test_can_delete_wishlist(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $wishlist = WishlistFactory::createOne(['owner' => $user]);
         $childWishlist = WishlistFactory::createOne(['parent' => $wishlist, 'owner' => $user]);

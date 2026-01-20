@@ -9,7 +9,10 @@ use App\Enum\AdvancedItemSearch\TypeEnum;
 use Doctrine\Common\Collections\ArrayCollection;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class SearchFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\Search>
+ */
+final class SearchFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     public static function class(): string

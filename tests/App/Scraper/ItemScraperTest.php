@@ -32,7 +32,7 @@ class ItemScraperTest extends AppTestCase
     public function test_can_see_item_scraper_list(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         // Act
@@ -46,7 +46,7 @@ class ItemScraperTest extends AppTestCase
     public function test_can_get_item_scraper(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $scraper = ScraperFactory::createOne(['type' => ScraperTypeEnum::TYPE_ITEM, 'owner' => $user]);
 
@@ -61,7 +61,7 @@ class ItemScraperTest extends AppTestCase
     public function test_can_add_item_scraper(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         // Act
@@ -79,7 +79,7 @@ class ItemScraperTest extends AppTestCase
     public function test_can_edit_item_scraper(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $scraper = ScraperFactory::createOne(['type' => ScraperTypeEnum::TYPE_ITEM, 'owner' => $user]);
         PathFactory::createOne(['scraper' => $scraper, 'owner' => $user]);
@@ -105,7 +105,7 @@ class ItemScraperTest extends AppTestCase
     public function test_can_delete_item_scraper(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $scraper = ScraperFactory::createOne(['type' => ScraperTypeEnum::TYPE_ITEM, 'owner' => $user]);
         PathFactory::createOne(['scraper' => $scraper, 'owner' => $user]);
@@ -124,7 +124,7 @@ class ItemScraperTest extends AppTestCase
     public function test_can_export_item_scraper(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $scraper = ScraperFactory::createOne(['type' => ScraperTypeEnum::TYPE_ITEM, 'owner' => $user]);
         PathFactory::createOne(['scraper' => $scraper, 'owner' => $user]);
@@ -140,7 +140,7 @@ class ItemScraperTest extends AppTestCase
     public function test_can_import_item_scraper(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         // Act

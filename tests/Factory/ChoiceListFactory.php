@@ -7,7 +7,10 @@ namespace App\Tests\Factory;
 use App\Entity\ChoiceList;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class ChoiceListFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\ChoiceList>
+ */
+final class ChoiceListFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     protected function defaults(): array|callable

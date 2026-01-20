@@ -28,7 +28,7 @@ class StatisticsTest extends AppTestCase
     public function test_can_see_statistics(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         // Act

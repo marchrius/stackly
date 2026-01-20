@@ -33,7 +33,7 @@ class WishlistVisibilityAccessTest extends AppTestCase
     public function test_shared_wishlists_list_with_anonymous(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         WishlistFactory::createOne(['owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PUBLIC]);
         WishlistFactory::createOne(['owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_INTERNAL]);
         WishlistFactory::createOne(['owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
@@ -50,12 +50,12 @@ class WishlistVisibilityAccessTest extends AppTestCase
     public function test_shared_wishlists_list_with_other_user_logged(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         WishlistFactory::createOne(['owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PUBLIC]);
         WishlistFactory::createOne(['owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_INTERNAL]);
         WishlistFactory::createOne(['owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
 
-        $otherUser = UserFactory::createOne()->_real();
+        $otherUser = UserFactory::createOne();
         $this->client->loginUser($otherUser);
 
         // Act
@@ -70,7 +70,7 @@ class WishlistVisibilityAccessTest extends AppTestCase
     public function test_shared_wishlists_list_with_owner_logged(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         WishlistFactory::createOne(['owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PUBLIC]);
         WishlistFactory::createOne(['owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_INTERNAL]);
         WishlistFactory::createOne(['owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
@@ -91,7 +91,7 @@ class WishlistVisibilityAccessTest extends AppTestCase
     public function test_shared_get_wishlist_with_anonymous(string $visibility, bool $shouldSucceed): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $wishlist = WishlistFactory::createOne(['owner' => $user, 'visibility' => $visibility]);
 
         WishlistFactory::createOne(['owner' => $user, 'parent' => $wishlist, 'visibility' => VisibilityEnum::VISIBILITY_PUBLIC]);
@@ -123,7 +123,7 @@ class WishlistVisibilityAccessTest extends AppTestCase
     public function test_shared_get_wishlist_with_other_logged_user(string $visibility, bool $shouldSucceed): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $wishlist = WishlistFactory::createOne(['owner' => $user, 'visibility' => $visibility]);
 
         WishlistFactory::createOne(['owner' => $user, 'parent' => $wishlist, 'visibility' => VisibilityEnum::VISIBILITY_PUBLIC]);
@@ -135,7 +135,7 @@ class WishlistVisibilityAccessTest extends AppTestCase
         WishFactory::createOne(['owner' => $user, 'wishlist' => $wishlist, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
 
         // Act
-        $otherUser = UserFactory::createOne()->_real();
+        $otherUser = UserFactory::createOne();
         $this->client->loginUser($otherUser);
         $this->client->request(Request::METHOD_GET, "/user/{$user->getUsername()}/wishlists");
          //Don't know why it's needed, it seems like $wishlist isn't properly initialized, maybe from some cache
@@ -158,7 +158,7 @@ class WishlistVisibilityAccessTest extends AppTestCase
     public function test_get_wishlist_with_owner_logged(string $visibility): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $wishlist = WishlistFactory::createOne(['owner' => $user, 'visibility' => $visibility]);
 
         WishlistFactory::createOne(['owner' => $user, 'parent' => $wishlist, 'visibility' => VisibilityEnum::VISIBILITY_PUBLIC]);

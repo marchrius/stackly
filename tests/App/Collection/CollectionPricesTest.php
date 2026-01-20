@@ -36,7 +36,7 @@ class CollectionPricesTest extends AppTestCase
     public function test_move_child_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
 
         $collectionLevel1 = CollectionFactory::createOne(['parent' => null, 'owner' => $user]);
         $item1 = ItemFactory::createOne(['collection' => $collectionLevel1, 'owner' => $user]);
@@ -63,39 +63,40 @@ class CollectionPricesTest extends AppTestCase
 
         // Act
         $newParentCollection = CollectionFactory::createOne(['owner' => $user]);
-        $collectionLevel3->setParent($newParentCollection->_real());
-        $collectionLevel3->_save();
+        $collectionLevel3->setParent($newParentCollection);
+        \Zenstruck\Foundry\Persistence\save($collectionLevel3);
 
-        $collectionLevel1->_refresh();
-        $collectionLevel2->_refresh();
-        $collectionLevel3->_refresh();
-        $collectionLevel4->_refresh();
+        \Zenstruck\Foundry\Persistence\refresh($collectionLevel1);
+        \Zenstruck\Foundry\Persistence\refresh($collectionLevel2);
+        \Zenstruck\Foundry\Persistence\refresh($collectionLevel3);
+        \Zenstruck\Foundry\Persistence\refresh($collectionLevel4);
+        \Zenstruck\Foundry\Persistence\refresh($newParentCollection);
 
         $this->refreshCachedValuesQueue->process();
 
         // Assert
-        $this->assertEqualsWithDelta(200.0, $this->cachedValuesGetter->getCachedValues($newParentCollection->_real())['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(2000.0, $this->cachedValuesGetter->getCachedValues($newParentCollection->_real())['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($newParentCollection->_real())['prices']['Other currency']['JPY'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(200.0, $this->cachedValuesGetter->getCachedValues($newParentCollection)['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(2000.0, $this->cachedValuesGetter->getCachedValues($newParentCollection)['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($newParentCollection)['prices']['Other currency']['JPY'], PHP_FLOAT_EPSILON);
 
-        $this->assertEqualsWithDelta(200.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1->_real())['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(2000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1->_real())['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(200.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1)['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(2000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1)['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
 
-        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2->_real())['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2->_real())['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2)['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2)['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
 
-        $this->assertEqualsWithDelta(200.0, $this->cachedValuesGetter->getCachedValues($collectionLevel3->_real())['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(2000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel3->_real())['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel3->_real())['prices']['Other currency']['JPY'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(200.0, $this->cachedValuesGetter->getCachedValues($collectionLevel3)['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(2000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel3)['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel3)['prices']['Other currency']['JPY'], PHP_FLOAT_EPSILON);
 
-        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($collectionLevel4->_real())['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel4->_real())['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($collectionLevel4)['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel4)['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
     }
 
     public function test_delete_child_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
 
         $collectionLevel1 = CollectionFactory::createOne(['parent' => null, 'owner' => $user]);
         $item1 = ItemFactory::createOne(['collection' => $collectionLevel1, 'owner' => $user]);
@@ -118,21 +119,21 @@ class CollectionPricesTest extends AppTestCase
         DatumFactory::createOne(['type' => DatumTypeEnum::TYPE_PRICE, 'currency' => 'EUR', 'label' => 'Current price', 'value' => '1000', 'item' => $item4, 'owner' => $user]);
 
         // Act
-        $collectionLevel3->_delete();
+        \Zenstruck\Foundry\Persistence\delete($collectionLevel3);
         $this->refreshCachedValuesQueue->process();
 
         // Assert
-        $this->assertEqualsWithDelta(200.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1->_real())['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(2000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1->_real())['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(200.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1)['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(2000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1)['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
 
-        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2->_real())['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2->_real())['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2)['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2)['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
     }
 
     public function test_add_item(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collectionLevel1 = CollectionFactory::createOne(['owner' => $user]);
         $collectionLevel2 = CollectionFactory::createOne(['parent' => $collectionLevel1, 'owner' => $user]);
         $collectionLevel3 = CollectionFactory::createOne(['parent' => $collectionLevel2, 'owner' => $user]);
@@ -144,20 +145,20 @@ class CollectionPricesTest extends AppTestCase
         $this->refreshCachedValuesQueue->process();
 
         // Assert
-        $this->assertEqualsWithDelta(200.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1->_real())['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(2000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1->_real())['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(200.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1)['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(2000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1)['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
 
-        $this->assertEqualsWithDelta(200.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2->_real())['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(2000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2->_real())['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(200.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2)['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(2000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2)['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
 
-        $this->assertEqualsWithDelta(200.0, $this->cachedValuesGetter->getCachedValues($collectionLevel3->_real())['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(2000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel3->_real())['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(200.0, $this->cachedValuesGetter->getCachedValues($collectionLevel3)['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(2000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel3)['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
     }
 
     public function test_move_item(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collectionLevel1 = CollectionFactory::createOne(['owner' => $user]);
 
         $collectionLevel2 = CollectionFactory::createOne(['parent' => $collectionLevel1, 'owner' => $user]);
@@ -172,33 +173,29 @@ class CollectionPricesTest extends AppTestCase
 
         // Act
         $newCollection = CollectionFactory::createOne(['owner' => $user]);
-        $itemToMove->_withoutAutoRefresh(
-            function (Item $itemToMove) use ($newCollection) {
-                $itemToMove->setCollection($newCollection->_real());
-            }
-        );
-        $itemToMove->_save();
+        $itemToMove->setCollection($newCollection);
+        \Zenstruck\Foundry\Persistence\save($itemToMove);
 
         $this->refreshCachedValuesQueue->process();
 
         // Assert
-        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($newCollection->_real())['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($newCollection->_real())['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($newCollection)['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($newCollection)['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
 
-        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1->_real())['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1->_real())['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1)['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1)['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
 
-        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2->_real())['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2->_real())['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2)['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2)['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
 
-        $this->assertArrayNotHasKey('Original price', $this->cachedValuesGetter->getCachedValues($collectionLevel3->_real())['prices']);
-        $this->assertArrayNotHasKey('Current price', $this->cachedValuesGetter->getCachedValues($collectionLevel3->_real())['prices']);
+        $this->assertArrayNotHasKey('Original price', $this->cachedValuesGetter->getCachedValues($collectionLevel3)['prices']);
+        $this->assertArrayNotHasKey('Current price', $this->cachedValuesGetter->getCachedValues($collectionLevel3)['prices']);
     }
 
     public function test_delete_item(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
 
         $collectionLevel1 = CollectionFactory::createOne(['owner' => $user]);
 
@@ -213,17 +210,17 @@ class CollectionPricesTest extends AppTestCase
         DatumFactory::createOne(['type' => DatumTypeEnum::TYPE_PRICE, 'currency' => 'EUR', 'label' => 'Current price', 'value' => '1000', 'item' => $itemToRemove, 'owner' => $user]);
 
         // Act
-        $itemToRemove->_delete();
+        \Zenstruck\Foundry\Persistence\delete($itemToRemove);
         $this->refreshCachedValuesQueue->process();
 
         // Assert
-        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1->_real())['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1->_real())['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1)['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel1)['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
 
-        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2->_real())['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
-        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2->_real())['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(100.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2)['prices']['Original price']['EUR'], PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(1000.0, $this->cachedValuesGetter->getCachedValues($collectionLevel2)['prices']['Current price']['EUR'], PHP_FLOAT_EPSILON);
 
-        $this->assertArrayNotHasKey('Original price', $this->cachedValuesGetter->getCachedValues($collectionLevel3->_real())['prices']);
-        $this->assertArrayNotHasKey('Current price', $this->cachedValuesGetter->getCachedValues($collectionLevel3->_real())['prices']);
+        $this->assertArrayNotHasKey('Original price', $this->cachedValuesGetter->getCachedValues($collectionLevel3)['prices']);
+        $this->assertArrayNotHasKey('Current price', $this->cachedValuesGetter->getCachedValues($collectionLevel3)['prices']);
     }
 }

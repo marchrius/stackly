@@ -7,7 +7,10 @@ namespace App\Tests\Factory;
 use App\Entity\SearchBlock;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class SearchBlockFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\SearchBlock>
+ */
+final class SearchBlockFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     public static function class(): string

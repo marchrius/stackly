@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
+use function Zenstruck\Foundry\Persistence\refresh;
 
 class ItemVisibilityAccessTest extends AppTestCase
 {
@@ -37,16 +38,18 @@ class ItemVisibilityAccessTest extends AppTestCase
     public function test_shared_get_item_with_anonymous(string $visibility, bool $shouldSucceed): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PUBLIC]);
         $item = ItemFactory::createOne(['owner' => $user, 'collection' => $collection, 'visibility' => $visibility]);
 
         DatumFactory::createOne(['owner' => $user, 'item' => $item, 'visibility' => VisibilityEnum::VISIBILITY_PUBLIC]);
         DatumFactory::createOne(['owner' => $user, 'item' => $item, 'visibility' => VisibilityEnum::VISIBILITY_INTERNAL]);
         DatumFactory::createOne(['owner' => $user, 'item' => $item, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
+        refresh($item);
 
         // Act
         $crawler = $this->client->request(Request::METHOD_GET, "/user/{$user->getUsername()}/items/{$item->getId()}");
+
 
         // Assert
         if ($shouldSucceed) {
@@ -64,16 +67,17 @@ class ItemVisibilityAccessTest extends AppTestCase
     public function test_shared_get_item_with_other_user_logged(string $visibility, bool $shouldSucceed): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PUBLIC]);
         $item = ItemFactory::createOne(['owner' => $user, 'collection' => $collection, 'visibility' => $visibility]);
 
         DatumFactory::createOne(['owner' => $user, 'item' => $item, 'visibility' => VisibilityEnum::VISIBILITY_PUBLIC]);
         DatumFactory::createOne(['owner' => $user, 'item' => $item, 'visibility' => VisibilityEnum::VISIBILITY_INTERNAL]);
         DatumFactory::createOne(['owner' => $user, 'item' => $item, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
+        refresh($item);
 
         // Act
-        $otherUser = UserFactory::createOne()->_real();
+        $otherUser = UserFactory::createOne();
         $this->client->loginUser($otherUser);
         $crawler = $this->client->request(Request::METHOD_GET, "/user/{$user->getUsername()}/items/{$item->getId()}");
 
@@ -93,13 +97,14 @@ class ItemVisibilityAccessTest extends AppTestCase
     public function test_shared_get_item_with_owner_logged(string $visibility): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user, 'visibility' => VisibilityEnum::VISIBILITY_PUBLIC]);
         $item = ItemFactory::createOne(['owner' => $user, 'collection' => $collection, 'visibility' => $visibility]);
 
         DatumFactory::createOne(['owner' => $user, 'item' => $item, 'visibility' => VisibilityEnum::VISIBILITY_PUBLIC]);
         DatumFactory::createOne(['owner' => $user, 'item' => $item, 'visibility' => VisibilityEnum::VISIBILITY_INTERNAL]);
         DatumFactory::createOne(['owner' => $user, 'item' => $item, 'visibility' => VisibilityEnum::VISIBILITY_PRIVATE]);
+        refresh($item);
 
         // Act
         $this->client->loginUser($user);

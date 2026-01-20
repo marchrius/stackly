@@ -41,10 +41,10 @@ class ItemTest extends AppTestCase
     public function test_can_get_item(): void
     {
         // Arrange
-        $user = UserFactory::createOne(['currency' => 'EUR', 'dateFormat' => DateFormatEnum::FORMAT_SLASH_DMY])->_real();
+        $user = UserFactory::createOne(['currency' => 'EUR', 'dateFormat' => DateFormatEnum::FORMAT_SLASH_DMY]);
         $this->client->loginUser($user);
-        $collection = CollectionFactory::createOne(['owner' => $user])->_real();
-        $relatedItem = ItemFactory::createOne(['name' => 'Calendar Frieren 2023', 'collection' => $collection, 'owner' => $user])->_real();
+        $collection = CollectionFactory::createOne(['owner' => $user]);
+        $relatedItem = ItemFactory::createOne(['name' => 'Calendar Frieren 2023', 'collection' => $collection, 'owner' => $user]);
         $choiceList = ChoiceListFactory::createOne(['name' => 'Edition', 'choices' => ['Normal', 'Collector'], 'owner' => $user]);
         ItemFactory::createOne(['name' => 'Frieren #4', 'collection' => $collection, 'owner' => $user]);
         ItemFactory::createOne(['name' => 'Frieren #6', 'collection' => $collection, 'owner' => $user]);
@@ -57,16 +57,16 @@ class ItemTest extends AppTestCase
             'visibility' => VisibilityEnum::VISIBILITY_PRIVATE,
             'quantity' => 2,
         ]);
-        $tag = TagFactory::createOne(['owner' => $user, 'label' => 'Abe Tsukasa'])->_real();
+        $tag = TagFactory::createOne(['owner' => $user, 'label' => 'Abe Tsukasa']);
         $item->addTag($tag);
-        $item->_save();
+        \Zenstruck\Foundry\Persistence\save($item);
 
-        $tag2 = TagFactory::createOne(['owner' => $user, 'label' => 'Yamada Kanehito'])->_real();
+        $tag2 = TagFactory::createOne(['owner' => $user, 'label' => 'Yamada Kanehito']);
         $item->addTag($tag2);
-        $item->_save();
+        \Zenstruck\Foundry\Persistence\save($item);
         
         $item->addRelatedItem($relatedItem);
-        $item->_save();
+        \Zenstruck\Foundry\Persistence\save($item);
 
         $file = $this->createFile('txt');
         $filename = $file->getFilename();
@@ -146,9 +146,9 @@ class ItemTest extends AppTestCase
     public function test_can_get_item_with_null_data(): void
     {
         // Arrange
-        $user = UserFactory::createOne(['currency' => 'EUR', 'dateFormat' => DateFormatEnum::FORMAT_SLASH_DMY])->_real();
+        $user = UserFactory::createOne(['currency' => 'EUR', 'dateFormat' => DateFormatEnum::FORMAT_SLASH_DMY]);
         $this->client->loginUser($user);
-        $collection = CollectionFactory::createOne(['owner' => $user])->_real();
+        $collection = CollectionFactory::createOne(['owner' => $user]);
 
         $item = ItemFactory::createOne([
             'name' => 'Frieren #5',
@@ -187,9 +187,9 @@ class ItemTest extends AppTestCase
     public function test_can_create_item(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $collection = CollectionFactory::createOne(['owner' => $user])->_real();
+        $collection = CollectionFactory::createOne(['owner' => $user]);
         $uploadedFile = $this->createFile('png');
 
         // Act
@@ -220,9 +220,9 @@ class ItemTest extends AppTestCase
     public function test_can_create_item_then_create_another(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $collection = CollectionFactory::createOne(['owner' => $user])->_real();
+        $collection = CollectionFactory::createOne(['owner' => $user]);
 
         // Act
         $this->client->request(Request::METHOD_GET, '/items/add?collection=' . $collection->getId());
@@ -247,7 +247,7 @@ class ItemTest extends AppTestCase
     public function test_cant_create_item_without_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         // Act
@@ -260,11 +260,11 @@ class ItemTest extends AppTestCase
     public function test_can_load_item_form_with_default_template(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $template = TemplateFactory::createOne(['owner' => $user]);
         FieldFactory::createMany(3, ['template' => $template, 'owner' => $user]);
-        $collection = CollectionFactory::createOne(['itemsDefaultTemplate' => $template, 'owner' => $user])->_real();
+        $collection = CollectionFactory::createOne(['itemsDefaultTemplate' => $template, 'owner' => $user]);
 
         // Act
         $crawler = $this->client->request(Request::METHOD_GET, '/items/add?collection=' . $collection->getId());
@@ -277,9 +277,9 @@ class ItemTest extends AppTestCase
     public function test_can_edit_item(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $collection = CollectionFactory::createOne(['owner' => $user])->_real();
+        $collection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $user, 'file' => $this->createFile('png')]);
         $oldImagePath = $item->getImage();
         $choiceList = ChoiceListFactory::createOne(['name' => 'Edition', 'choices' => ['Normal', 'Collector'], 'owner' => $user]);
@@ -351,7 +351,7 @@ class ItemTest extends AppTestCase
     public function test_can_delete_item(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);
@@ -372,7 +372,7 @@ class ItemTest extends AppTestCase
     public function test_can_loan_item(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);
@@ -394,7 +394,7 @@ class ItemTest extends AppTestCase
     public function test_can_autocomplete_related_item(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['owner' => $user]);
         ItemFactory::createOne(['name' => 'Frieren #1', 'collection' => $collection, 'owner' => $user]);
@@ -414,15 +414,15 @@ class ItemTest extends AppTestCase
     public function test_cant_have_multiple_data_with_same_label(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $collection = CollectionFactory::createOne(['owner' => $user])->_real();
+        $collection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);
         DatumFactory::createOne(['label' => 'Author', 'item' => $item, 'owner' => $user]);
         DatumFactory::createOne(['label' => 'Author', 'item' => $item, 'owner' => $user]);
 
         // Act
-        $errors = $this->getContainer()->get(ValidatorInterface::class)->validate($item->_real());
+        $errors = $this->getContainer()->get(ValidatorInterface::class)->validate($item);
 
         // Assert
         $this->assertCount(1, $errors);

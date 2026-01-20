@@ -19,8 +19,8 @@ class LogApiNotOwnerTest extends ApiTestCase
     public function test_cant_get_another_user_log(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
-        $owner = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
+        $owner = UserFactory::createOne();
         $log = LogFactory::createOne(['owner' => $owner]);
 
         // Act

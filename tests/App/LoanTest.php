@@ -31,7 +31,7 @@ class LoanTest extends AppTestCase
     public function test_can_see_loan_list(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         // Act
@@ -45,7 +45,7 @@ class LoanTest extends AppTestCase
     public function test_can_delete_loan(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);
@@ -65,7 +65,7 @@ class LoanTest extends AppTestCase
     public function test_can_set_loan_as_returned(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);
@@ -73,7 +73,7 @@ class LoanTest extends AppTestCase
 
         // Act
         $this->client->request(Request::METHOD_GET, '/loans/' . $loan->getId() . '/returned');
-        $loan->_refresh();
+        \Zenstruck\Foundry\Persistence\refresh($loan);
 
         // Assert
         $this->assertResponseIsSuccessful();

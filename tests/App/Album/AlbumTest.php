@@ -32,7 +32,7 @@ class AlbumTest extends AppTestCase
     public function test_can_get_album_list(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         AlbumFactory::createMany(3, ['owner' => $user]);
 
@@ -48,7 +48,7 @@ class AlbumTest extends AppTestCase
     public function test_can_get_album(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $album = AlbumFactory::createOne(['owner' => $user]);
         AlbumFactory::createMany(3, ['owner' => $user, 'parent' => $album]);
@@ -67,13 +67,13 @@ class AlbumTest extends AppTestCase
     public function test_can_get_album_with_list_view(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $album = AlbumFactory::createOne(['owner' => $user]);
         $album->getChildrenDisplayConfiguration()->setDisplayMode(DisplayModeEnum::DISPLAY_MODE_LIST);
-        $album->_save();
+        \Zenstruck\Foundry\Persistence\save($album);
         $album->getPhotosDisplayConfiguration()->setDisplayMode(DisplayModeEnum::DISPLAY_MODE_LIST);
-        $album->_save();
+        \Zenstruck\Foundry\Persistence\save($album);
 
         AlbumFactory::createMany(3, ['owner' => $user, 'parent' => $album]);
         PhotoFactory::createMany(3, ['owner' => $user, 'album' => $album]);
@@ -91,7 +91,7 @@ class AlbumTest extends AppTestCase
     public function test_can_post_album(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $parent = AlbumFactory::createOne(['owner' => $user]);
 
@@ -110,7 +110,7 @@ class AlbumTest extends AppTestCase
     public function test_can_edit_album_index(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         AlbumFactory::createMany(3, ['owner' => $user]);
 
@@ -129,7 +129,7 @@ class AlbumTest extends AppTestCase
     public function test_can_edit_album(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $album = AlbumFactory::createOne(['owner' => $user, 'image' => $this->createFile('png')->getRealPath()]);
         $imagePath = $album->getImage();
@@ -149,7 +149,7 @@ class AlbumTest extends AppTestCase
     public function test_can_delete_album_image(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $album = AlbumFactory::createOne(['title' => 'Home', 'owner' => $user, 'image' => $this->createFile('png')->getRealPath()]);
         $oldAlbumImagePath = $album->getImage();
@@ -168,7 +168,7 @@ class AlbumTest extends AppTestCase
     public function test_can_delete_album(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
         $album = AlbumFactory::createOne(['owner' => $user]);
         $childAlbum = AlbumFactory::createOne(['parent' => $album, 'owner' => $user]);

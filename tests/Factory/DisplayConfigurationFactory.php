@@ -7,7 +7,10 @@ namespace App\Tests\Factory;
 use App\Entity\DisplayConfiguration;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class DisplayConfigurationFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\DisplayConfiguration>
+ */
+final class DisplayConfigurationFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     protected function defaults(): array|callable

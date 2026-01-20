@@ -31,7 +31,7 @@ class SettingsTest extends AppTestCase
     public function test_can_edit_settings(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         // Act

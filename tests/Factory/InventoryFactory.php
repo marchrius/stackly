@@ -7,7 +7,10 @@ namespace App\Tests\Factory;
 use App\Entity\Inventory;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class InventoryFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\Inventory>
+ */
+final class InventoryFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     protected function defaults(): array|callable

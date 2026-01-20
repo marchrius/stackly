@@ -8,7 +8,10 @@ use App\Entity\Datum;
 use App\Enum\DatumTypeEnum;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class DatumFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\Datum>
+ */
+final class DatumFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     protected function defaults(): array|callable

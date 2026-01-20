@@ -123,16 +123,16 @@
         </div>
 
         <div class="center-align form-btn-holder">
-            {% if app.request.get('_route') == 'app_item_add' %}
+            {% if app.request.attributes.get('_route') == 'app_item_add' %}
                 {% set cancelUrl = path('app_collection_show', {id: app.request.query.get('collection')}) %}
-            {% elseif app.request.get('_route') == 'app_wish_transfer_to_collection' %}
+            {% elseif app.request.attributes.get('_route') == 'app_wish_transfer_to_collection' %}
                 {% set cancelUrl = path('app_wishlist_show', {id: wish.wishlist.id}) %}
             {% else %}
                 {% set cancelUrl = path('app_collection_show', {id: item.collection.id}) %}
             {% endif %}
 
             <button type="submit" class="btn waves-effect waves-light">{{ 'btn.submit'|trans }}</button>
-            {% if app.request.get('_route') == 'app_item_add' %}
+            {% if app.request.attributes.get('_route') == 'app_item_add' %}
                 <button type="submit" name="save_and_add_another"
                         class="btn waves-effect waves-light">{{ 'btn.submit_and_add_another'|trans }}</button>
             {% endif %}

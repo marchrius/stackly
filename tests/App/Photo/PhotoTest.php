@@ -31,9 +31,9 @@ class PhotoTest extends AppTestCase
     public function test_can_create_photo(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $album = AlbumFactory::createOne(['owner' => $user])->_real();
+        $album = AlbumFactory::createOne(['owner' => $user]);
 
         // Act
         $this->client->request(Request::METHOD_GET, '/photos/add?album=' . $album->getId());
@@ -59,7 +59,7 @@ class PhotoTest extends AppTestCase
     public function test_cant_create_photo_without_album(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
 
         // Act
@@ -72,9 +72,9 @@ class PhotoTest extends AppTestCase
     public function test_can_edit_photo(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $album = AlbumFactory::createOne(['owner' => $user])->_real();
+        $album = AlbumFactory::createOne(['owner' => $user]);
         $photo = PhotoFactory::createOne(['album' => $album, 'owner' => $user]);
 
         // Act
@@ -101,9 +101,9 @@ class PhotoTest extends AppTestCase
     public function test_can_delete_photo(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $this->client->loginUser($user);
-        $album = AlbumFactory::createOne(['owner' => $user])->_real();
+        $album = AlbumFactory::createOne(['owner' => $user]);
         $photo = PhotoFactory::createOne(['album' => $album, 'owner' => $user]);
 
         // Act

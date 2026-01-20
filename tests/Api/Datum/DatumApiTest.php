@@ -27,7 +27,7 @@ class DatumApiTest extends ApiTestCase
     public function test_get_data(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         DatumFactory::createMany(3, ['owner' => $user]);
 
         // Act
@@ -44,7 +44,7 @@ class DatumApiTest extends ApiTestCase
     public function test_get_datum(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $datum = DatumFactory::createOne(['owner' => $user]);
 
         // Act
@@ -61,7 +61,7 @@ class DatumApiTest extends ApiTestCase
     public function test_get_datum_item(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);
         $datum = DatumFactory::createOne(['item' => $item, 'owner' => $user]);
@@ -80,7 +80,7 @@ class DatumApiTest extends ApiTestCase
     public function test_get_datum_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $datum = DatumFactory::createOne(['collection' => $collection, 'owner' => $user]);
 
@@ -98,7 +98,7 @@ class DatumApiTest extends ApiTestCase
     public function test_post_datum_with_collection(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user]);
 
         // Act
@@ -120,7 +120,7 @@ class DatumApiTest extends ApiTestCase
     public function test_post_datum_with_item(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);
 
@@ -143,7 +143,7 @@ class DatumApiTest extends ApiTestCase
     public function test_post_datum_with_collection_and_item(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);
         $collection = CollectionFactory::createOne(['owner' => $user]);
@@ -167,7 +167,7 @@ class DatumApiTest extends ApiTestCase
     public function test_post_datum_without_collection_nor_item(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
 
         // Act
         $this->createClientWithCredentials($user)->request('POST', '/api/data', ['json' => [
@@ -186,7 +186,7 @@ class DatumApiTest extends ApiTestCase
     public function test_put_datum(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $datum = DatumFactory::createOne(['collection' => $collection, 'label' => 'Title', 'owner' => $user]);
 
@@ -207,7 +207,7 @@ class DatumApiTest extends ApiTestCase
     public function test_patch_datum(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $datum = DatumFactory::createOne(['collection' => $collection, 'label' => 'Title', 'owner' => $user]);
 
@@ -231,7 +231,7 @@ class DatumApiTest extends ApiTestCase
     public function test_delete_datum(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $datum = DatumFactory::createOne(['label' => 'Title', 'owner' => $user]);
 
         // Act
@@ -244,7 +244,7 @@ class DatumApiTest extends ApiTestCase
     public function test_post_datum_image(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $datum = DatumFactory::createOne(['collection' => $collection, 'owner' => $user]);
         $uploadedFile = $this->createFile('png');
@@ -269,7 +269,7 @@ class DatumApiTest extends ApiTestCase
     public function test_post_datum_file(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $datum = DatumFactory::createOne(['collection' => $collection, 'owner' => $user]);
         $uploadedFile = $this->createFile('png');
@@ -294,7 +294,7 @@ class DatumApiTest extends ApiTestCase
     public function test_post_datum_video(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $datum = DatumFactory::createOne(['collection' => $collection, 'owner' => $user]);
         $uploadedFile = $this->createFile('mp4');
@@ -319,7 +319,7 @@ class DatumApiTest extends ApiTestCase
     public function test_post_datum_choice_list(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);
         $choiceList = ChoiceListFactory::createOne(['name' => 'Progress', 'choices' => ['New', 'In progress', 'Done'], 'owner' => $user]);
@@ -345,7 +345,7 @@ class DatumApiTest extends ApiTestCase
     public function test_cant_post_datum_choice_list_without_choice_list(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);
 
@@ -379,7 +379,7 @@ class DatumApiTest extends ApiTestCase
     public function test_datum_format_ok(string $type, ?string $value): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);
 
@@ -434,7 +434,7 @@ class DatumApiTest extends ApiTestCase
     public function test_datum_format_not_ok(string $type, mixed $value): void
     {
         // Arrange
-        $user = UserFactory::createOne()->_real();
+        $user = UserFactory::createOne();
         $collection = CollectionFactory::createOne(['owner' => $user]);
         $item = ItemFactory::createOne(['collection' => $collection, 'owner' => $user]);
 

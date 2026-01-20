@@ -53,7 +53,7 @@
     </div>
 
     <div class="center-align form-btn-holder">
-        {% if app.request.get('_route') == 'app_wish_add' %}
+        {% if app.request.attributes.get('_route') == 'app_wish_add' %}
             {% set cancelUrl = path('app_wishlist_show', {id: app.request.query.get('wishlist')}) %}
         {% else %}
             {% set cancelUrl = path('app_wishlist_show', {id: wish.wishlist.id}) %}

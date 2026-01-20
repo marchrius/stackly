@@ -7,7 +7,10 @@ namespace App\Tests\Factory;
 use App\Entity\Log;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class LogFactory extends PersistentProxyObjectFactory
+/**
+ * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<\App\Entity\Log>
+ */
+final class LogFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
 {
     #[\Override]
     protected function defaults(): array|callable
