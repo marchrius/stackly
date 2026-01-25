@@ -109,6 +109,8 @@ FROM koillection-base AS koillection-final
 COPY --from=build-node /app/public/build/ /app/public/public/build/
 COPY --from=download-env /opt/libcurl-impersonate* /opt/
 
+VOLUME /uploads
+
 EXPOSE 80
 EXPOSE 443
 

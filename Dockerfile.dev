@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp
+FROM dunglas/frankenphp:php8.5
 
 # Environment variables
 ENV APP_ENV=prod
@@ -10,7 +10,6 @@ ENV FRANKENPHP_SERVER_NAME=":80"
 ENV APP_RUNTIME="Symfony\\Component\\Runtime\\SymfonyRuntime"
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-COPY ./docker/entrypoint-dev.sh /entrypoint.sh
 COPY ./docker/Caddyfile-dev /etc/caddy/Caddyfile
 
 # Install some basics dependencies
@@ -56,4 +55,4 @@ WORKDIR /app/public
 
 HEALTHCHECK CMD curl --fail http://localhost:80/ || exit 1
 
-ENTRYPOINT ["sh", "/app/public/docker/entrypoint.sh" ]
+ENTRYPOINT ["sh", "/app/public/docker/entrypoint-dev.sh" ]
