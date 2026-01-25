@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.8.0] / 2025-01-25
+### Miscellaneous
+- Upgrade PHP to 8.5, Symfony 8.0 and JS dependencies (benjaminjonard)
+- Switching the main docker image from Ubuntu to the official FrankenPHP image, based on Debian Trixie (benjaminjonard)
+- Improve container build process (pstoeckle)
+
 ## [1.7.1] / 2025-12-21
 ### Fixes
 - Enable javascript translations (jorne-tremani)
