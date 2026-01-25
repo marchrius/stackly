@@ -73,7 +73,7 @@ class CleanUpCommand extends Command
         }, $result->fetchAllAssociative());
 
         $output->writeln('Getting all files paths from /uploads...');
-        
+
         if (is_dir($this->publicPath . '/uploads')) {
             $rii = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->publicPath . '/uploads'));
             $diskPaths = [];

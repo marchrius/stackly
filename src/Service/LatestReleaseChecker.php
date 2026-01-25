@@ -19,6 +19,7 @@ class LatestReleaseChecker
         '1.5' => '8.3',
         '1.6' => '8.4',
         '1.7' => '8.4', # Security release, potential BC
+        '1.8' => '8.5',
     ];
 
     private readonly ?CurlHttpClient $client;
