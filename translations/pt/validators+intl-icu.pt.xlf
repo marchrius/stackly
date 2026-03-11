@@ -4,19 +4,19 @@
     <unit id="m_gMJbR" name="error.parent.same_as_current_object">
       <segment state="translated">
         <source>The parent can't be the same as the current item</source>
-        <target>O item pai não pode ser o mesmo que o item actual.</target>
+        <target>O item-pai não pode ser o mesmo que o item presente.</target>
       </segment>
     </unit>
     <unit id="3IyvSxa" name="error.datum.cant_be_used_by_both_collections_and_items">
       <segment state="translated">
         <source>A datum cannot be used with both item and collection</source>
-        <target>O dado não pode ser usado como item e como colecção</target>
+        <target>O dado não pode ser usado como item e como coleção</target>
       </segment>
     </unit>
     <unit id="AUVR8TR" name="error.datum.must_provide_collection_or_item">
       <segment state="translated">
         <source>A collection or an item must be provided</source>
-        <target>Tem de indicar uma colecção ou item</target>
+        <target>Tem de indicar uma coleção ou item</target>
       </segment>
     </unit>
     <unit id="7OcgSlg" name="error.email.not_unique">
@@ -34,19 +34,19 @@
     <unit id="PjAj0XF" name="error.username.incorrect">
       <segment state="translated">
         <source>Username must have between 2 and 32 characters (only letters, numbers and underscores are allowed)</source>
-        <target>O nome do utilizador tem de ter entre 2 e 32 caracteres (apenas letras, números e underscores são permitidos)</target>
+        <target>O nome do utilizador tem de ter entre 2 e 32 caracteres (apenas letras, números e ‘underscores’ são permitidos)</target>
       </segment>
     </unit>
     <unit id="4Bdfyy1" name="error.password.incorrect">
       <segment state="translated">
         <source>Your password must contain at least 8 characters (with at least 1 letter and 1 number)</source>
-        <target>A sua password deve de conter no mínimo 8 caracteres (com pelo menos 1 letra e 1 número)</target>
+        <target>A sua senha deve conter no mínimo 8 caracteres (com pelo menos 1 letra e 1 número)</target>
       </segment>
     </unit>
     <unit id="4m1Sgo3" name="error.password.not_matching">
       <segment state="translated">
         <source>The two passwords are not identical</source>
-        <target>As passwords não são idênticas</target>
+        <target>As senhas não são idênticas</target>
       </segment>
     </unit>
     <unit id=".OeR.gK" name="error.search.too_short">
@@ -58,7 +58,7 @@
     <unit id="_d89Gke" name="error.search.empty">
       <segment state="translated">
         <source>Please fill at least one of the fields</source>
-        <target>Por favor preencha pelo menos um dos campos</target>
+        <target>Por favor, preencha pelo menos um dos campos</target>
       </segment>
     </unit>
     <unit id="DVztPk_" name="error.label.must_be_unique">
@@ -76,13 +76,13 @@
     <unit id="tg4uV16" name="error.upload.not_enough_space">
       <segment state="translated">
         <source>There is not enough space left on your account to execute this action</source>
-        <target>Não há espaço suficiente na sua conta para executar esta acção</target>
+        <target>Não há espaço suficiente na sua conta para executar esta ação</target>
       </segment>
     </unit>
     <unit id="vwTDAxs" name="error.datum.value.rating">
       <segment state="translated">
         <source>Value must be a string representation of an integer between '0' and '10'</source>
-        <target>Valor deve ser uma representação de string de um número inteiro entre '0' e '10'</target>
+        <target>Valor deve ser uma representação de ‘string’ de um número inteiro entre '0' e '10'</target>
       </segment>
     </unit>
     <unit id="1ptFEJZ" name="error.datum.value.checkbox">
@@ -94,7 +94,7 @@
     <unit id="Sm7SLSo" name="error.datum.value.price">
       <segment state="translated">
         <source>Value must be a string representation of a positive number</source>
-        <target>Valor deve ser uma representação de string de um número positivo</target>
+        <target>Valor deve ser uma representação de ‘string’ de um número positivo</target>
       </segment>
     </unit>
     <unit id="Ho12PpQ" name="error.datum.value.number">
@@ -112,7 +112,7 @@
     <unit id="bZ6z5fo" name="error.datum.value.date">
       <segment state="translated">
         <source>Value must be a Y-m-d formated string like '2024-06-10'</source>
-        <target>O valor deve ser uma string de formato Y-m-d como '2024-06-10'</target>
+        <target>O valor deve ser uma 'string' de formato Y-m-d como '2024-06-10'</target>
       </segment>
     </unit>
   </file>
