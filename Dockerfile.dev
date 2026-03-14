@@ -9,6 +9,9 @@ ENV FRANKENPHP_CONFIG="worker /app/public/public/index.php"
 ENV FRANKENPHP_SERVER_NAME=":80"
 ENV APP_RUNTIME="Symfony\\Component\\Runtime\\SymfonyRuntime"
 ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV PANTHER_CHROME_BINARY=/usr/bin/chromium
+ENV PANTHER_CHROME_DRIVER_BINARY=/usr/bin/chromedriver
+ENV PANTHER_NO_SANDBOX=1
 
 COPY ./docker/Caddyfile-dev /etc/caddy/Caddyfile
 
@@ -25,6 +28,8 @@ RUN apt-get update && \
 # Install packages
     apt-get update && \
     apt-get install -y \
+    chromium \
+    chromium-driver \
     libnss3 \
     nss-plugin-pem \
     ca-certificates \

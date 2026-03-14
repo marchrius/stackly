@@ -9,6 +9,9 @@ ENV FRANKENPHP_CONFIG="worker /app/public/public/index.php"
 ENV FRANKENPHP_SERVER_NAME=":80"
 ENV APP_RUNTIME="Symfony\\Component\\Runtime\\SymfonyRuntime"
 ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV PANTHER_CHROME_BINARY=/usr/bin/chromium
+ENV PANTHER_CHROME_DRIVER_BINARY=/usr/bin/chromedriver
+ENV PANTHER_NO_SANDBOX=1
 
 COPY ./ /app/public
 COPY ./docker/Caddyfile /etc/caddy/Caddyfile
@@ -21,6 +24,8 @@ RUN set -eux ; \
     # Install packages \
     apt-get update -qq ; \
     apt-get install -qqy --no-install-recommends \
+    chromium \
+    chromium-driver \
     curl \
     gnupg2 \
     libnss3 \
@@ -83,6 +88,7 @@ RUN set -eux ; \
     case $ARCHITECTURE in \
     x86_64) ARCHITECTURE="x86_64" ;; \
     aarch64 | armv8* | arm64) ARCHITECTURE="aarch64" ;; \
+    arm | armv7*) ARCHITECTURE="arm" ;; \
     *) \
     echo "(!) Architecture $ARCHITECTURE unsupported" \
     exit 1 \
@@ -98,11 +104,6 @@ RUN set -eux ; \
     "https://github.com/lwthiker/curl-impersonate/releases/download/v${CURL_IMPERSONATE_VERSION}/${FILE_NAME}" \
     ; \
     tar xvzf /tmp/${FILE_NAME} -C /opt/
-
-
-# Install curl-impersonate
-ADD https://github.com/lwthiker/curl-impersonate/releases/download/v0.6.1/libcurl-impersonate-v0.6.1.x86_64-linux-gnu.tar.gz /opt/
-RUN cd /opt tar xvzf libcurl-impersonate-v0.6.1.x86_64-linux-gnu.tar.gz rm libcurl-impersonate-v0.6.1.x86_64-linux-gnu.tar.gz
 
 FROM koillection-base AS koillection-final
 

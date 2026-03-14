@@ -13,41 +13,56 @@ use App\Model\ScrapingWish;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Intl\Countries;
-use Symfony\Component\HttpClient\CurlHttpClient;
+use Symfony\Component\Panther\Client as PantherClient;
 use Twig\Environment;
 
 abstract class HtmlScraper
 {
-    protected ?CurlHttpClient $client = null;
-
     public function __construct(
         protected Environment $twig
     ) {
-        $this->client = new CurlHttpClient();
     }
 
     protected function getCrawler(ScrapingItem|ScrapingCollection|ScrapingWish $scraping): Crawler
     {
         if ($scraping->getFile() instanceof UploadedFile) {
-            $content = $scraping->getFile()->getContent();
-        } else {
-            $headers = [];
-            foreach ($scraping->getScraper()->getHeaders() as $header) {
-                $headers[$header['header']] = $header['value'];
-            }
-
-            $response = $this->client->request('GET', $scraping->getUrl(), [
-                'headers' => $headers
-            ]);
-
-            if (200 !== $response->getStatusCode()) {
-                throw new \Exception('Api error: ' . $response->getStatusCode() . ' - ' . $response->getContent());
-            }
-
-            $content = $response->getContent();
+            return new Crawler($scraping->getFile()->getContent());
         }
 
-        return new Crawler($content);
+        $pantherClient = PantherClient::createChromeClient(null, [
+            '--headless',
+            '--no-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-gpu',
+            '--window-size=1200,1100',
+        ], ['port' => random_int(9515, 9999)]);
+
+        try {
+            $pantherClient->request('GET', $scraping->getUrl());
+
+            // Poll until the DOM stops changing — required for SPAs (Next.js RSC, React, etc.)
+            // getPageSource() called immediately after request() captures pre-hydration HTML
+            $html = '';
+            $previousHtml = null;
+            $deadline = time() + 10;
+            do {
+                usleep(500_000);
+                $html = $pantherClient->executeScript('return document.documentElement.outerHTML');
+                if ($html === $previousHtml) {
+                    break;
+                }
+                $previousHtml = $html;
+            } while (time() < $deadline);
+        } finally {
+            $pantherClient->quit();
+        }
+
+        // Strip non-visible elements so XPath cannot match RSC payloads, React hydration
+        // templates, or inline scripts — PHP's DOMDocument does not honour HTML5 semantics
+        // for <script> and <template> and would otherwise include their content in the tree.
+        $html = preg_replace('@<(script|template|noscript)[^>]*>.*?</\1>@si', '', $html);
+
+        return new Crawler($html);
     }
 
     protected function extract(?string $template, string $type, Crawler $crawler, $scraping): ?string
@@ -64,6 +79,11 @@ abstract class HtmlScraper
 
             if ($results instanceof Crawler) {
                 $results = $results->each(static function (Crawler $node): string {
+                    $domNode = $node->getNode(0);
+                    if ($domNode instanceof \DOMAttr) {
+                        return $domNode->value;
+                    }
+
                     return $node->text();
                 });
             }
@@ -126,11 +146,11 @@ abstract class HtmlScraper
         }
 
         if ($type === DatumTypeEnum::TYPE_TEXT) {
-            return implode(', ', $values);
+            return implode(', ', array_unique($values));
         }
 
         if ($type === DatumTypeEnum::TYPE_LIST) {
-            return json_encode($values);
+            return json_encode(array_values(array_unique($values)));
         }
 
         if ($type === DatumTypeEnum::TYPE_TEXTAREA) {
@@ -174,7 +194,10 @@ abstract class HtmlScraper
         $urlElements = parse_url($url);
         if (!isset($urlElements['host'])) {
             $scrapingUrlElements = parse_url($scraping->getUrl());
-            $url = $scrapingUrlElements['scheme'] . '://' . $scrapingUrlElements['host'] . $urlElements['path'];
+            $url = $scrapingUrlElements['scheme'] . '://' . $scrapingUrlElements['host'] . ($urlElements['path'] ?? '');
+            if (isset($urlElements['query'])) {
+                $url .= '?' . $urlElements['query'];
+            }
         }
 
         return $url;
