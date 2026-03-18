@@ -1,0 +1,283 @@
+---
+alwaysApply: true
+---
+---
+title: "Conversione Koillection: Symfony/PHP → Next.js/React + shadcn (senza Firebase)"
+project: "benjaminjonard/koillection"
+version: "1.8.0"
+backend_as_is:
+  framework: "Symfony 8"
+  api: "API Platform 4.2"
+  auth_api: "LexikJWT (POST /api/authentication_token)"
+  ui_server: "Twig templates"
+  db: "PostgreSQL (env: DB_* / DB_VERSION=15)"
+frontend_as_is:
+  tooling: "Webpack Encore"
+  js: "Stimulus"
+  css: "Materialize"
+constraints:
+  - "Non usare Firebase"
+  - "UI in Next.js/React con shadcn/ui"
+  - "TUTTO il codice convertito deve vivere SOLO in /new (crearla se non esiste)"
+conversion_workspace:
+  root_dir: "new"
+  rule: "Nessuna modifica strutturale o refactor fuori da /new (eccetto configurazioni minime di routing/proxy se e solo se indispensabili)."
+---
+
+## Clausola fondamentale: cartella `new/` (obbligatoria)
+
+- **Regola**: tutto il codice “convertito” (Next.js/React/shadcn, config frontend, scripts, toolchain, Docker/compose dedicati al nuovo frontend, proxy/BFF, ecc.) deve stare **interamente e solo** dentro la cartella **`new/`**.
+- **Creazione**: se `new/` **non esiste**, deve essere **creata**.
+- **Divieto**: non introdurre nuovo codice conversione fuori da `new/` (es. non aggiungere `package.json` in root, non modificare `assets/`, non toccare `templates/`), **salvo** piccole modifiche “ponte” strettamente necessarie per far convivere vecchio e nuovo (es. reverse proxy di ambiente, doc, o configurazione di deploy). Se possibile, anche queste vanno replicate/gestite dentro `new/` (es. `new/docker-compose.yml`, `new/nginx/`, `new/README.md`).
+
+### Struttura consigliata dentro `new/`
+- `new/apps/web/` → Next.js (App Router) + shadcn/ui
+- `new/README.md` → istruzioni avvio nuovo frontend
+- `new/docker/` o `new/infra/` → reverse proxy e dev setup (opzionale)
+- `new/scripts/` → script per dev/proxy/generate types (opzionale)
+
+> Obiettivo: rendere la conversione “reversibile” e non invasiva: cancellando `new/` torni al progetto originale.
+
+
+## Checklist di conformità `new/` (obbligatoria)
+
+### Regole “hard” (devono sempre valere)
+- **Tutto il codice convertito sta in `new/`**:
+  - Next.js app, shadcn/ui, Tailwind, tooling (`package.json`, lockfile), config (`next.config.*`, `tsconfig.json`), componenti, route handlers/BFF, assets, test E2E, docker/proxy.
+- **Nessun file fuori da `new/` viene creato o modificato** per la conversione.
+- **Se `new/` non esiste: va creata** come root della conversione.
+
+### Eccezioni ammesse (solo se indispensabili)
+- **Bridge di integrazione** strettamente necessario per far convivere Symfony e Next (es. reverse proxy di produzione/dev), ma:
+  - prima scelta: mettere il bridge in `new/` (es. `new/infra/nginx/`, `new/docker-compose.yml`);
+  - seconda scelta (solo se non evitabile): minima modifica fuori da `new/`, documentata chiaramente, e limitata a config di deploy/routing.
+
+### Cosa NON fare (anti-pattern)
+- Non aggiungere `package.json`/`node_modules` in root.
+- Non toccare `assets/`, `templates/`, `src/Controller/`, `api/`, `config/` per “portare React dentro Symfony”.
+- Non duplicare logica PHP in Node fuori da `new/` (se serve un BFF, sta in `new/apps/web`).
+- Non introdurre dipendenze Firebase.
+
+### Verifiche rapide (manuali)
+- **Diff del repo**: ogni file nuovo o modificato deve essere sotto `new/` (salvo eccezioni approvate).
+- **Albero**: `new/apps/web` contiene tutto ciò che serve per build e run del frontend.
+- **Ambienti**: variabili `.env*` del nuovo frontend stanno in `new/apps/web/` (es. `.env.local`), non in root.
+
+## Layout monorepo consigliato (tutto dentro `new/`)
+
+### Obiettivo
+Tenere **frontend, BFF/proxy, UI kit e client API** nello stesso perimetro `new/`, senza contaminare il progetto Symfony.
+
+### Struttura proposta
+- `new/`
+  - `apps/`
+    - `web/`  
+      - Next.js (App Router) + shadcn/ui + Tailwind  
+      - include route handlers per BFF/proxy verso Symfony
+  - `packages/` (opzionale ma consigliato)
+    - `ui/`  
+      - componenti “design system” sopra shadcn (Button, DataTable, EmptyState, ecc.)
+      - tema, tokens, wrapper, convenzioni di styling
+    - `api-client/`  
+      - client tipizzato verso API Platform (da OpenAPI), fetch wrapper, error mapping, auth helpers
+      - qui vivono anche i tipi TS (DTO) e la logica di paginazione/filtri
+    - `config/` (opzionale)
+      - config condivise (eslint, tsconfig base, prettier) per `new/`
+  - `infra/` (opzionale)
+    - `nginx/` o `caddy/` o `traefik/` per reverse proxy (dev/prod)
+    - `docker-compose.yml` dedicato a “Symfony + Next” per sviluppo integrato
+  - `scripts/` (opzionale)
+    - generatori (openapi → types), smoke test, helper di dev
+  - `README.md`
+    - come avviare `new/apps/web`
+    - come far parlare Next ↔ Symfony (BFF vs CORS)
+    - variabili d’ambiente richieste
+
+### Convenzione routing per coesistenza
+- `new/apps/web/app/(app)/**` → area autenticata
+- `new/apps/web/app/(shared)/user/[username]/**` → viste condivise (`/user/{username}/...`)
+- `new/apps/web/app/api/**` → proxy/BFF verso Symfony (se adottato)
+
+### Regola di compatibilità con la clausola `new/`
+- Qualsiasi nuova dipendenza, script, toolchain o infrastruttura introdotta per la conversione deve finire in `new/` (anche i file di CI/dev, se possibile).
+
+## Obiettivo
+
+Trasformare il progetto attuale (Symfony + Twig + Encore/Stimulus/Materialize) in un’architettura **frontend Next.js/React** moderna con **shadcn/ui + Tailwind**, mantenendo (almeno inizialmente) il backend Symfony/API Platform come **API**. Nessun utilizzo di Firebase: autenticazione e sessione gestite con **JWT esistente** (o alternativa server-side).
+
+## Stato attuale (as-is) — punti chiave dal repo
+
+- **Backend**
+  - Dipendenze principali: `api-platform/core`, `lexik/jwt-authentication-bundle`, `nelmio/cors-bundle`, Doctrine ORM/DBAL, Twig. Vedi `composer.json`.
+  - Routing:
+    - Controller UI Symfony: `config/routes.yaml` punta a `src/Controller/` (attribute routes).
+    - Controller API: `config/routes.yaml` punta a `api/Controller/` (attribute routes).
+    - Endpoint JWT: `POST /api/authentication_token` (`config/routes.yaml`, `config/packages/security.yaml`, `api/OpenApi/JwtDecorator.php`).
+  - Sicurezza:
+    - Firewall `api` su `^/api` con `json_login` su `POST /api/authentication_token` + `jwt: ~`.
+    - Firewall `main` (UI Twig) con `remember_me` e `custom_authenticators`.
+    - Access control: `^/api/...` per docs/token/metrics pubblici; `^/` richiede `ROLE_USER`.
+  - CORS: `nelmio_cors` permette origin `localhost/127.0.0.1` e header `Authorization`. Vedi `.env` e `config/packages/nelmio_cors.yaml`.
+  - Upload multipart: `api/Encoder/MultipartDecoder.php` e `api/Serializer/UploadedFileDenormalizer.php`.
+  - Dominio: entità in `src/Entity/**` (molte `#[ApiResource]`).
+
+- **Frontend attuale**
+  - `assets/package.json`: Materialize, Stimulus, Encore, Croppie, ECharts, ecc.
+  - UI in Twig: `templates/App/**`.
+
+## Strategia di migrazione consigliata (senza “big bang”)
+
+### Fase 0 — Decisioni architetturali
+- **Backend resta Symfony/API Platform**.
+- **Frontend nuovo in Next.js** dentro `new/apps/web`.
+- **Coesistenza**: migrazione progressiva per route (reverse proxy o subdomain). Idealmente, tutta l’infra/compose/proxy sta in `new/`.
+
+### Fase 1 — Setup Next.js + shadcn (in `new/apps/web`)
+- Next.js (App Router), Tailwind, shadcn/ui.
+- Struttura (indicativa):
+
+  - `new/apps/web/app/(auth)/login/page.tsx`
+  - `new/apps/web/app/(app)/collections/page.tsx`
+  - `new/apps/web/app/(shared)/user/[username]/collections/page.tsx`
+  - `new/apps/web/lib/api/*`
+  - `new/apps/web/lib/auth/*`
+  - `new/apps/web/components/ui/*`
+  - `new/apps/web/components/*`
+
+## Autenticazione (senza Firebase)
+
+Endpoint JWT esistente:
+- `POST /api/authentication_token` con `{ "username": "...", "password": "..." }`
+- Risposta `{ "token": "..." }`
+
+### Opzione A (consigliata): cookie HttpOnly + BFF Next
+- Next (in `new/apps/web`) fa login chiamando Symfony, salva JWT in cookie HttpOnly.
+- Il browser chiama route handler Next (BFF) e Next inoltra a Symfony con `Authorization: Bearer`.
+
+### Opzione B: NextAuth (Credentials Provider)
+- Provider che chiama `/api/authentication_token`.
+- Session cookie HttpOnly gestita da NextAuth.
+
+### Ruoli e permessi
+- Ruoli Symfony: `ROLE_USER`, `ROLE_ADMIN`.
+- In Next: UI gating (ruoli/feature) ma enforcement vero resta nel backend.
+
+## Consumo API Platform da Next
+
+- API Platform espone `application/json` e `application/ld+json`.
+- Tipi: genera da OpenAPI oppure manuale.
+- Paginazione/filtri: replicare comportamento della UI Twig.
+
+## Upload e file
+
+- Upload verso Symfony in `multipart/form-data`.
+- Se BFF: inoltro multipart da Next a Symfony server-side.
+
+## Migrazione UI: Materialize/Stimulus → React/shadcn
+
+- Twig partials → layout React.
+- Stimulus → componenti React.
+- Materialize → shadcn + Tailwind.
+
+## Routing: da Symfony a Next (App Router)
+
+- `new/apps/web/app/(app)/**` per area autenticata.
+- `new/apps/web/app/(shared)/user/[username]/**` per viste “shared” (`/user/{username}/...`).
+
+## Mappa rotte UI (Twig) → route Next.js — COMPLETA
+
+> Next routes sono riferite a `new/apps/web/app/...`
+
+| Area | Symfony route (path) | Template Twig principale | Next.js route consigliata | Note |
+|---|---|---|---|---|
+| Auth: login (UI) | `""` (root) | `templates/App/Security/login.html.twig` | `(auth)/login` | Symfony login è su path vuoto. In Next usa `/login`. |
+| Auth: first connection | `/first-connection` | `templates/App/Security/first_connection.html.twig` | `(auth)/first-connection` | |
+| Auth: register | `/register` | `templates/App/Security/first_connection.html.twig` | `(auth)/register` | |
+| Home / Collections index | `/collections` + shared `/user/{username}` `/user/{username}/collections` | `App/Collection/index.html.twig` | `(app)/collections` + `(shared)/user/[username]/collections` | |
+| Collection create | `/collections/add` | `App/Collection/add.html.twig` | `(app)/collections/new` | |
+| Collections index config | `/collections/edit` | `App/Collection/edit_index.html.twig` | `(app)/collections/settings` | |
+| Collection detail | `/collections/{id}` + shared | `App/Collection/show.html.twig` | `(app)/collections/[id]` + `(shared)/user/[username]/collections/[id]` | |
+| Collection items | `/collections/{id}/items` + shared | `App/Collection/items.html.twig` | `(app)/collections/[id]/items` | |
+| Collection edit | `/collections/{id}/edit` | `App/Collection/edit.html.twig` | `(app)/collections/[id]/edit` | |
+| Collection delete | `/collections/{id}/delete` (POST) | (action) | route handler o server action | |
+| Collection batch tagging | `/collections/{id}/batch-tagging` | `App/Collection/batch_tagging.html.twig` | `(app)/collections/[id]/batch-tagging` | |
+| Item create | `/items/add?collection=...` | `App/Item/add.html.twig` | `(app)/collections/[collectionId]/items/new` | |
+| Item detail | `/items/{id}` + shared | `App/Item/show.html.twig` | `(app)/items/[id]` + `(shared)/user/[username]/items/[id]` | |
+| Item edit | `/items/{id}/edit` | `App/Item/edit.html.twig` | `(app)/items/[id]/edit` | |
+| Item delete | `/items/{id}/delete` (POST) | (action) | route handler o server action | |
+| Item loan | `/items/{id}/loan` | `App/Loan/loan.html.twig` | `(app)/items/[id]/loan` | |
+| Item autocomplete | `/items/autocomplete/{search}` | (JSON) | `api/items/autocomplete/[search]` | proxy/BFF |
+| Loans index | `/loans` | `App/Loan/index.html.twig` | `(app)/loans` | |
+| Tags index | `/tags` + shared | `App/Tag/index.html.twig` | `(app)/tags` + `(shared)/user/[username]/tags` | |
+| Tag detail | `/tags/{id}` + shared | `App/Tag/show.html.twig` | `(app)/tags/[id]` + shared | |
+| Tag edit | `/tags/{id}/edit` | `App/Tag/edit.html.twig` | `(app)/tags/[id]/edit` | |
+| Tag delete unused | `/tags/delete-unused-tags` (POST) | (action) | route handler o server action | |
+| Tag autocomplete | `/tags/autocomplete/{search}` | (JSON) | `api/tags/autocomplete/[search]` | proxy/BFF |
+| Tag item view | `/tags/{tagId}/items/{itemId}` + shared | `App/Tag/item.html.twig` | `(app)/tags/[tagId]/items/[itemId]` | |
+| Tag categories | `/tag-categories` | `App/TagCategory/index.html.twig` | `(app)/tag-categories` | |
+| Wishlists index | `/wishlists` + shared | `App/Wishlist/index.html.twig` | `(app)/wishlists` + shared | |
+| Wishlists index config | `/wishlists/edit` | `App/Wishlist/edit_index.html.twig` | `(app)/wishlists/settings` | |
+| Wishlist detail | `/wishlists/{id}` + shared | `App/Wishlist/show.html.twig` | `(app)/wishlists/[id]` + shared | |
+| Wishes create | `/wishes/add?wishlist=...` | `App/Wish/add.html.twig` | `(app)/wishlists/[wishlistId]/wishes/new` | |
+| Wish transfer → item | `/wishes/{id}/transfer` | `App/Wish/transfer_to_collection.html.twig` | `(app)/wishes/[id]/transfer` | |
+| Albums index | `/albums` + shared | `App/Album/index.html.twig` | `(app)/albums` + shared | |
+| Albums index config | `/albums/edit` | `App/Album/edit_index.html.twig` | `(app)/albums/settings` | |
+| Album detail | `/albums/{id}` + shared | `App/Album/show.html.twig` | `(app)/albums/[id]` + shared | |
+| Photos create | `/photos/add?album=...` | `App/Photo/add.html.twig` | `(app)/albums/[albumId]/photos/new` | |
+| Search | `/search` + shared | `App/Search/index.html.twig` | `(app)/search` + shared | |
+| Search autocomplete | `/search/autocomplete/{term}` + shared | (JSON) | `api/search/autocomplete/[term]` | proxy/BFF |
+| Advanced search | `/advanced-item-search...` | `App/AdvancedItemSearch/*` | `(app)/advanced-item-search/**` | rifare inputs in React (non HTML-in-JSON) |
+| History | `/history` | `App/History/index.html.twig` | `(app)/history` | |
+| Statistics | `/statistics` + shared | `App/Statistics/index.html.twig` | `(app)/statistics` + shared | |
+| Tools | `/tools` | `App/Tools/index.html.twig` | `(app)/tools` | |
+| Tools exports | `/tools/export/*` | (download/render) | `(app)/tools/export/*` (route handlers) | proxy/BFF |
+| Inventories | `/inventories/*` | `App/Inventory/*` | `(app)/inventories/**` | evitare HTML-in-JSON per “check” |
+| Settings | `/settings` | `App/Settings/index.html.twig` | `(app)/settings` | |
+| Profile | `/profile` | `App/Profile/index.html.twig` | `(app)/profile` | |
+| Signs | `/signatures` + shared | `App/Sign/index.html.twig` | `(app)/signatures` + shared | |
+| Templates | `/templates/*` | `App/Template/*` | `(app)/templates/**` | “fields” restituisce HTML in JSON: rifare |
+| Choice lists | `/choice-lists/*` | `App/ChoiceList/*` | `(app)/choice-lists/**` | |
+| Scrapers (collection/item/wish) | `/scrapers/*` | `App/Scraper/**` | `(app)/scrapers/**` | rifare form/checkbox React (no HTML-in-JSON) |
+| Admin dashboard | `/admin` | `App/Admin/Admin/index.html.twig` | `(admin)/admin` | |
+| Admin users | `/admin/users*` | `App/Admin/User/*` | `(admin)/admin/users/**` | |
+| Admin configuration | `/admin/configuration` | `App/Admin/Configuration/index.html.twig` | `(admin)/admin/configuration` | |
+| Admin errors | `/admin/errors*` | `App/Admin/Error/*` | `(admin)/admin/errors/**` | |
+| Admin export/refresh | `/admin/export/images`, `/admin/refresh-caches` | (download/action) | `(admin)/admin/export/images` + route handler | |
+
+## Dati, DB e migrazioni
+
+- DB attuale: Postgres.
+- Prima fase: **nessuna migrazione DB**; Next parla con Symfony API.
+- Possibile evoluzione: mantenere Symfony come backend stabile.
+
+## Metriche
+
+- `GET /api/metrics` (condizionato da config) → decidere se proxyare o esporre separatamente.
+
+## Configurazione env (Next) — dentro `new/apps/web`
+- `API_BASE_URL` (server-to-server verso Symfony)
+- `AUTH_COOKIE_NAME=koi_token`
+- `AUTH_COOKIE_SECURE=true` (prod)
+- `AUTH_COOKIE_SAMESITE=lax`
+
+## Test & parity
+
+- Usare `tests/Api/**` come contratto API.
+- Aggiungere E2E sul frontend Next (Playwright) dentro `new/`.
+
+## Piano di rollout
+
+- Avviare Next in parallelo (subpath/subdomain) senza toccare UI Twig.
+- Migrare feature per feature seguendo la tabella.
+- Progressivamente ridurre dipendenza da HTML-in-JSON e portare tutto in componenti React.
+
+## Riferimenti rapidi (repo)
+
+- JWT OpenAPI: `api/OpenApi/JwtDecorator.php`
+- Security: `config/packages/security.yaml`
+- Routes: `config/routes.yaml`
+- CORS: `config/packages/nelmio_cors.yaml` + `.env`
+- API Platform: `config/packages/api_platform.yaml`
+- UI routes: `src/Controller/**`
+- UI templates: `templates/App/**`
+- Upload multipart: `api/Encoder/MultipartDecoder.php`, `api/Serializer/UploadedFileDenormalizer.php`

@@ -1,0 +1,526 @@
+// prisma/schema.prisma
+// Rispecchia il database PostgreSQL di Koillection (tabelle koi_*)
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// USER
+// ─────────────────────────────────────────────────────────────────────────────
+
+model User {
+  id                  String    @id @default(uuid()) @db.Char(36)
+  username            String    @unique @db.VarChar(32)
+  email               String    @unique
+  password            String
+  enabled             Boolean   @default(true)
+  roles               Json      @default("[\"ROLE_USER\"]")
+  currency            String    @default("EUR") @db.VarChar(3)
+  locale              String    @default("en") @db.VarChar(5)
+  timezone            String?   @db.VarChar(50)
+  dateFormat          String    @default("Y-m-d") @db.VarChar(10)
+  diskSpaceAllowed    BigInt    @default(536870912)
+  diskSpaceUsed       BigInt    @default(0)
+  theme               String    @default("auto") @db.VarChar(10)
+  displayMode         String    @default("grid") @db.VarChar(4)
+  wishlistDisplayMode String    @default("grid") @db.VarChar(4)
+  albumDisplayMode    String    @default("grid") @db.VarChar(4)
+  visibility          String    @default("public") @db.VarChar(10)
+  avatar              String?   @unique
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime? @updatedAt @map("updated_at")
+
+  collections           Collection[]
+  albums                Album[]
+  wishlists             Wishlist[]
+  tags                  Tag[]
+  tagCategories         TagCategory[]
+  templates             Template[]
+  choiceLists           ChoiceList[]
+  inventories           Inventory[]
+  loans                 Loan[]
+  logs                  Log[]
+  scrapers              Scraper[]
+  items                 Item[]
+  photos                Photo[]
+  wishes                Wish[]
+  paths                 Path[]
+  displayConfigurations DisplayConfiguration[]
+  fields                Field[]
+
+  @@map("koi_user")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// COLLECTION
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Collection {
+  id               String    @id @default(uuid()) @db.Char(36)
+  title            String
+  color            String?   @db.VarChar(7)
+  image            String?   @unique
+  visibility       String    @default("public") @db.VarChar(10)
+  parentVisibility String    @default("public") @db.VarChar(10) @map("parent_visibility")
+  finalVisibility  String    @default("public") @db.VarChar(10) @map("final_visibility")
+  seenCounter      Int       @default(0) @map("seen_counter")
+  childrenCount    Int       @default(0) @map("children_count")
+  cachedValues     Json?     @map("cached_values")
+
+  owner                    User?       @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId                  String?     @db.Char(36) @map("owner_id")
+  parent                   Collection? @relation("CollectionChildren", fields: [parentId], references: [id], onDelete: SetNull)
+  parentId                 String?     @db.Char(36) @map("parent_id")
+  itemsDefaultTemplate     Template?   @relation("CollectionDefaultTemplate", fields: [itemsDefaultTemplateId], references: [id], onDelete: SetNull)
+  itemsDefaultTemplateId   String?     @db.Char(36) @map("items_default_template_id")
+  childrenDisplayConfig    DisplayConfiguration? @relation("CollectionChildrenDisplay", fields: [childrenDisplayConfigId], references: [id])
+  childrenDisplayConfigId  String?     @unique @db.Char(36) @map("children_display_config_id")
+  itemsDisplayConfig       DisplayConfiguration? @relation("CollectionItemsDisplay", fields: [itemsDisplayConfigId], references: [id])
+  itemsDisplayConfigId     String?     @unique @db.Char(36) @map("items_display_config_id")
+
+  children Collection[] @relation("CollectionChildren")
+  items    Item[]
+  data     Datum[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@index([finalVisibility], name: "idx_collection_final_visibility")
+  @@index([ownerId], name: "idx_collection_owner")
+  @@map("koi_collection")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ITEM
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Item {
+  id                  String    @id @default(uuid()) @db.Char(36)
+  name                String
+  quantity            Int       @default(1)
+  visibility          String    @default("public") @db.VarChar(10)
+  parentVisibility    String    @default("public") @db.VarChar(10) @map("parent_visibility")
+  finalVisibility     String    @default("public") @db.VarChar(10) @map("final_visibility")
+  image               String?   @unique
+  imageSmallThumbnail String?   @unique @map("image_small_thumbnail")
+  imageLargeThumbnail String?   @unique @map("image_large_thumbnail")
+  seenCounter         Int       @default(0) @map("seen_counter")
+  cachedValues        Json?     @map("cached_values")
+
+  collection   Collection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  collectionId String?     @db.Char(36) @map("collection_id")
+  owner        User?       @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId      String?     @db.Char(36) @map("owner_id")
+
+  data         Datum[]
+  loans        Loan[]
+  tags         Tag[]    @relation("ItemTags")
+  relatedItems Item[]   @relation("RelatedItems")
+  relatedTo    Item[]   @relation("RelatedItems")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@index([finalVisibility], name: "idx_item_final_visibility")
+  @@index([collectionId], name: "idx_item_collection")
+  @@index([ownerId], name: "idx_item_owner")
+  @@map("koi_item")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DATUM
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Datum {
+  id                  String    @id @default(uuid()) @db.Char(36)
+  type                String    @db.VarChar(15)
+  label               String?
+  value               String?   @db.Text
+  position            Int?
+  currency            String?   @db.VarChar(3)
+  image               String?   @unique
+  imageSmallThumbnail String?   @unique @map("image_small_thumbnail")
+  file                String?   @unique
+  video               String?   @unique
+  originalFilename    String?   @map("original_filename")
+  visibility          String    @default("public") @db.VarChar(10)
+  parentVisibility    String    @default("public") @db.VarChar(10) @map("parent_visibility")
+  finalVisibility     String    @default("public") @db.VarChar(10) @map("final_visibility")
+
+  item         Item?       @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId       String?     @db.Char(36) @map("item_id")
+  collection   Collection? @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  collectionId String?     @db.Char(36) @map("collection_id")
+  choiceList   ChoiceList? @relation(fields: [choiceListId], references: [id], onDelete: SetNull)
+  choiceListId String?     @db.Char(36) @map("choice_list_id")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@index([label], name: "idx_datum_label")
+  @@index([finalVisibility], name: "idx_datum_final_visibility")
+  @@index([itemId], name: "idx_datum_item")
+  @@map("koi_datum")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ALBUM & PHOTO
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Album {
+  id               String    @id @default(uuid()) @db.Char(36)
+  title            String
+  color            String?   @db.VarChar(7)
+  image            String?   @unique
+  visibility       String    @default("public") @db.VarChar(10)
+  parentVisibility String    @default("public") @db.VarChar(10) @map("parent_visibility")
+  finalVisibility  String    @default("public") @db.VarChar(10) @map("final_visibility")
+  seenCounter      Int       @default(0) @map("seen_counter")
+  childrenCount    Int       @default(0) @map("children_count")
+  photosCount      Int       @default(0) @map("photos_count")
+
+  owner    User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId  String? @db.Char(36) @map("owner_id")
+  parent   Album?  @relation("AlbumChildren", fields: [parentId], references: [id], onDelete: SetNull)
+  parentId String? @db.Char(36) @map("parent_id")
+
+  children Album[] @relation("AlbumChildren")
+  photos   Photo[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@index([finalVisibility], name: "idx_album_final_visibility")
+  @@index([ownerId], name: "idx_album_owner")
+  @@map("koi_album")
+}
+
+model Photo {
+  id                  String    @id @default(uuid()) @db.Char(36)
+  title               String
+  comment             String?   @db.Text
+  place               String?
+  image               String?   @unique
+  imageSmallThumbnail String?   @unique @map("image_small_thumbnail")
+  takenAt             DateTime? @map("taken_at")
+  visibility          String    @default("public") @db.VarChar(10)
+  parentVisibility    String    @default("public") @db.VarChar(10) @map("parent_visibility")
+  finalVisibility     String    @default("public") @db.VarChar(10) @map("final_visibility")
+  seenCounter         Int       @default(0) @map("seen_counter")
+
+  album   Album?  @relation(fields: [albumId], references: [id], onDelete: SetNull)
+  albumId String? @db.Char(36) @map("album_id")
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String? @db.Char(36) @map("owner_id")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@index([finalVisibility], name: "idx_photo_final_visibility")
+  @@index([albumId], name: "idx_photo_album")
+  @@map("koi_photo")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// WISHLIST & WISH
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Wishlist {
+  id               String    @id @default(uuid()) @db.Char(36)
+  name             String
+  color            String?   @db.VarChar(7)
+  image            String?   @unique
+  visibility       String    @default("public") @db.VarChar(10)
+  parentVisibility String    @default("public") @db.VarChar(10) @map("parent_visibility")
+  finalVisibility  String    @default("public") @db.VarChar(10) @map("final_visibility")
+  seenCounter      Int       @default(0) @map("seen_counter")
+  childrenCount    Int       @default(0) @map("children_count")
+  wishesCount      Int       @default(0) @map("wishes_count")
+
+  owner    User?      @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId  String?    @db.Char(36) @map("owner_id")
+  parent   Wishlist?  @relation("WishlistChildren", fields: [parentId], references: [id], onDelete: SetNull)
+  parentId String?    @db.Char(36) @map("parent_id")
+
+  children Wishlist[] @relation("WishlistChildren")
+  wishes   Wish[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@index([finalVisibility], name: "idx_wishlist_final_visibility")
+  @@index([ownerId], name: "idx_wishlist_owner")
+  @@map("koi_wishlist")
+}
+
+model Wish {
+  id                  String    @id @default(uuid()) @db.Char(36)
+  name                String
+  url                 String?   @db.Text
+  price               String?
+  currency            String?   @db.VarChar(6)
+  image               String?   @unique
+  imageSmallThumbnail String?   @unique @map("image_small_thumbnail")
+  comment             String?   @db.Text
+  visibility          String    @default("public") @db.VarChar(10)
+  parentVisibility    String    @default("public") @db.VarChar(10) @map("parent_visibility")
+  finalVisibility     String    @default("public") @db.VarChar(10) @map("final_visibility")
+  seenCounter         Int       @default(0) @map("seen_counter")
+
+  wishlist   Wishlist? @relation(fields: [wishlistId], references: [id], onDelete: SetNull)
+  wishlistId String?   @db.Char(36) @map("wishlist_id")
+  owner      User?     @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId    String?   @db.Char(36) @map("owner_id")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@index([finalVisibility], name: "idx_wish_final_visibility")
+  @@index([wishlistId], name: "idx_wish_wishlist")
+  @@map("koi_wish")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TAG & TAG CATEGORY
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Tag {
+  id                  String    @id @default(uuid()) @db.Char(36)
+  label               String
+  description         String?   @db.Text
+  image               String?   @unique
+  imageSmallThumbnail String?   @unique @map("image_small_thumbnail")
+  visibility          String    @default("public") @db.VarChar(10)
+  seenCounter         Int       @default(0) @map("seen_counter")
+
+  owner      User?        @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId    String?      @db.Char(36) @map("owner_id")
+  category   TagCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId String?      @db.Char(36) @map("category_id")
+
+  items Item[] @relation("ItemTags")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@index([visibility], name: "idx_tag_visibility")
+  @@index([ownerId], name: "idx_tag_owner")
+  @@map("koi_tag")
+}
+
+model TagCategory {
+  id          String  @id @default(uuid()) @db.Char(36)
+  label       String
+  description String? @db.Text
+  color       String? @db.VarChar(7)
+
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String? @db.Char(36) @map("owner_id")
+
+  tags Tag[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@index([ownerId], name: "idx_tag_category_owner")
+  @@map("koi_tag_category")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TEMPLATE & FIELD
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Template {
+  id   String @id @default(uuid()) @db.Char(36)
+  name String
+
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String? @db.Char(36) @map("owner_id")
+
+  fields      Field[]
+  collections Collection[] @relation("CollectionDefaultTemplate")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@index([ownerId], name: "idx_template_owner")
+  @@map("koi_template")
+}
+
+model Field {
+  id         String  @id @default(uuid()) @db.Char(36)
+  name       String
+  position   Int
+  type       String  @db.VarChar(15)
+  visibility String  @default("public") @db.VarChar(10)
+
+  template     Template?   @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  templateId   String?     @db.Char(36) @map("template_id")
+  choiceList   ChoiceList? @relation(fields: [choiceListId], references: [id], onDelete: SetNull)
+  choiceListId String?     @db.Char(36) @map("choice_list_id")
+  owner        User?       @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId      String?     @db.Char(36) @map("owner_id")
+
+  @@index([templateId], name: "idx_field_template")
+  @@map("koi_field")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CHOICE LIST
+// ─────────────────────────────────────────────────────────────────────────────
+
+model ChoiceList {
+  id      String @id @default(uuid()) @db.Char(36)
+  name    String @db.VarChar(255)
+  choices Json   @default("[]")
+
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String? @db.Char(36) @map("owner_id")
+
+  data   Datum[]
+  fields Field[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@index([ownerId], name: "idx_choice_list_owner")
+  @@map("koi_choice_list")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// INVENTORY
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Inventory {
+  id      String @id @default(uuid()) @db.Char(36)
+  name    String
+  content Json   @default("[]")
+
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String? @db.Char(36) @map("owner_id")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@index([ownerId], name: "idx_inventory_owner")
+  @@map("koi_inventory")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LOAN
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Loan {
+  id         String    @id @default(uuid()) @db.Char(36)
+  lentTo     String    @map("lent_to")
+  lentAt     DateTime  @map("lent_at")
+  returnedAt DateTime? @map("returned_at")
+
+  item    Item?   @relation(fields: [itemId], references: [id], onDelete: SetNull)
+  itemId  String? @db.Char(36) @map("item_id")
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String? @db.Char(36) @map("owner_id")
+
+  @@index([ownerId], name: "idx_loan_owner")
+  @@map("koi_loan")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LOG
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Log {
+  id            String    @id @default(uuid()) @db.Char(36)
+  type          String?   @db.VarChar(6)
+  loggedAt      DateTime? @map("logged_at")
+  objectId      String    @db.VarChar(36) @map("object_id")
+  objectLabel   String    @map("object_label")
+  objectClass   String    @map("object_class")
+  objectDeleted Boolean   @default(false) @map("object_deleted")
+
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String? @db.Char(36) @map("owner_id")
+
+  @@index([ownerId], name: "idx_log_owner")
+  @@index([loggedAt], name: "idx_log_logged_at")
+  @@map("koi_log")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SCRAPER & PATH
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Scraper {
+  id         String  @id @default(uuid()) @db.Char(36)
+  name       String
+  type       String? @db.VarChar(15)
+  urlPattern String? @db.Text @map("url_pattern")
+  namePath   String? @db.Text @map("name_path")
+  imagePath  String? @db.Text @map("image_path")
+  pricePath  String? @db.Text @map("price_path")
+  headers    Json?   @default("[]")
+
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String? @db.Char(36) @map("owner_id")
+
+  dataPaths Path[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@index([ownerId], name: "idx_scraper_owner")
+  @@map("koi_scraper")
+}
+
+model Path {
+  id       String @id @default(uuid()) @db.Char(36)
+  name     String
+  type     String @db.VarChar(15)
+  path     String @db.Text
+  position Int
+
+  scraper   Scraper? @relation(fields: [scraperId], references: [id], onDelete: Cascade)
+  scraperId String?  @db.Char(36) @map("scraper_id")
+  owner     User?    @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId   String?  @db.Char(36) @map("owner_id")
+
+  @@index([scraperId], name: "idx_path_scraper")
+  @@map("koi_path")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DISPLAY CONFIGURATION
+// ─────────────────────────────────────────────────────────────────────────────
+
+model DisplayConfiguration {
+  id                   String  @id @default(uuid()) @db.Char(36)
+  label                String?
+  displayMode          String  @default("grid") @db.VarChar(4) @map("display_mode")
+  sortingProperty      String? @db.VarChar(255) @map("sorting_property")
+  sortingType          String? @db.VarChar(15) @map("sorting_type")
+  sortingDirection     String? @db.VarChar(255) @map("sorting_direction")
+  showVisibility       Boolean @default(true) @map("show_visibility")
+  showActions          Boolean @default(true) @map("show_actions")
+  showNumberOfChildren Boolean @default(true) @map("show_number_of_children")
+  showNumberOfItems    Boolean @default(true) @map("show_number_of_items")
+  showItemQuantities   Boolean @default(false) @map("show_item_quantities")
+  columns              Json?   @default("[]")
+
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String? @db.Char(36) @map("owner_id")
+
+  collectionChildren Collection? @relation("CollectionChildrenDisplay")
+  collectionItems    Collection? @relation("CollectionItemsDisplay")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@map("koi_display_configuration")
+}
+

@@ -1,0 +1,49 @@
+import type { Template, Field } from "@koillection/db";
+import Link from "next/link";
+import { Badge, Card, CardContent, CardHeader, CardTitle } from "@koillection/ui";
+import { FileText, Layers } from "lucide-react";
+
+type TemplateWithRelations = Template & { fields: Field[]; _count: { collections: number } };
+
+export function TemplateList({ templates }: { templates: TemplateWithRelations[] }) {
+  if (templates.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+        <FileText className="h-12 w-12 mb-4 opacity-30" />
+        <p className="text-lg font-medium">Nessun template</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {templates.map((tmpl) => (
+        <Link key={tmpl.id} href={`/templates/${tmpl.id}/edit`}>
+          <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base flex items-center gap-2">
+                <FileText className="h-4 w-4 text-primary" />
+                {tmpl.name}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <span>{tmpl.fields.length} campi</span>
+                {tmpl._count.collections > 0 && (
+                  <span className="flex items-center gap-1"><Layers className="h-3 w-3" />{tmpl._count.collections} coll.</span>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-1 mt-2">
+                {tmpl.fields.slice(0, 5).map((f) => (
+                  <Badge key={f.id} variant="secondary" className="text-xs">{f.name}</Badge>
+                ))}
+                {tmpl.fields.length > 5 && <Badge variant="outline" className="text-xs">+{tmpl.fields.length - 5}</Badge>}
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
