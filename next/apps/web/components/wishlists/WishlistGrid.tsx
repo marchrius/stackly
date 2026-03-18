@@ -5,7 +5,12 @@ import { Heart, Layers } from "lucide-react";
 
 type WishlistWithCount = Wishlist & { _count: { children: number; wishes: number } };
 
-export function WishlistGrid({ wishlists }: { wishlists: WishlistWithCount[] }) {
+interface WishlistGridProps {
+  wishlists: WishlistWithCount[];
+  basePath?: string;
+}
+
+export function WishlistGrid({ wishlists, basePath = "/wishlists" }: WishlistGridProps) {
   if (wishlists.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
@@ -17,7 +22,7 @@ export function WishlistGrid({ wishlists }: { wishlists: WishlistWithCount[] }) 
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {wishlists.map((wl) => (
-        <Link key={wl.id} href={`/wishlists/${wl.id}`}>
+        <Link key={wl.id} href={`${basePath}/${wl.id}`}>
           <Card className="group overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-full">
             <div className="h-36 flex items-center justify-center" style={{ backgroundColor: wl.color ? `#${wl.color}22` : undefined }}>
               <div className="flex h-14 w-14 items-center justify-center rounded-full text-2xl font-bold text-white" style={{ backgroundColor: wl.color ? `#${wl.color}` : "#ec4899" }}>

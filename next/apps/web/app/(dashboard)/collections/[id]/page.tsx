@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
+import { getCollectionAncestors } from "@/lib/collections-tree";
 import { prisma } from "@koillection/db";
 import { notFound } from "next/navigation";
 import { CollectionDetail } from "@/components/collections/CollectionDetail";
@@ -32,6 +33,7 @@ export default async function CollectionDetailPage({ params }: Props) {
 
   if (!collection) notFound();
 
-  return <CollectionDetail collection={collection} />;
-}
+  const ancestors = await getCollectionAncestors(session.user.id, collection.parentId);
 
+  return <CollectionDetail collection={collection} ancestors={ancestors} />;
+}

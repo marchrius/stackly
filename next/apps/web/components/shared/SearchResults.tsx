@@ -1,17 +1,21 @@
-import type { Item, Collection, Tag } from "@koillection/db";
+import type { Item, Collection, Tag, Wishlist, Wish } from "@koillection/db";
 import Link from "next/link";
 import { Badge } from "@koillection/ui";
-import { Box, Layers, Tag as TagIcon } from "lucide-react";
+import { Box, Heart, Layers, Tag as TagIcon } from "lucide-react";
+
+type WishWithWishlist = Wish & { wishlist?: { id: string; name: string } | null };
 
 interface SearchResultsProps {
   items: Item[];
   collections: Collection[];
   tags: Tag[];
+  wishlists: Wishlist[];
+  wishes: WishWithWishlist[];
   query: string;
 }
 
-export function SearchResults({ items, collections, tags, query }: SearchResultsProps) {
-  const total = items.length + collections.length + tags.length;
+export function SearchResults({ items, collections, tags, wishlists, wishes, query }: SearchResultsProps) {
+  const total = items.length + collections.length + tags.length + wishlists.length + wishes.length;
 
   if (total === 0) {
     return <p className="text-muted-foreground">Nessun risultato per &ldquo;{query}&rdquo;.</p>;
@@ -37,6 +41,22 @@ export function SearchResults({ items, collections, tags, query }: SearchResults
         </section>
       )}
 
+      {wishlists.length > 0 && (
+        <section>
+          <h2 className="text-sm font-semibold text-muted-foreground mb-2 flex items-center gap-1">
+            <Heart className="h-4 w-4" /> Wishlist ({wishlists.length})
+          </h2>
+          <div className="space-y-1">
+            {wishlists.map((wishlist) => (
+              <Link key={wishlist.id} href={`/wishlists/${wishlist.id}`} className="flex items-center gap-2 rounded-md p-2 hover:bg-accent text-sm">
+                <Heart className="h-4 w-4 text-pink-500 shrink-0" />
+                {wishlist.name}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
       {items.length > 0 && (
         <section>
           <h2 className="text-sm font-semibold text-muted-foreground mb-2 flex items-center gap-1">
@@ -48,6 +68,25 @@ export function SearchResults({ items, collections, tags, query }: SearchResults
                 <Box className="h-4 w-4 text-primary shrink-0" />
                 {item.name}
                 {item.quantity > 1 && <Badge variant="secondary" className="text-xs">×{item.quantity}</Badge>}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {wishes.length > 0 && (
+        <section>
+          <h2 className="text-sm font-semibold text-muted-foreground mb-2 flex items-center gap-1">
+            <Heart className="h-4 w-4" /> Desideri ({wishes.length})
+          </h2>
+          <div className="space-y-1">
+            {wishes.map((wish) => (
+              <Link key={wish.id} href={`/wishes/${wish.id}`} className="flex items-center gap-2 rounded-md p-2 hover:bg-accent text-sm">
+                <Heart className="h-4 w-4 text-pink-500 shrink-0" />
+                <span className="truncate">{wish.name}</span>
+                {wish.wishlist?.name && (
+                  <Badge variant="outline" className="text-xs ml-auto">{wish.wishlist.name}</Badge>
+                )}
               </Link>
             ))}
           </div>

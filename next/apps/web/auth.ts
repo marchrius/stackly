@@ -1,9 +1,7 @@
-// @ts-nocheck
-// next-auth v5: 'auth' inferred type cannot be named (known issue, safe to ignore)
-// See: https://github.com/nextauthjs/next-auth/issues/9504
 import NextAuth from "next-auth";
-import type { Session } from "next-auth";
+import type { Session, DefaultSession } from "next-auth";
 import type { JWT } from "next-auth/jwt";
+import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@koillection/db";
 import bcrypt from "bcryptjs";
@@ -15,7 +13,7 @@ const loginSchema = z.object({
   password: z.string().min(1),
 });
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+const config: NextAuthConfig = {
   providers: [
     Credentials({
       credentials: {
@@ -88,4 +86,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: "/login",
     error: "/login",
   },
-});
+} satisfies NextAuthConfig;
+
+const authConfig = NextAuth(config);
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      roles: string[];
+      currency: string;
+      locale: string;
+      theme: string;
+      dateFormat: string;
+    } & DefaultSession["user"];
+  }
+}
+
+export const handlers = authConfig.handlers;
+// @ts-ignore TS2742: next-auth v5 — auth type not nominable without internal module reference
+// Tracked: https://github.com/nextauthjs/next-auth/issues/9504
+export const auth = authConfig.auth as any;

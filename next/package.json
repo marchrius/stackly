@@ -6,16 +6,17 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "type-check": "turbo run type-check",
-    "db:generate": "turbo run db:generate --filter=@koillection/db",
-    "db:push": "turbo run db:push --filter=@koillection/db",
-    "db:migrate": "turbo run db:migrate --filter=@koillection/db",
-    "db:studio": "turbo run db:studio --filter=@koillection/db"
+    "build": "dotenv -e .env -- turbo run build",
+    "dev": "dotenv -e .env -- turbo run dev",
+    "lint": "dotenv -e .env -- turbo run lint",
+    "type-check": "dotenv -e .env -- turbo run type-check",
+    "db:generate": "dotenv -e .env -- turbo run db:generate --filter=@koillection/db",
+    "db:push": "dotenv -e .env -- turbo run db:push --filter=@koillection/db",
+    "db:migrate": "dotenv -e .env -- turbo run db:migrate --filter=@koillection/db",
+    "db:studio": "dotenv -e .env -- turbo run db:studio --filter=@koillection/db"
   },
   "devDependencies": {
+    "dotenv-cli": "^8.0.0",
     "turbo": "^2.3.3",
     "typescript": "^5.7.3",
     "@types/node": "^22.10.7",

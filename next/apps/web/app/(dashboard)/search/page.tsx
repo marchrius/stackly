@@ -14,7 +14,7 @@ export default async function SearchPage({ searchParams }: Props) {
 
   const query = q?.trim() ?? "";
 
-  const [items, collections, tags] = query.length >= 2
+  const [items, collections, tags, wishlists, wishes] = query.length >= 2
     ? await Promise.all([
         prisma.item.findMany({
           where: { ownerId: session.user.id, name: { contains: query, mode: "insensitive" } },
@@ -29,8 +29,17 @@ export default async function SearchPage({ searchParams }: Props) {
           where: { ownerId: session.user.id, label: { contains: query, mode: "insensitive" } },
           take: 10,
         }),
+        prisma.wishlist.findMany({
+          where: { ownerId: session.user.id, name: { contains: query, mode: "insensitive" } },
+          take: 10,
+        }),
+        prisma.wish.findMany({
+          where: { ownerId: session.user.id, name: { contains: query, mode: "insensitive" } },
+          take: 20,
+          include: { wishlist: { select: { id: true, name: true } } },
+        }),
       ])
-    : [[], [], []];
+    : [[], [], [], [], []];
 
   return (
     <div className="space-y-6">
@@ -39,7 +48,7 @@ export default async function SearchPage({ searchParams }: Props) {
         <Input name="q" defaultValue={query} placeholder="Cerca oggetti, collezioni, tag…" className="max-w-lg" autoFocus />
       </form>
       {query.length >= 2 && (
-        <SearchResults items={items} collections={collections} tags={tags} query={query} />
+        <SearchResults items={items} collections={collections} tags={tags} wishlists={wishlists} wishes={wishes} query={query} />
       )}
     </div>
   );

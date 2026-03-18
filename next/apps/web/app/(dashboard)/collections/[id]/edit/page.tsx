@@ -14,11 +14,16 @@ export default async function EditCollectionPage({ params }: Props) {
   const { id } = await params;
   const session = await requireAuth();
 
-  const [collection, templates] = await Promise.all([
+  const [collection, templates, parentOptions] = await Promise.all([
     prisma.collection.findFirst({ where: { id, ownerId: session.user.id } }),
     prisma.template.findMany({
       where: { ownerId: session.user.id },
       orderBy: { name: "asc" },
+    }),
+    prisma.collection.findMany({
+      where: { ownerId: session.user.id, id: { not: id } },
+      orderBy: { title: "asc" },
+      select: { id: true, title: true },
     }),
   ]);
 
@@ -27,8 +32,7 @@ export default async function EditCollectionPage({ params }: Props) {
   return (
     <div className="max-w-2xl space-y-6">
       <h1 className="text-2xl font-bold tracking-tight">Modifica Collezione</h1>
-      <CollectionForm collection={collection} templates={templates} />
+      <CollectionForm collection={collection} templates={templates} parentOptions={parentOptions} />
     </div>
   );
 }
-

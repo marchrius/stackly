@@ -38,8 +38,8 @@ cd next
 npm install
 
 # 2. Configura le variabili d'ambiente
-cp apps/web/.env.example apps/web/.env.local
-# Modifica DATABASE_URL e NEXTAUTH_SECRET in apps/web/.env.local
+cp .env.example .env
+# Modifica DATABASE_URL e NEXTAUTH_SECRET in .env
 
 # 3. Genera il client Prisma
 cd packages/db
@@ -53,7 +53,7 @@ cd ../../
 npm run dev
 ```
 
-## Variabili d'Ambiente (`apps/web/.env.local`)
+## Variabili d'Ambiente (`next/.env`)
 
 | Variabile | Descrizione | Esempio |
 |---|---|---|
@@ -79,34 +79,148 @@ npm run db:studio     # Apre Prisma Studio
 
 ## Route Disponibili
 
-| Route | Descrizione |
-|---|---|
-| `/login` | Accesso |
-| `/register` | Registrazione |
-| `/` | Dashboard (statistiche rapide) |
-| `/collections` | Gestione collezioni |
-| `/collections/[id]` | Dettaglio collezione con oggetti |
-| `/items/[id]` | Dettaglio oggetto con dati custom |
-| `/albums` | Album fotografici |
-| `/wishlists` | Liste dei desideri |
-| `/tags` | Gestione tag |
-| `/templates` | Template per struttura oggetti |
-| `/loans` | Prestiti attivi |
-| `/history` | Storico modifiche |
-| `/statistics` | Statistiche e grafici |
-| `/search` | Ricerca globale |
-| `/settings` | Impostazioni profilo |
+### Autenticazione
+
+| Route | Descrizione | Stato |
+|---|---|---|
+| `/login` | Accesso (provider Credentials) | ✅ Implementato |
+| `/register` | Registrazione nuovo utente | ✅ Implementato |
+
+### Dashboard e principale
+
+| Route | Descrizione | Stato |
+|---|---|---|
+| `/` | Dashboard (statistiche rapide) | ✅ Implementato |
+
+### Collezioni e Oggetti
+
+| Route | Descrizione | Stato |
+|---|---|---|
+| `/collections` | Gestione collezioni (lista, create, hierarchical) | ✅ Implementato |
+| `/collections/[id]` | Dettaglio collezione con oggetti annidati | ✅ Implementato |
+| `/collections/[id]/edit` | Modifica collezione | ✅ Implementato |
+| `/items/[id]` | Dettaglio oggetto con dati custom (Datum) | ✅ Implementato |
+| `/items/[id]/edit` | Modifica oggetto | ✅ Implementato |
+
+### Album e Foto
+
+| Route | Descrizione | Stato |
+|---|---|---|
+| `/albums` | Gestione album fotografici (lista, create, hierarchical) | ✅ Implementato |
+| `/albums/[id]` | Dettaglio album con foto | ✅ Implementato |
+| `/albums/[id]/edit` | Modifica album | ✅ Implementato |
+| `/photos/[id]` | Dettaglio foto | ✅ Implementato |
+
+### Wishlist e Wish
+
+| Route | Descrizione | Stato |
+|---|---|---|
+| `/wishlists` | Gestione liste desideri (lista, create, hierarchical) | ✅ Implementato |
+| `/wishlists/[id]` | Dettaglio wishlist con wish | ✅ Implementato |
+| `/wishlists/[id]/edit` | Modifica wishlist | ✅ Implementato |
+| `/wishes/[id]` | Dettaglio wish | ✅ Implementato |
+
+### Funzionalità secondarie
+
+| Route | Descrizione | Stato |
+|---|---|---|
+| `/tags` | Gestione tag e categorie tag | 🔲 Da implementare |
+| `/templates` | Template per struttura oggetti + Field | 🔲 Da implementare |
+| `/loans` | Prestiti attivi | 🔲 Da implementare |
+| `/history` | Storico modifiche (Log) | ✅ Implementato |
+| `/statistics` | Statistiche e grafici | ✅ Implementato |
+| `/search` | Ricerca full-text (Collections, Items, Albums, Photos, Wishlists, Wishes) | ✅ Implementato |
+| `/settings` | Impostazioni profilo utente | ✅ Implementato |
 
 ## API REST
 
-| Endpoint | Metodi | Descrizione |
+### Autenticazione
+
+| Endpoint | Metodi | Descrizione | Stato |
+|---|---|---|---|
+| `/api/auth/[...nextauth]` | GET, POST | Handler NextAuth.js (login, logout, session) | ✅ |
+
+### Collezioni
+
+| Endpoint | Metodi | Descrizione | Stato |
+|---|---|---|---|
+| `/api/collections` | GET, POST | Lista e crea collezioni | ✅ |
+| `/api/collections/[id]` | GET, PATCH, DELETE | CRUD collezione | ✅ |
+
+### Oggetti
+
+| Endpoint | Metodi | Descrizione | Stato |
+|---|---|---|---|
+| `/api/items` | GET, POST | Lista e crea oggetti | ✅ |
+| `/api/items/[id]` | GET, PATCH, DELETE | CRUD oggetto | ✅ |
+
+### Album
+
+| Endpoint | Metodi | Descrizione | Stato |
+|---|---|---|---|
+| `/api/albums` | GET, POST | Lista e crea album | ✅ |
+| `/api/albums/[id]` | GET, PATCH, DELETE | CRUD album | ✅ |
+
+### Foto
+
+| Endpoint | Metodi | Descrizione | Stato |
+|---|---|---|---|
+| `/api/photos` | GET, POST | Lista e crea foto | ✅ |
+| `/api/photos/[id]` | GET, PATCH, DELETE | CRUD foto | ✅ |
+
+### Wishlist
+
+| Endpoint | Metodi | Descrizione | Stato |
+|---|---|---|---|
+| `/api/wishlists` | GET, POST | Lista e crea wishlist | ✅ |
+| `/api/wishlists/[id]` | GET, PATCH, DELETE | CRUD wishlist | ✅ |
+
+### Wish
+
+| Endpoint | Metodi | Descrizione | Stato |
+|---|---|---|---|
+| `/api/wishes` | GET, POST | Lista e crea wish | ✅ |
+| `/api/wishes/[id]` | GET, PATCH, DELETE | CRUD wish | ✅ |
+
+### Utility
+
+| Endpoint | Metodi | Descrizione | Stato |
+|---|---|---|---|
+| `/api/search` | GET | Ricerca full-text su tutte le entità | ✅ |
+| `/api/upload` | POST | Upload immagini con auto-resize thumbnail | ✅ |
+| `/api/logs` | GET | Storico modifiche | ✅ |
+
+## Server Actions
+
+Tutte le operazioni CRUD sono implementate anche come **Server Actions** (file `lib/actions/*.actions.ts`) per integrazione diretta nei component React:
+
+| File | Descrizione | Stato |
 |---|---|---|
-| `/api/auth/[...nextauth]` | GET, POST | Handler NextAuth.js |
-| `/api/collections` | GET, POST | Lista e crea collezioni |
-| `/api/collections/[id]` | GET, PATCH, DELETE | CRUD collezione |
-| `/api/items` | GET, POST | Lista e crea oggetti |
-| `/api/items/[id]` | GET, PATCH, DELETE | CRUD oggetto |
-| `/api/search` | GET | Ricerca full-text |
-| `/api/upload` | POST | Upload immagini (con thumbnail) |
-| `/api/logs` | GET | Storico modifiche |
+| `lib/actions/collection.actions.ts` | CRUD collezioni | ✅ |
+| `lib/actions/item.actions.ts` | CRUD oggetti | ✅ |
+| `lib/actions/media.actions.ts` | CRUD media (helper per upload) | ✅ |
+| `lib/actions/photo.actions.ts` | CRUD foto | ✅ |
+| `lib/actions/wish.actions.ts` | CRUD wish | ✅ |
+| `lib/actions/user.actions.ts` | Azioni utente (profilo, settings) | ✅ |
+
+## Componenti React (shadcn/ui)
+
+Organizzati per modulo funzionale in `apps/web/components/`:
+
+| Modulo | Componenti | Descrizione |
+|---|---|---|
+| `auth/` | `LoginForm`, `RegisterForm` | Form autenticazione |
+| `collections/` | `CollectionList`, `CollectionForm`, `CollectionBreadcrumb`, `ItemTree`, `ItemForm`, `ItemDetail` | Componenti collezioni e oggetti |
+| `albums/` | `AlbumList`, `AlbumForm`, `AlbumBreadcrumb`, `PhotoGrid`, `PhotoUpload` | Componenti album e foto |
+| `wishlists/` | `WishlistList`, `WishlistForm`, `WishlistBreadcrumb`, `WishGrid`, `WishForm` | Componenti wishlist e wish |
+| `tags/` | `TagList`, `TagForm` | Gestione tag (🔲 da implementare) |
+| `templates/` | `TemplateList`, `TemplateForm`, `FieldEditor` | Template e field (🔲 da implementare) |
+| `statistics/` | `StatsCard`, `CollectionsChart`, `ItemsChart` | Visualizzazione statistiche |
+| `history/` | `LogTable`, `LogFilter` | Storico modifiche |
+| `search/` | `SearchBox`, `SearchResults` | Ricerca full-text |
+| `settings/` | `ProfileForm`, `ChangePasswordForm` | Impostazioni utente |
+| `shared/` | `Sidebar`, `Navbar`, `Breadcrumb`, `LoadingSpinner`, `Dialog`, `Table` | Componenti shared UI |
+| `layout/` | `ProtectedLayout`, `AuthLayout`, `DashboardLayout` | Layout comuni |
+
+
 

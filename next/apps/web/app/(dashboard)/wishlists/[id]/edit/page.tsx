@@ -11,12 +11,22 @@ interface Props { params: Promise<{ id: string }> }
 export default async function EditWishlistPage({ params }: Props) {
   const { id } = await params;
   const session = await requireAuth();
-  const wishlist = await prisma.wishlist.findFirst({ where: { id, ownerId: session.user.id } });
+
+  const [wishlist, allWishlists] = await Promise.all([
+    prisma.wishlist.findFirst({ where: { id, ownerId: session.user.id } }),
+    prisma.wishlist.findMany({
+      where: { ownerId: session.user.id },
+      orderBy: { name: "asc" },
+      select: { id: true, name: true },
+    }),
+  ]);
+
   if (!wishlist) notFound();
+
   return (
     <div className="max-w-2xl space-y-6">
       <h1 className="text-2xl font-bold tracking-tight">Modifica Wishlist</h1>
-      <WishlistForm wishlist={wishlist} />
+      <WishlistForm wishlist={wishlist} parentOptions={allWishlists} />
     </div>
   );
 }

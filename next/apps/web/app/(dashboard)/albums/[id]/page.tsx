@@ -3,6 +3,7 @@ import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@koillection/db";
 import { notFound } from "next/navigation";
 import { AlbumDetail } from "@/components/albums/AlbumDetail";
+import { getAlbumAncestors } from "@/lib/albums-tree";
 
 export const metadata: Metadata = { title: "Dettaglio Album" };
 
@@ -15,13 +16,19 @@ export default async function AlbumDetailPage({ params }: Props) {
   const album = await prisma.album.findFirst({
     where: { id, ownerId: session.user.id },
     include: {
-      children: { include: { _count: { select: { children: true, photos: true } } }, orderBy: { title: "asc" } },
+      children: {
+        include: { _count: { select: { children: true, photos: true } } },
+        orderBy: { title: "asc" },
+      },
       photos: { orderBy: { createdAt: "desc" }, take: 60 },
       _count: { select: { children: true, photos: true } },
     },
   });
 
   if (!album) notFound();
-  return <AlbumDetail album={album} />;
+
+  const ancestors = await getAlbumAncestors(session.user.id, album.parentId);
+
+  return <AlbumDetail album={{ ...album, ancestors }} />;
 }
 

@@ -3,6 +3,7 @@ import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@koillection/db";
 import { notFound } from "next/navigation";
 import { WishlistDetail } from "@/components/wishlists/WishlistDetail";
+import { getWishlistAncestors } from "@/lib/wishlists-tree";
 
 export const metadata: Metadata = { title: "Dettaglio Wishlist" };
 
@@ -15,13 +16,16 @@ export default async function WishlistDetailPage({ params }: Props) {
   const wishlist = await prisma.wishlist.findFirst({
     where: { id, ownerId: session.user.id },
     include: {
-      children: { include: { _count: { select: { wishes: true } } }, orderBy: { name: "asc" } },
+      children: { include: { _count: { select: { children: true, wishes: true } } }, orderBy: { name: "asc" } },
       wishes: { orderBy: { name: "asc" } },
       _count: { select: { children: true, wishes: true } },
     },
   });
 
   if (!wishlist) notFound();
-  return <WishlistDetail wishlist={wishlist} />;
+
+  const ancestors = await getWishlistAncestors(session.user.id, wishlist.parentId);
+
+  return <WishlistDetail wishlist={{ ...wishlist, ancestors }} />;
 }
 

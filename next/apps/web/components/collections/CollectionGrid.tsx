@@ -12,6 +12,11 @@ interface CollectionGridProps {
   collections: CollectionWithCount[];
 }
 
+function asHexColor(color: string | null): string {
+  if (!color) return "#6366f1";
+  return color.startsWith("#") ? color : `#${color}`;
+}
+
 export function CollectionGrid({ collections }: CollectionGridProps) {
   if (collections.length === 0) {
     return (
@@ -30,7 +35,7 @@ export function CollectionGrid({ collections }: CollectionGridProps) {
           <Card className="group overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-full">
             <div
               className="h-36 flex items-center justify-center"
-              style={{ backgroundColor: col.color ? `#${col.color}22` : undefined }}
+              style={{ backgroundColor: col.color ? `${asHexColor(col.color)}22` : undefined }}
             >
               {col.image ? (
                 <Image
@@ -43,7 +48,7 @@ export function CollectionGrid({ collections }: CollectionGridProps) {
               ) : (
                 <div
                   className="flex h-14 w-14 items-center justify-center rounded-full text-2xl font-bold text-white"
-                  style={{ backgroundColor: col.color ? `#${col.color}` : "#6366f1" }}
+                  style={{ backgroundColor: asHexColor(col.color) }}
                 >
                   {col.title.charAt(0).toUpperCase()}
                 </div>
