@@ -219,8 +219,16 @@
     "passwordUpdated": "Mot de passe mis à jour avec succès.",
     "themes": {
       "auto": "Automatique",
-      "light": "Clair",
-      "dark": "Sombre"
+      "autoSection": "Système",
+      "autoSubtitle": "suit le système",
+      "lightSection": "Clair",
+      "darkSection": "Sombre",
+      "l_aqua": "Aqua",
+      "l_rose": "Rose",
+      "l_mint": "Mint",
+      "d_neo": "Neo",
+      "d_ink": "Ink",
+      "d_ember": "Ember"
     },
     "languages": {
       "da": "Dansk",
@@ -237,6 +245,11 @@
       "tr": "Türkçe",
       "uk": "Українська",
       "zh": "中文"
+    },
+    "visibilityOptions": {
+      "public": "Public",
+      "internal": "Interne",
+      "private": "Privé"
     }
   },
   "search": {

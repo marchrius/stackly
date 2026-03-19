@@ -219,8 +219,16 @@
     "passwordUpdated": "Wachtwoord succesvol bijgewerkt.",
     "themes": {
       "auto": "Automatisch",
-      "light": "Licht",
-      "dark": "Donker"
+      "autoSection": "Systeem",
+      "autoSubtitle": "volgt het systeem",
+      "lightSection": "Licht",
+      "darkSection": "Donker",
+      "l_aqua": "Aqua",
+      "l_rose": "Rose",
+      "l_mint": "Mint",
+      "d_neo": "Neo",
+      "d_ink": "Ink",
+      "d_ember": "Ember"
     },
     "languages": {
       "da": "Dansk",
@@ -237,6 +245,11 @@
       "tr": "Türkçe",
       "uk": "Українська",
       "zh": "中文"
+    },
+    "visibilityOptions": {
+      "public": "Openbaar",
+      "internal": "Intern",
+      "private": "Privé"
     }
   },
   "search": {

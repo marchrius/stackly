@@ -219,8 +219,16 @@
     "passwordUpdated": "Contraseña actualizada correctamente.",
     "themes": {
       "auto": "Automático",
-      "light": "Claro",
-      "dark": "Oscuro"
+      "autoSection": "Sistema",
+      "autoSubtitle": "sigue el sistema",
+      "lightSection": "Claro",
+      "darkSection": "Oscuro",
+      "l_aqua": "Aqua",
+      "l_rose": "Rose",
+      "l_mint": "Mint",
+      "d_neo": "Neo",
+      "d_ink": "Ink",
+      "d_ember": "Ember"
     },
     "languages": {
       "da": "Dansk",
@@ -237,6 +245,11 @@
       "tr": "Türkçe",
       "uk": "Українська",
       "zh": "中文"
+    },
+    "visibilityOptions": {
+      "public": "Público",
+      "internal": "Interno",
+      "private": "Privado"
     }
   },
   "search": {

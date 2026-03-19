@@ -219,8 +219,16 @@
     "passwordUpdated": "密码更新成功。",
     "themes": {
       "auto": "自动",
-      "light": "浅色",
-      "dark": "深色"
+      "autoSection": "系统",
+      "autoSubtitle": "跟随系统",
+      "lightSection": "浅色",
+      "darkSection": "深色",
+      "l_aqua": "Aqua",
+      "l_rose": "Rose",
+      "l_mint": "Mint",
+      "d_neo": "Neo",
+      "d_ink": "Ink",
+      "d_ember": "Ember"
     },
     "languages": {
       "da": "Dansk",
@@ -237,6 +245,11 @@
       "tr": "Türkçe",
       "uk": "Українська",
       "zh": "中文"
+    },
+    "visibilityOptions": {
+      "public": "公开",
+      "internal": "内部",
+      "private": "私有"
     }
   },
   "search": {

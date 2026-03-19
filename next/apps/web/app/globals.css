@@ -3,49 +3,223 @@
 @tailwind utilities;
 
 @layer base {
+  /* ─── Fallback default (l_aqua light) ─── */
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 191 60% 98%;
+    --foreground: 213 40% 14%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 213 40% 14%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --popover-foreground: 213 40% 14%;
+    --primary: 191 92% 43%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 191 50% 92%;
+    --secondary-foreground: 191 80% 18%;
+    --muted: 191 40% 93%;
+    --muted-foreground: 196 20% 48%;
+    --accent: 191 50% 90%;
+    --accent-foreground: 191 80% 18%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 191 35% 87%;
+    --input: 191 35% 87%;
+    --ring: 191 92% 43%;
     --radius: 0.5rem;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+  /* ─── Aqua (light) ─── */
+  .theme-l_aqua {
+    --background: 191 60% 98%;
+    --foreground: 213 40% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 213 40% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 40% 14%;
+    --primary: 191 92% 43%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 191 50% 92%;
+    --secondary-foreground: 191 80% 18%;
+    --muted: 191 40% 93%;
+    --muted-foreground: 196 20% 48%;
+    --accent: 191 50% 90%;
+    --accent-foreground: 191 80% 18%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 191 35% 87%;
+    --input: 191 35% 87%;
+    --ring: 191 92% 43%;
+    --radius: 0.5rem;
+  }
+
+  /* ─── Rose (light) ─── */
+  .theme-l_rose {
+    --background: 355 80% 99%;
+    --foreground: 340 45% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 340 45% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 340 45% 10%;
+    --primary: 347 88% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 355 70% 94%;
+    --secondary-foreground: 343 70% 28%;
+    --muted: 355 60% 95%;
+    --muted-foreground: 343 18% 50%;
+    --accent: 355 65% 92%;
+    --accent-foreground: 343 70% 28%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 355 40% 88%;
+    --input: 355 40% 88%;
+    --ring: 347 88% 60%;
+    --radius: 0.5rem;
+  }
+
+  /* ─── Mint (light) ─── */
+  .theme-l_mint {
+    --background: 138 60% 98%;
+    --foreground: 151 81% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 151 81% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 151 81% 10%;
+    --primary: 161 84% 39%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 138 55% 93%;
+    --secondary-foreground: 161 70% 18%;
+    --muted: 138 50% 94%;
+    --muted-foreground: 155 18% 46%;
+    --accent: 142 50% 91%;
+    --accent-foreground: 161 70% 18%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 142 36% 87%;
+    --input: 142 36% 87%;
+    --ring: 161 84% 39%;
+    --radius: 0.5rem;
+  }
+
+  /* ─── Neo (dark) ─── */
+  .theme-d_neo {
+    --background: 222 50% 7%;
+    --foreground: 210 38% 88%;
+    --card: 222 47% 10%;
+    --card-foreground: 210 38% 88%;
+    --popover: 222 47% 10%;
+    --popover-foreground: 210 38% 88%;
+    --primary: 188 78% 53%;
+    --primary-foreground: 222 50% 7%;
+    --secondary: 259 55% 60%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 217 35% 15%;
+    --muted-foreground: 215 20% 58%;
+    --accent: 217 35% 17%;
+    --accent-foreground: 210 38% 88%;
+    --destructive: 0 55% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 217 30% 18%;
+    --input: 217 30% 18%;
+    --ring: 188 78% 53%;
+    --radius: 0.5rem;
+  }
+
+  /* ─── Ink (dark) ─── */
+  .theme-d_ink {
+    --background: 240 6% 4%;
+    --foreground: 210 40% 93%;
+    --card: 234 12% 7%;
+    --card-foreground: 210 40% 93%;
+    --popover: 234 12% 7%;
+    --popover-foreground: 210 40% 93%;
+    --primary: 239 84% 67%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 216 25% 22%;
+    --secondary-foreground: 210 40% 93%;
+    --muted: 216 22% 17%;
+    --muted-foreground: 215 18% 58%;
+    --accent: 216 22% 16%;
+    --accent-foreground: 210 40% 93%;
+    --destructive: 0 55% 48%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 216 22% 16%;
+    --input: 216 22% 16%;
+    --ring: 239 84% 67%;
+    --radius: 0.5rem;
+  }
+
+  /* ─── Ember (dark) ─── */
+  .theme-d_ember {
+    --background: 220 28% 9%;
+    --foreground: 210 38% 95%;
+    --card: 221 26% 13%;
+    --card-foreground: 210 38% 95%;
+    --popover: 221 26% 13%;
+    --popover-foreground: 210 38% 95%;
+    --primary: 24 95% 53%;
+    --primary-foreground: 220 28% 9%;
+    --secondary: 351 80% 62%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 219 22% 17%;
+    --muted-foreground: 215 15% 55%;
+    --accent: 219 22% 18%;
+    --accent-foreground: 210 38% 95%;
+    --destructive: 0 55% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 20% 18%;
+    --input: 220 20% 18%;
+    --ring: 24 95% 53%;
+    --radius: 0.5rem;
+  }
+
+  /* ─── Auto: segue il sistema operativo ─── */
+  /* Light default → l_aqua */
+  .theme-auto {
+    --background: 191 60% 98%;
+    --foreground: 213 40% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 213 40% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 40% 14%;
+    --primary: 191 92% 43%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 191 50% 92%;
+    --secondary-foreground: 191 80% 18%;
+    --muted: 191 40% 93%;
+    --muted-foreground: 196 20% 48%;
+    --accent: 191 50% 90%;
+    --accent-foreground: 191 80% 18%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 191 35% 87%;
+    --input: 191 35% 87%;
+    --ring: 191 92% 43%;
+    --radius: 0.5rem;
+  }
+
+  /* Dark default → d_neo */
+  @media (prefers-color-scheme: dark) {
+    .theme-auto {
+      --background: 222 50% 7%;
+      --foreground: 210 38% 88%;
+      --card: 222 47% 10%;
+      --card-foreground: 210 38% 88%;
+      --popover: 222 47% 10%;
+      --popover-foreground: 210 38% 88%;
+      --primary: 188 78% 53%;
+      --primary-foreground: 222 50% 7%;
+      --secondary: 259 55% 60%;
+      --secondary-foreground: 0 0% 100%;
+      --muted: 217 35% 15%;
+      --muted-foreground: 215 20% 58%;
+      --accent: 217 35% 17%;
+      --accent-foreground: 210 38% 88%;
+      --destructive: 0 55% 50%;
+      --destructive-foreground: 0 0% 100%;
+      --border: 217 30% 18%;
+      --input: 217 30% 18%;
+      --ring: 188 78% 53%;
+      --radius: 0.5rem;
+    }
   }
 }
 
@@ -57,4 +231,3 @@
     @apply bg-background text-foreground;
   }
 }
-

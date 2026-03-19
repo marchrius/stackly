@@ -219,8 +219,21 @@
     "passwordUpdated": "Password updated successfully.",
     "themes": {
       "auto": "Auto",
-      "light": "Light",
-      "dark": "Dark"
+      "autoSection": "System",
+      "autoSubtitle": "follows system",
+      "lightSection": "Light",
+      "darkSection": "Dark",
+      "l_aqua": "Aqua",
+      "l_rose": "Rose",
+      "l_mint": "Mint",
+      "d_neo": "Neo",
+      "d_ink": "Ink",
+      "d_ember": "Ember"
+    },
+    "visibilityOptions": {
+      "public": "Public",
+      "internal": "Internal",
+      "private": "Private"
     },
     "languages": {
       "da": "Dansk",

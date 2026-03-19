@@ -8,13 +8,14 @@ import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { isValidLocale } from "@/i18n/locales";
+import { THEME_IDS } from "@/lib/theme/themes";
 
 const settingsSchema = z.object({
   currency: z.string().length(3).default("EUR"),
   locale: z.string().max(5).default("en"),
   timezone: z.string().optional().nullable(),
   dateFormat: z.string().default("Y-m-d"),
-  theme: z.enum(["auto", "light", "dark"]).default("auto"),
+  theme: z.enum(THEME_IDS).default("auto"),
   visibility: z.enum(["public", "internal", "private"]).default("public"),
 });
 

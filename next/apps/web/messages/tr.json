@@ -219,8 +219,16 @@
     "passwordUpdated": "Parola başarıyla güncellendi.",
     "themes": {
       "auto": "Otomatik",
-      "light": "Açık",
-      "dark": "Koyu"
+      "autoSection": "Sistem",
+      "autoSubtitle": "sistemi takip eder",
+      "lightSection": "Açık",
+      "darkSection": "Koyu",
+      "l_aqua": "Aqua",
+      "l_rose": "Rose",
+      "l_mint": "Mint",
+      "d_neo": "Neo",
+      "d_ink": "Ink",
+      "d_ember": "Ember"
     },
     "languages": {
       "da": "Dansk",
@@ -237,6 +245,11 @@
       "tr": "Türkçe",
       "uk": "Українська",
       "zh": "中文"
+    },
+    "visibilityOptions": {
+      "public": "Genel",
+      "internal": "Dahili",
+      "private": "Özel"
     }
   },
   "search": {

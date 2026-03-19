@@ -218,9 +218,17 @@
     "changePasswordButton": "Змінити пароль",
     "passwordUpdated": "Пароль успішно оновлено.",
     "themes": {
-      "auto": "Авто",
-      "light": "Світла",
-      "dark": "Темна"
+      "auto": "Автоматично",
+      "autoSection": "Система",
+      "autoSubtitle": "за налаштуваннями системи",
+      "lightSection": "Світлі",
+      "darkSection": "Темні",
+      "l_aqua": "Aqua",
+      "l_rose": "Rose",
+      "l_mint": "Mint",
+      "d_neo": "Neo",
+      "d_ink": "Ink",
+      "d_ember": "Ember"
     },
     "languages": {
       "da": "Dansk",
@@ -237,6 +245,11 @@
       "tr": "Türkçe",
       "uk": "Українська",
       "zh": "中文"
+    },
+    "visibilityOptions": {
+      "public": "Публічний",
+      "internal": "Внутрішній",
+      "private": "Приватний"
     }
   },
   "search": {

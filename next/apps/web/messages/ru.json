@@ -219,8 +219,16 @@
     "passwordUpdated": "Пароль успешно обновлен.",
     "themes": {
       "auto": "Авто",
-      "light": "Светлая",
-      "dark": "Тёмная"
+      "autoSection": "Система",
+      "autoSubtitle": "по настройкам системы",
+      "lightSection": "Светлые",
+      "darkSection": "Тёмные",
+      "l_aqua": "Aqua",
+      "l_rose": "Rose",
+      "l_mint": "Mint",
+      "d_neo": "Neo",
+      "d_ink": "Ink",
+      "d_ember": "Ember"
     },
     "languages": {
       "da": "Dansk",
@@ -237,6 +245,11 @@
       "tr": "Türkçe",
       "uk": "Українська",
       "zh": "中文"
+    },
+    "visibilityOptions": {
+      "public": "Публичный",
+      "internal": "Внутренний",
+      "private": "Приватный"
     }
   },
   "search": {

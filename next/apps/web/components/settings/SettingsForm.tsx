@@ -7,6 +7,8 @@ import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger,
 import { updateSettings, changePassword } from "@/lib/actions/user.actions";
 import { useTranslations } from "next-intl";
 import { SUPPORTED_LOCALES } from "@/i18n/locales";
+import { ThemePicker } from "@/components/settings/ThemePicker";
+import { normalizeTheme } from "@/lib/theme/themes";
 
 export function SettingsForm({ user }: { user: User }) {
   const t = useTranslations("settings");
@@ -41,7 +43,8 @@ export function SettingsForm({ user }: { user: User }) {
       {/* Preferenze */}
       <section>
         <h2 className="text-lg font-semibold mb-4">{t("preferences")}</h2>
-        <form onSubmit={handleSettings} className="space-y-4">
+        <form onSubmit={handleSettings} className="space-y-6">
+          {/* Riga 1: Lingua + Valuta */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="locale">{t("language")}</Label>
@@ -61,24 +64,35 @@ export function SettingsForm({ user }: { user: User }) {
               <Input id="currency" name="currency" defaultValue={user.currency} maxLength={3} />
             </div>
           </div>
+
+          {/* Riga 2: Formato data + Visibilità */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="theme">{t("theme")}</Label>
-              <Select name="theme" defaultValue={user.theme}>
-                <SelectTrigger id="theme"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="auto">{t("themes.auto")}</SelectItem>
-                  <SelectItem value="light">{t("themes.light")}</SelectItem>
-                  <SelectItem value="dark">{t("themes.dark")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
             <div className="space-y-2">
               <Label htmlFor="dateFormat">{t("dateFormat")}</Label>
               <Input id="dateFormat" name="dateFormat" defaultValue={user.dateFormat} />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="visibility">{t("visibility")}</Label>
+              <Select name="visibility" defaultValue={user.visibility}>
+                <SelectTrigger id="visibility"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="public">{t("visibilityOptions.public")}</SelectItem>
+                  <SelectItem value="internal">{t("visibilityOptions.internal")}</SelectItem>
+                  <SelectItem value="private">{t("visibilityOptions.private")}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-          <Button type="submit" disabled={saving}>{saving ? t("saving") : t("savePreferences")}</Button>
+
+          {/* Tema — picker visivo full-width */}
+          <div className="space-y-3">
+            <Label>{t("theme")}</Label>
+            <ThemePicker defaultValue={normalizeTheme(user.theme)} />
+          </div>
+
+          <Button type="submit" disabled={saving}>
+            {saving ? t("saving") : t("savePreferences")}
+          </Button>
         </form>
       </section>
 
@@ -96,7 +110,9 @@ export function SettingsForm({ user }: { user: User }) {
             <Label htmlFor="newPassword">{t("newPassword")}</Label>
             <Input id="newPassword" name="newPassword" type="password" required minLength={8} />
           </div>
-          <Button type="submit" disabled={pwLoading}>{pwLoading ? t("saving") : t("changePasswordButton")}</Button>
+          <Button type="submit" disabled={pwLoading}>
+            {pwLoading ? t("saving") : t("changePasswordButton")}
+          </Button>
         </form>
       </section>
     </div>

@@ -219,8 +219,16 @@
     "passwordUpdated": "Adgangskoden blev opdateret.",
     "themes": {
       "auto": "Automatisk",
-      "light": "Lys",
-      "dark": "Mørk"
+      "autoSection": "System",
+      "autoSubtitle": "følger systemet",
+      "lightSection": "Lys",
+      "darkSection": "Mørk",
+      "l_aqua": "Aqua",
+      "l_rose": "Rose",
+      "l_mint": "Mint",
+      "d_neo": "Neo",
+      "d_ink": "Ink",
+      "d_ember": "Ember"
     },
     "languages": {
       "da": "Dansk",
@@ -237,6 +245,11 @@
       "tr": "Türkçe",
       "uk": "Українська",
       "zh": "中文"
+    },
+    "visibilityOptions": {
+      "public": "Offentlig",
+      "internal": "Intern",
+      "private": "Privat"
     }
   },
   "search": {
