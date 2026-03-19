@@ -4,8 +4,10 @@ import type { Album, Photo } from "@koillection/db";
 import Link from "next/link";
 import { Button, Badge } from "@koillection/ui";
 import { AlbumGrid } from "./AlbumGrid";
-import { Edit, Trash2, Plus, ChevronRight } from "lucide-react";
+import { Edit, Plus, ChevronRight } from "lucide-react";
 import { deleteAlbum } from "@/lib/actions/media.actions";
+import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
+import { useTranslations } from "next-intl";
 
 interface Ancestor {
   id: string;
@@ -20,6 +22,8 @@ type AlbumWithRelations = Album & {
 };
 
 export function AlbumDetail({ album }: { album: AlbumWithRelations }) {
+  const t = useTranslations("albums");
+  const tCommon = useTranslations("common");
   const ancestors = album.ancestors ?? [];
 
   return (
@@ -28,7 +32,7 @@ export function AlbumDetail({ album }: { album: AlbumWithRelations }) {
       {(ancestors.length > 0 || album.parentId) && (
         <nav className="flex items-center gap-1 text-sm text-muted-foreground flex-wrap">
           <Link href="/albums" className="hover:text-foreground transition-colors">
-            Album
+            {t("title")}
           </Link>
           {ancestors.map((a) => (
             <span key={a.id} className="flex items-center gap-1">
@@ -65,7 +69,8 @@ export function AlbumDetail({ album }: { album: AlbumWithRelations }) {
             <div className="flex items-center gap-2 mt-1">
               <Badge variant="outline">{album.visibility}</Badge>
               <span className="text-sm text-muted-foreground">
-                {album._count.photos} foto · {album._count.children} sub-album
+                {album._count.photos} {t("photos").toLowerCase()} · {album._count.children}{" "}
+                {t("subAlbums").toLowerCase()}
               </span>
             </div>
           </div>
@@ -75,14 +80,13 @@ export function AlbumDetail({ album }: { album: AlbumWithRelations }) {
           <Button asChild variant="outline" size="sm">
             <Link href={`/albums/${album.id}/edit`}>
               <Edit className="mr-1 h-4 w-4" />
-              Modifica
+              {tCommon("edit")}
             </Link>
           </Button>
-          <form action={deleteAlbum.bind(null, album.id)}>
-            <Button variant="destructive" size="sm" type="submit">
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </form>
+          <DeleteConfirmDialog
+            description={t("delete.confirm", { name: album.title })}
+            onConfirm={deleteAlbum.bind(null, album.id)}
+          />
         </div>
       </div>
 
@@ -91,12 +95,12 @@ export function AlbumDetail({ album }: { album: AlbumWithRelations }) {
         <section>
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-semibold">
-              Sub-album {album.children.length > 0 && `(${album.children.length})`}
+              {t("subAlbums")} {album.children.length > 0 && `(${album.children.length})`}
             </h2>
             <Button asChild size="sm" variant="outline">
               <Link href={`/albums/new?parentId=${album.id}`}>
                 <Plus className="mr-1 h-3.5 w-3.5" />
-                Nuovo sub-album
+                {t("newSub")}
               </Link>
             </Button>
           </div>
@@ -108,41 +112,45 @@ export function AlbumDetail({ album }: { album: AlbumWithRelations }) {
       <section>
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold">
-            Foto {album._count.photos > 0 && `(${album._count.photos})`}
+            {t("photos")} {album._count.photos > 0 && `(${album._count.photos})`}
           </h2>
           <Button asChild size="sm">
             <Link href={`/albums/${album.id}/photos/new`}>
               <Plus className="mr-1 h-3.5 w-3.5" />
-              Aggiungi foto
+              {t("addPhoto")}
             </Link>
           </Button>
         </div>
 
         {album.photos.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-6 text-center">
-            Nessuna foto in questo album.
-          </p>
+          <p className="text-sm text-muted-foreground py-6 text-center">{t("noPhotos")}</p>
         ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+          <div
+            className="grid gap-x-2.5 gap-y-4"
+            style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}
+          >
             {album.photos.map((photo) => (
               <Link
                 key={photo.id}
                 href={`/photos/${photo.id}`}
-                className="group relative overflow-hidden rounded-lg border aspect-square bg-muted block"
+                className="group block cursor-pointer rounded-lg border bg-card overflow-hidden hover:shadow-md transition-shadow"
               >
-                {photo.imageSmallThumbnail ? (
-                  <img
-                    src={`/uploads/${photo.imageSmallThumbnail}`}
-                    alt={photo.title}
-                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center text-muted-foreground text-xs p-2 text-center">
-                    {photo.title}
-                  </div>
-                )}
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <p className="text-white text-xs truncate">{photo.title}</p>
+                <div className="relative aspect-[10/13] bg-muted flex items-center justify-center overflow-hidden">
+                  {photo.imageSmallThumbnail ? (
+                    <img
+                      src={`/uploads/${photo.imageSmallThumbnail}`}
+                      alt={photo.title}
+                      loading="lazy"
+                      className="max-h-full max-w-full object-contain transition-transform group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-muted-foreground text-xs p-2 text-center">
+                      {photo.title}
+                    </div>
+                  )}
+                </div>
+                <div className="p-2">
+                  <p className="text-xs font-medium truncate">{photo.title}</p>
                 </div>
               </Link>
             ))}
@@ -152,6 +160,4 @@ export function AlbumDetail({ album }: { album: AlbumWithRelations }) {
     </div>
   );
 }
-
-
 

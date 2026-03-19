@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@koillection/db";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = { title: "History" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("history");
+  return { title: t("title") };
+}
 
 export default async function HistoryPage() {
   const session = await requireAuth();
+  const t = await getTranslations("history");
 
   const logs = await prisma.log.findMany({
     where: { ownerId: session.user.id },
@@ -17,7 +22,7 @@ export default async function HistoryPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">Storico Modifiche</h1>
+      <h1 className="text-2xl font-bold tracking-tight">{t("pageTitle")}</h1>
       <div className="space-y-2">
         {logs.map((log: LogEntry) => (
           <div key={log.id} className="flex items-center gap-3 rounded-lg border p-3 text-sm">
@@ -34,7 +39,7 @@ export default async function HistoryPage() {
           </div>
         ))}
         {logs.length === 0 && (
-          <p className="text-muted-foreground text-center py-8">Nessuna attività registrata.</p>
+          <p className="text-muted-foreground text-center py-8">{t("noActivity")}</p>
         )}
       </div>
     </div>

@@ -4,8 +4,10 @@ import type { Collection, Datum, Item } from "@koillection/db";
 import Link from "next/link";
 import { Badge, Button } from "@koillection/ui";
 import { CollectionGrid } from "./CollectionGrid";
-import { Box, ChevronRight, Edit, Layers, Plus, Trash2 } from "lucide-react";
+import { Box, ChevronRight, Edit, Layers, Plus } from "lucide-react";
 import { deleteCollection } from "@/lib/actions/collection.actions";
+import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
+import { useTranslations } from "next-intl";
 
 type CollectionWithRelations = Collection & {
   children: (Collection & { _count: { children: number; items: number } })[];
@@ -25,12 +27,15 @@ function asHexColor(color: string | null): string {
 }
 
 export function CollectionDetail({ collection, ancestors }: CollectionDetailProps) {
+  const t = useTranslations("collections");
+  const tCommon = useTranslations("common");
+
   return (
     <div className="space-y-6">
       {/* Breadcrumbs */}
       <div className="flex flex-wrap items-center gap-1 text-sm text-muted-foreground">
         <Link href="/collections" className="hover:text-foreground">
-          Collezioni
+          {t("title")}
         </Link>
         {ancestors.map((ancestor) => (
           <span key={ancestor.id} className="inline-flex items-center gap-1">
@@ -57,13 +62,13 @@ export function CollectionDetail({ collection, ancestors }: CollectionDetailProp
             {collection._count.children > 0 && (
               <span className="flex items-center gap-1">
                 <Layers className="h-4 w-4" />
-                {collection._count.children} sotto-collezioni
+                {collection._count.children} {t("subCollections").toLowerCase()}
               </span>
             )}
             {collection._count.items > 0 && (
               <span className="flex items-center gap-1">
                 <Box className="h-4 w-4" />
-                {collection._count.items} oggetti
+                {collection._count.items} {t("items").toLowerCase()}
               </span>
             )}
             <Badge variant="outline">{collection.visibility}</Badge>
@@ -73,33 +78,32 @@ export function CollectionDetail({ collection, ancestors }: CollectionDetailProp
           <Button asChild variant="outline" size="sm">
             <Link href={`/collections/new?parentId=${collection.id}`}>
               <Plus className="mr-1 h-4 w-4" />
-              Nuova sotto-collezione
+              {t("newSub")}
             </Link>
           </Button>
           <Button asChild variant="outline" size="sm">
             <Link href={`/items/new?collectionId=${collection.id}`}>
               <Plus className="mr-1 h-4 w-4" />
-              Aggiungi oggetto
+              {t("addItem")}
             </Link>
           </Button>
           <Button asChild variant="outline" size="sm">
             <Link href={`/collections/${collection.id}/edit`}>
               <Edit className="mr-1 h-4 w-4" />
-              Modifica
+              {tCommon("edit")}
             </Link>
           </Button>
-          <form action={deleteCollection.bind(null, collection.id)}>
-            <Button variant="destructive" size="sm" type="submit">
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </form>
+          <DeleteConfirmDialog
+            description={t("delete.confirm", { name: collection.title })}
+            onConfirm={deleteCollection.bind(null, collection.id)}
+          />
         </div>
       </div>
 
       {/* Sotto-collezioni */}
       {collection.children.length > 0 && (
         <section>
-          <h2 className="mb-3 text-lg font-semibold">Sotto-collezioni</h2>
+          <h2 className="mb-3 text-lg font-semibold">{t("subCollections")}</h2>
           <CollectionGrid collections={collection.children} />
         </section>
       )}
@@ -107,20 +111,34 @@ export function CollectionDetail({ collection, ancestors }: CollectionDetailProp
       {/* Oggetti */}
       {collection.items.length > 0 && (
         <section>
-          <h2 className="mb-3 text-lg font-semibold">Oggetti</h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+          <h2 className="mb-3 text-lg font-semibold">{t("items")}</h2>
+          <div
+            className="grid gap-x-2.5 gap-y-4"
+            style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}
+          >
             {collection.items.map((item) => (
               <Link key={item.id} href={`/items/${item.id}`}>
-                <div className="group cursor-pointer rounded-lg border bg-card p-3 transition-shadow hover:shadow-md">
-                  <div className="mb-2 flex h-20 items-center justify-center overflow-hidden rounded bg-muted">
+                <div className="group cursor-pointer rounded-lg border bg-card transition-shadow hover:shadow-md overflow-hidden text-center">
+                  <div className="relative aspect-[10/13] bg-muted flex items-center justify-center overflow-hidden">
                     {item.imageSmallThumbnail ? (
-                      <img src={`/uploads/${item.imageSmallThumbnail}`} alt={item.name} className="h-full w-full object-cover" />
+                      <img
+                        src={`/uploads/${item.imageSmallThumbnail}`}
+                        alt={item.name}
+                        loading="lazy"
+                        className="max-h-full max-w-full object-contain"
+                      />
                     ) : (
                       <Box className="h-8 w-8 text-muted-foreground opacity-40" />
                     )}
+                    {item.quantity > 1 && (
+                      <span className="absolute bottom-1 right-1 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground">
+                        x{item.quantity}
+                      </span>
+                    )}
                   </div>
-                  <p className="truncate text-xs font-medium">{item.name}</p>
-                  {item.quantity > 1 && <p className="text-xs text-muted-foreground">x{item.quantity}</p>}
+                  <div className="p-2">
+                    <p className="truncate text-xs font-medium">{item.name}</p>
+                  </div>
                 </div>
               </Link>
             ))}
@@ -132,8 +150,8 @@ export function CollectionDetail({ collection, ancestors }: CollectionDetailProp
       {collection.children.length === 0 && collection.items.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
           <Box className="mb-4 h-12 w-12 opacity-30" />
-          <p className="text-lg font-medium">Collezione vuota</p>
-          <p className="text-sm">Aggiungi oggetti o sotto-collezioni.</p>
+          <p className="text-lg font-medium">{t("emptyCollection")}</p>
+          <p className="text-sm">{t("emptyCollectionHint")}</p>
         </div>
       )}
     </div>

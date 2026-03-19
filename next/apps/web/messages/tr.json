@@ -1,0 +1,279 @@
+{
+  "common": {
+    "save": "Kaydet",
+    "saving": "Kaydediliyor…",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "deleting": "Siliniyor…",
+    "cancel": "İptal",
+    "add": "Ekle",
+    "create": "Oluştur",
+    "back": "Geri",
+    "loading": "Yükleniyor…",
+    "search": "Ara",
+    "confirm": "Onayla",
+    "yes": "Evet",
+    "no": "Hayır",
+    "none": "Yok",
+    "noImage": "Görsel yok",
+    "visibility": "Görünürlük",
+    "quantity": "Adet"
+  },
+  "nav": {
+    "collections": "Koleksiyonlar",
+    "albums": "Albümler",
+    "wishlists": "İstek listeleri",
+    "tags": "Etiketler",
+    "templates": "Şablonlar",
+    "choiceLists": "Seçim listeleri",
+    "inventories": "Envanterler",
+    "loans": "Ödünçler",
+    "history": "Geçmiş",
+    "statistics": "İstatistikler",
+    "search": "Ara",
+    "settings": "Ayarlar",
+    "logout": "Çıkış yap"
+  },
+  "auth": {
+    "login": {
+      "title": "Tekrar hoş geldiniz",
+      "subtitle": "Hesabınıza giriş yapın",
+      "username": "Kullanıcı adı veya e-posta",
+      "password": "Parola",
+      "submit": "Giriş yap",
+      "submitting": "Giriş yapılıyor…",
+      "noAccount": "Hesabınız yok mu?",
+      "register": "Kayıt ol",
+      "invalidCredentials": "Geçersiz kimlik bilgileri. Lütfen tekrar deneyin."
+    },
+    "register": {
+      "title": "Hesap oluştur",
+      "subtitle": "Koleksiyonlarınızı yönetmeye başlayın",
+      "username": "Kullanıcı adı",
+      "email": "E-posta",
+      "password": "Parola",
+      "submit": "Kayıt ol",
+      "submitting": "Hesap oluşturuluyor…",
+      "alreadyHaveAccount": "Zaten bir hesabınız var mı?",
+      "login": "Giriş yap"
+    }
+  },
+  "dashboard": {
+    "title": "Kontrol paneli",
+    "welcome": "Hoş geldiniz, {name}!",
+    "subtitle": "İşte koleksiyonlarınızın bir özeti.",
+    "collections": "Koleksiyonlar",
+    "albums": "Albümler",
+    "wishlists": "İstek listeleri",
+    "tags": "Etiketler"
+  },
+  "collections": {
+    "title": "Koleksiyonlar",
+    "new": "Yeni koleksiyon",
+    "newSub": "Yeni alt koleksiyon",
+    "addItem": "Öğe ekle",
+    "edit": "Koleksiyonu düzenle",
+    "empty": "Koleksiyon yok",
+    "emptyHint": "İlk koleksiyonunuzu oluşturarak başlayın.",
+    "emptyCollection": "Boş koleksiyon",
+    "emptyCollectionHint": "Öğe veya alt koleksiyon ekleyin.",
+    "subCollections": "Alt koleksiyonlar",
+    "items": "Öğeler",
+    "form": {
+      "title": "Başlık",
+      "color": "Renk",
+      "image": "Görsel",
+      "parent": "Üst koleksiyon",
+      "template": "Varsayılan şablon",
+      "visibility": "Görünürlük",
+      "changeImage": "Görseli değiştir",
+      "removeImage": "Görseli kaldır",
+      "noParent": "Üst öğe yok",
+      "noTemplate": "Şablon yok"
+    },
+    "delete": {
+      "confirm": "\"{name}\" koleksiyonunu silmek istiyor musunuz? Bu işlem geri alınamaz."
+    }
+  },
+  "items": {
+    "title": "Öğeler",
+    "new": "Yeni öğe",
+    "edit": "Öğeyi düzenle",
+    "empty": "Öğe yok",
+    "form": {
+      "name": "Ad",
+      "quantity": "Adet",
+      "collection": "Koleksiyon",
+      "template": "Şablon",
+      "visibility": "Görünürlük",
+      "image": "Görsel",
+      "changeImage": "Görseli değiştir",
+      "removeImage": "Görseli kaldır",
+      "data": "Özel veriler"
+    },
+    "delete": {
+      "confirm": "\"{name}\" öğesini silmek istiyor musunuz? Bu işlem geri alınamaz."
+    }
+  },
+  "albums": {
+    "title": "Albümler",
+    "new": "Yeni albüm",
+    "newSub": "Yeni alt albüm",
+    "edit": "Albümü düzenle",
+    "empty": "Albüm yok",
+    "subAlbums": "Alt albümler",
+    "photos": "Fotoğraflar",
+    "addPhoto": "Fotoğraf ekle",
+    "noPhotos": "Bu albümde fotoğraf yok.",
+    "form": {
+      "title": "Başlık",
+      "color": "Renk",
+      "image": "Görsel",
+      "parent": "Üst albüm",
+      "visibility": "Görünürlük",
+      "changeImage": "Görseli değiştir",
+      "removeImage": "Görseli kaldır",
+      "noParent": "Üst öğe yok"
+    },
+    "delete": {
+      "confirm": "\"{name}\" albümünü silmek istiyor musunuz? Bu işlem geri alınamaz."
+    }
+  },
+  "photos": {
+    "title": "Fotoğraflar",
+    "new": "Yeni fotoğraf",
+    "edit": "Fotoğrafı düzenle",
+    "mainImage": "Ana görsel",
+    "form": {
+      "title": "Başlık",
+      "place": "Yer",
+      "takenAt": "Çekim tarihi",
+      "comment": "Yorum",
+      "visibility": "Görünürlük",
+      "image": "Görsel",
+      "changeImage": "Görseli değiştir",
+      "removeImage": "Görseli kaldır"
+    },
+    "delete": {
+      "confirm": "\"{name}\" fotoğrafını silmek istiyor musunuz? Bu işlem geri alınamaz."
+    }
+  },
+  "wishlists": {
+    "title": "İstek listeleri",
+    "new": "Yeni istek listesi",
+    "newSub": "Yeni alt istek listesi",
+    "edit": "İstek listesini düzenle",
+    "empty": "İstek listesi yok",
+    "subWishlists": "Alt istek listeleri",
+    "wishes": "İstekler",
+    "addWish": "İstek ekle",
+    "noWishes": "Bu listede istek yok.",
+    "form": {
+      "name": "Ad",
+      "color": "Renk",
+      "image": "Görsel",
+      "parent": "Üst liste",
+      "visibility": "Görünürlük",
+      "changeImage": "Görseli değiştir",
+      "removeImage": "Görseli kaldır",
+      "noParent": "Üst öğe yok"
+    },
+    "delete": {
+      "confirm": "\"{name}\" istek listesini silmek istiyor musunuz? Bu işlem geri alınamaz."
+    }
+  },
+  "wishes": {
+    "title": "İstekler",
+    "new": "Yeni istek",
+    "edit": "İsteği düzenle",
+    "openLink": "Bağlantıyı aç",
+    "form": {
+      "name": "Ad",
+      "url": "URL",
+      "price": "Fiyat",
+      "currency": "Para birimi",
+      "comment": "Yorum",
+      "visibility": "Görünürlük",
+      "image": "Görsel",
+      "changeImage": "Görseli değiştir",
+      "removeImage": "Görseli kaldır"
+    },
+    "delete": {
+      "confirm": "\"{name}\" isteğini silmek istiyor musunuz? Bu işlem geri alınamaz."
+    }
+  },
+  "settings": {
+    "title": "Profil ayarları",
+    "preferences": "Tercihler",
+    "language": "Dil",
+    "currency": "Para birimi",
+    "theme": "Tema",
+    "dateFormat": "Tarih biçimi",
+    "visibility": "Varsayılan görünürlük",
+    "savePreferences": "Tercihleri kaydet",
+    "saving": "Kaydediliyor…",
+    "changePassword": "Parolayı değiştir",
+    "currentPassword": "Mevcut parola",
+    "newPassword": "Yeni parola",
+    "changePasswordButton": "Parolayı değiştir",
+    "passwordUpdated": "Parola başarıyla güncellendi.",
+    "themes": {
+      "auto": "Otomatik",
+      "light": "Açık",
+      "dark": "Koyu"
+    },
+    "languages": {
+      "da": "Dansk",
+      "de": "Deutsch",
+      "en": "English",
+      "es": "Español",
+      "fr": "Français",
+      "it": "Italiano",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "pt_BR": "Português (Brasil)",
+      "ru": "Русский",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "zh": "中文"
+    }
+  },
+  "search": {
+    "title": "Ara",
+    "placeholder": "Koleksiyonları, öğeleri, albümleri ara…",
+    "noResults": "Sonuç bulunamadı.",
+    "noResultsFor": "\"{query}\" için sonuç yok.",
+    "resultsFor": "\"{query}\" için {count} sonuç",
+    "results": "Sonuçlar"
+  },
+  "history": {
+    "title": "Geçmiş",
+    "pageTitle": "Değişiklik geçmişi",
+    "noActivity": "Kayıtlı etkinlik yok."
+  },
+  "statistics": {
+    "title": "İstatistikler"
+  },
+  "deleteDialog": {
+    "title": "Silmeyi onayla",
+    "defaultDescription": "Bu işlem geri alınamaz. Öğe kalıcı olarak silinecektir.",
+    "confirm": "Sil",
+    "cancel": "İptal",
+    "deleting": "Siliniyor…"
+  },
+  "visibility": {
+    "public": "Herkese açık",
+    "internal": "Dahili",
+    "private": "Özel"
+  },
+  "breadcrumb": {
+    "collections": "Koleksiyonlar",
+    "albums": "Albümler",
+    "wishlists": "İstek listeleri"
+  },
+  "upload": {
+    "clickOrDrop": "Buraya tıklayın veya bir görsel bırakın",
+    "error": "Yükleme hatası"
+  }
+}

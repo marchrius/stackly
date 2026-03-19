@@ -1,0 +1,279 @@
+{
+  "common": {
+    "save": "Gem",
+    "saving": "Gemmer…",
+    "edit": "Rediger",
+    "delete": "Slet",
+    "deleting": "Sletter…",
+    "cancel": "Annuller",
+    "add": "Tilføj",
+    "create": "Opret",
+    "back": "Tilbage",
+    "loading": "Indlæser…",
+    "search": "Søg",
+    "confirm": "Bekræft",
+    "yes": "Ja",
+    "no": "Nej",
+    "none": "Ingen",
+    "noImage": "Intet billede",
+    "visibility": "Synlighed",
+    "quantity": "Antal"
+  },
+  "nav": {
+    "collections": "Samlinger",
+    "albums": "Album",
+    "wishlists": "Ønskelister",
+    "tags": "Tags",
+    "templates": "Skabeloner",
+    "choiceLists": "Valglister",
+    "inventories": "Inventarer",
+    "loans": "Udlån",
+    "history": "Historik",
+    "statistics": "Statistik",
+    "search": "Søg",
+    "settings": "Indstillinger",
+    "logout": "Log ud"
+  },
+  "auth": {
+    "login": {
+      "title": "Velkommen tilbage",
+      "subtitle": "Log ind på din konto",
+      "username": "Brugernavn eller e-mail",
+      "password": "Adgangskode",
+      "submit": "Log ind",
+      "submitting": "Logger ind…",
+      "noAccount": "Har du ikke en konto?",
+      "register": "Registrer dig",
+      "invalidCredentials": "Ugyldige legitimationsoplysninger. Prøv igen."
+    },
+    "register": {
+      "title": "Opret en konto",
+      "subtitle": "Begynd at administrere dine samlinger",
+      "username": "Brugernavn",
+      "email": "E-mail",
+      "password": "Adgangskode",
+      "submit": "Registrer dig",
+      "submitting": "Opretter konto…",
+      "alreadyHaveAccount": "Har du allerede en konto?",
+      "login": "Log ind"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Velkommen, {name}!",
+    "subtitle": "Her er en oversigt over dine samlinger.",
+    "collections": "Samlinger",
+    "albums": "Album",
+    "wishlists": "Ønskelister",
+    "tags": "Tags"
+  },
+  "collections": {
+    "title": "Samlinger",
+    "new": "Ny samling",
+    "newSub": "Ny undersamling",
+    "addItem": "Tilføj objekt",
+    "edit": "Rediger samling",
+    "empty": "Ingen samlinger",
+    "emptyHint": "Start med at oprette din første samling.",
+    "emptyCollection": "Tom samling",
+    "emptyCollectionHint": "Tilføj objekter eller undersamlinger.",
+    "subCollections": "Undersamlinger",
+    "items": "Objekter",
+    "form": {
+      "title": "Titel",
+      "color": "Farve",
+      "image": "Billede",
+      "parent": "Overordnet samling",
+      "template": "Standardskabelon",
+      "visibility": "Synlighed",
+      "changeImage": "Skift billede",
+      "removeImage": "Fjern billede",
+      "noParent": "Ingen overordnet",
+      "noTemplate": "Ingen skabelon"
+    },
+    "delete": {
+      "confirm": "Vil du slette samlingen \"{name}\"? Denne handling kan ikke fortrydes."
+    }
+  },
+  "items": {
+    "title": "Objekter",
+    "new": "Nyt objekt",
+    "edit": "Rediger objekt",
+    "empty": "Ingen objekter",
+    "form": {
+      "name": "Navn",
+      "quantity": "Antal",
+      "collection": "Samling",
+      "template": "Skabelon",
+      "visibility": "Synlighed",
+      "image": "Billede",
+      "changeImage": "Skift billede",
+      "removeImage": "Fjern billede",
+      "data": "Brugerdefinerede data"
+    },
+    "delete": {
+      "confirm": "Vil du slette objektet \"{name}\"? Denne handling kan ikke fortrydes."
+    }
+  },
+  "albums": {
+    "title": "Album",
+    "new": "Nyt album",
+    "newSub": "Nyt underalbum",
+    "edit": "Rediger album",
+    "empty": "Ingen album",
+    "subAlbums": "Underalbum",
+    "photos": "Fotos",
+    "addPhoto": "Tilføj foto",
+    "noPhotos": "Ingen fotos i dette album.",
+    "form": {
+      "title": "Titel",
+      "color": "Farve",
+      "image": "Billede",
+      "parent": "Overordnet album",
+      "visibility": "Synlighed",
+      "changeImage": "Skift billede",
+      "removeImage": "Fjern billede",
+      "noParent": "Ingen overordnet"
+    },
+    "delete": {
+      "confirm": "Vil du slette albummet \"{name}\"? Denne handling kan ikke fortrydes."
+    }
+  },
+  "photos": {
+    "title": "Fotos",
+    "new": "Nyt foto",
+    "edit": "Rediger foto",
+    "mainImage": "Hovedbillede",
+    "form": {
+      "title": "Titel",
+      "place": "Sted",
+      "takenAt": "Taget den",
+      "comment": "Kommentar",
+      "visibility": "Synlighed",
+      "image": "Billede",
+      "changeImage": "Skift billede",
+      "removeImage": "Fjern billede"
+    },
+    "delete": {
+      "confirm": "Vil du slette fotoet \"{name}\"? Denne handling kan ikke fortrydes."
+    }
+  },
+  "wishlists": {
+    "title": "Ønskelister",
+    "new": "Ny ønskeliste",
+    "newSub": "Ny underønskeliste",
+    "edit": "Rediger ønskeliste",
+    "empty": "Ingen ønskelister",
+    "subWishlists": "Underønskelister",
+    "wishes": "Ønsker",
+    "addWish": "Tilføj ønske",
+    "noWishes": "Ingen ønsker i denne ønskeliste.",
+    "form": {
+      "name": "Navn",
+      "color": "Farve",
+      "image": "Billede",
+      "parent": "Overordnet ønskeliste",
+      "visibility": "Synlighed",
+      "changeImage": "Skift billede",
+      "removeImage": "Fjern billede",
+      "noParent": "Ingen overordnet"
+    },
+    "delete": {
+      "confirm": "Vil du slette ønskelisten \"{name}\"? Denne handling kan ikke fortrydes."
+    }
+  },
+  "wishes": {
+    "title": "Ønsker",
+    "new": "Nyt ønske",
+    "edit": "Rediger ønske",
+    "openLink": "Åbn link",
+    "form": {
+      "name": "Navn",
+      "url": "URL",
+      "price": "Pris",
+      "currency": "Valuta",
+      "comment": "Kommentar",
+      "visibility": "Synlighed",
+      "image": "Billede",
+      "changeImage": "Skift billede",
+      "removeImage": "Fjern billede"
+    },
+    "delete": {
+      "confirm": "Vil du slette ønsket \"{name}\"? Denne handling kan ikke fortrydes."
+    }
+  },
+  "settings": {
+    "title": "Profilindstillinger",
+    "preferences": "Præferencer",
+    "language": "Sprog",
+    "currency": "Valuta",
+    "theme": "Tema",
+    "dateFormat": "Datoformat",
+    "visibility": "Standard synlighed",
+    "savePreferences": "Gem præferencer",
+    "saving": "Gemmer…",
+    "changePassword": "Skift adgangskode",
+    "currentPassword": "Nuværende adgangskode",
+    "newPassword": "Ny adgangskode",
+    "changePasswordButton": "Skift adgangskode",
+    "passwordUpdated": "Adgangskoden blev opdateret.",
+    "themes": {
+      "auto": "Automatisk",
+      "light": "Lys",
+      "dark": "Mørk"
+    },
+    "languages": {
+      "da": "Dansk",
+      "de": "Deutsch",
+      "en": "English",
+      "es": "Español",
+      "fr": "Français",
+      "it": "Italiano",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "pt_BR": "Português (Brasil)",
+      "ru": "Русский",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "zh": "中文"
+    }
+  },
+  "search": {
+    "title": "Søg",
+    "placeholder": "Søg i samlinger, objekter, album…",
+    "noResults": "Ingen resultater fundet.",
+    "noResultsFor": "Ingen resultater for \"{query}\".",
+    "resultsFor": "{count} resultater for \"{query}\"",
+    "results": "Resultater"
+  },
+  "history": {
+    "title": "Historik",
+    "pageTitle": "Ændringshistorik",
+    "noActivity": "Ingen aktivitet registreret."
+  },
+  "statistics": {
+    "title": "Statistik"
+  },
+  "deleteDialog": {
+    "title": "Bekræft sletning",
+    "defaultDescription": "Denne handling kan ikke fortrydes. Elementet bliver slettet permanent.",
+    "confirm": "Slet",
+    "cancel": "Annuller",
+    "deleting": "Sletter…"
+  },
+  "visibility": {
+    "public": "Offentlig",
+    "internal": "Intern",
+    "private": "Privat"
+  },
+  "breadcrumb": {
+    "collections": "Samlinger",
+    "albums": "Album",
+    "wishlists": "Ønskelister"
+  },
+  "upload": {
+    "clickOrDrop": "Klik eller slip et billede her",
+    "error": "Uploadfejl"
+  }
+}

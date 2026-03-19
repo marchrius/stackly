@@ -10,6 +10,7 @@
     "dev": "dotenv -e .env -- turbo run dev",
     "lint": "dotenv -e .env -- turbo run lint",
     "type-check": "dotenv -e .env -- turbo run type-check",
+    "i18n:validate": "python3 scripts/validate_i18n_messages.py",
     "db:generate": "dotenv -e .env -- turbo run db:generate --filter=@koillection/db",
     "db:push": "dotenv -e .env -- turbo run db:push --filter=@koillection/db",
     "db:migrate": "dotenv -e .env -- turbo run db:migrate --filter=@koillection/db",

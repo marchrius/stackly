@@ -4,11 +4,16 @@ import { prisma } from "@koillection/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@koillection/ui";
 import { Library, Image, Heart, Tag } from "lucide-react";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = { title: "Dashboard" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("dashboard");
+  return { title: t("title") ?? "Dashboard" };
+}
 
 export default async function DashboardPage() {
   const session = await requireAuth();
+  const t = await getTranslations("dashboard");
 
   const [collectionsCount, albumsCount, wishlistsCount, tagsCount] = await Promise.all([
     prisma.collection.count({ where: { ownerId: session.user.id, parentId: null } }),
@@ -18,19 +23,19 @@ export default async function DashboardPage() {
   ]);
 
   const stats = [
-    { label: "Collezioni", count: collectionsCount, icon: Library, href: "/collections", color: "text-blue-500" },
-    { label: "Album", count: albumsCount, icon: Image, href: "/albums", color: "text-purple-500" },
-    { label: "Wishlist", count: wishlistsCount, icon: Heart, href: "/wishlists", color: "text-pink-500" },
-    { label: "Tag", count: tagsCount, icon: Tag, href: "/tags", color: "text-green-500" },
+    { label: t("collections"), count: collectionsCount, icon: Library, href: "/collections", color: "text-blue-500" },
+    { label: t("albums"), count: albumsCount, icon: Image, href: "/albums", color: "text-purple-500" },
+    { label: t("wishlists"), count: wishlistsCount, icon: Heart, href: "/wishlists", color: "text-pink-500" },
+    { label: t("tags"), count: tagsCount, icon: Tag, href: "/tags", color: "text-green-500" },
   ];
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">
-          Benvenuto, {session.user.name}!
+          {t("welcome", { name: session.user.name ?? "" })}
         </h1>
-        <p className="text-muted-foreground">Ecco un riepilogo delle tue collezioni.</p>
+        <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -51,4 +56,3 @@ export default async function DashboardPage() {
     </div>
   );
 }
-

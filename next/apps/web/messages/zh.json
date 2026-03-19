@@ -1,0 +1,279 @@
+{
+  "common": {
+    "save": "保存",
+    "saving": "正在保存…",
+    "edit": "编辑",
+    "delete": "删除",
+    "deleting": "正在删除…",
+    "cancel": "取消",
+    "add": "添加",
+    "create": "创建",
+    "back": "返回",
+    "loading": "加载中…",
+    "search": "搜索",
+    "confirm": "确认",
+    "yes": "是",
+    "no": "否",
+    "none": "无",
+    "noImage": "无图片",
+    "visibility": "可见性",
+    "quantity": "数量"
+  },
+  "nav": {
+    "collections": "收藏",
+    "albums": "相册",
+    "wishlists": "愿望清单",
+    "tags": "标签",
+    "templates": "模板",
+    "choiceLists": "选项列表",
+    "inventories": "库存",
+    "loans": "借出",
+    "history": "历史",
+    "statistics": "统计",
+    "search": "搜索",
+    "settings": "设置",
+    "logout": "退出登录"
+  },
+  "auth": {
+    "login": {
+      "title": "欢迎回来",
+      "subtitle": "登录到你的账户",
+      "username": "用户名或电子邮箱",
+      "password": "密码",
+      "submit": "登录",
+      "submitting": "正在登录…",
+      "noAccount": "还没有账户？",
+      "register": "注册",
+      "invalidCredentials": "凭据无效，请重试。"
+    },
+    "register": {
+      "title": "创建账户",
+      "subtitle": "开始管理你的收藏",
+      "username": "用户名",
+      "email": "电子邮箱",
+      "password": "密码",
+      "submit": "注册",
+      "submitting": "正在创建账户…",
+      "alreadyHaveAccount": "已经有账户了？",
+      "login": "登录"
+    }
+  },
+  "dashboard": {
+    "title": "仪表盘",
+    "welcome": "欢迎，{name}！",
+    "subtitle": "以下是你的收藏概览。",
+    "collections": "收藏",
+    "albums": "相册",
+    "wishlists": "愿望清单",
+    "tags": "标签"
+  },
+  "collections": {
+    "title": "收藏",
+    "new": "新建收藏",
+    "newSub": "新建子收藏",
+    "addItem": "添加条目",
+    "edit": "编辑收藏",
+    "empty": "没有收藏",
+    "emptyHint": "从创建你的第一个收藏开始。",
+    "emptyCollection": "空收藏",
+    "emptyCollectionHint": "添加条目或子收藏。",
+    "subCollections": "子收藏",
+    "items": "条目",
+    "form": {
+      "title": "标题",
+      "color": "颜色",
+      "image": "图片",
+      "parent": "父收藏",
+      "template": "默认模板",
+      "visibility": "可见性",
+      "changeImage": "更换图片",
+      "removeImage": "移除图片",
+      "noParent": "无父级",
+      "noTemplate": "无模板"
+    },
+    "delete": {
+      "confirm": "确定要删除收藏“{name}”吗？此操作不可撤销。"
+    }
+  },
+  "items": {
+    "title": "条目",
+    "new": "新建条目",
+    "edit": "编辑条目",
+    "empty": "没有条目",
+    "form": {
+      "name": "名称",
+      "quantity": "数量",
+      "collection": "收藏",
+      "template": "模板",
+      "visibility": "可见性",
+      "image": "图片",
+      "changeImage": "更换图片",
+      "removeImage": "移除图片",
+      "data": "自定义数据"
+    },
+    "delete": {
+      "confirm": "确定要删除条目“{name}”吗？此操作不可撤销。"
+    }
+  },
+  "albums": {
+    "title": "相册",
+    "new": "新建相册",
+    "newSub": "新建子相册",
+    "edit": "编辑相册",
+    "empty": "没有相册",
+    "subAlbums": "子相册",
+    "photos": "照片",
+    "addPhoto": "添加照片",
+    "noPhotos": "此相册中没有照片。",
+    "form": {
+      "title": "标题",
+      "color": "颜色",
+      "image": "图片",
+      "parent": "父相册",
+      "visibility": "可见性",
+      "changeImage": "更换图片",
+      "removeImage": "移除图片",
+      "noParent": "无父级"
+    },
+    "delete": {
+      "confirm": "确定要删除相册“{name}”吗？此操作不可撤销。"
+    }
+  },
+  "photos": {
+    "title": "照片",
+    "new": "新建照片",
+    "edit": "编辑照片",
+    "mainImage": "主图",
+    "form": {
+      "title": "标题",
+      "place": "地点",
+      "takenAt": "拍摄于",
+      "comment": "备注",
+      "visibility": "可见性",
+      "image": "图片",
+      "changeImage": "更换图片",
+      "removeImage": "移除图片"
+    },
+    "delete": {
+      "confirm": "确定要删除照片“{name}”吗？此操作不可撤销。"
+    }
+  },
+  "wishlists": {
+    "title": "愿望清单",
+    "new": "新建愿望清单",
+    "newSub": "新建子愿望清单",
+    "edit": "编辑愿望清单",
+    "empty": "没有愿望清单",
+    "subWishlists": "子愿望清单",
+    "wishes": "愿望",
+    "addWish": "添加愿望",
+    "noWishes": "此愿望清单中没有愿望。",
+    "form": {
+      "name": "名称",
+      "color": "颜色",
+      "image": "图片",
+      "parent": "父清单",
+      "visibility": "可见性",
+      "changeImage": "更换图片",
+      "removeImage": "移除图片",
+      "noParent": "无父级"
+    },
+    "delete": {
+      "confirm": "确定要删除愿望清单“{name}”吗？此操作不可撤销。"
+    }
+  },
+  "wishes": {
+    "title": "愿望",
+    "new": "新建愿望",
+    "edit": "编辑愿望",
+    "openLink": "打开链接",
+    "form": {
+      "name": "名称",
+      "url": "URL",
+      "price": "价格",
+      "currency": "货币",
+      "comment": "备注",
+      "visibility": "可见性",
+      "image": "图片",
+      "changeImage": "更换图片",
+      "removeImage": "移除图片"
+    },
+    "delete": {
+      "confirm": "确定要删除愿望“{name}”吗？此操作不可撤销。"
+    }
+  },
+  "settings": {
+    "title": "个人资料设置",
+    "preferences": "偏好设置",
+    "language": "语言",
+    "currency": "货币",
+    "theme": "主题",
+    "dateFormat": "日期格式",
+    "visibility": "默认可见性",
+    "savePreferences": "保存偏好设置",
+    "saving": "正在保存…",
+    "changePassword": "修改密码",
+    "currentPassword": "当前密码",
+    "newPassword": "新密码",
+    "changePasswordButton": "修改密码",
+    "passwordUpdated": "密码更新成功。",
+    "themes": {
+      "auto": "自动",
+      "light": "浅色",
+      "dark": "深色"
+    },
+    "languages": {
+      "da": "Dansk",
+      "de": "Deutsch",
+      "en": "English",
+      "es": "Español",
+      "fr": "Français",
+      "it": "Italiano",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "pt_BR": "Português (Brasil)",
+      "ru": "Русский",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "zh": "中文"
+    }
+  },
+  "search": {
+    "title": "搜索",
+    "placeholder": "搜索收藏、条目、相册…",
+    "noResults": "未找到结果。",
+    "noResultsFor": "没有找到“{query}”的结果。",
+    "resultsFor": "“{query}”共有 {count} 条结果",
+    "results": "结果"
+  },
+  "history": {
+    "title": "历史",
+    "pageTitle": "变更历史",
+    "noActivity": "没有记录任何活动。"
+  },
+  "statistics": {
+    "title": "统计"
+  },
+  "deleteDialog": {
+    "title": "确认删除",
+    "defaultDescription": "此操作不可撤销。该项目将被永久删除。",
+    "confirm": "删除",
+    "cancel": "取消",
+    "deleting": "正在删除…"
+  },
+  "visibility": {
+    "public": "公开",
+    "internal": "内部",
+    "private": "私有"
+  },
+  "breadcrumb": {
+    "collections": "收藏",
+    "albums": "相册",
+    "wishlists": "愿望清单"
+  },
+  "upload": {
+    "clickOrDrop": "点击或将图片拖放到此处",
+    "error": "上传错误"
+  }
+}

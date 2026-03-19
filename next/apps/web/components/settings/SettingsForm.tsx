@@ -2,10 +2,15 @@
 
 import type { User } from "@koillection/db";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@koillection/ui";
 import { updateSettings, changePassword } from "@/lib/actions/user.actions";
+import { useTranslations } from "next-intl";
+import { SUPPORTED_LOCALES } from "@/i18n/locales";
 
 export function SettingsForm({ user }: { user: User }) {
+  const t = useTranslations("settings");
+  const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [pwLoading, setPwLoading] = useState(false);
   const [pwError, setPwError] = useState("");
@@ -16,6 +21,8 @@ export function SettingsForm({ user }: { user: User }) {
     setSaving(true);
     await updateSettings(new FormData(e.currentTarget));
     setSaving(false);
+    // Ricarica la pagina per applicare il nuovo locale
+    router.refresh();
   }
 
   async function handlePassword(e: React.FormEvent<HTMLFormElement>) {
@@ -33,64 +40,65 @@ export function SettingsForm({ user }: { user: User }) {
     <div className="space-y-8">
       {/* Preferenze */}
       <section>
-        <h2 className="text-lg font-semibold mb-4">Preferenze</h2>
+        <h2 className="text-lg font-semibold mb-4">{t("preferences")}</h2>
         <form onSubmit={handleSettings} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="locale">Lingua</Label>
+              <Label htmlFor="locale">{t("language")}</Label>
               <Select name="locale" defaultValue={user.locale}>
                 <SelectTrigger id="locale"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {["en","it","fr","de","es","pt","nl","pl","ru","uk","tr","da","zh","pt_BR"].map((l) => (
-                    <SelectItem key={l} value={l}>{l}</SelectItem>
+                  {SUPPORTED_LOCALES.map((locale) => (
+                    <SelectItem key={locale} value={locale}>
+                      {t(`languages.${locale}` as any)}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="currency">Valuta</Label>
+              <Label htmlFor="currency">{t("currency")}</Label>
               <Input id="currency" name="currency" defaultValue={user.currency} maxLength={3} />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="theme">Tema</Label>
+              <Label htmlFor="theme">{t("theme")}</Label>
               <Select name="theme" defaultValue={user.theme}>
                 <SelectTrigger id="theme"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="auto">Automatico</SelectItem>
-                  <SelectItem value="light">Chiaro</SelectItem>
-                  <SelectItem value="dark">Scuro</SelectItem>
+                  <SelectItem value="auto">{t("themes.auto")}</SelectItem>
+                  <SelectItem value="light">{t("themes.light")}</SelectItem>
+                  <SelectItem value="dark">{t("themes.dark")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="dateFormat">Formato data</Label>
+              <Label htmlFor="dateFormat">{t("dateFormat")}</Label>
               <Input id="dateFormat" name="dateFormat" defaultValue={user.dateFormat} />
             </div>
           </div>
-          <Button type="submit" disabled={saving}>{saving ? "Salvataggio…" : "Salva preferenze"}</Button>
+          <Button type="submit" disabled={saving}>{saving ? t("saving") : t("savePreferences")}</Button>
         </form>
       </section>
 
       {/* Password */}
       <section>
-        <h2 className="text-lg font-semibold mb-4">Cambia Password</h2>
+        <h2 className="text-lg font-semibold mb-4">{t("changePassword")}</h2>
         <form onSubmit={handlePassword} className="space-y-4 max-w-sm">
           {pwError && <p className="text-destructive text-sm">{pwError}</p>}
-          {pwSuccess && <p className="text-green-600 text-sm">Password aggiornata con successo.</p>}
+          {pwSuccess && <p className="text-green-600 text-sm">{t("passwordUpdated")}</p>}
           <div className="space-y-2">
-            <Label htmlFor="currentPassword">Password attuale</Label>
+            <Label htmlFor="currentPassword">{t("currentPassword")}</Label>
             <Input id="currentPassword" name="currentPassword" type="password" required />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="newPassword">Nuova password</Label>
+            <Label htmlFor="newPassword">{t("newPassword")}</Label>
             <Input id="newPassword" name="newPassword" type="password" required minLength={8} />
           </div>
-          <Button type="submit" disabled={pwLoading}>{pwLoading ? "Aggiornamento…" : "Cambia password"}</Button>
+          <Button type="submit" disabled={pwLoading}>{pwLoading ? t("saving") : t("changePasswordButton")}</Button>
         </form>
       </section>
     </div>
   );
 }
-

@@ -1,0 +1,279 @@
+{
+  "common": {
+    "save": "Guardar",
+    "saving": "A guardar…",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "deleting": "A eliminar…",
+    "cancel": "Cancelar",
+    "add": "Adicionar",
+    "create": "Criar",
+    "back": "Voltar",
+    "loading": "A carregar…",
+    "search": "Pesquisar",
+    "confirm": "Confirmar",
+    "yes": "Sim",
+    "no": "Não",
+    "none": "Nenhum",
+    "noImage": "Sem imagem",
+    "visibility": "Visibilidade",
+    "quantity": "Quantidade"
+  },
+  "nav": {
+    "collections": "Coleções",
+    "albums": "Álbuns",
+    "wishlists": "Listas de desejos",
+    "tags": "Etiquetas",
+    "templates": "Modelos",
+    "choiceLists": "Listas de opções",
+    "inventories": "Inventários",
+    "loans": "Empréstimos",
+    "history": "Histórico",
+    "statistics": "Estatísticas",
+    "search": "Pesquisar",
+    "settings": "Definições",
+    "logout": "Terminar sessão"
+  },
+  "auth": {
+    "login": {
+      "title": "Bem-vindo de volta",
+      "subtitle": "Inicie sessão na sua conta",
+      "username": "Nome de utilizador ou e-mail",
+      "password": "Palavra-passe",
+      "submit": "Iniciar sessão",
+      "submitting": "A iniciar sessão…",
+      "noAccount": "Não tem conta?",
+      "register": "Registar-se",
+      "invalidCredentials": "Credenciais inválidas. Tente novamente."
+    },
+    "register": {
+      "title": "Criar uma conta",
+      "subtitle": "Comece a gerir as suas coleções",
+      "username": "Nome de utilizador",
+      "email": "E-mail",
+      "password": "Palavra-passe",
+      "submit": "Registar-se",
+      "submitting": "A criar conta…",
+      "alreadyHaveAccount": "Já tem conta?",
+      "login": "Iniciar sessão"
+    }
+  },
+  "dashboard": {
+    "title": "Painel",
+    "welcome": "Bem-vindo, {name}!",
+    "subtitle": "Aqui está um resumo das suas coleções.",
+    "collections": "Coleções",
+    "albums": "Álbuns",
+    "wishlists": "Listas de desejos",
+    "tags": "Etiquetas"
+  },
+  "collections": {
+    "title": "Coleções",
+    "new": "Nova coleção",
+    "newSub": "Nova subcoleção",
+    "addItem": "Adicionar item",
+    "edit": "Editar coleção",
+    "empty": "Sem coleções",
+    "emptyHint": "Comece por criar a sua primeira coleção.",
+    "emptyCollection": "Coleção vazia",
+    "emptyCollectionHint": "Adicione itens ou subcoleções.",
+    "subCollections": "Subcoleções",
+    "items": "Itens",
+    "form": {
+      "title": "Título",
+      "color": "Cor",
+      "image": "Imagem",
+      "parent": "Coleção principal",
+      "template": "Modelo predefinido",
+      "visibility": "Visibilidade",
+      "changeImage": "Alterar imagem",
+      "removeImage": "Remover imagem",
+      "noParent": "Sem principal",
+      "noTemplate": "Sem modelo"
+    },
+    "delete": {
+      "confirm": "Pretende eliminar a coleção \"{name}\"? Esta ação é irreversível."
+    }
+  },
+  "items": {
+    "title": "Itens",
+    "new": "Novo item",
+    "edit": "Editar item",
+    "empty": "Sem itens",
+    "form": {
+      "name": "Nome",
+      "quantity": "Quantidade",
+      "collection": "Coleção",
+      "template": "Modelo",
+      "visibility": "Visibilidade",
+      "image": "Imagem",
+      "changeImage": "Alterar imagem",
+      "removeImage": "Remover imagem",
+      "data": "Dados personalizados"
+    },
+    "delete": {
+      "confirm": "Pretende eliminar o item \"{name}\"? Esta ação é irreversível."
+    }
+  },
+  "albums": {
+    "title": "Álbuns",
+    "new": "Novo álbum",
+    "newSub": "Novo subálbum",
+    "edit": "Editar álbum",
+    "empty": "Sem álbuns",
+    "subAlbums": "Subálbuns",
+    "photos": "Fotografias",
+    "addPhoto": "Adicionar fotografia",
+    "noPhotos": "Não existem fotografias neste álbum.",
+    "form": {
+      "title": "Título",
+      "color": "Cor",
+      "image": "Imagem",
+      "parent": "Álbum principal",
+      "visibility": "Visibilidade",
+      "changeImage": "Alterar imagem",
+      "removeImage": "Remover imagem",
+      "noParent": "Sem principal"
+    },
+    "delete": {
+      "confirm": "Pretende eliminar o álbum \"{name}\"? Esta ação é irreversível."
+    }
+  },
+  "photos": {
+    "title": "Fotografias",
+    "new": "Nova fotografia",
+    "edit": "Editar fotografia",
+    "mainImage": "Imagem principal",
+    "form": {
+      "title": "Título",
+      "place": "Local",
+      "takenAt": "Tirada em",
+      "comment": "Comentário",
+      "visibility": "Visibilidade",
+      "image": "Imagem",
+      "changeImage": "Alterar imagem",
+      "removeImage": "Remover imagem"
+    },
+    "delete": {
+      "confirm": "Pretende eliminar a fotografia \"{name}\"? Esta ação é irreversível."
+    }
+  },
+  "wishlists": {
+    "title": "Listas de desejos",
+    "new": "Nova lista de desejos",
+    "newSub": "Nova sublista de desejos",
+    "edit": "Editar lista de desejos",
+    "empty": "Sem listas de desejos",
+    "subWishlists": "Sublistas de desejos",
+    "wishes": "Desejos",
+    "addWish": "Adicionar desejo",
+    "noWishes": "Não existem desejos nesta lista.",
+    "form": {
+      "name": "Nome",
+      "color": "Cor",
+      "image": "Imagem",
+      "parent": "Lista principal",
+      "visibility": "Visibilidade",
+      "changeImage": "Alterar imagem",
+      "removeImage": "Remover imagem",
+      "noParent": "Sem principal"
+    },
+    "delete": {
+      "confirm": "Pretende eliminar a lista de desejos \"{name}\"? Esta ação é irreversível."
+    }
+  },
+  "wishes": {
+    "title": "Desejos",
+    "new": "Novo desejo",
+    "edit": "Editar desejo",
+    "openLink": "Abrir ligação",
+    "form": {
+      "name": "Nome",
+      "url": "URL",
+      "price": "Preço",
+      "currency": "Moeda",
+      "comment": "Comentário",
+      "visibility": "Visibilidade",
+      "image": "Imagem",
+      "changeImage": "Alterar imagem",
+      "removeImage": "Remover imagem"
+    },
+    "delete": {
+      "confirm": "Pretende eliminar o desejo \"{name}\"? Esta ação é irreversível."
+    }
+  },
+  "settings": {
+    "title": "Definições do perfil",
+    "preferences": "Preferências",
+    "language": "Idioma",
+    "currency": "Moeda",
+    "theme": "Tema",
+    "dateFormat": "Formato da data",
+    "visibility": "Visibilidade predefinida",
+    "savePreferences": "Guardar preferências",
+    "saving": "A guardar…",
+    "changePassword": "Alterar palavra-passe",
+    "currentPassword": "Palavra-passe atual",
+    "newPassword": "Nova palavra-passe",
+    "changePasswordButton": "Alterar palavra-passe",
+    "passwordUpdated": "Palavra-passe atualizada com sucesso.",
+    "themes": {
+      "auto": "Automático",
+      "light": "Claro",
+      "dark": "Escuro"
+    },
+    "languages": {
+      "da": "Dansk",
+      "de": "Deutsch",
+      "en": "English",
+      "es": "Español",
+      "fr": "Français",
+      "it": "Italiano",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "pt_BR": "Português (Brasil)",
+      "ru": "Русский",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "zh": "中文"
+    }
+  },
+  "search": {
+    "title": "Pesquisar",
+    "placeholder": "Pesquisar coleções, itens, álbuns…",
+    "noResults": "Nenhum resultado encontrado.",
+    "noResultsFor": "Nenhum resultado para \"{query}\".",
+    "resultsFor": "{count} resultados para \"{query}\"",
+    "results": "Resultados"
+  },
+  "history": {
+    "title": "Histórico",
+    "pageTitle": "Histórico de alterações",
+    "noActivity": "Nenhuma atividade registada."
+  },
+  "statistics": {
+    "title": "Estatísticas"
+  },
+  "deleteDialog": {
+    "title": "Confirmar eliminação",
+    "defaultDescription": "Esta ação é irreversível. O elemento será eliminado permanentemente.",
+    "confirm": "Eliminar",
+    "cancel": "Cancelar",
+    "deleting": "A eliminar…"
+  },
+  "visibility": {
+    "public": "Público",
+    "internal": "Interno",
+    "private": "Privado"
+  },
+  "breadcrumb": {
+    "collections": "Coleções",
+    "albums": "Álbuns",
+    "wishlists": "Listas de desejos"
+  },
+  "upload": {
+    "clickOrDrop": "Clique ou largue uma imagem aqui",
+    "error": "Erro de envio"
+  }
+}

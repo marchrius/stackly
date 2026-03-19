@@ -1,0 +1,279 @@
+{
+  "common": {
+    "save": "Save",
+    "saving": "Saving…",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleting": "Deleting…",
+    "cancel": "Cancel",
+    "add": "Add",
+    "create": "Create",
+    "back": "Back",
+    "loading": "Loading…",
+    "search": "Search",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "none": "None",
+    "noImage": "No image",
+    "visibility": "Visibility",
+    "quantity": "Quantity"
+  },
+  "nav": {
+    "collections": "Collections",
+    "albums": "Albums",
+    "wishlists": "Wishlists",
+    "tags": "Tags",
+    "templates": "Templates",
+    "choiceLists": "Choice Lists",
+    "inventories": "Inventories",
+    "loans": "Loans",
+    "history": "History",
+    "statistics": "Statistics",
+    "search": "Search",
+    "settings": "Settings",
+    "logout": "Log out"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to your account",
+      "username": "Username or Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "noAccount": "Don't have an account?",
+      "register": "Register",
+      "invalidCredentials": "Invalid credentials. Please try again."
+    },
+    "register": {
+      "title": "Create an account",
+      "subtitle": "Start managing your collections",
+      "username": "Username",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Register",
+      "submitting": "Creating account…",
+      "alreadyHaveAccount": "Already have an account?",
+      "login": "Sign in"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, {name}!",
+    "subtitle": "Here's a summary of your collections.",
+    "collections": "Collections",
+    "albums": "Albums",
+    "wishlists": "Wishlists",
+    "tags": "Tags"
+  },
+  "collections": {
+    "title": "Collections",
+    "new": "New Collection",
+    "newSub": "New sub-collection",
+    "addItem": "Add item",
+    "edit": "Edit Collection",
+    "empty": "No collections",
+    "emptyHint": "Start by creating your first collection.",
+    "emptyCollection": "Empty collection",
+    "emptyCollectionHint": "Add items or sub-collections.",
+    "subCollections": "Sub-collections",
+    "items": "Items",
+    "form": {
+      "title": "Title",
+      "color": "Color",
+      "image": "Image",
+      "parent": "Parent collection",
+      "template": "Default template",
+      "visibility": "Visibility",
+      "changeImage": "Change image",
+      "removeImage": "Remove image",
+      "noParent": "No parent",
+      "noTemplate": "No template"
+    },
+    "delete": {
+      "confirm": "Do you want to delete the collection \"{name}\"? This action is irreversible."
+    }
+  },
+  "items": {
+    "title": "Items",
+    "new": "New Item",
+    "edit": "Edit Item",
+    "empty": "No items",
+    "form": {
+      "name": "Name",
+      "quantity": "Quantity",
+      "collection": "Collection",
+      "template": "Template",
+      "visibility": "Visibility",
+      "image": "Image",
+      "changeImage": "Change image",
+      "removeImage": "Remove image",
+      "data": "Custom data"
+    },
+    "delete": {
+      "confirm": "Do you want to delete the item \"{name}\"? This action is irreversible."
+    }
+  },
+  "albums": {
+    "title": "Albums",
+    "new": "New Album",
+    "newSub": "New sub-album",
+    "edit": "Edit Album",
+    "empty": "No albums",
+    "subAlbums": "Sub-albums",
+    "photos": "Photos",
+    "addPhoto": "Add photo",
+    "noPhotos": "No photos in this album.",
+    "form": {
+      "title": "Title",
+      "color": "Color",
+      "image": "Image",
+      "parent": "Parent album",
+      "visibility": "Visibility",
+      "changeImage": "Change image",
+      "removeImage": "Remove image",
+      "noParent": "No parent"
+    },
+    "delete": {
+      "confirm": "Do you want to delete the album \"{name}\"? This action is irreversible."
+    }
+  },
+  "photos": {
+    "title": "Photos",
+    "new": "New Photo",
+    "edit": "Edit Photo",
+    "mainImage": "Main image",
+    "form": {
+      "title": "Title",
+      "place": "Place",
+      "takenAt": "Taken at",
+      "comment": "Comment",
+      "visibility": "Visibility",
+      "image": "Image",
+      "changeImage": "Change image",
+      "removeImage": "Remove image"
+    },
+    "delete": {
+      "confirm": "Do you want to delete the photo \"{name}\"? This action is irreversible."
+    }
+  },
+  "wishlists": {
+    "title": "Wishlists",
+    "new": "New Wishlist",
+    "newSub": "New sub-wishlist",
+    "edit": "Edit Wishlist",
+    "empty": "No wishlists",
+    "subWishlists": "Sub-wishlists",
+    "wishes": "Wishes",
+    "addWish": "Add wish",
+    "noWishes": "No wishes in this wishlist.",
+    "form": {
+      "name": "Name",
+      "color": "Color",
+      "image": "Image",
+      "parent": "Parent wishlist",
+      "visibility": "Visibility",
+      "changeImage": "Change image",
+      "removeImage": "Remove image",
+      "noParent": "No parent"
+    },
+    "delete": {
+      "confirm": "Do you want to delete the wishlist \"{name}\"? This action is irreversible."
+    }
+  },
+  "wishes": {
+    "title": "Wishes",
+    "new": "New Wish",
+    "edit": "Edit Wish",
+    "openLink": "Open link",
+    "form": {
+      "name": "Name",
+      "url": "URL",
+      "price": "Price",
+      "currency": "Currency",
+      "comment": "Comment",
+      "visibility": "Visibility",
+      "image": "Image",
+      "changeImage": "Change image",
+      "removeImage": "Remove image"
+    },
+    "delete": {
+      "confirm": "Do you want to delete the wish \"{name}\"? This action is irreversible."
+    }
+  },
+  "settings": {
+    "title": "Profile Settings",
+    "preferences": "Preferences",
+    "language": "Language",
+    "currency": "Currency",
+    "theme": "Theme",
+    "dateFormat": "Date format",
+    "visibility": "Default visibility",
+    "savePreferences": "Save preferences",
+    "saving": "Saving…",
+    "changePassword": "Change Password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "changePasswordButton": "Change password",
+    "passwordUpdated": "Password updated successfully.",
+    "themes": {
+      "auto": "Auto",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "languages": {
+      "da": "Dansk",
+      "de": "Deutsch",
+      "en": "English",
+      "es": "Español",
+      "fr": "Français",
+      "it": "Italiano",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "pt_BR": "Português (Brasil)",
+      "ru": "Русский",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "zh": "中文"
+    }
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search collections, items, albums…",
+    "noResults": "No results found.",
+    "noResultsFor": "No results for \"{query}\".",
+    "resultsFor": "{count} results for \"{query}\"",
+    "results": "Results"
+  },
+  "history": {
+    "title": "History",
+    "pageTitle": "Change History",
+    "noActivity": "No activity recorded."
+  },
+  "statistics": {
+    "title": "Statistics"
+  },
+  "deleteDialog": {
+    "title": "Confirm deletion",
+    "defaultDescription": "This action is irreversible. The item will be permanently deleted.",
+    "confirm": "Delete",
+    "cancel": "Cancel",
+    "deleting": "Deleting…"
+  },
+  "visibility": {
+    "public": "Public",
+    "internal": "Internal",
+    "private": "Private"
+  },
+  "breadcrumb": {
+    "collections": "Collections",
+    "albums": "Albums",
+    "wishlists": "Wishlists"
+  },
+  "upload": {
+    "clickOrDrop": "Click or drop an image here",
+    "error": "Upload error"
+  }
+}

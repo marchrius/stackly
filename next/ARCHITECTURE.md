@@ -19,6 +19,7 @@
    - [Autenticazione](#37-autenticazione)
    - [Middleware](#38-middleware)
    - [Upload file](#39-upload-file)
+   - [Internazionalizzazione (i18n)](#310-internazionalizzazione-i18n)
 4. [Package `packages/db`](#4-package-packagesdb)
 5. [Package `packages/ui`](#5-package-packagesui)
 6. [Package `packages/lib`](#6-package-packageslib)
@@ -27,6 +28,7 @@
 9. [Flusso di una richiesta tipica](#9-flusso-di-una-richiesta-tipica)
 10. [Convenzioni di naming](#10-convenzioni-di-naming)
 11. [Variabili d'ambiente](#11-variabili-dambiente)
+12. [Regola i18n — testo traducibile obbligatorio](#12-regola-i18n--testo-traducibile-obbligatorio)
 
 ---
 
@@ -348,7 +350,8 @@ Configurazione **NextAuth.js v5** con:
 
 **File:** `apps/web/middleware.ts`
 
-Usa `auth` di NextAuth come middleware di protezione. Redireziona a `/login` se non autenticato.
+Usa `auth` di NextAuth come middleware di protezione. Redireziona a `/login` se non autenticato.  
+Imposta il cookie `koillection_locale` alla prima visita (default `en`) se assente.
 
 **Route escluse dalla protezione:**
 
@@ -378,6 +381,122 @@ Flusso:
 
 **Variabile d'ambiente:** `UPLOAD_DIR` (default `./public/uploads`)  
 I file sono serviti staticamente da Next.js tramite la cartella `public/`.
+
+---
+
+### 3.10 Internazionalizzazione (i18n)
+
+**Libreria:** [`next-intl`](https://next-intl-docs.vercel.app/) v3  
+**Strategia:** senza routing per locale nell'URL — il locale è determinato da un **cookie HTTP** (`koillection_locale`).
+
+#### Lingue supportate
+
+| Codice | Lingua |
+|---|---|
+| `da` | Danish |
+| `de` | German |
+| `en` | English (default) |
+| `es` | Spanish |
+| `fr` | French |
+| `it` | Italiano |
+| `nl` | Dutch |
+| `pl` | Polish |
+| `pt` | Portuguese |
+| `pt_BR` | Portuguese (Brazil) |
+| `ru` | Russian |
+| `tr` | Turkish |
+| `uk` | Ukrainian |
+| `zh` | Chinese |
+
+#### Struttura file
+
+```
+apps/web/
+├── i18n/
+│   ├── locales.ts          ← source-of-truth locale (`SUPPORTED_LOCALES`, `DEFAULT_LOCALE`)
+│   └── request.ts          ← configurazione next-intl: legge cookie → carica messaggi
+└── messages/
+    ├── en.json             ← tutte le stringhe in inglese
+    ├── it.json             ← tutte le stringhe in italiano
+    └── *.json              ← altri locale supportati
+```
+
+#### Configurazione (`i18n/request.ts`)
+
+```typescript
+// Legge il cookie "koillection_locale" (set dal middleware o da user.actions.ts)
+// Fallback: DEFAULT_LOCALE se il valore non è tra i locale supportati
+export default getRequestConfig(async () => {
+  const locale = cookies().get("koillection_locale")?.value ?? DEFAULT_LOCALE;
+  return { locale, messages: (await import(`../messages/${locale}.json`)).default };
+});
+```
+
+#### Flusso del locale
+
+```
+Prima visita
+  → middleware.ts imposta cookie koillection_locale=en
+
+Cambio lingua (Settings → Preferenze → Lingua → Salva)
+  → updateSettings() [user.actions.ts]
+      ├── salva locale nel DB (campo User.locale)
+      ├── sovrascrive il cookie koillection_locale
+      └── revalidatePath("/", "layout")
+  → SettingsForm chiama router.refresh()
+  → RootLayout rilegge il cookie → NextIntlClientProvider usa nuovi messaggi
+```
+
+#### Utilizzo nei componenti
+
+| Tipo componente | Hook / funzione | Import |
+|---|---|---|
+| Client Component (`"use client"`) | `useTranslations("namespace")` | `next-intl` |
+| Server Component / Page | `getTranslations("namespace")` | `next-intl/server` |
+| `generateMetadata()` | `getTranslations("namespace")` | `next-intl/server` |
+
+```typescript
+// Client Component
+const t = useTranslations("collections");
+<h1>{t("title")}</h1>
+<p>{t("delete.confirm", { name: collection.title })}</p>
+
+// Server Component
+const t = await getTranslations("albums");
+return <h1>{t("title")}</h1>;
+```
+
+#### Struttura dei messaggi (`messages/*.json`)
+
+I messaggi sono organizzati per **namespace** corrispondente al dominio:
+
+```
+common          → azioni generiche (save, cancel, edit, delete, …)
+nav             → voci del menu laterale
+auth.login      → pagina login
+auth.register   → pagina registrazione
+dashboard       → homepage
+collections     → collezioni e form
+items           → oggetti e form
+albums          → album e form
+photos          → foto e form
+wishlists       → wishlist e form
+wishes          → desideri e form
+settings        → preferenze utente e password
+search          → ricerca
+history         → storico modifiche
+statistics      → statistiche
+deleteDialog    → modale conferma eliminazione
+visibility      → etichette visibilità
+upload          → messaggi upload immagine
+```
+
+#### Aggiungere una nuova lingua
+
+1. Creare `messages/<codice>.json` copiando `messages/en.json` e traducendo tutti i valori
+2. Aggiungere il codice a `SUPPORTED_LOCALES` in `i18n/locales.ts`
+3. Aggiungere `<SelectItem value="<codice>">` in `SettingsForm.tsx`
+4. Aggiungere `"languages.<codice>": "Nome lingua"` in **tutti** i file `messages/*.json`
 
 ---
 
@@ -530,8 +649,9 @@ npm run db:studio     # Prisma Studio
 | 2 | **Collections** | ✅ Completato | CRUD collezioni + Items · gerarchia parent/child · upload immagine · type-check pulito |
 | 3 | **Album** | ✅ Completato | CRUD album + Foto · gerarchia parent/child · upload immagine · breadcrumb · propagazione visibilità · type-check pulito |
 | 4 | **Wishlist** | ✅ Completato | CRUD wishlist + Wish · gerarchia parent/child · upload immagine · breadcrumb · API REST (`/api/wishlists`, `/api/wishlists/[id]`, `/api/wishes`, `/api/wishes/[id]`) · server actions · propagazione visibilità |
-| 5 | **Tags / Template / ChoiceList** | 🔲 Da fare | Backend API + frontend components |
-| 6 | **Admin / Statistics / Tools** | 🔲 Da fare | Dashboard admin + statistiche + inventory/loans |
+| 5 | **i18n** | ✅ Completato | `next-intl` v3 · cookie-based · lingue: `da`, `de`, `en`, `es`, `fr`, `it`, `nl`, `pl`, `pt`, `pt_BR`, `ru`, `tr`, `uk`, `zh` · selettore in impostazioni utente |
+| 6 | **Tags / Template / ChoiceList** | 🔲 Da fare | Backend API + frontend components |
+| 7 | **Admin / Statistics / Tools** | 🔲 Da fare | Dashboard admin + statistiche + inventory/loans |
 
 ---
 
@@ -640,3 +760,56 @@ Definite in `next/.env` (non committato). Template in `next/.env.example`.
 
 > `DATABASE_URL` è condivisa tra `apps/web/.env` e `packages/db/.env` perché sia Next.js che Prisma CLI la leggono dal proprio working directory.
 
+---
+
+## 12. Regola i18n — testo traducibile obbligatorio
+
+> **Regola fondamentale — applicata a tutto il codice in `next/`:**
+>
+> Ogni qualvolta viene aggiunta o modificata una funzionalità che include **testo leggibile dall'utente** (etichette, titoli, messaggi di errore, stati vuoti, bottoni, toast, placeholder, testi di conferma, ecc.), tale testo **deve** essere gestito tramite il sistema i18n (`next-intl`) e **non** hardcodato come stringa letterale nel codice.
+
+### Checklist obbligatoria per ogni nuova feature
+
+1. **Nessuna stringa letterale UI nel codice** — ogni testo visibile dall'utente va in `messages/*.json`
+2. **Aggiornare tutti i file lingua** — ogni nuova chiave deve essere aggiunta in **tutti** i file `messages/` esistenti (`en.json`, `it.json`, e qualsiasi altra lingua aggiunta in futuro)
+3. **Namespace coerente** — usare il namespace del dominio della feature (es. `"tags"` per tutto ciò che riguarda i tag); crearne uno nuovo se il dominio non esiste ancora
+4. **Interpolazione per valori dinamici** — usare `{variabile}` per nomi, contatori e altri valori runtime (es. `"delete.confirm": "Vuoi eliminare {name}?"`)
+5. **Client vs Server** — usare `useTranslations()` nei Client Components e `getTranslations()` nei Server Components e in `generateMetadata()`
+6. **Metadata pagina** — il `title` di ogni pagina deve essere tradotto tramite `generateMetadata()` + `getTranslations()`
+
+### Esempio — aggiunta feature "Tags"
+
+```typescript
+// ✅ CORRETTO — testo via i18n
+// messages/en.json  →  "tags": { "title": "Tags", "new": "New Tag", "empty": "No tags yet." }
+// messages/it.json  →  "tags": { "title": "Tag", "new": "Nuovo Tag", "empty": "Nessun tag." }
+
+const t = useTranslations("tags");
+<h1>{t("title")}</h1>
+<p>{t("empty")}</p>
+
+// ❌ VIETATO — stringa hardcodata
+<h1>Tags</h1>
+<p>No tags yet.</p>
+```
+
+### Lingue attualmente supportate
+
+| Codice | Lingua | File messaggi |
+|---|---|---|
+| `da` | Danish | `messages/da.json` |
+| `de` | German | `messages/de.json` |
+| `en` | English | `messages/en.json` |
+| `es` | Spanish | `messages/es.json` |
+| `fr` | French | `messages/fr.json` |
+| `it` | Italiano | `messages/it.json` |
+| `nl` | Dutch | `messages/nl.json` |
+| `pl` | Polish | `messages/pl.json` |
+| `pt` | Portuguese | `messages/pt.json` |
+| `pt_BR` | Portuguese (Brazil) | `messages/pt_BR.json` |
+| `ru` | Russian | `messages/ru.json` |
+| `tr` | Turkish | `messages/tr.json` |
+| `uk` | Ukrainian | `messages/uk.json` |
+| `zh` | Chinese | `messages/zh.json` |
+
+> Ogni nuova lingua aggiunta al progetto richiede la traduzione **completa** di tutte le chiavi presenti in `messages/en.json` prima di poter essere considerata pronta per la produzione.

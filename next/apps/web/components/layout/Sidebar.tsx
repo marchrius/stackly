@@ -2,28 +2,30 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   Library, Image, Heart, Tag, FileText, List,
   BarChart2, Clock, Package, Wrench, Search,
 } from "lucide-react";
 import { cn } from "@koillection/ui";
 
-const nav = [
-  { href: "/collections", label: "Collezioni", icon: Library },
-  { href: "/albums", label: "Album", icon: Image },
-  { href: "/wishlists", label: "Wishlist", icon: Heart },
-  { href: "/tags", label: "Tag", icon: Tag },
-  { href: "/templates", label: "Template", icon: FileText },
-  { href: "/choice-lists", label: "Choice List", icon: List },
-  { href: "/inventories", label: "Inventari", icon: Package },
-  { href: "/loans", label: "Prestiti", icon: Wrench },
-  { href: "/history", label: "Storico", icon: Clock },
-  { href: "/statistics", label: "Statistiche", icon: BarChart2 },
-  { href: "/search", label: "Cerca", icon: Search },
-];
-
 export function Sidebar() {
   const pathname = usePathname();
+  const t = useTranslations("nav");
+
+  const nav = [
+    { href: "/collections", label: t("collections"), icon: Library },
+    { href: "/albums", label: t("albums"), icon: Image },
+    { href: "/wishlists", label: t("wishlists"), icon: Heart },
+    { href: "/tags", label: t("tags"), icon: Tag },
+    { href: "/templates", label: t("templates"), icon: FileText },
+    { href: "/choice-lists", label: t("choiceLists"), icon: List },
+    { href: "/inventories", label: t("inventories"), icon: Package },
+    { href: "/loans", label: t("loans"), icon: Wrench },
+    { href: "/history", label: t("history"), icon: Clock },
+    { href: "/statistics", label: t("statistics"), icon: BarChart2 },
+    { href: "/search", label: t("search"), icon: Search },
+  ];
 
   return (
     <aside className="hidden w-60 flex-col border-r bg-card md:flex">
@@ -56,4 +58,3 @@ export function Sidebar() {
     </aside>
   );
 }
-

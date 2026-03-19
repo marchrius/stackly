@@ -1,16 +1,21 @@
+"use client";
+
 import type { Album } from "@koillection/db";
 import Link from "next/link";
 import { Card, CardContent } from "@koillection/ui";
 import { Image, Layers } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type AlbumWithCount = Album & { _count: { children: number; photos: number } };
 
 export function AlbumGrid({ albums }: { albums: AlbumWithCount[] }) {
+  const t = useTranslations("albums");
+
   if (albums.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
         <Image className="h-12 w-12 mb-4 opacity-30" />
-        <p className="text-lg font-medium">Nessun album</p>
+        <p className="text-lg font-medium">{t("empty")}</p>
       </div>
     );
   }
@@ -18,12 +23,23 @@ export function AlbumGrid({ albums }: { albums: AlbumWithCount[] }) {
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {albums.map((album) => (
         <Link key={album.id} href={`/albums/${album.id}`}>
-          <Card className="group overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-full">
-            <div className="h-36 flex items-center justify-center bg-muted" style={{ backgroundColor: album.color ? `#${album.color}22` : undefined }}>
+          <Card className="group overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
+            <div
+              className="relative aspect-[10/13] flex items-center justify-center overflow-hidden"
+              style={{ backgroundColor: album.color ? `#${album.color}22` : undefined }}
+            >
               {album.image ? (
-                <img src={`/uploads/${album.image}`} alt={album.title} className="h-full w-full object-cover" />
+                <img
+                  src={`/uploads/${album.image}`}
+                  alt={album.title}
+                  loading="lazy"
+                  className="max-h-full max-w-full object-contain"
+                />
               ) : (
-                <div className="flex h-14 w-14 items-center justify-center rounded-full text-2xl font-bold text-white" style={{ backgroundColor: album.color ? `#${album.color}` : "#8b5cf6" }}>
+                <div
+                  className="flex h-14 w-14 items-center justify-center rounded-full text-2xl font-bold text-white"
+                  style={{ backgroundColor: album.color ? `#${album.color}` : "#8b5cf6" }}
+                >
                   {album.title.charAt(0).toUpperCase()}
                 </div>
               )}
@@ -41,4 +57,3 @@ export function AlbumGrid({ albums }: { albums: AlbumWithCount[] }) {
     </div>
   );
 }
-

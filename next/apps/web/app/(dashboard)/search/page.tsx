@@ -3,14 +3,19 @@ import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@koillection/db";
 import { Input } from "@koillection/ui";
 import { SearchResults } from "@/components/shared/SearchResults";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = { title: "Ricerca" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("search");
+  return { title: t("title") };
+}
 
 interface Props { searchParams: Promise<{ q?: string }> }
 
 export default async function SearchPage({ searchParams }: Props) {
   const { q } = await searchParams;
   const session = await requireAuth();
+  const t = await getTranslations("search");
 
   const query = q?.trim() ?? "";
 
@@ -43,9 +48,9 @@ export default async function SearchPage({ searchParams }: Props) {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">Ricerca</h1>
+      <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
       <form method="GET">
-        <Input name="q" defaultValue={query} placeholder="Cerca oggetti, collezioni, tag…" className="max-w-lg" autoFocus />
+        <Input name="q" defaultValue={query} placeholder={t("placeholder")} className="max-w-lg" autoFocus />
       </form>
       {query.length >= 2 && (
         <SearchResults items={items} collections={collections} tags={tags} wishlists={wishlists} wishes={wishes} query={query} />
@@ -53,4 +58,3 @@ export default async function SearchPage({ searchParams }: Props) {
     </div>
   );
 }
-

@@ -71,10 +71,42 @@ Lo schema Prisma usa i **nomi di tabella originali** (`koi_*`), quindi è possib
 ```bash
 npm run dev           # Avvia in development (Turbopack)
 npm run build         # Build di produzione
+npm run i18n:validate # Valida schema/placeholder dei cataloghi messages/*.json
 npm run db:generate   # Rigenera client Prisma
 npm run db:push       # Sincronizza schema sul DB (dev)
 npm run db:migrate    # Crea migration (produzione)
 npm run db:studio     # Apre Prisma Studio
+```
+
+## Internazionalizzazione (i18n)
+
+L'app usa `next-intl` con strategia cookie-based (`koillection_locale`).
+
+**Source of truth locale:** `apps/web/i18n/locales.ts`
+
+Locale supportati in `next/apps/web/messages/`:
+
+| Codice | Lingua |
+|---|---|
+| `da` | Danish |
+| `de` | German |
+| `en` | English (default) |
+| `es` | Spanish |
+| `fr` | French |
+| `it` | Italiano |
+| `nl` | Dutch |
+| `pl` | Polish |
+| `pt` | Portuguese |
+| `pt_BR` | Portuguese (Brazil) |
+| `ru` | Russian |
+| `tr` | Turkish |
+| `uk` | Ukrainian |
+| `zh` | Chinese |
+
+Prima di aprire una PR con modifiche ai testi UI, eseguire:
+
+```bash
+npm run i18n:validate
 ```
 
 ## Route Disponibili

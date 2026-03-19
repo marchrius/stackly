@@ -4,8 +4,10 @@ import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@koillection/db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
+import { isValidLocale } from "@/i18n/locales";
 
 const settingsSchema = z.object({
   currency: z.string().length(3).default("EUR"),
@@ -32,7 +34,17 @@ export async function updateSettings(formData: FormData) {
     data: { ...parsed.data, updatedAt: new Date() },
   });
 
-  revalidatePath("/settings");
+  // Imposta il cookie locale affinché next-intl lo legga subito
+  if (isValidLocale(parsed.data.locale)) {
+    const cookieStore = await cookies();
+    cookieStore.set("koillection_locale", parsed.data.locale, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+    });
+  }
+
+  revalidatePath("/", "layout");
   return { success: true };
 }
 
@@ -80,4 +92,3 @@ export async function registerUser(formData: FormData) {
 
   redirect("/login");
 }
-

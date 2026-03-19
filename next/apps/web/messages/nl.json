@@ -1,0 +1,279 @@
+{
+  "common": {
+    "save": "Opslaan",
+    "saving": "Opslaan…",
+    "edit": "Bewerken",
+    "delete": "Verwijderen",
+    "deleting": "Verwijderen…",
+    "cancel": "Annuleren",
+    "add": "Toevoegen",
+    "create": "Aanmaken",
+    "back": "Terug",
+    "loading": "Laden…",
+    "search": "Zoeken",
+    "confirm": "Bevestigen",
+    "yes": "Ja",
+    "no": "Nee",
+    "none": "Geen",
+    "noImage": "Geen afbeelding",
+    "visibility": "Zichtbaarheid",
+    "quantity": "Aantal"
+  },
+  "nav": {
+    "collections": "Collecties",
+    "albums": "Albums",
+    "wishlists": "Verlanglijsten",
+    "tags": "Tags",
+    "templates": "Sjablonen",
+    "choiceLists": "Keuzelijsten",
+    "inventories": "Inventarissen",
+    "loans": "Uitleeningen",
+    "history": "Geschiedenis",
+    "statistics": "Statistieken",
+    "search": "Zoeken",
+    "settings": "Instellingen",
+    "logout": "Afmelden"
+  },
+  "auth": {
+    "login": {
+      "title": "Welkom terug",
+      "subtitle": "Meld je aan bij je account",
+      "username": "Gebruikersnaam of e-mail",
+      "password": "Wachtwoord",
+      "submit": "Aanmelden",
+      "submitting": "Bezig met aanmelden…",
+      "noAccount": "Heb je nog geen account?",
+      "register": "Registreren",
+      "invalidCredentials": "Ongeldige inloggegevens. Probeer opnieuw."
+    },
+    "register": {
+      "title": "Account aanmaken",
+      "subtitle": "Begin met het beheren van je collecties",
+      "username": "Gebruikersnaam",
+      "email": "E-mail",
+      "password": "Wachtwoord",
+      "submit": "Registreren",
+      "submitting": "Account wordt aangemaakt…",
+      "alreadyHaveAccount": "Heb je al een account?",
+      "login": "Aanmelden"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welkom, {name}!",
+    "subtitle": "Hier is een overzicht van je collecties.",
+    "collections": "Collecties",
+    "albums": "Albums",
+    "wishlists": "Verlanglijsten",
+    "tags": "Tags"
+  },
+  "collections": {
+    "title": "Collecties",
+    "new": "Nieuwe collectie",
+    "newSub": "Nieuwe subcollectie",
+    "addItem": "Object toevoegen",
+    "edit": "Collectie bewerken",
+    "empty": "Geen collecties",
+    "emptyHint": "Begin met het aanmaken van je eerste collectie.",
+    "emptyCollection": "Lege collectie",
+    "emptyCollectionHint": "Voeg objecten of subcollecties toe.",
+    "subCollections": "Subcollecties",
+    "items": "Objecten",
+    "form": {
+      "title": "Titel",
+      "color": "Kleur",
+      "image": "Afbeelding",
+      "parent": "Bovenliggende collectie",
+      "template": "Standaardsjabloon",
+      "visibility": "Zichtbaarheid",
+      "changeImage": "Afbeelding wijzigen",
+      "removeImage": "Afbeelding verwijderen",
+      "noParent": "Geen bovenliggend element",
+      "noTemplate": "Geen sjabloon"
+    },
+    "delete": {
+      "confirm": "Wil je de collectie \"{name}\" verwijderen? Deze actie is onomkeerbaar."
+    }
+  },
+  "items": {
+    "title": "Objecten",
+    "new": "Nieuw object",
+    "edit": "Object bewerken",
+    "empty": "Geen objecten",
+    "form": {
+      "name": "Naam",
+      "quantity": "Aantal",
+      "collection": "Collectie",
+      "template": "Sjabloon",
+      "visibility": "Zichtbaarheid",
+      "image": "Afbeelding",
+      "changeImage": "Afbeelding wijzigen",
+      "removeImage": "Afbeelding verwijderen",
+      "data": "Aangepaste gegevens"
+    },
+    "delete": {
+      "confirm": "Wil je het object \"{name}\" verwijderen? Deze actie is onomkeerbaar."
+    }
+  },
+  "albums": {
+    "title": "Albums",
+    "new": "Nieuw album",
+    "newSub": "Nieuw subalbum",
+    "edit": "Album bewerken",
+    "empty": "Geen albums",
+    "subAlbums": "Subalbums",
+    "photos": "Foto’s",
+    "addPhoto": "Foto toevoegen",
+    "noPhotos": "Geen foto’s in dit album.",
+    "form": {
+      "title": "Titel",
+      "color": "Kleur",
+      "image": "Afbeelding",
+      "parent": "Bovenliggend album",
+      "visibility": "Zichtbaarheid",
+      "changeImage": "Afbeelding wijzigen",
+      "removeImage": "Afbeelding verwijderen",
+      "noParent": "Geen bovenliggend element"
+    },
+    "delete": {
+      "confirm": "Wil je het album \"{name}\" verwijderen? Deze actie is onomkeerbaar."
+    }
+  },
+  "photos": {
+    "title": "Foto’s",
+    "new": "Nieuwe foto",
+    "edit": "Foto bewerken",
+    "mainImage": "Hoofdafbeelding",
+    "form": {
+      "title": "Titel",
+      "place": "Plaats",
+      "takenAt": "Genomen op",
+      "comment": "Opmerking",
+      "visibility": "Zichtbaarheid",
+      "image": "Afbeelding",
+      "changeImage": "Afbeelding wijzigen",
+      "removeImage": "Afbeelding verwijderen"
+    },
+    "delete": {
+      "confirm": "Wil je de foto \"{name}\" verwijderen? Deze actie is onomkeerbaar."
+    }
+  },
+  "wishlists": {
+    "title": "Verlanglijsten",
+    "new": "Nieuwe verlanglijst",
+    "newSub": "Nieuwe subverlanglijst",
+    "edit": "Verlanglijst bewerken",
+    "empty": "Geen verlanglijsten",
+    "subWishlists": "Subverlanglijsten",
+    "wishes": "Wensen",
+    "addWish": "Wens toevoegen",
+    "noWishes": "Geen wensen in deze verlanglijst.",
+    "form": {
+      "name": "Naam",
+      "color": "Kleur",
+      "image": "Afbeelding",
+      "parent": "Bovenliggende verlanglijst",
+      "visibility": "Zichtbaarheid",
+      "changeImage": "Afbeelding wijzigen",
+      "removeImage": "Afbeelding verwijderen",
+      "noParent": "Geen bovenliggend element"
+    },
+    "delete": {
+      "confirm": "Wil je de verlanglijst \"{name}\" verwijderen? Deze actie is onomkeerbaar."
+    }
+  },
+  "wishes": {
+    "title": "Wensen",
+    "new": "Nieuwe wens",
+    "edit": "Wens bewerken",
+    "openLink": "Link openen",
+    "form": {
+      "name": "Naam",
+      "url": "URL",
+      "price": "Prijs",
+      "currency": "Valuta",
+      "comment": "Opmerking",
+      "visibility": "Zichtbaarheid",
+      "image": "Afbeelding",
+      "changeImage": "Afbeelding wijzigen",
+      "removeImage": "Afbeelding verwijderen"
+    },
+    "delete": {
+      "confirm": "Wil je de wens \"{name}\" verwijderen? Deze actie is onomkeerbaar."
+    }
+  },
+  "settings": {
+    "title": "Profielinstellingen",
+    "preferences": "Voorkeuren",
+    "language": "Taal",
+    "currency": "Valuta",
+    "theme": "Thema",
+    "dateFormat": "Datumnotatie",
+    "visibility": "Standaard zichtbaarheid",
+    "savePreferences": "Voorkeuren opslaan",
+    "saving": "Opslaan…",
+    "changePassword": "Wachtwoord wijzigen",
+    "currentPassword": "Huidig wachtwoord",
+    "newPassword": "Nieuw wachtwoord",
+    "changePasswordButton": "Wachtwoord wijzigen",
+    "passwordUpdated": "Wachtwoord succesvol bijgewerkt.",
+    "themes": {
+      "auto": "Automatisch",
+      "light": "Licht",
+      "dark": "Donker"
+    },
+    "languages": {
+      "da": "Dansk",
+      "de": "Deutsch",
+      "en": "English",
+      "es": "Español",
+      "fr": "Français",
+      "it": "Italiano",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "pt_BR": "Português (Brasil)",
+      "ru": "Русский",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "zh": "中文"
+    }
+  },
+  "search": {
+    "title": "Zoeken",
+    "placeholder": "Zoek collecties, objecten, albums…",
+    "noResults": "Geen resultaten gevonden.",
+    "noResultsFor": "Geen resultaten voor \"{query}\".",
+    "resultsFor": "{count} resultaten voor \"{query}\"",
+    "results": "Resultaten"
+  },
+  "history": {
+    "title": "Geschiedenis",
+    "pageTitle": "Wijzigingsgeschiedenis",
+    "noActivity": "Geen activiteit geregistreerd."
+  },
+  "statistics": {
+    "title": "Statistieken"
+  },
+  "deleteDialog": {
+    "title": "Verwijdering bevestigen",
+    "defaultDescription": "Deze actie is onomkeerbaar. Het element wordt permanent verwijderd.",
+    "confirm": "Verwijderen",
+    "cancel": "Annuleren",
+    "deleting": "Verwijderen…"
+  },
+  "visibility": {
+    "public": "Openbaar",
+    "internal": "Intern",
+    "private": "Privé"
+  },
+  "breadcrumb": {
+    "collections": "Collecties",
+    "albums": "Albums",
+    "wishlists": "Verlanglijsten"
+  },
+  "upload": {
+    "clickOrDrop": "Klik of sleep hier een afbeelding neer",
+    "error": "Uploadfout"
+  }
+}

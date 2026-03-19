@@ -5,11 +5,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Input, Label, Card, CardContent, CardFooter } from "@koillection/ui";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export function LoginForm() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const t = useTranslations("auth.login");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -24,7 +26,7 @@ export function LoginForm() {
     });
 
     if (result?.error) {
-      setError("Credenziali non valide. Riprova.");
+      setError(t("invalidCredentials"));
       setLoading(false);
     } else {
       router.push("/");
@@ -36,29 +38,26 @@ export function LoginForm() {
     <Card>
       <form onSubmit={handleSubmit}>
         <CardContent className="pt-6 space-y-4">
-          {error && (
-            <div className="rounded-md bg-destructive/10 text-destructive text-sm p-3">{error}</div>
-          )}
+          {error && <div className="rounded-md bg-destructive/10 text-destructive text-sm p-3">{error}</div>}
           <div className="space-y-2">
-            <Label htmlFor="username">Username o Email</Label>
+            <Label htmlFor="username">{t("username")}</Label>
             <Input id="username" name="username" type="text" required autoFocus autoComplete="username" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t("password")}</Label>
             <Input id="password" name="password" type="password" required autoComplete="current-password" />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-3">
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Accesso in corso…" : "Accedi"}
+            {loading ? t("submitting") : t("submit")}
           </Button>
           <p className="text-sm text-muted-foreground text-center">
-            Non hai un account?{" "}
-            <Link href="/register" className="text-primary hover:underline">Registrati</Link>
+            {t("noAccount")}{" "}
+            <Link href="/register" className="text-primary hover:underline">{t("register")}</Link>
           </p>
         </CardFooter>
       </form>
     </Card>
   );
 }
-

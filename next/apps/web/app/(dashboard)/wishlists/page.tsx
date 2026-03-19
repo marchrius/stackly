@@ -5,11 +5,16 @@ import { Button } from "@koillection/ui";
 import { WishlistGrid } from "@/components/wishlists/WishlistGrid";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = { title: "Wishlist" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("wishlists");
+  return { title: t("title") };
+}
 
 export default async function WishlistsPage() {
   const session = await requireAuth();
+  const t = await getTranslations("wishlists");
 
   const wishlists = await prisma.wishlist.findMany({
     where: { ownerId: session.user.id, parentId: null },
@@ -21,15 +26,19 @@ export default async function WishlistsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Wishlist</h1>
-          <p className="text-muted-foreground">{wishlists.length} wishlist</p>
+          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+          <p className="text-muted-foreground">
+            {wishlists.length} {t("title").toLowerCase()}
+          </p>
         </div>
         <Button asChild>
-          <Link href="/wishlists/new"><Plus className="mr-2 h-4 w-4" />Nuova wishlist</Link>
+          <Link href="/wishlists/new">
+            <Plus className="mr-2 h-4 w-4" />
+            {t("new")}
+          </Link>
         </Button>
       </div>
       <WishlistGrid wishlists={wishlists} />
     </div>
   );
 }
-

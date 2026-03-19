@@ -2,11 +2,16 @@ import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@koillection/db";
 import { StatisticsCharts } from "@/components/statistics/StatisticsCharts";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = { title: "Statistiche" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("statistics");
+  return { title: t("title") };
+}
 
 export default async function StatisticsPage() {
   const session = await requireAuth();
+  const t = await getTranslations("statistics");
 
   const [
     collectionsCount, itemsCount, albumsCount, photosCount,
@@ -29,9 +34,8 @@ export default async function StatisticsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">Statistiche</h1>
+      <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
       <StatisticsCharts stats={stats} />
     </div>
   );
 }
-

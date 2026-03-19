@@ -1,0 +1,279 @@
+{
+  "common": {
+    "save": "Speichern",
+    "saving": "Wird gespeichert…",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "deleting": "Wird gelöscht…",
+    "cancel": "Abbrechen",
+    "add": "Hinzufügen",
+    "create": "Erstellen",
+    "back": "Zurück",
+    "loading": "Wird geladen…",
+    "search": "Suchen",
+    "confirm": "Bestätigen",
+    "yes": "Ja",
+    "no": "Nein",
+    "none": "Keine",
+    "noImage": "Kein Bild",
+    "visibility": "Sichtbarkeit",
+    "quantity": "Anzahl"
+  },
+  "nav": {
+    "collections": "Sammlungen",
+    "albums": "Alben",
+    "wishlists": "Wunschlisten",
+    "tags": "Tags",
+    "templates": "Vorlagen",
+    "choiceLists": "Auswahllisten",
+    "inventories": "Inventare",
+    "loans": "Ausleihen",
+    "history": "Verlauf",
+    "statistics": "Statistiken",
+    "search": "Suchen",
+    "settings": "Einstellungen",
+    "logout": "Abmelden"
+  },
+  "auth": {
+    "login": {
+      "title": "Willkommen zurück",
+      "subtitle": "Melden Sie sich bei Ihrem Konto an",
+      "username": "Benutzername oder E-Mail",
+      "password": "Passwort",
+      "submit": "Anmelden",
+      "submitting": "Anmeldung läuft…",
+      "noAccount": "Haben Sie noch kein Konto?",
+      "register": "Registrieren",
+      "invalidCredentials": "Ungültige Anmeldedaten. Bitte versuchen Sie es erneut."
+    },
+    "register": {
+      "title": "Konto erstellen",
+      "subtitle": "Beginnen Sie, Ihre Sammlungen zu verwalten",
+      "username": "Benutzername",
+      "email": "E-Mail",
+      "password": "Passwort",
+      "submit": "Registrieren",
+      "submitting": "Konto wird erstellt…",
+      "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
+      "login": "Anmelden"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Willkommen, {name}!",
+    "subtitle": "Hier ist eine Übersicht Ihrer Sammlungen.",
+    "collections": "Sammlungen",
+    "albums": "Alben",
+    "wishlists": "Wunschlisten",
+    "tags": "Tags"
+  },
+  "collections": {
+    "title": "Sammlungen",
+    "new": "Neue Sammlung",
+    "newSub": "Neue Untersammlung",
+    "addItem": "Objekt hinzufügen",
+    "edit": "Sammlung bearbeiten",
+    "empty": "Keine Sammlungen",
+    "emptyHint": "Beginnen Sie mit Ihrer ersten Sammlung.",
+    "emptyCollection": "Leere Sammlung",
+    "emptyCollectionHint": "Fügen Sie Objekte oder Untersammlungen hinzu.",
+    "subCollections": "Untersammlungen",
+    "items": "Objekte",
+    "form": {
+      "title": "Titel",
+      "color": "Farbe",
+      "image": "Bild",
+      "parent": "Übergeordnete Sammlung",
+      "template": "Standardvorlage",
+      "visibility": "Sichtbarkeit",
+      "changeImage": "Bild ändern",
+      "removeImage": "Bild entfernen",
+      "noParent": "Kein übergeordnetes Element",
+      "noTemplate": "Keine Vorlage"
+    },
+    "delete": {
+      "confirm": "Möchten Sie die Sammlung \"{name}\" löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+    }
+  },
+  "items": {
+    "title": "Objekte",
+    "new": "Neues Objekt",
+    "edit": "Objekt bearbeiten",
+    "empty": "Keine Objekte",
+    "form": {
+      "name": "Name",
+      "quantity": "Anzahl",
+      "collection": "Sammlung",
+      "template": "Vorlage",
+      "visibility": "Sichtbarkeit",
+      "image": "Bild",
+      "changeImage": "Bild ändern",
+      "removeImage": "Bild entfernen",
+      "data": "Benutzerdefinierte Daten"
+    },
+    "delete": {
+      "confirm": "Möchten Sie das Objekt \"{name}\" löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+    }
+  },
+  "albums": {
+    "title": "Alben",
+    "new": "Neues Album",
+    "newSub": "Neues Unteralbum",
+    "edit": "Album bearbeiten",
+    "empty": "Keine Alben",
+    "subAlbums": "Unteralben",
+    "photos": "Fotos",
+    "addPhoto": "Foto hinzufügen",
+    "noPhotos": "Keine Fotos in diesem Album.",
+    "form": {
+      "title": "Titel",
+      "color": "Farbe",
+      "image": "Bild",
+      "parent": "Übergeordnetes Album",
+      "visibility": "Sichtbarkeit",
+      "changeImage": "Bild ändern",
+      "removeImage": "Bild entfernen",
+      "noParent": "Kein übergeordnetes Element"
+    },
+    "delete": {
+      "confirm": "Möchten Sie das Album \"{name}\" löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+    }
+  },
+  "photos": {
+    "title": "Fotos",
+    "new": "Neues Foto",
+    "edit": "Foto bearbeiten",
+    "mainImage": "Hauptbild",
+    "form": {
+      "title": "Titel",
+      "place": "Ort",
+      "takenAt": "Aufgenommen am",
+      "comment": "Kommentar",
+      "visibility": "Sichtbarkeit",
+      "image": "Bild",
+      "changeImage": "Bild ändern",
+      "removeImage": "Bild entfernen"
+    },
+    "delete": {
+      "confirm": "Möchten Sie das Foto \"{name}\" löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+    }
+  },
+  "wishlists": {
+    "title": "Wunschlisten",
+    "new": "Neue Wunschliste",
+    "newSub": "Neue Unterwunschliste",
+    "edit": "Wunschliste bearbeiten",
+    "empty": "Keine Wunschlisten",
+    "subWishlists": "Unterwunschlisten",
+    "wishes": "Wünsche",
+    "addWish": "Wunsch hinzufügen",
+    "noWishes": "Keine Wünsche in dieser Wunschliste.",
+    "form": {
+      "name": "Name",
+      "color": "Farbe",
+      "image": "Bild",
+      "parent": "Übergeordnete Wunschliste",
+      "visibility": "Sichtbarkeit",
+      "changeImage": "Bild ändern",
+      "removeImage": "Bild entfernen",
+      "noParent": "Kein übergeordnetes Element"
+    },
+    "delete": {
+      "confirm": "Möchten Sie die Wunschliste \"{name}\" löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+    }
+  },
+  "wishes": {
+    "title": "Wünsche",
+    "new": "Neuer Wunsch",
+    "edit": "Wunsch bearbeiten",
+    "openLink": "Link öffnen",
+    "form": {
+      "name": "Name",
+      "url": "URL",
+      "price": "Preis",
+      "currency": "Währung",
+      "comment": "Kommentar",
+      "visibility": "Sichtbarkeit",
+      "image": "Bild",
+      "changeImage": "Bild ändern",
+      "removeImage": "Bild entfernen"
+    },
+    "delete": {
+      "confirm": "Möchten Sie den Wunsch \"{name}\" löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+    }
+  },
+  "settings": {
+    "title": "Profileinstellungen",
+    "preferences": "Einstellungen",
+    "language": "Sprache",
+    "currency": "Währung",
+    "theme": "Design",
+    "dateFormat": "Datumsformat",
+    "visibility": "Standard-Sichtbarkeit",
+    "savePreferences": "Einstellungen speichern",
+    "saving": "Wird gespeichert…",
+    "changePassword": "Passwort ändern",
+    "currentPassword": "Aktuelles Passwort",
+    "newPassword": "Neues Passwort",
+    "changePasswordButton": "Passwort ändern",
+    "passwordUpdated": "Passwort erfolgreich aktualisiert.",
+    "themes": {
+      "auto": "Automatisch",
+      "light": "Hell",
+      "dark": "Dunkel"
+    },
+    "languages": {
+      "da": "Dansk",
+      "de": "Deutsch",
+      "en": "English",
+      "es": "Español",
+      "fr": "Français",
+      "it": "Italiano",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "pt_BR": "Português (Brasil)",
+      "ru": "Русский",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "zh": "中文"
+    }
+  },
+  "search": {
+    "title": "Suche",
+    "placeholder": "Sammlungen, Objekte, Alben durchsuchen…",
+    "noResults": "Keine Ergebnisse gefunden.",
+    "noResultsFor": "Keine Ergebnisse für \"{query}\".",
+    "resultsFor": "{count} Ergebnisse für \"{query}\"",
+    "results": "Ergebnisse"
+  },
+  "history": {
+    "title": "Verlauf",
+    "pageTitle": "Änderungsverlauf",
+    "noActivity": "Keine Aktivität aufgezeichnet."
+  },
+  "statistics": {
+    "title": "Statistiken"
+  },
+  "deleteDialog": {
+    "title": "Löschen bestätigen",
+    "defaultDescription": "Diese Aktion kann nicht rückgängig gemacht werden. Das Element wird dauerhaft gelöscht.",
+    "confirm": "Löschen",
+    "cancel": "Abbrechen",
+    "deleting": "Wird gelöscht…"
+  },
+  "visibility": {
+    "public": "Öffentlich",
+    "internal": "Intern",
+    "private": "Privat"
+  },
+  "breadcrumb": {
+    "collections": "Sammlungen",
+    "albums": "Alben",
+    "wishlists": "Wunschlisten"
+  },
+  "upload": {
+    "clickOrDrop": "Klicken Sie hier oder ziehen Sie ein Bild hierher",
+    "error": "Upload-Fehler"
+  }
+}

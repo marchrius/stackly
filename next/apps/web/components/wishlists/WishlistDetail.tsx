@@ -4,8 +4,10 @@ import type { Wishlist, Wish } from "@koillection/db";
 import Link from "next/link";
 import { Button, Badge } from "@koillection/ui";
 import { WishlistGrid } from "./WishlistGrid";
-import { Edit, Trash2, ExternalLink, Heart, ChevronRight, Plus } from "lucide-react";
+import { Edit, ExternalLink, Heart, ChevronRight, Plus } from "lucide-react";
 import { deleteWishlist } from "@/lib/actions/media.actions";
+import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
+import { useTranslations } from "next-intl";
 
 interface Ancestor {
   id: string;
@@ -26,6 +28,8 @@ interface WishlistDetailProps {
 }
 
 export function WishlistDetail({ wishlist, readOnly = false, basePath = "/wishlists" }: WishlistDetailProps) {
+  const t = useTranslations("wishlists");
+  const tCommon = useTranslations("common");
   const ancestors = wishlist.ancestors ?? [];
   const visibleChildrenCount = wishlist.children.length;
   const visibleWishesCount = wishlist.wishes.length;
@@ -34,15 +38,11 @@ export function WishlistDetail({ wishlist, readOnly = false, basePath = "/wishli
     <div className="space-y-6">
       {(ancestors.length > 0 || wishlist.parentId) && (
         <nav className="flex items-center gap-1 text-sm text-muted-foreground flex-wrap">
-          <Link href="/wishlists" className="hover:text-foreground transition-colors">
-            Wishlist
-          </Link>
+          <Link href="/wishlists" className="hover:text-foreground transition-colors">{t("title")}</Link>
           {ancestors.map((ancestor) => (
             <span key={ancestor.id} className="flex items-center gap-1">
               <ChevronRight className="h-3.5 w-3.5" />
-              <Link href={`${basePath}/${ancestor.id}`} className="hover:text-foreground transition-colors">
-                {ancestor.name}
-              </Link>
+              <Link href={`${basePath}/${ancestor.id}`} className="hover:text-foreground transition-colors">{ancestor.name}</Link>
             </span>
           ))}
           <ChevronRight className="h-3.5 w-3.5" />
@@ -55,10 +55,7 @@ export function WishlistDetail({ wishlist, readOnly = false, basePath = "/wishli
           {wishlist.image ? (
             <img src={`/uploads/${wishlist.image}`} alt={wishlist.name} className="h-14 w-14 rounded-lg object-cover border" />
           ) : (
-            <div
-              className="h-14 w-14 rounded-lg flex items-center justify-center text-2xl font-bold text-white"
-              style={{ backgroundColor: wishlist.color ? `#${wishlist.color}` : "#ec4899" }}
-            >
+            <div className="h-14 w-14 rounded-lg flex items-center justify-center text-2xl font-bold text-white" style={{ backgroundColor: wishlist.color ? `#${wishlist.color}` : "#ec4899" }}>
               {wishlist.name.charAt(0).toUpperCase()}
             </div>
           )}
@@ -66,31 +63,29 @@ export function WishlistDetail({ wishlist, readOnly = false, basePath = "/wishli
             <h1 className="text-2xl font-bold tracking-tight">{wishlist.name}</h1>
             <div className="flex items-center gap-2 mt-1">
               <Badge variant="outline">{wishlist.visibility}</Badge>
-              <span className="text-sm text-muted-foreground">{visibleWishesCount} desideri · {visibleChildrenCount} sub-wishlist</span>
+              <span className="text-sm text-muted-foreground">{visibleWishesCount} {t("wishes").toLowerCase()} · {visibleChildrenCount} {t("subWishlists").toLowerCase()}</span>
             </div>
           </div>
         </div>
         {!readOnly && (
           <div className="flex gap-2">
             <Button asChild variant="outline" size="sm">
-              <Link href={`/wishlists/${wishlist.id}/edit`}><Edit className="mr-1 h-4 w-4" />Modifica</Link>
+              <Link href={`/wishlists/${wishlist.id}/edit`}><Edit className="mr-1 h-4 w-4" />{tCommon("edit")}</Link>
             </Button>
-            <form action={deleteWishlist.bind(null, wishlist.id)}>
-              <Button variant="destructive" size="sm" type="submit"><Trash2 className="h-4 w-4" /></Button>
-            </form>
+            <DeleteConfirmDialog
+              description={t("delete.confirm", { name: wishlist.name })}
+              onConfirm={deleteWishlist.bind(null, wishlist.id)}
+            />
           </div>
         )}
       </div>
 
       <section>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-semibold">Sub-wishlist {visibleChildrenCount > 0 && `(${visibleChildrenCount})`}</h2>
+          <h2 className="text-lg font-semibold">{t("subWishlists")} {visibleChildrenCount > 0 && `(${visibleChildrenCount})`}</h2>
           {!readOnly && (
             <Button asChild size="sm" variant="outline">
-              <Link href={`/wishlists/new?parentId=${wishlist.id}`}>
-                <Plus className="mr-1 h-3.5 w-3.5" />
-                Nuova sub-wishlist
-              </Link>
+              <Link href={`/wishlists/new?parentId=${wishlist.id}`}><Plus className="mr-1 h-3.5 w-3.5" />{t("newSub")}</Link>
             </Button>
           )}
         </div>
@@ -101,56 +96,49 @@ export function WishlistDetail({ wishlist, readOnly = false, basePath = "/wishli
 
       <section>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-semibold">Desideri {visibleWishesCount > 0 && `(${visibleWishesCount})`}</h2>
+          <h2 className="text-lg font-semibold">{t("wishes")} {visibleWishesCount > 0 && `(${visibleWishesCount})`}</h2>
           {!readOnly && (
             <Button asChild size="sm">
-              <Link href={`/wishlists/${wishlist.id}/wishes/new`}>
-                <Plus className="mr-1 h-3.5 w-3.5" />
-                Aggiungi desiderio
-              </Link>
+              <Link href={`/wishlists/${wishlist.id}/wishes/new`}><Plus className="mr-1 h-3.5 w-3.5" />{t("addWish")}</Link>
             </Button>
           )}
         </div>
         {wishlist.wishes.length > 0 ? (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-x-2.5 gap-y-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}>
             {wishlist.wishes.map((wish) => (
-              <div key={wish.id} className="rounded-lg border p-4 space-y-2 block hover:shadow-sm transition-shadow">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3 min-w-0">
+              <Link key={wish.id} href={`/wishes/${wish.id}`}>
+                <div className="group cursor-pointer rounded-lg border bg-card overflow-hidden hover:shadow-md transition-shadow">
+                  <div className="relative aspect-[10/13] bg-muted flex items-center justify-center overflow-hidden">
                     {wish.imageSmallThumbnail ? (
-                      <img src={`/uploads/${wish.imageSmallThumbnail}`} alt={wish.name} className="h-12 w-12 rounded object-cover border" />
+                      <img src={`/uploads/${wish.imageSmallThumbnail}`} alt={wish.name} loading="lazy" className="max-h-full max-w-full object-contain" />
                     ) : (
-                      <div className="h-12 w-12 rounded bg-pink-100 text-pink-600 flex items-center justify-center">
-                        <Heart className="h-5 w-5" />
-                      </div>
+                      <Heart className="h-8 w-8 text-pink-300 opacity-60" />
                     )}
-                    <p className="font-medium text-sm truncate">{wish.name}</p>
+                    {wish.url && (
+                      <a href={wish.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="absolute top-1 right-1 rounded-full bg-black/40 p-1 text-white hover:bg-black/70">
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    )}
                   </div>
-                  {wish.url && (
-                    <a href={wish.url} target="_blank" rel="noopener noreferrer" className="text-primary">
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                  )}
+                  <div className="p-2 space-y-0.5">
+                    <p className="truncate text-xs font-medium">{wish.name}</p>
+                    {wish.price && <p className="text-xs text-muted-foreground">{wish.price} {wish.currency}</p>}
+                  </div>
                 </div>
-                {wish.price && (
-                  <p className="text-sm text-muted-foreground">{wish.price} {wish.currency}</p>
-                )}
-                {wish.comment && <p className="text-xs text-muted-foreground">{wish.comment}</p>}
-              </div>
+              </Link>
             ))}
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground py-6 text-center">Nessun desiderio in questa wishlist.</p>
+          <p className="text-sm text-muted-foreground py-6 text-center">{t("noWishes")}</p>
         )}
       </section>
 
       {wishlist.children.length === 0 && wishlist.wishes.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
           <Heart className="h-12 w-12 mb-4 opacity-30" />
-          <p className="text-lg font-medium">Wishlist vuota</p>
+          <p className="text-lg font-medium">{t("title")} vuota</p>
         </div>
       )}
     </div>
   );
 }
-

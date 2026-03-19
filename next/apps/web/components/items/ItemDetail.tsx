@@ -1,10 +1,12 @@
 "use client";
 
-import type { Item, Datum, Tag, Loan, Collection } from "@koillection/db";
+import type { Item, Datum, Tag, Loan } from "@koillection/db";
 import Link from "next/link";
 import { Button, Badge } from "@koillection/ui";
-import { Edit, Trash2, Box } from "lucide-react";
+import { Edit } from "lucide-react";
 import { deleteItem } from "@/lib/actions/item.actions";
+import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
+import { useTranslations } from "next-intl";
 
 type ItemWithRelations = Item & {
   data: Datum[];
@@ -14,6 +16,9 @@ type ItemWithRelations = Item & {
 };
 
 export function ItemDetail({ item }: { item: ItemWithRelations }) {
+  const t = useTranslations("items");
+  const tCommon = useTranslations("common");
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between">
@@ -32,11 +37,12 @@ export function ItemDetail({ item }: { item: ItemWithRelations }) {
         </div>
         <div className="flex gap-2">
           <Button asChild variant="outline" size="sm">
-            <Link href={`/items/${item.id}/edit`}><Edit className="mr-1 h-4 w-4" />Modifica</Link>
+            <Link href={`/items/${item.id}/edit`}><Edit className="mr-1 h-4 w-4" />{tCommon("edit")}</Link>
           </Button>
-          <form action={deleteItem.bind(null, item.id)}>
-            <Button variant="destructive" size="sm" type="submit"><Trash2 className="h-4 w-4" /></Button>
-          </form>
+          <DeleteConfirmDialog
+            description={t("delete.confirm", { name: item.name })}
+            onConfirm={deleteItem.bind(null, item.id)}
+          />
         </div>
       </div>
 
@@ -48,7 +54,7 @@ export function ItemDetail({ item }: { item: ItemWithRelations }) {
       {/* Dati custom */}
       {item.data.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold mb-3">Dati</h2>
+          <h2 className="text-lg font-semibold mb-3">{t("form.data")}</h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {item.data.map((datum) => (
               <div key={datum.id} className="rounded-lg border p-3">
@@ -56,7 +62,7 @@ export function ItemDetail({ item }: { item: ItemWithRelations }) {
                 {datum.type === "image" && datum.image ? (
                   <img src={`/uploads/${datum.image}`} alt={datum.label ?? ""} className="max-h-40 rounded" />
                 ) : datum.type === "checkbox" ? (
-                  <span>{datum.value === "1" ? "✓ Sì" : "✗ No"}</span>
+                  <span>{datum.value === "1" ? `✓ ${tCommon("yes")}` : `✗ ${tCommon("no")}`}</span>
                 ) : (
                   <p className="text-sm break-words">{datum.value ?? "—"}</p>
                 )}
@@ -78,4 +84,3 @@ export function ItemDetail({ item }: { item: ItemWithRelations }) {
     </div>
   );
 }
-

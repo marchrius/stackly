@@ -3,8 +3,10 @@
 import type { Wish } from "@koillection/db";
 import Link from "next/link";
 import { Badge, Button } from "@koillection/ui";
-import { ChevronRight, Edit, ExternalLink, Heart, Trash2 } from "lucide-react";
+import { ChevronRight, Edit, ExternalLink, Heart } from "lucide-react";
 import { deleteWish } from "@/lib/actions/wish.actions";
+import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
+import { useTranslations } from "next-intl";
 
 interface Ancestor {
   id: string;
@@ -22,13 +24,15 @@ type WishWithWishlist = Wish & {
 };
 
 export function WishDetail({ wish }: { wish: WishWithWishlist }) {
+  const t = useTranslations("wishes");
+  const tCommon = useTranslations("common");
   const ancestors = wish.wishlist?.ancestors ?? [];
 
   return (
     <div className="space-y-6">
       <nav className="flex items-center gap-1 text-sm text-muted-foreground flex-wrap">
         <Link href="/wishlists" className="hover:text-foreground transition-colors">
-          Wishlist
+          {t("title")}
         </Link>
         {ancestors.map((ancestor) => (
           <span key={ancestor.id} className="flex items-center gap-1">
@@ -67,8 +71,7 @@ export function WishDetail({ wish }: { wish: WishWithWishlist }) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
               >
-                Apri link
-                <ExternalLink className="h-3.5 w-3.5" />
+                {t("openLink")} <ExternalLink className="h-3.5 w-3.5" />
               </a>
             )}
           </div>
@@ -78,14 +81,13 @@ export function WishDetail({ wish }: { wish: WishWithWishlist }) {
           <Button asChild variant="outline" size="sm">
             <Link href={`/wishes/${wish.id}/edit`}>
               <Edit className="mr-1 h-4 w-4" />
-              Modifica
+              {tCommon("edit")}
             </Link>
           </Button>
-          <form action={deleteWish.bind(null, wish.id)}>
-            <Button variant="destructive" size="sm" type="submit">
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </form>
+          <DeleteConfirmDialog
+            description={t("delete.confirm", { name: wish.name })}
+            onConfirm={deleteWish.bind(null, wish.id)}
+          />
         </div>
       </div>
 
@@ -96,14 +98,11 @@ export function WishDetail({ wish }: { wish: WishWithWishlist }) {
           <div className="flex h-64 items-center justify-center text-muted-foreground">
             <div className="flex flex-col items-center gap-3">
               <Heart className="h-10 w-10 opacity-40" />
-              <span>Nessuna immagine</span>
+              <span>{tCommon("noImage")}</span>
             </div>
           </div>
         )}
       </div>
-
-      {wish.comment && <p className="text-muted-foreground leading-relaxed">{wish.comment}</p>}
     </div>
   );
 }
-
