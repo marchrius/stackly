@@ -4,8 +4,12 @@ import { getCollectionAncestors } from "@/lib/collections-tree";
 import { prisma } from "@koillection/db";
 import { notFound } from "next/navigation";
 import { CollectionDetail } from "@/components/collections/CollectionDetail";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = { title: "Dettaglio Collezione" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("collections");
+  return { title: t("detailTitle") };
+}
 
 interface Props {
   params: Promise<{ id: string }>;

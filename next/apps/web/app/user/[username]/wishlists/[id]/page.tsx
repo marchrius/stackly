@@ -4,8 +4,12 @@ import { auth } from "@/auth";
 import { prisma } from "@koillection/db";
 import { WishlistDetail } from "@/components/wishlists/WishlistDetail";
 import { buildFinalVisibilityWhere, getAllowedFinalVisibilities } from "@/lib/wishlist-visibility";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = { title: "Wishlist condivisa" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("wishlists");
+  return { title: t("sharedDetailTitle") };
+}
 
 interface Props {
   params: Promise<{ username: string; id: string }>;
@@ -80,4 +84,3 @@ async function getVisibleWishlistAncestors(
 
   return chain;
 }
-

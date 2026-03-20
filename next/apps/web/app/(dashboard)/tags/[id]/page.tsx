@@ -3,8 +3,12 @@ import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@koillection/db";
 import { notFound } from "next/navigation";
 import { TagDetail } from "@/components/tags/TagDetail";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = { title: "Dettaglio Tag" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("tags");
+  return { title: t("title") };
+}
 
 interface Props { params: Promise<{ id: string }> }
 
@@ -24,4 +28,3 @@ export default async function TagDetailPage({ params }: Props) {
   if (!tag) notFound();
   return <TagDetail tag={tag} />;
 }
-

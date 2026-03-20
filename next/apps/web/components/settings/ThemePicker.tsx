@@ -14,11 +14,17 @@ import {
 
 interface ThemePickerProps {
   defaultValue: ThemeId;
+  onChange?: (value: ThemeId) => void;
 }
 
-export function ThemePicker({ defaultValue }: ThemePickerProps) {
+export function ThemePicker({ defaultValue, onChange }: ThemePickerProps) {
   const t = useTranslations("settings");
   const [selected, setSelected] = useState<ThemeId>(defaultValue);
+
+  function selectTheme(value: ThemeId) {
+    setSelected(value);
+    onChange?.(value);
+  }
 
   const lightThemes = APP_THEMES.filter((th) => th.mode === "light");
   const darkThemes = APP_THEMES.filter((th) => th.mode === "dark");
@@ -35,7 +41,7 @@ export function ThemePicker({ defaultValue }: ThemePickerProps) {
         </p>
         <AutoCard
           selected={selected === "auto"}
-          onClick={() => setSelected("auto")}
+          onClick={() => selectTheme("auto")}
           label={t("themes.auto")}
           subtitle={t("themes.autoSubtitle")}
           lightPreview={AUTO_PREVIEW_LIGHT}
@@ -54,7 +60,7 @@ export function ThemePicker({ defaultValue }: ThemePickerProps) {
               key={theme.id}
               theme={theme}
               selected={selected === theme.id}
-              onClick={() => setSelected(theme.id)}
+              onClick={() => selectTheme(theme.id)}
               label={t(`themes.${theme.id}` as any)}
             />
           ))}
@@ -72,7 +78,7 @@ export function ThemePicker({ defaultValue }: ThemePickerProps) {
               key={theme.id}
               theme={theme}
               selected={selected === theme.id}
-              onClick={() => setSelected(theme.id)}
+              onClick={() => selectTheme(theme.id)}
               label={t(`themes.${theme.id}` as any)}
             />
           ))}
@@ -258,4 +264,3 @@ function AutoCard({
     </button>
   );
 }
-

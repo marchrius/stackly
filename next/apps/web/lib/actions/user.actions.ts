@@ -8,7 +8,8 @@ import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { isValidLocale } from "@/i18n/locales";
-import { THEME_IDS } from "@/lib/theme/themes";
+import { THEME_COOKIE_NAME, THEME_IDS, normalizeTheme } from "@/lib/theme/themes";
+import { getTranslations } from "next-intl/server";
 
 const settingsSchema = z.object({
   currency: z.string().length(3).default("EUR"),
@@ -35,9 +36,10 @@ export async function updateSettings(formData: FormData) {
     data: { ...parsed.data, updatedAt: new Date() },
   });
 
+  const cookieStore = await cookies();
+
   // Imposta il cookie locale affinché next-intl lo legga subito
   if (isValidLocale(parsed.data.locale)) {
-    const cookieStore = await cookies();
     cookieStore.set("koillection_locale", parsed.data.locale, {
       path: "/",
       maxAge: 60 * 60 * 24 * 365,
@@ -45,25 +47,32 @@ export async function updateSettings(formData: FormData) {
     });
   }
 
+  cookieStore.set(THEME_COOKIE_NAME, normalizeTheme(parsed.data.theme), {
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365,
+    sameSite: "lax",
+  });
+
   revalidatePath("/", "layout");
   return { success: true };
 }
 
 export async function changePassword(formData: FormData) {
   const session = await requireAuth();
+  const t = await getTranslations("settings");
 
   const parsed = passwordSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: parsed.error.flatten().fieldErrors };
 
   const user = await prisma.user.findUnique({ where: { id: session.user.id } });
-  if (!user) throw new Error("Utente non trovato");
+  if (!user) throw new Error(t("userNotFound"));
 
   const hash = user.password.startsWith("$2y$")
     ? "$2b$" + user.password.slice(4)
     : user.password;
 
   const valid = await bcrypt.compare(parsed.data.currentPassword, hash);
-  if (!valid) return { error: { currentPassword: ["Password corrente non corretta"] } };
+  if (!valid) return { error: { currentPassword: [t("currentPasswordInvalid")] } };
 
   const newHash = await bcrypt.hash(parsed.data.newPassword, 12);
   await prisma.user.update({ where: { id: session.user.id }, data: { password: newHash } });
@@ -72,6 +81,7 @@ export async function changePassword(formData: FormData) {
 }
 
 export async function registerUser(formData: FormData) {
+  const t = await getTranslations("auth.register");
   const schema = z.object({
     username: z.string().min(3).max(32),
     email: z.string().email(),
@@ -84,7 +94,7 @@ export async function registerUser(formData: FormData) {
   const { username, email, password } = parsed.data;
 
   const exists = await prisma.user.findFirst({ where: { OR: [{ username }, { email }] } });
-  if (exists) return { error: { username: ["Username o email già in uso"] } };
+  if (exists) return { error: { username: [t("usernameOrEmailTaken")] } };
 
   const hash = await bcrypt.hash(password, 12);
   await prisma.user.create({

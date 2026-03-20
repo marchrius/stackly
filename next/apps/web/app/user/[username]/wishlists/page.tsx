@@ -5,8 +5,12 @@ import { auth } from "@/auth";
 import { prisma } from "@koillection/db";
 import { WishlistGrid } from "@/components/wishlists/WishlistGrid";
 import { buildFinalVisibilityWhere, getAllowedFinalVisibilities } from "@/lib/wishlist-visibility";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = { title: "Wishlist condivise" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("wishlists");
+  return { title: t("sharedTitle") };
+}
 
 interface Props {
   params: Promise<{ username: string }>;
@@ -15,6 +19,7 @@ interface Props {
 export default async function SharedWishlistsPage({ params }: Props) {
   const { username } = await params;
   const session = await auth();
+  const t = await getTranslations("wishlists");
 
   const owner = await prisma.user.findFirst({
     where: { username },
@@ -39,18 +44,21 @@ export default async function SharedWishlistsPage({ params }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Wishlist condivise</h1>
-        <p className="text-muted-foreground">
-          Profilo di <span className="font-medium">{owner.username}</span> · {wishlists.length} wishlist visibili
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("sharedTitle")}</h1>
+        <p className="text-muted-foreground">{t("sharedProfileSummary", { name: owner.username, count: wishlists.length })}</p>
       </div>
 
       <WishlistGrid wishlists={wishlists} basePath={`/user/${owner.username}/wishlists`} />
 
       <p className="text-sm text-muted-foreground">
-        <Link href="/login" className="text-primary hover:underline">Accedi</Link> per vedere anche i contenuti interni disponibili.
+        {t.rich("sharedLoginHint", {
+          link: (chunks) => (
+            <Link href="/login" className="text-primary hover:underline">
+              {chunks}
+            </Link>
+          ),
+        })}
       </p>
     </div>
   );
 }
-

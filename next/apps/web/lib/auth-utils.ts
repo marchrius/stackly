@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { ROLES } from "@koillection/lib";
 import { redirect } from "next/navigation";
 
 export type AuthSession = {
@@ -28,3 +29,10 @@ export async function requireAuth(): Promise<AuthSession> {
   return session as AuthSession;
 }
 
+export async function requireAdmin(): Promise<AuthSession> {
+  const session = await requireAuth();
+  if (!session.user.roles.includes(ROLES.ADMIN)) {
+    redirect("/");
+  }
+  return session;
+}

@@ -2,15 +2,18 @@ import type { Template, Field } from "@koillection/db";
 import Link from "next/link";
 import { Badge, Card, CardContent, CardHeader, CardTitle } from "@koillection/ui";
 import { FileText, Layers } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type TemplateWithRelations = Template & { fields: Field[]; _count: { collections: number } };
 
 export function TemplateList({ templates }: { templates: TemplateWithRelations[] }) {
+  const t = useTranslations("templates");
+
   if (templates.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
         <FileText className="h-12 w-12 mb-4 opacity-30" />
-        <p className="text-lg font-medium">Nessun template</p>
+        <p className="text-lg font-medium">{t("empty")}</p>
       </div>
     );
   }
@@ -28,9 +31,12 @@ export function TemplateList({ templates }: { templates: TemplateWithRelations[]
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <span>{tmpl.fields.length} campi</span>
+                <span>{t("fieldsCount", { count: tmpl.fields.length })}</span>
                 {tmpl._count.collections > 0 && (
-                  <span className="flex items-center gap-1"><Layers className="h-3 w-3" />{tmpl._count.collections} coll.</span>
+                  <span className="flex items-center gap-1">
+                    <Layers className="h-3 w-3" />
+                    {t("collectionsCount", { count: tmpl._count.collections })}
+                  </span>
                 )}
               </div>
               <div className="flex flex-wrap gap-1 mt-2">
@@ -46,4 +52,3 @@ export function TemplateList({ templates }: { templates: TemplateWithRelations[]
     </div>
   );
 }
-

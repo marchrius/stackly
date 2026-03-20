@@ -130,6 +130,13 @@ next/
 5. Usare **shadcn/ui** per i componenti UI.
 6. Eseguire i comandi del nuovo stack dalla cartella `next/` (`npm run dev`, `npm run build`, `npm run lint`, `npm run type-check`, `npm run db:generate`).
 
+### Tracciamento bug:
+- Ogni bug trovato durante analisi, sviluppo, review o validazione del progetto `next/` va registrato in `next/BUGS.md`.
+- La registrazione del bug va fatta subito, non solo a fine task.
+- Ogni entry deve indicare almeno stato, area coinvolta, descrizione, comportamento atteso e note tecniche/riproduzione.
+- Quando un bug viene corretto, aggiornare la relativa entry in `next/BUGS.md`.
+- Il bug attuale del tema che non si applica dopo il salvataggio delle preferenze è già tracciato in `next/BUGS.md`.
+
 ### Convenzioni di naming:
 - File componenti React: `PascalCase.tsx`
 - Route handlers: `apps/web/app/api/[risorsa]/route.ts`

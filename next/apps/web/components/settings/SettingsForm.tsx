@@ -8,7 +8,7 @@ import { updateSettings, changePassword } from "@/lib/actions/user.actions";
 import { useTranslations } from "next-intl";
 import { SUPPORTED_LOCALES } from "@/i18n/locales";
 import { ThemePicker } from "@/components/settings/ThemePicker";
-import { normalizeTheme } from "@/lib/theme/themes";
+import { getThemeClass, normalizeTheme, THEME_CLASSNAMES, type ThemeId } from "@/lib/theme/themes";
 
 export function SettingsForm({ user }: { user: User }) {
   const t = useTranslations("settings");
@@ -17,13 +17,17 @@ export function SettingsForm({ user }: { user: User }) {
   const [pwLoading, setPwLoading] = useState(false);
   const [pwError, setPwError] = useState("");
   const [pwSuccess, setPwSuccess] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState<ThemeId>(normalizeTheme(user.theme));
 
   async function handleSettings(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSaving(true);
+    const themeClass = getThemeClass(selectedTheme);
+    document.body.classList.remove(...THEME_CLASSNAMES);
+    document.body.classList.add(themeClass);
+
     await updateSettings(new FormData(e.currentTarget));
     setSaving(false);
-    // Ricarica la pagina per applicare il nuovo locale
     router.refresh();
   }
 
@@ -87,7 +91,7 @@ export function SettingsForm({ user }: { user: User }) {
           {/* Tema — picker visivo full-width */}
           <div className="space-y-3">
             <Label>{t("theme")}</Label>
-            <ThemePicker defaultValue={normalizeTheme(user.theme)} />
+            <ThemePicker defaultValue={selectedTheme} onChange={setSelectedTheme} />
           </div>
 
           <Button type="submit" disabled={saving}>

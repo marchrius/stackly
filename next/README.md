@@ -71,12 +71,43 @@ Lo schema Prisma usa i **nomi di tabella originali** (`koi_*`), quindi è possib
 ```bash
 npm run dev           # Avvia in development (Turbopack)
 npm run build         # Build di produzione
+npm run start         # Avvia il server Next.js built in produzione
 npm run i18n:validate # Valida schema/placeholder dei cataloghi messages/*.json
 npm run db:generate   # Rigenera client Prisma
 npm run db:push       # Sincronizza schema sul DB (dev)
 npm run db:migrate    # Crea migration (produzione)
 npm run db:studio     # Apre Prisma Studio
+npm run maintenance:refresh-cached-values # Riallinea contatori/cachedValues
+npm run maintenance:regenerate-logs       # Rigenera create logs mancanti e marca delete logs
+npm run maintenance:regenerate-thumbnails # Rigenera thumbnails dai file originali
 ```
+
+Tutti i comandi `maintenance:*` supportano `--help` e `--dry-run`.
+
+## Deployment e runtime
+
+Il legacy espone solo il runtime Symfony/PHP dai file Docker alla root del repository. Per il nuovo stack Next.js usare invece:
+
+- `next/Dockerfile` per la build/runtime container del monorepo `next/`
+- `docker-compose.next.dist.yml` alla root per un setup di esempio con app Next.js + PostgreSQL
+
+### Avvio locale del runtime container
+
+```bash
+# Dalla root del repository
+cp next/.env.example next/.env
+
+# Modifica DATABASE_URL, NEXTAUTH_SECRET e NEXTAUTH_URL
+docker compose -f docker-compose.next.dist.yml up --build
+```
+
+### Note operative di produzione
+
+- Montare una volume persistente su `/app/apps/web/public/uploads`
+- Eseguire `npm run db:generate` in fase di build immagine
+- Usare `npm run build` per generare `.next/` e `npm run start` come entrypoint runtime
+- `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL` e `UPLOAD_DIR` devono essere valorizzate a runtime
+- I comandi `maintenance:*` possono essere eseguiti nello stesso container applicativo
 
 ## Internazionalizzazione (i18n)
 
@@ -253,6 +284,4 @@ Organizzati per modulo funzionale in `apps/web/components/`:
 | `settings/` | `ProfileForm`, `ChangePasswordForm` | Impostazioni utente |
 | `shared/` | `Sidebar`, `Navbar`, `Breadcrumb`, `LoadingSpinner`, `Dialog`, `Table` | Componenti shared UI |
 | `layout/` | `ProtectedLayout`, `AuthLayout`, `DashboardLayout` | Layout comuni |
-
-
 

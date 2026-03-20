@@ -1,14 +1,17 @@
 import type { Tag, TagCategory } from "@koillection/db";
 import Link from "next/link";
 import { Badge } from "@koillection/ui";
+import { useTranslations } from "next-intl";
 
 type TagWithRelations = Tag & { category: TagCategory | null; _count: { items: number } };
 
 export function TagList({ tags, categories }: { tags: TagWithRelations[]; categories: TagCategory[] }) {
+  const t = useTranslations("tags");
+
   if (tags.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
-        <p className="text-lg font-medium">Nessun tag</p>
+        <p className="text-lg font-medium">{t("empty")}</p>
       </div>
     );
   }
@@ -46,7 +49,7 @@ export function TagList({ tags, categories }: { tags: TagWithRelations[]; catego
       })}
       {uncategorized.length > 0 && (
         <section>
-          <h2 className="text-sm font-semibold mb-2 text-muted-foreground">Senza categoria</h2>
+          <h2 className="text-sm font-semibold mb-2 text-muted-foreground">{t("uncategorized")}</h2>
           <div className="flex flex-wrap gap-2">
             {uncategorized.map((tag) => <TagBadge key={tag.id} tag={tag} />)}
           </div>
@@ -66,4 +69,3 @@ function TagBadge({ tag }: { tag: TagWithRelations }) {
     </Link>
   );
 }
-

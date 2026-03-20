@@ -17,6 +17,7 @@ export const THEME_IDS = ["auto", ...CONCRETE_THEME_IDS] as const;
 export type ThemeId = (typeof THEME_IDS)[number];
 
 export const DEFAULT_THEME: ThemeId = "l_aqua";
+export const THEME_COOKIE_NAME = "koillection_theme";
 
 export interface AppTheme {
   id: ConcreteThemeId;
@@ -71,6 +72,11 @@ export const APP_THEMES: readonly AppTheme[] = [
     preview: ["#0e1420", "#f97316", "#fb923c", "#f0f4f8"],
   },
 ];
+
+export const THEME_CLASSNAMES = [
+  "theme-auto",
+  ...APP_THEMES.map((theme) => theme.className),
+] as const;
 
 /** Preview colori del tema light di default (l_aqua) usata nel selettore Auto */
 export const AUTO_PREVIEW_LIGHT = APP_THEMES.find((t) => t.id === "l_aqua")!.preview;

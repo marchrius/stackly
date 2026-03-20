@@ -753,7 +753,7 @@ Definite in `next/.env` (non committato). Template in `next/.env.example`.
 | Variabile | Obbligatoria | Descrizione | Default |
 |---|---|---|---|
 | `DATABASE_URL` | ✅ | Connection string PostgreSQL | — |
-| `AUTH_SECRET` | ✅ | Secret JWT NextAuth (min 32 char) | — |
+| `NEXTAUTH_SECRET` | ✅ | Secret JWT NextAuth (min 32 char) | — |
 | `NEXTAUTH_URL` | ✅ (prod) | URL pubblico dell'app | — |
 | `UPLOAD_DIR` | ❌ | Path assoluto o relativo cartella upload | `./public/uploads` |
 | `NODE_ENV` | ❌ | `development` \| `production` | `development` |

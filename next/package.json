@@ -7,14 +7,21 @@
   ],
   "scripts": {
     "build": "dotenv -e .env -- turbo run build",
-    "dev": "dotenv -e .env -- turbo run dev",
+    "dev": "dotenv -e .env -- turbo run dev db:studio",
     "lint": "dotenv -e .env -- turbo run lint",
+    "maintenance:refresh-cached-values": "dotenv -e .env -- node scripts/refresh-cached-values.mjs",
+    "maintenance:regenerate-logs": "dotenv -e .env -- node scripts/regenerate-logs.mjs",
+    "maintenance:regenerate-thumbnails": "dotenv -e .env -- node scripts/regenerate-thumbnails.mjs",
+    "start": "npm run start --workspace=@koillection/web",
+    "test": "turbo run test",
     "type-check": "dotenv -e .env -- turbo run type-check",
     "i18n:validate": "python3 scripts/validate_i18n_messages.py",
     "db:generate": "dotenv -e .env -- turbo run db:generate --filter=@koillection/db",
     "db:push": "dotenv -e .env -- turbo run db:push --filter=@koillection/db",
     "db:migrate": "dotenv -e .env -- turbo run db:migrate --filter=@koillection/db",
-    "db:studio": "dotenv -e .env -- turbo run db:studio --filter=@koillection/db"
+    "db:studio": "dotenv -e .env -- turbo run db:studio --filter=@koillection/db",
+    "db:seed": "dotenv -e .env -- npm run db:seed --workspace=@koillection/db",
+    "db:seed:demo": "dotenv -e .env -- node scripts/seed-demo-data.mjs"
   },
   "devDependencies": {
     "dotenv-cli": "^8.0.0",
@@ -29,4 +36,3 @@
     "node": ">=20.0.0"
   }
 }
-

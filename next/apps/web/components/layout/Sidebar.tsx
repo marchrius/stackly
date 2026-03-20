@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   Library, Image, Heart, Tag, FileText, List,
-  BarChart2, Clock, Package, Wrench, Search,
+  BarChart2, Clock, Package, Wrench, Search, Shield,
 } from "lucide-react";
 import { cn } from "@koillection/ui";
 
-export function Sidebar() {
+export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
   const t = useTranslations("nav");
 
@@ -25,6 +25,7 @@ export function Sidebar() {
     { href: "/history", label: t("history"), icon: Clock },
     { href: "/statistics", label: t("statistics"), icon: BarChart2 },
     { href: "/search", label: t("search"), icon: Search },
+    ...(isAdmin ? [{ href: "/settings/admin", label: t("admin"), icon: Shield }] : []),
   ];
 
   return (

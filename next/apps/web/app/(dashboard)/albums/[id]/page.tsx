@@ -4,8 +4,12 @@ import { prisma } from "@koillection/db";
 import { notFound } from "next/navigation";
 import { AlbumDetail } from "@/components/albums/AlbumDetail";
 import { getAlbumAncestors } from "@/lib/albums-tree";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = { title: "Dettaglio Album" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("albums");
+  return { title: t("detailTitle") };
+}
 
 interface Props { params: Promise<{ id: string }> }
 
@@ -31,4 +35,3 @@ export default async function AlbumDetailPage({ params }: Props) {
 
   return <AlbumDetail album={{ ...album, ancestors }} />;
 }
-

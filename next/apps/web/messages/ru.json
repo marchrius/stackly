@@ -32,7 +32,8 @@
     "statistics": "Статистика",
     "search": "Поиск",
     "settings": "Настройки",
-    "logout": "Выйти"
+    "logout": "Выйти",
+    "admin": "Admin"
   },
   "auth": {
     "login": {
@@ -55,7 +56,8 @@
       "submit": "Зарегистрироваться",
       "submitting": "Создание аккаунта…",
       "alreadyHaveAccount": "Уже есть аккаунт?",
-      "login": "Войти"
+      "login": "Войти",
+      "usernameOrEmailTaken": "Username or email is already in use."
     }
   },
   "dashboard": {
@@ -93,7 +95,8 @@
     },
     "delete": {
       "confirm": "Удалить коллекцию «{name}»? Это действие необратимо."
-    }
+    },
+    "detailTitle": "Collection details"
   },
   "items": {
     "title": "Предметы",
@@ -109,11 +112,63 @@
       "image": "Изображение",
       "changeImage": "Изменить изображение",
       "removeImage": "Удалить изображение",
-      "data": "Пользовательские данные"
+      "data": "Пользовательские данные",
+      "tags": "Tags",
+      "templateData": "Template data",
+      "templateName": "Using template: {name}",
+      "noChoiceSelected": "No choice selected",
+      "checkboxLabel": "Enabled",
+      "unsupportedFieldType": "This field type ({type}) is not editable yet in the Next.js app.",
+      "unsupportedFieldsRemain": "Unsupported media and signature fields remain unchanged until dedicated editors are migrated.",
+      "saveFailed": "Unable to save the item.",
+      "fieldFallback": "Field {index}",
+      "scrapedFromUrl": "Scraped from URL",
+      "imageHelp": "Upload the main image shown on the item card and detail page.",
+      "templateReady": "A template is selected and can be applied to add its fields.",
+      "dataHelp": "Add text, numeric, structured, and choice-list fields to this item.",
+      "applyTemplate": "Apply template",
+      "loadCommonFields": "Load common fields",
+      "loadCollectionFields": "Load collection fields",
+      "addFieldType": "Add {type}",
+      "addChoiceListField": "Add choice list: {name}",
+      "noDataFields": "No text or structure fields yet.",
+      "mediaFields": "Media fields",
+      "mediaFieldsHelp": "Add image, file, video, or signature fields linked to this item.",
+      "noMediaFields": "No media fields yet.",
+      "tagsHelp": "Select the tags attached to this item.",
+      "relatedItems": "Related items",
+      "relatedItemsHelp": "Link this item to other items from your collection.",
+      "fieldLabel": "Field label",
+      "removeFile": "Remove file",
+      "listPlaceholder": "One value per line",
+      "noCollection": "No collection",
+      "noTemplate": "No template",
+      "collectionFieldsLoadFailed": "Unable to load collection-based fields.",
+      "saveAndAddAnother": "Save and add another",
+      "useSuggestedName": "Use: {name}",
+      "scrape": "Scrape item",
+      "scrapeHelp": "Preview values from an item scraper and import them into this form.",
+      "scraper": "Scraper",
+      "noScraper": "No scraper",
+      "scrapeUrl": "URL to scrape",
+      "scrapeHtmlFile": "HTML file",
+      "scrapeName": "Import name",
+      "scrapeImage": "Import image",
+      "previewScrape": "Preview scrape",
+      "scrapeFailed": "Unable to preview the scrape."
     },
     "delete": {
       "confirm": "Удалить предмет «{name}»? Это действие необратимо."
-    }
+    },
+    "loanItem": "Create loan",
+    "viewAllLoans": "View all loans",
+    "activeLoans": "{count} active loans",
+    "noActiveLoans": "This item is not currently on loan.",
+    "fromCollection": "From collection: {name}",
+    "media": "Media",
+    "video": "Video",
+    "unknownFile": "Download file",
+    "relatedItems": "{count} related items"
   },
   "albums": {
     "title": "Альбомы",
@@ -137,7 +192,8 @@
     },
     "delete": {
       "confirm": "Удалить альбом «{name}»? Это действие необратимо."
-    }
+    },
+    "detailTitle": "Album details"
   },
   "photos": {
     "title": "Фотографии",
@@ -156,7 +212,8 @@
     },
     "delete": {
       "confirm": "Удалить фото «{name}»? Это действие необратимо."
-    }
+    },
+    "detailTitle": "Photo details"
   },
   "wishlists": {
     "title": "Списки желаний",
@@ -180,7 +237,12 @@
     },
     "delete": {
       "confirm": "Удалить список желаний «{name}»? Это действие необратимо."
-    }
+    },
+    "detailTitle": "Wishlist details",
+    "sharedTitle": "Shared wishlists",
+    "sharedDetailTitle": "Shared wishlist",
+    "sharedProfileSummary": "Profile of {name} · {count} visible wishlists",
+    "sharedLoginHint": "<link>Sign in</link> to view any additional internal content available to you."
   },
   "wishes": {
     "title": "Желания",
@@ -200,7 +262,8 @@
     },
     "delete": {
       "confirm": "Удалить желание «{name}»? Это действие необратимо."
-    }
+    },
+    "detailTitle": "Wish details"
   },
   "settings": {
     "title": "Настройки профиля",
@@ -250,7 +313,9 @@
       "public": "Публичный",
       "internal": "Внутренний",
       "private": "Приватный"
-    }
+    },
+    "userNotFound": "User not found.",
+    "currentPasswordInvalid": "Current password is incorrect."
   },
   "search": {
     "title": "Поиск",
@@ -288,5 +353,261 @@
   "upload": {
     "clickOrDrop": "Нажмите или перетащите изображение сюда",
     "error": "Ошибка загрузки"
+  },
+  "tags": {
+    "title": "Tags",
+    "new": "New Tag",
+    "edit": "Edit Tag",
+    "count": "{count} tags",
+    "empty": "No tags",
+    "uncategorized": "Uncategorized",
+    "itemCount": "{count} items",
+    "taggedItems": "Items with this tag",
+    "noItems": "No items with this tag.",
+    "form": {
+      "label": "Label",
+      "description": "Description",
+      "category": "Category",
+      "noCategory": "No category",
+      "saveFailed": "Unable to save the tag."
+    },
+    "delete": {
+      "confirm": "Do you want to delete the tag \"{name}\"? This action is irreversible."
+    },
+    "manageCategories": "Manage categories",
+    "categories": {
+      "title": "Tag Categories",
+      "count": "{count} categories",
+      "new": "New Category",
+      "edit": "Edit Category",
+      "empty": "No tag categories",
+      "tagsCount": "{count} tags",
+      "taggedTags": "Tags in this category",
+      "noTags": "No tags are assigned to this category.",
+      "deleteAction": "Delete",
+      "delete": {
+        "confirm": "Do you want to delete the category \"{name}\"? This action is irreversible."
+      },
+      "form": {
+        "label": "Label",
+        "description": "Description",
+        "color": "Color",
+        "saveFailed": "Unable to save the tag category."
+      }
+    }
+  },
+  "templates": {
+    "title": "Templates",
+    "new": "New Template",
+    "edit": "Edit Template",
+    "count": "{count} templates",
+    "empty": "No templates",
+    "fieldsCount": "{count} fields",
+    "collectionsCount": "{count} collections",
+    "noFields": "No fields configured yet.",
+    "form": {
+      "name": "Name",
+      "fields": "Fields",
+      "fieldsHelp": "Configure the fields available for items using this template.",
+      "addField": "Add field",
+      "removeField": "Remove field",
+      "fieldName": "Field name",
+      "fieldType": "Field type",
+      "fieldVisibility": "Field visibility",
+      "choiceList": "Choice list",
+      "noChoiceList": "No choice list",
+      "saveFailed": "Unable to save the template."
+    },
+    "fieldTypes": {
+      "text": "Text",
+      "textarea": "Text area",
+      "number": "Number",
+      "price": "Price",
+      "date": "Date",
+      "rating": "Rating",
+      "country": "Country",
+      "link": "Link",
+      "list": "List",
+      "choice-list": "Choice list",
+      "checkbox": "Checkbox",
+      "image": "Image",
+      "file": "File",
+      "video": "Video",
+      "sign": "Sign",
+      "blank-line": "Blank line",
+      "section": "Section"
+    }
+  },
+  "choiceLists": {
+    "title": "Choice Lists",
+    "count": "{count} choice lists",
+    "empty": "No choice lists",
+    "choicesCount": "{count} choices",
+    "fieldsCount": "{count} linked fields",
+    "dataCount": "{count} linked values",
+    "new": "New Choice List",
+    "edit": "Edit Choice List",
+    "deleteAction": "Delete",
+    "choices": "Choices",
+    "linkedFields": "Linked fields",
+    "emptyChoices": "No choices configured yet.",
+    "noLinkedFields": "No fields currently use this choice list.",
+    "delete": {
+      "confirm": "Do you want to delete the choice list \"{name}\"? This action is irreversible."
+    },
+    "form": {
+      "name": "Name",
+      "choices": "Choices",
+      "choicesPlaceholder": "One value per line",
+      "choicesHelp": "Add one choice per line. Commas are also accepted.",
+      "saveFailed": "Unable to save the choice list."
+    }
+  },
+  "inventories": {
+    "title": "Inventories",
+    "count": "{count} inventories",
+    "empty": "No inventories",
+    "entriesCount": "{count} entries",
+    "updatedAt": "Updated {date}",
+    "new": "New Inventory",
+    "edit": "Edit Inventory",
+    "deleteAction": "Delete",
+    "content": "Content",
+    "delete": {
+      "confirm": "Do you want to delete the inventory \"{name}\"? This action is irreversible."
+    },
+    "form": {
+      "name": "Name",
+      "content": "Content (JSON)",
+      "contentHelp": "Paste a JSON array or object matching the inventory structure you want to keep.",
+      "invalidJson": "The content must be valid JSON.",
+      "saveFailed": "Unable to save the inventory."
+    }
+  },
+  "scrapers": {
+    "title": "Scrapers",
+    "count": "{count} scrapers",
+    "empty": "No scrapers",
+    "type": "Type: {type}",
+    "pathsCount": "{count} paths",
+    "new": "New Scraper",
+    "edit": "Edit Scraper",
+    "details": "Scraper details",
+    "newDescription": "Create a scraper configuration for collections, items, or wishes.",
+    "editDescription": "Update the scraper configuration for {name}.",
+    "deleteAction": "Delete",
+    "unknownType": "Unknown",
+    "notConfigured": "Not configured",
+    "noHeaders": "No custom headers.",
+    "noPaths": "No data paths.",
+    "types": {
+      "collection": "Collection",
+      "item": "Item",
+      "wish": "Wish"
+    },
+    "pathTypes": {
+      "text": "Text",
+      "textarea": "Textarea",
+      "number": "Number",
+      "date": "Date",
+      "rating": "Rating",
+      "price": "Price",
+      "country": "Country",
+      "link": "Link",
+      "image": "Image",
+      "list": "List"
+    },
+    "form": {
+      "name": "Name",
+      "type": "Type",
+      "urlPattern": "URL pattern",
+      "namePath": "Name path",
+      "imagePath": "Image path",
+      "pricePath": "Price path",
+      "typeHint": "Type-specific fields",
+      "dataPaths": "Data paths",
+      "dataPathsHelp": "Configure the extracted data paths for collection and item scrapers.",
+      "addPath": "Add path",
+      "removePath": "Remove path",
+      "pathName": "Path name",
+      "pathType": "Path type",
+      "pathValue": "Selector / path",
+      "headers": "Custom headers",
+      "headersHelp": "Optional HTTP headers sent with scraper requests.",
+      "addHeader": "Add header",
+      "removeHeader": "Remove header",
+      "headerName": "Header",
+      "headerValue": "Value",
+      "saveFailed": "Unable to save the scraper."
+    },
+    "delete": {
+      "confirm": "Do you want to delete the scraper \"{name}\"? This action is irreversible."
+    }
+  },
+  "admin": {
+    "title": "Admin",
+    "subtitle": "Overview of the shared Koillection instance.",
+    "users": "Users",
+    "items": "Items",
+    "recentUsers": "Recent users",
+    "joinedOn": "Joined on {date}",
+    "configurationTitle": "Instance configuration",
+    "configurationDescription": "Manage global display and infrastructure options for the shared Koillection instance.",
+    "saveConfiguration": "Save configuration",
+    "savingConfiguration": "Saving configuration…",
+    "saveSucceeded": "Configuration updated successfully.",
+    "saveFailed": "Unable to save the configuration.",
+    "thumbnailsFormat": "Thumbnail format",
+    "thumbnailsFormatHelp": "This affects newly generated thumbnails. Existing files keep their current format until regeneration.",
+    "thumbnailsFormatOptions": {
+      "keepOriginal": "Keep original format",
+      "jpeg": "JPEG",
+      "png": "PNG",
+      "webp": "WebP",
+      "avif": "AVIF"
+    },
+    "customLightThemeCss": "Custom light-theme CSS",
+    "customDarkThemeCss": "Custom dark-theme CSS",
+    "customCssHelp": "These CSS snippets are injected globally for the selected light/dark theme modes.",
+    "enableMetrics": "Metrics endpoint",
+    "enableMetricsEnabled": "Enabled",
+    "enableMetricsDisabled": "Disabled"
+  },
+  "loans": {
+    "title": "Loans",
+    "count": "{count} loans",
+    "new": "New Loan",
+    "edit": "Edit Loan",
+    "active": "Active loans ({count})",
+    "returned": "Returned loans ({count})",
+    "open": "Open",
+    "closed": "Returned",
+    "noActive": "No active loans.",
+    "noReturned": "No returned loans yet.",
+    "returnNow": "Mark returned",
+    "deleteAction": "Delete",
+    "details": "Loan details",
+    "itemLabel": "Item",
+    "lentTo": "Lent to",
+    "lentAt": "Lent at",
+    "returnedAt": "Returned at",
+    "lentToLabel": "Lent to {name}",
+    "notReturned": "Not returned yet",
+    "untitled": "Loan",
+    "form": {
+      "item": "Item",
+      "selectItem": "Select an item",
+      "lentTo": "Lent to",
+      "lentAt": "Lent at",
+      "returnedAt": "Returned at",
+      "saveFailed": "Unable to save the loan."
+    },
+    "delete": {
+      "confirm": "Do you want to delete the loan for \"{name}\"? This action is irreversible."
+    },
+    "noItemsAvailable": "Create an item before recording a loan.",
+    "goToItems": "Go to items",
+    "updateFailed": "Unable to update the loan.",
+    "deleteFailed": "Unable to delete the loan."
   }
 }

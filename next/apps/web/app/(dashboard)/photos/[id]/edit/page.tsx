@@ -3,14 +3,19 @@ import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@koillection/db";
 import { notFound } from "next/navigation";
 import { PhotoForm } from "@/components/photos/PhotoForm";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = { title: "Modifica Foto" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("photos");
+  return { title: t("edit") };
+}
 
 interface Props { params: Promise<{ id: string }> }
 
 export default async function EditPhotoPage({ params }: Props) {
   const { id } = await params;
   const session = await requireAuth();
+  const t = await getTranslations("photos");
 
   const [photo, allAlbums] = await Promise.all([
     prisma.photo.findFirst({ where: { id, ownerId: session.user.id } }),
@@ -25,9 +30,8 @@ export default async function EditPhotoPage({ params }: Props) {
 
   return (
     <div className="max-w-2xl space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">Modifica Foto</h1>
+      <h1 className="text-2xl font-bold tracking-tight">{t("edit")}</h1>
       <PhotoForm photo={photo} albums={allAlbums} />
     </div>
   );
 }
-

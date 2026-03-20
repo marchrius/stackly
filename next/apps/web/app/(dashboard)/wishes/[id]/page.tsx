@@ -4,8 +4,12 @@ import { prisma } from "@koillection/db";
 import { notFound } from "next/navigation";
 import { WishDetail } from "@/components/wishes/WishDetail";
 import { getWishlistAncestors } from "@/lib/wishlists-tree";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = { title: "Dettaglio Desiderio" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("wishes");
+  return { title: t("detailTitle") };
+}
 
 interface Props { params: Promise<{ id: string }> }
 
@@ -35,4 +39,3 @@ export default async function WishDetailPage({ params }: Props) {
     />
   );
 }
-

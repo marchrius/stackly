@@ -47,6 +47,7 @@ model User {
   loans                 Loan[]
   logs                  Log[]
   scrapers              Scraper[]
+  searches              Search[]
   items                 Item[]
   photos                Photo[]
   wishes                Wish[]
@@ -55,6 +56,20 @@ model User {
   fields                Field[]
 
   @@map("koi_user")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CONFIGURATION
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Configuration {
+  id        String   @id @default(uuid()) @db.Char(36)
+  label     String   @unique
+  value     String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@map("koi_configuration")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -107,6 +122,7 @@ model Item {
   visibility          String    @default("public") @db.VarChar(10)
   parentVisibility    String    @default("public") @db.VarChar(10) @map("parent_visibility")
   finalVisibility     String    @default("public") @db.VarChar(10) @map("final_visibility")
+  scrapedFromUrl      String?   @db.Text @map("scraped_from_url")
   image               String?   @unique
   imageSmallThumbnail String?   @unique @map("image_small_thumbnail")
   imageLargeThumbnail String?   @unique @map("image_large_thumbnail")
@@ -495,6 +511,56 @@ model Path {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// SEARCH
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Search {
+  id              String @id @default(uuid()) @db.Char(36)
+  name            String?
+  numberOfResults BigInt? @map("number_of_results")
+
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String? @db.Char(36) @map("owner_id")
+
+  displayConfiguration   DisplayConfiguration? @relation(fields: [displayConfigurationId], references: [id])
+  displayConfigurationId String?               @unique @db.Char(36) @map("display_configuration_id")
+
+  blocks SearchBlock[]
+
+  @@index([ownerId], name: "idx_search_owner")
+  @@map("koi_search")
+}
+
+model SearchBlock {
+  id        String  @id @default(uuid()) @db.Char(36)
+  condition String? @map("condition")
+
+  search   Search? @relation(fields: [searchId], references: [id])
+  searchId String? @db.Char(36) @map("search_id")
+
+  filters SearchFilter[]
+
+  @@index([searchId], name: "idx_search_block_search")
+  @@map("koi_search_block")
+}
+
+model SearchFilter {
+  id         String  @id @default(uuid()) @db.Char(36)
+  condition  String? @map("condition")
+  type       String
+  datumLabel String? @map("datum_label")
+  datumType  String? @map("datum_type")
+  operator   String
+  value      String?
+
+  block   SearchBlock? @relation(fields: [blockId], references: [id])
+  blockId String?      @db.Char(36) @map("block_id")
+
+  @@index([blockId], name: "idx_search_filter_block")
+  @@map("koi_search_filter")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // DISPLAY CONFIGURATION
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -517,10 +583,10 @@ model DisplayConfiguration {
 
   collectionChildren Collection? @relation("CollectionChildrenDisplay")
   collectionItems    Collection? @relation("CollectionItemsDisplay")
+  search             Search?
 
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   @@map("koi_display_configuration")
 }
-
