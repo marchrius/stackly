@@ -27,14 +27,16 @@ model User {
   dateFormat          String    @default("Y-m-d") @db.VarChar(10)
   diskSpaceAllowed    BigInt    @default(536870912)
   diskSpaceUsed       BigInt    @default(0)
-  theme               String    @default("auto") @db.VarChar(10)
-  displayMode         String    @default("grid") @db.VarChar(4)
-  wishlistDisplayMode String    @default("grid") @db.VarChar(4)
-  albumDisplayMode    String    @default("grid") @db.VarChar(4)
-  visibility          String    @default("public") @db.VarChar(10)
-  avatar              String?   @unique
-  createdAt           DateTime  @default(now()) @map("created_at")
-  updatedAt           DateTime? @updatedAt @map("updated_at")
+  theme                           String    @default("auto") @db.VarChar(10)
+  displayMode                     String    @default("grid") @db.VarChar(4)
+  wishlistDisplayMode             String    @default("grid") @db.VarChar(4)
+  albumDisplayMode                String    @default("grid") @db.VarChar(4)
+  visibility                      String    @default("public") @db.VarChar(10)
+  avatar                          String?   @unique
+  createdAt                       DateTime  @default(now()) @map("created_at")
+  updatedAt                       DateTime? @updatedAt @map("updated_at")
+  collectionsDisplayConfiguration DisplayConfiguration? @relation("UserCollectionsDisplayConfiguration", fields: [collectionsDisplayConfigurationId], references: [id])
+  collectionsDisplayConfigurationId String? @unique @db.Char(36) @map("collections_display_configuration_id")
 
   collections           Collection[]
   albums                Album[]
@@ -81,6 +83,7 @@ model Collection {
   title            String
   color            String?   @db.VarChar(7)
   image            String?   @unique
+  scrapedFromUrl   String?   @db.Text @map("scraped_from_url")
   visibility       String    @default("public") @db.VarChar(10)
   parentVisibility String    @default("public") @db.VarChar(10) @map("parent_visibility")
   finalVisibility  String    @default("public") @db.VarChar(10) @map("final_visibility")
@@ -581,6 +584,7 @@ model DisplayConfiguration {
   owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
   ownerId String? @db.Char(36) @map("owner_id")
 
+  userCollectionsIndex User? @relation("UserCollectionsDisplayConfiguration")
   collectionChildren Collection? @relation("CollectionChildrenDisplay")
   collectionItems    Collection? @relation("CollectionItemsDisplay")
   search             Search?

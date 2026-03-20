@@ -23,10 +23,10 @@ export default async function DashboardPage() {
   ]);
 
   const stats = [
-    { label: t("collections"), count: collectionsCount, icon: Library, href: "/collections", color: "text-blue-500" },
-    { label: t("albums"), count: albumsCount, icon: Image, href: "/albums", color: "text-purple-500" },
-    { label: t("wishlists"), count: wishlistsCount, icon: Heart, href: "/wishlists", color: "text-pink-500" },
-    { label: t("tags"), count: tagsCount, icon: Tag, href: "/tags", color: "text-green-500" },
+    { label: t("collections"), count: collectionsCount, icon: Library, href: "/collections", colorClass: "text-[hsl(var(--chart-1))]" },
+    { label: t("albums"), count: albumsCount, icon: Image, href: "/albums", colorClass: "text-[hsl(var(--chart-2))]" },
+    { label: t("wishlists"), count: wishlistsCount, icon: Heart, href: "/wishlists", colorClass: "text-[hsl(var(--chart-3))]" },
+    { label: t("tags"), count: tagsCount, icon: Tag, href: "/tags", colorClass: "text-[hsl(var(--chart-7))]" },
   ];
 
   return (
@@ -41,10 +41,10 @@ export default async function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <Link key={stat.href} href={stat.href}>
-            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+            <Card className="cursor-pointer transition-shadow hover:shadow-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{stat.label}</CardTitle>
-                <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                <stat.icon className={`h-5 w-5 ${stat.colorClass}`} />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{stat.count}</div>

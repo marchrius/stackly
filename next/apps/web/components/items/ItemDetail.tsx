@@ -9,6 +9,7 @@ import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { buildItemMediaEntries, getDisplayData, mergeRelatedItems } from "@/lib/item-detail";
+import { formatCountryValue, formatDateValue, formatPriceValue, renderRatingValue } from "@/lib/datum-format";
 
 type ItemWithRelations = Item & {
   data: Datum[];
@@ -20,57 +21,6 @@ type ItemWithRelations = Item & {
 };
 
 type SiblingItem = { id: string; name: string } | null;
-
-function formatDate(value: string) {
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString();
-}
-
-function formatPrice(value: string | null, currency: string | null) {
-  if (!value) return null;
-
-  const amount = Number(value);
-  if (!Number.isFinite(amount)) return value;
-
-  try {
-    return new Intl.NumberFormat(undefined, {
-      style: "currency",
-      currency: currency || "USD",
-    }).format(amount);
-  } catch {
-    return `${amount} ${currency ?? ""}`.trim();
-  }
-}
-
-function formatCountry(value: string | null) {
-  if (!value) return null;
-
-  try {
-    const displayNames = new Intl.DisplayNames(undefined, { type: "region" });
-    return displayNames.of(value.toUpperCase()) ?? value;
-  } catch {
-    return value;
-  }
-}
-
-function renderRating(value: string | null) {
-  const rating = Number(value);
-  if (!Number.isFinite(rating) || rating <= 0) return null;
-
-  const fullStars = Math.max(0, Math.min(10, Math.round(rating)));
-  return `${"★".repeat(fullStars)}${"☆".repeat(10 - fullStars)}`;
-}
-
-function parseListValues(value: string | null) {
-  if (!value) return [];
-
-  try {
-    const parsed = JSON.parse(value) as unknown;
-    return Array.isArray(parsed) ? parsed.filter((entry): entry is string => typeof entry === "string") : [value];
-  } catch {
-    return value.split(",").map((entry) => entry.trim()).filter(Boolean);
-  }
-}
 
 export function ItemDetail({ item, previousItem, nextItem }: { item: ItemWithRelations; previousItem?: SiblingItem; nextItem?: SiblingItem }) {
   const t = useTranslations("items");
@@ -191,7 +141,7 @@ export function ItemDetail({ item, previousItem, nextItem }: { item: ItemWithRel
                       {datum.value}
                     </a>
                   ) : datum.type === "date" && datum.value ? (
-                    <p className="break-words text-sm">{formatDate(datum.value)}</p>
+                    <p className="break-words text-sm">{formatDateValue(datum.value)}</p>
                   ) : datum.type === "list" || datum.type === "textarea" ? (
                     <p className="whitespace-pre-line break-words text-sm">{datum.value ?? tCommon("none")}</p>
                   ) : datum.type === "file" && datum.file ? (
@@ -206,11 +156,11 @@ export function ItemDetail({ item, previousItem, nextItem }: { item: ItemWithRel
                       {datum.originalFilename ?? t("unknownFile")}
                     </a>
                   ) : datum.type === "price" ? (
-                    <p className="break-words text-sm">{formatPrice(datum.value, datum.currency) ?? tCommon("none")}</p>
+                    <p className="break-words text-sm">{formatPriceValue(datum.value, datum.currency) ?? tCommon("none")}</p>
                   ) : datum.type === "rating" ? (
-                    <p className="break-words text-sm">{renderRating(datum.value) ?? tCommon("none")}</p>
+                    <p className="break-words text-sm">{renderRatingValue(datum.value) ?? tCommon("none")}</p>
                   ) : datum.type === "country" ? (
-                    <p className="break-words text-sm">{formatCountry(datum.value) ?? tCommon("none")}</p>
+                    <p className="break-words text-sm">{formatCountryValue(datum.value) ?? tCommon("none")}</p>
                   ) : (
                     <p className="break-words text-sm">{datum.value ?? tCommon("none")}</p>
                   )}

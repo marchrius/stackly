@@ -1,6 +1,7 @@
 "use client";
 
 import type { ChoiceList, Datum, Field, Item, Tag, Template } from "@koillection/db";
+import { CURRENCIES } from "@koillection/lib";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -50,6 +51,7 @@ type ManagedDatumField = {
   choiceListId: string | null;
   position: number;
   value: string;
+  currency: string | null;
   choices: string[];
   selectedChoices: string[];
   image: string | null;
@@ -128,6 +130,7 @@ function buildManagedFields(item: ItemWithRelations | undefined, template: ItemT
                   ? "1"
                   : "0"
                 : datum.value ?? "",
+          currency: datum.type === "price" ? datum.currency ?? null : null,
           choices: normalizeChoiceValues(fallbackChoiceList?.choices),
           selectedChoices: datum.type === "choice-list" ? parseChoiceValues(datum.value) : [],
           image: datum.image ?? null,
@@ -156,6 +159,7 @@ function buildManagedFields(item: ItemWithRelations | undefined, template: ItemT
         choiceListId: field.choiceListId ?? null,
         position: field.position ?? index,
         value: field.type === "checkbox" ? "0" : "",
+        currency: null,
         choices: normalizeChoiceValues(field.choiceList?.choices ?? fallbackChoiceList?.choices),
         selectedChoices: [],
         image: null,
@@ -185,6 +189,7 @@ function buildFieldFromPreset(
     choiceListId: preset.choiceListId,
     position,
     value: preset.type === "list" ? parseListValue(preset.value) : preset.type === "checkbox" ? (preset.value === "1" ? "1" : "0") : preset.value,
+    currency: null,
     choices: normalizeChoiceValues(fallbackChoiceList?.choices),
     selectedChoices: preset.type === "choice-list" ? parseChoiceValues(preset.value) : [],
     image: null,
@@ -219,6 +224,7 @@ function serializeField(field: ManagedDatumField, position: number) {
     choiceListId: field.choiceListId,
     position,
     value,
+    currency: field.type === "price" ? field.currency : null,
     image: field.image,
     imageSmallThumbnail: field.imageSmallThumbnail,
     file: field.file,
@@ -249,6 +255,7 @@ export function ItemForm({
   const router = useRouter();
   const t = useTranslations("items");
   const tCommon = useTranslations("common");
+  const tSettings = useTranslations("settings");
   const tVisibility = useTranslations("visibility");
   const tTemplates = useTranslations("templates");
   const isEdit = Boolean(item);
@@ -339,6 +346,7 @@ export function ItemForm({
         choiceListId: preset?.choiceListId ?? null,
         position: current.length,
         value: type === "checkbox" ? "0" : type === "list" ? parseListValue(preset?.value ?? "") : (preset?.value ?? ""),
+        currency: null,
         choices: normalizeChoiceValues(fallbackChoiceList?.choices),
         selectedChoices: type === "choice-list" ? parseChoiceValues(preset?.value ?? "") : [],
         image: null,
@@ -656,13 +664,45 @@ export function ItemForm({
             <input id={field.key} type="checkbox" checked={field.value === "1"} onChange={(event) => updateField(field.key, (current) => ({ ...current, value: event.target.checked ? "1" : "0" }))} />
             <span>{t("form.checkboxLabel")}</span>
           </label>
+        ) : field.type === "price" ? (
+          <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_220px]">
+            <div className="space-y-2">
+              <Label htmlFor={field.key}>{fieldTitle}</Label>
+              <Input
+                id={field.key}
+                value={field.value}
+                onChange={(event) => updateField(field.key, (current) => ({ ...current, value: event.target.value }))}
+                type="number"
+                step="0.01"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor={`${field.key}-currency`}>{tSettings("currency")}</Label>
+              <Select
+                value={field.currency ?? "__none__"}
+                onValueChange={(value) => updateField(field.key, (current) => ({ ...current, currency: value === "__none__" ? null : value }))}
+              >
+                <SelectTrigger id={`${field.key}-currency`}>
+                  <SelectValue placeholder={tCommon("none")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">{tCommon("none")}</SelectItem>
+                  {CURRENCIES.map((currency) => (
+                    <SelectItem key={currency.code} value={currency.code}>
+                      {currency.code} ({currency.symbol})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         ) : (
           <Input
             id={field.key}
             value={field.value}
             onChange={(event) => updateField(field.key, (current) => ({ ...current, value: event.target.value }))}
-            type={field.type === "number" || field.type === "price" || field.type === "rating" ? "number" : field.type === "date" ? "date" : field.type === "link" ? "url" : "text"}
-            step={field.type === "price" ? "0.01" : "1"}
+            type={field.type === "number" || field.type === "rating" ? "number" : field.type === "date" ? "date" : field.type === "link" ? "url" : "text"}
+            step="1"
             min={field.type === "rating" ? 0 : undefined}
             max={field.type === "rating" ? 10 : undefined}
           />

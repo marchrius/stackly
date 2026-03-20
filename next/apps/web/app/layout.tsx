@@ -5,9 +5,7 @@ import { getLocale, getMessages } from "next-intl/server";
 import { auth } from "@/auth";
 import { prisma } from "@koillection/db";
 import { buildCustomThemeCss, CONFIGURATION_LABELS, readAdminConfiguration } from "@/lib/configuration";
-import { getThemeClass, normalizeTheme, THEME_COOKIE_NAME } from "@/lib/theme/themes";
-import { cookies } from "next/headers";
-import { ThemeBodySync } from "@/components/settings/ThemeBodySync";
+import { getThemeClass, normalizeTheme } from "@/lib/theme/themes";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -27,9 +25,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const locale = await getLocale();
   const messages = await getMessages();
   const session = await auth();
-  const cookieStore = await cookies();
 
-  let themeValue: string | null | undefined = cookieStore.get(THEME_COOKIE_NAME)?.value ?? session?.user?.theme;
   const [dbUser, configurationEntries] = await Promise.all([
     session?.user?.id
       ? prisma.user.findUnique({
@@ -46,20 +42,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       select: { label: true, value: true },
     }),
   ]);
-  themeValue = cookieStore.get(THEME_COOKIE_NAME)?.value ?? dbUser?.theme ?? themeValue;
 
-  const normalizedTheme = normalizeTheme(themeValue);
+  const normalizedTheme = normalizeTheme(dbUser?.theme ?? session?.user?.theme);
   const themeClass = getThemeClass(normalizedTheme);
   const customThemeCss = buildCustomThemeCss(normalizedTheme, readAdminConfiguration(configurationEntries));
 
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body className={`${inter.className} ${themeClass}`}>
+    <html lang={locale} className={themeClass} suppressHydrationWarning>
+      <body className={inter.className}>
         {customThemeCss ? <style dangerouslySetInnerHTML={{ __html: customThemeCss }} /> : null}
-        <NextIntlClientProvider messages={messages}>
-          <ThemeBodySync themeClass={themeClass} />
-          {children}
-        </NextIntlClientProvider>
+        <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
       </body>
     </html>
   );

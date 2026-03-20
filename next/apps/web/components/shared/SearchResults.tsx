@@ -56,7 +56,7 @@ export function SearchResults({ items, collections, tags, wishlists, wishes, que
           <div className="space-y-1">
             {wishlists.map((wishlist) => (
               <Link key={wishlist.id} href={`/wishlists/${wishlist.id}`} className="flex items-center gap-2 rounded-md p-2 hover:bg-accent text-sm">
-                <Heart className="h-4 w-4 text-pink-500 shrink-0" />
+                <Heart className="h-4 w-4 text-secondary shrink-0" />
                 {wishlist.name}
               </Link>
             ))}
@@ -89,7 +89,7 @@ export function SearchResults({ items, collections, tags, wishlists, wishes, que
           <div className="space-y-1">
             {wishes.map((wish) => (
               <Link key={wish.id} href={`/wishes/${wish.id}`} className="flex items-center gap-2 rounded-md p-2 hover:bg-accent text-sm">
-                <Heart className="h-4 w-4 text-pink-500 shrink-0" />
+                <Heart className="h-4 w-4 text-secondary shrink-0" />
                 <span className="truncate">{wish.name}</span>
                 {wish.wishlist?.name && (
                   <Badge variant="outline" className="text-xs ml-auto">{wish.wishlist.name}</Badge>

@@ -1,0 +1,73 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@koillection/db";
+import { requireApiSession } from "@/lib/api-helpers";
+import { previewScrape } from "@/lib/server/scraper-preview";
+
+export async function POST(req: NextRequest) {
+  const result = await requireApiSession();
+  if ("response" in result) return result.response;
+
+  const formData = await req.formData();
+  const scraperId = formData.get("scraperId");
+  const url = formData.get("url");
+  const htmlFile = formData.get("htmlFile");
+  const scrapName = formData.get("scrapName") !== "0";
+  const scrapImage = formData.get("scrapImage") !== "0";
+
+  if (typeof scraperId !== "string" || scraperId.length === 0) {
+    return NextResponse.json({ error: "Missing scraper" }, { status: 400 });
+  }
+
+  const scraper = await prisma.scraper.findFirst({
+    where: { id: scraperId, ownerId: result.session.user.id, type: "collection" },
+    include: { dataPaths: { orderBy: { position: "asc" } } },
+  });
+
+  if (!scraper) {
+    return NextResponse.json({ error: "Scraper not found" }, { status: 404 });
+  }
+
+  let html = "";
+  if (htmlFile instanceof File && htmlFile.size > 0) {
+    html = await htmlFile.text();
+  } else if (typeof url === "string" && url.length > 0) {
+    const headers = Array.isArray(scraper.headers)
+      ? Object.fromEntries(
+          scraper.headers
+            .filter(
+              (entry): entry is { header: string; value: string } =>
+                typeof entry === "object" &&
+                entry !== null &&
+                typeof (entry as { header?: unknown }).header === "string" &&
+                typeof (entry as { value?: unknown }).value === "string",
+            )
+            .map((entry) => [entry.header, entry.value]),
+        )
+      : {};
+
+    const response = await fetch(url, { headers, cache: "no-store" });
+    if (!response.ok) {
+      return NextResponse.json({ error: `Unable to fetch ${url}` }, { status: 400 });
+    }
+    html = await response.text();
+  } else {
+    return NextResponse.json({ error: "Missing source" }, { status: 400 });
+  }
+
+  const preview = await previewScrape({
+    html,
+    config: {
+      url: typeof url === "string" ? url : null,
+      namePath: scraper.namePath,
+      imagePath: scraper.imagePath,
+      dataPaths: scraper.dataPaths,
+    },
+    scrapName,
+    scrapImage,
+  });
+
+  return NextResponse.json({
+    ...preview,
+    scrapedUrl: typeof url === "string" ? url : null,
+  });
+}

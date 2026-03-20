@@ -8,6 +8,7 @@ export type ManagedDatumPayload = {
   choiceListId?: string | null;
   position?: number;
   value?: string | null;
+  currency?: string | null;
   image?: string | null;
   imageSmallThumbnail?: string | null;
   file?: string | null;
@@ -98,6 +99,7 @@ export async function syncDatumEntries(
           label: normalized.label,
           type: normalized.type,
           value: normalized.value,
+          currency: normalized.currency,
           image: normalized.image,
           imageSmallThumbnail: normalized.imageSmallThumbnail,
           file: normalized.file,
@@ -120,6 +122,7 @@ export async function syncDatumEntries(
         label: normalized.label,
         type: normalized.type,
         value: normalized.value,
+        currency: normalized.currency,
         image: normalized.image,
         imageSmallThumbnail: normalized.imageSmallThumbnail,
         file: normalized.file,
@@ -161,6 +164,7 @@ function normalizeDatumEntry(entry: ManagedDatumPayload) {
     choiceListId: entry.choiceListId || null,
     position: entry.position ?? null,
     value,
+    currency: type === "price" ? entry.currency ?? null : null,
     image: type === "image" || type === "sign" ? entry.image ?? null : null,
     imageSmallThumbnail: type === "image" || type === "sign" ? entry.imageSmallThumbnail ?? null : null,
     file: type === "file" ? entry.file ?? null : null,

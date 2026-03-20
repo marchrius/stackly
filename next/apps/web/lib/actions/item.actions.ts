@@ -25,6 +25,7 @@ const datumPayloadSchema = z.object({
   choiceListId: z.string().nullable().optional(),
   position: z.number().int().optional(),
   value: z.string().nullable().optional(),
+  currency: z.string().length(3).nullable().optional(),
   image: z.string().nullable().optional(),
   imageSmallThumbnail: z.string().nullable().optional(),
   file: z.string().nullable().optional(),

@@ -98,7 +98,7 @@ describe("POST /api/items", () => {
         visibility: "public",
         collectionId: "collection-1",
         tagIds: ["tag-1", "tag-1"],
-        dataPayload: [{ label: "Author", type: "text", visibility: "public", value: "Alice" }],
+        dataPayload: [{ label: "Price", type: "price", visibility: "public", value: "19.99", currency: "EUR" }],
       }),
     }));
     expect(response).toBeDefined();
@@ -119,7 +119,7 @@ describe("POST /api/items", () => {
       tx,
       "item-1",
       "internal",
-      [{ label: "Author", type: "text", visibility: "public", value: "Alice" }],
+      [{ label: "Price", type: "price", visibility: "public", value: "19.99", currency: "EUR" }],
       [],
     );
     expect(mockLogApiAction).toHaveBeenCalledWith("user-1", "create", "item-1", "Item test", "Item");

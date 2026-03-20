@@ -1,34 +1,32 @@
 "use client";
 
 import type { User } from "@koillection/db";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@koillection/ui";
 import { updateSettings, changePassword } from "@/lib/actions/user.actions";
 import { useTranslations } from "next-intl";
 import { SUPPORTED_LOCALES } from "@/i18n/locales";
 import { ThemePicker } from "@/components/settings/ThemePicker";
-import { getThemeClass, normalizeTheme, THEME_CLASSNAMES, type ThemeId } from "@/lib/theme/themes";
+import { normalizeTheme, type ThemeId } from "@/lib/theme/themes";
 
 export function SettingsForm({ user }: { user: User }) {
   const t = useTranslations("settings");
-  const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [pwLoading, setPwLoading] = useState(false);
   const [pwError, setPwError] = useState("");
   const [pwSuccess, setPwSuccess] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState<ThemeId>(normalizeTheme(user.theme));
 
+  useEffect(() => {
+    setSelectedTheme(normalizeTheme(user.theme));
+  }, [user.theme]);
+
   async function handleSettings(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSaving(true);
-    const themeClass = getThemeClass(selectedTheme);
-    document.body.classList.remove(...THEME_CLASSNAMES);
-    document.body.classList.add(themeClass);
 
     await updateSettings(new FormData(e.currentTarget));
-    setSaving(false);
-    router.refresh();
+    window.location.reload();
   }
 
   async function handlePassword(e: React.FormEvent<HTMLFormElement>) {
@@ -44,11 +42,9 @@ export function SettingsForm({ user }: { user: User }) {
 
   return (
     <div className="space-y-8">
-      {/* Preferenze */}
       <section>
-        <h2 className="text-lg font-semibold mb-4">{t("preferences")}</h2>
+        <h2 className="mb-4 text-lg font-semibold">{t("preferences")}</h2>
         <form onSubmit={handleSettings} className="space-y-6">
-          {/* Riga 1: Lingua + Valuta */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="locale">{t("language")}</Label>
@@ -69,7 +65,6 @@ export function SettingsForm({ user }: { user: User }) {
             </div>
           </div>
 
-          {/* Riga 2: Formato data + Visibilità */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="dateFormat">{t("dateFormat")}</Label>
@@ -88,7 +83,6 @@ export function SettingsForm({ user }: { user: User }) {
             </div>
           </div>
 
-          {/* Tema — picker visivo full-width */}
           <div className="space-y-3">
             <Label>{t("theme")}</Label>
             <ThemePicker defaultValue={selectedTheme} onChange={setSelectedTheme} />
@@ -100,12 +94,11 @@ export function SettingsForm({ user }: { user: User }) {
         </form>
       </section>
 
-      {/* Password */}
       <section>
-        <h2 className="text-lg font-semibold mb-4">{t("changePassword")}</h2>
-        <form onSubmit={handlePassword} className="space-y-4 max-w-sm">
-          {pwError && <p className="text-destructive text-sm">{pwError}</p>}
-          {pwSuccess && <p className="text-green-600 text-sm">{t("passwordUpdated")}</p>}
+        <h2 className="mb-4 text-lg font-semibold">{t("changePassword")}</h2>
+        <form onSubmit={handlePassword} className="max-w-sm space-y-4">
+          {pwError && <p className="text-sm text-destructive">{pwError}</p>}
+          {pwSuccess && <p className="text-sm text-[hsl(var(--success))]">{t("passwordUpdated")}</p>}
           <div className="space-y-2">
             <Label htmlFor="currentPassword">{t("currentPassword")}</Label>
             <Input id="currentPassword" name="currentPassword" type="password" required />

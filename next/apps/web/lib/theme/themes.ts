@@ -17,7 +17,6 @@ export const THEME_IDS = ["auto", ...CONCRETE_THEME_IDS] as const;
 export type ThemeId = (typeof THEME_IDS)[number];
 
 export const DEFAULT_THEME: ThemeId = "l_aqua";
-export const THEME_COOKIE_NAME = "koillection_theme";
 
 export interface AppTheme {
   id: ConcreteThemeId;
@@ -34,42 +33,42 @@ export const APP_THEMES: readonly AppTheme[] = [
     mode: "light",
     nameKey: "settings.themes.l_aqua",
     className: "theme-l_aqua",
-    preview: ["#f0fbfc", "#06b6d4", "#38bdf8", "#0e2a35"],
+    preview: ["#f8f6f2", "#8a7f73", "#d9d1c7", "#2f2721"],
   },
   {
     id: "l_rose",
     mode: "light",
     nameKey: "settings.themes.l_rose",
     className: "theme-l_rose",
-    preview: ["#fff0f2", "#f43f5e", "#fb7185", "#1a0810"],
+    preview: ["#fff5f8", "#ff6fae", "#ffc2da", "#4a1730"],
   },
   {
     id: "l_mint",
     mode: "light",
     nameKey: "settings.themes.l_mint",
     className: "theme-l_mint",
-    preview: ["#f0fdf5", "#10b981", "#34d399", "#052e16"],
+    preview: ["#f5fbff", "#5fd6c2", "#b58cff", "#163042"],
   },
   {
     id: "d_neo",
     mode: "dark",
     nameKey: "settings.themes.d_neo",
     className: "theme-d_neo",
-    preview: ["#080d1c", "#22d3ee", "#a78bfa", "#c8d8e8"],
+    preview: ["#141210", "#b8afa6", "#3a342f", "#f3ede6"],
   },
   {
     id: "d_ink",
     mode: "dark",
     nameKey: "settings.themes.d_ink",
     className: "theme-d_ink",
-    preview: ["#09090b", "#6366f1", "#818cf8", "#e8ecf4"],
+    preview: ["#18111d", "#d8a4ff", "#7d4fc5", "#f7efff"],
   },
   {
     id: "d_ember",
     mode: "dark",
     nameKey: "settings.themes.d_ember",
     className: "theme-d_ember",
-    preview: ["#0e1420", "#f97316", "#fb923c", "#f0f4f8"],
+    preview: ["#101722", "#6ee7d8", "#ff9ac1", "#edf6ff"],
   },
 ];
 

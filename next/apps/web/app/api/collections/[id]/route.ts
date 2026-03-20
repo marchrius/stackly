@@ -9,6 +9,35 @@ import {
   TreeValidationError,
 } from "@/lib/collections-tree";
 import { NextRequest, NextResponse } from "next/server";
+import { syncCollectionDatumEntries, type ManagedCollectionDatumPayload } from "@/lib/collection-persistence";
+import { getCollectionDisplayConfigOptions, upsertDisplayConfiguration } from "@/lib/collection-display-config";
+import { downloadRemoteAsset } from "@/lib/server/uploads";
+import { z } from "zod";
+
+const datumSchema = z.object({
+  id: z.string().nullable().optional(),
+  label: z.string(),
+  type: z.string().min(1),
+  visibility: z.enum(["public", "internal", "private"]).default("public"),
+  choiceListId: z.string().nullable().optional(),
+  position: z.number().int().optional(),
+  value: z.string().nullable().optional(),
+  file: z.string().nullable().optional(),
+  originalFilename: z.string().nullable().optional(),
+});
+
+const displayConfigSchema = z.object({
+  label: z.preprocess((value) => (typeof value === "string" ? value : ""), z.string()),
+  displayMode: z.enum(["grid", "list"]).default("grid"),
+  sortingProperty: z.preprocess((value) => (value === "" || value == null ? null : value), z.string().nullable()),
+  sortingDirection: z.enum(["ASC", "DESC"]).default("ASC"),
+  showVisibility: z.boolean().default(true),
+  showActions: z.boolean().default(true),
+  showNumberOfChildren: z.boolean().default(true),
+  showNumberOfItems: z.boolean().default(true),
+  showItemQuantities: z.boolean().default(false),
+  columns: z.array(z.string()).default([]),
+});
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -44,7 +73,10 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   const session = await auth();
   if (!session) return NextResponse.json({ error: "Non autenticato" }, { status: 401 });
 
-  const existing = await prisma.collection.findFirst({ where: { id, ownerId: session.user.id } });
+  const existing = await prisma.collection.findFirst({
+    where: { id, ownerId: session.user.id },
+    include: { data: true, childrenDisplayConfig: true, itemsDisplayConfig: true },
+  });
   if (!existing) return NextResponse.json({ error: "Non trovato" }, { status: 404 });
 
   try {
@@ -68,15 +100,29 @@ export async function PATCH(req: NextRequest, { params }: Params) {
         : typeof body.itemsDefaultTemplateId === "string"
           ? body.itemsDefaultTemplateId
           : existing.itemsDefaultTemplateId;
+    const scrapedFromUrl =
+      body.scrapedFromUrl === "" || body.scrapedFromUrl === null
+        ? null
+        : typeof body.scrapedFromUrl === "string"
+          ? body.scrapedFromUrl
+          : existing.scrapedFromUrl;
     const image =
       body.image === "" || body.image === null
         ? null
         : typeof body.image === "string"
           ? body.image
           : existing.image;
+    const remoteImageUrl =
+      typeof body.remoteImageUrl === "string" && body.remoteImageUrl.length > 0 ? body.remoteImageUrl : null;
     const deleteImage = body.deleteImage === true || body.deleteImage === "true" || body.deleteImage === "on";
+    const dataPayload = Array.isArray(body.dataPayload) ? datumSchema.array().parse(body.dataPayload) : [];
+    const childrenDisplayConfig = displayConfigSchema.parse(body.childrenDisplayConfigPayload ?? {});
+    const itemsDisplayConfig = displayConfigSchema.parse(body.itemsDisplayConfigPayload ?? {});
 
-    const nextImage = deleteImage ? null : image;
+    const resolvedImage = remoteImageUrl
+      ? await downloadRemoteAsset({ url: remoteImageUrl, userId: session.user.id, entity: "collections", kind: "image" })
+      : null;
+    const nextImage = deleteImage ? null : (resolvedImage?.smallThumbnail ?? resolvedImage?.path ?? image);
 
     if (!title) {
       return NextResponse.json({ error: "Il titolo e obbligatorio" }, { status: 400 });
@@ -90,19 +136,50 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
     const finalVisibility = computeFinalVisibility(visibility, parent.parentVisibility);
 
-    const collection = await prisma.collection.update({
-      where: { id },
-      data: {
-        title,
-        color,
-        visibility,
-        parentId: parent.parentId,
-        parentVisibility: parent.parentVisibility,
-        finalVisibility,
-        itemsDefaultTemplateId,
-        image: nextImage,
-        updatedAt: new Date(),
-      },
+    const collection = await prisma.$transaction(async (tx) => {
+      const displayOptions = await getCollectionDisplayConfigOptions(tx, session.user.id, id);
+      const childrenDisplayConfigId = await upsertDisplayConfiguration(
+        tx,
+        session.user.id,
+        existing.childrenDisplayConfigId,
+        childrenDisplayConfig,
+        displayOptions.childrenSortingOptions,
+      );
+      const itemsDisplayConfigId = await upsertDisplayConfiguration(
+        tx,
+        session.user.id,
+        existing.itemsDisplayConfigId,
+        itemsDisplayConfig,
+        displayOptions.itemsSortingOptions,
+      );
+
+      const updatedCollection = await tx.collection.update({
+        where: { id },
+        data: {
+          title,
+          color,
+          visibility,
+          parentId: parent.parentId,
+          parentVisibility: parent.parentVisibility,
+          finalVisibility,
+          itemsDefaultTemplateId,
+          childrenDisplayConfigId,
+          itemsDisplayConfigId,
+          scrapedFromUrl,
+          image: nextImage,
+          updatedAt: new Date(),
+        },
+      });
+
+      await syncCollectionDatumEntries(
+        tx,
+        updatedCollection.id,
+        updatedCollection.finalVisibility,
+        dataPayload as ManagedCollectionDatumPayload[],
+        existing.data,
+      );
+
+      return updatedCollection;
     });
 
     if (deleteImage && existing.image) {

@@ -112,10 +112,10 @@ export function WishlistDetail({ wishlist, readOnly = false, basePath = "/wishli
                     {wish.imageSmallThumbnail ? (
                       <img src={`/uploads/${wish.imageSmallThumbnail}`} alt={wish.name} loading="lazy" className="max-h-full max-w-full object-contain" />
                     ) : (
-                      <Heart className="h-8 w-8 text-pink-300 opacity-60" />
+                      <Heart className="h-8 w-8 text-secondary opacity-60" />
                     )}
                     {wish.url && (
-                      <a href={wish.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="absolute top-1 right-1 rounded-full bg-black/40 p-1 text-white hover:bg-black/70">
+                      <a href={wish.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="absolute right-1 top-1 rounded-full bg-background/75 p-1 text-foreground shadow-sm transition-colors hover:bg-background">
                         <ExternalLink className="h-3 w-3" />
                       </a>
                     )}

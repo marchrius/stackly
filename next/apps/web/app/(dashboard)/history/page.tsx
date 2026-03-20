@@ -1,11 +1,24 @@
 import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@koillection/db";
+import { Badge } from "@koillection/ui";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("history");
   return { title: t("title") };
+}
+
+function getLogBadgeVariant(type: string): "success" | "destructive" | "info" {
+  if (type === "create") {
+    return "success";
+  }
+
+  if (type === "delete") {
+    return "destructive";
+  }
+
+  return "info";
 }
 
 export default async function HistoryPage() {
@@ -24,23 +37,21 @@ export default async function HistoryPage() {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold tracking-tight">{t("pageTitle")}</h1>
       <div className="space-y-2">
-        {logs.map((log: LogEntry) => (
+        {logs.map((log: LogEntry) => {
+          const logType = log.type ?? "update";
+
+          return (
           <div key={log.id} className="flex items-center gap-3 rounded-lg border p-3 text-sm">
-            <span className={`rounded px-2 py-0.5 text-xs font-medium ${
-              log.type === "create" ? "bg-green-100 text-green-700" :
-              log.type === "delete" ? "bg-red-100 text-red-700" :
-              "bg-blue-100 text-blue-700"
-            }`}>{log.type}</span>
+            <Badge variant={getLogBadgeVariant(logType)}>{logType}</Badge>
             <span className="font-medium">{log.objectLabel}</span>
             <span className="text-muted-foreground">{log.objectClass}</span>
             <span className="ml-auto text-muted-foreground">
-              {log.loggedAt ? new Date(log.loggedAt).toLocaleString() : "—"}
+              {log.loggedAt ? new Date(log.loggedAt).toLocaleString() : "-"}
             </span>
           </div>
-        ))}
-        {logs.length === 0 && (
-          <p className="text-muted-foreground text-center py-8">{t("noActivity")}</p>
-        )}
+          );
+        })}
+        {logs.length === 0 && <p className="py-8 text-center text-muted-foreground">{t("noActivity")}</p>}
       </div>
     </div>
   );
