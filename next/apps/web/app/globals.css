@@ -2,244 +2,291 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  /* ─── Fallback default (neutral light) ─── */
-  :root {
-    --background: 36 24% 97%;
-    --foreground: 28 17% 18%;
-    --card: 40 20% 99%;
-    --card-foreground: 28 17% 18%;
-    --popover: 40 20% 99%;
-    --popover-foreground: 28 17% 18%;
-    --primary: 28 14% 47%;
-    --primary-foreground: 40 25% 97%;
-    --secondary: 34 22% 90%;
-    --secondary-foreground: 28 17% 24%;
-    --muted: 36 18% 92%;
-    --muted-foreground: 28 9% 42%;
-    --accent: 30 18% 86%;
-    --accent-foreground: 28 17% 24%;
-    --destructive: 0 79% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 32 15% 84%;
-    --input: 32 15% 84%;
-    --ring: 28 14% 47%;
-    --success: 145 63% 42%;
-    --success-foreground: 0 0% 100%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 30 42% 14%;
-    --info: 217 91% 60%;
-    --info-foreground: 0 0% 100%;
-    --chart-1: var(--primary);
-    --chart-2: var(--secondary);
-    --chart-3: var(--accent);
-    --chart-4: var(--ring);
-    --chart-5: var(--destructive);
-    --chart-6: var(--muted-foreground);
-    --chart-7: var(--success);
-    --chart-8: var(--warning);
-    --radius: 0.5rem;
-  }
+/* ─── Theme CSS variables (outside @layer to prevent Turbopack/JIT stripping) ─── */
 
-  /* ─── Neutral (light) ─── */
-  html.theme-l_aqua, body.theme-l_aqua {
-    color-scheme: light;
-    --background: 36 24% 97%;
-    --foreground: 28 17% 18%;
-    --card: 40 20% 99%;
-    --card-foreground: 28 17% 18%;
-    --popover: 40 20% 99%;
-    --popover-foreground: 28 17% 18%;
-    --primary: 28 14% 47%;
-    --primary-foreground: 40 25% 97%;
-    --secondary: 34 22% 90%;
-    --secondary-foreground: 28 17% 24%;
-    --muted: 36 18% 92%;
-    --muted-foreground: 28 9% 42%;
-    --accent: 30 18% 86%;
-    --accent-foreground: 28 17% 24%;
-    --destructive: 0 79% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 32 15% 84%;
-    --input: 32 15% 84%;
-    --ring: 28 14% 47%;
-    --radius: 0.5rem;
-  }
+:root {
+  --background: 249 248 246;
+  --foreground: 54 45 38;
+  --card: 253 253 252;
+  --card-foreground: 54 45 38;
+  --popover: 253 253 252;
+  --popover-foreground: 54 45 38;
+  --primary: 137 119 103;
+  --primary-foreground: 249 248 245;
+  --secondary: 235 230 224;
+  --secondary-foreground: 72 61 51;
+  --muted: 238 235 231;
+  --muted-foreground: 117 106 97;
+  --accent: 226 219 213;
+  --accent-foreground: 72 61 51;
+  --destructive: 234 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 220 215 208;
+  --input: 220 215 208;
+  --ring: 137 119 103;
+  --success: 40 175 96;
+  --success-foreground: 255 255 255;
+  --warning: 245 159 10;
+  --warning-foreground: 51 36 21;
+  --info: 60 131 246;
+  --info-foreground: 255 255 255;
+  --chart-1: var(--primary);
+  --chart-2: var(--secondary);
+  --chart-3: var(--accent);
+  --chart-4: var(--ring);
+  --chart-5: var(--destructive);
+  --chart-6: var(--muted-foreground);
+  --chart-7: var(--success);
+  --chart-8: var(--warning);
+  --radius: 0.5rem;
+}
 
-  /* ─── Blossom (light) ─── */
-  html.theme-l_rose, body.theme-l_rose {
-    color-scheme: light;
-    --background: 332 100% 98%;
-    --foreground: 331 45% 18%;
-    --card: 0 0% 100%;
-    --card-foreground: 331 45% 18%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 331 45% 18%;
-    --primary: 334 94% 71%;
-    --primary-foreground: 330 48% 18%;
-    --secondary: 332 100% 91%;
-    --secondary-foreground: 331 45% 24%;
-    --muted: 332 90% 95%;
-    --muted-foreground: 331 20% 48%;
-    --accent: 345 96% 86%;
-    --accent-foreground: 331 45% 24%;
-    --destructive: 0 79% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 336 70% 87%;
-    --input: 336 70% 87%;
-    --ring: 334 94% 71%;
-    --radius: 0.5rem;
-  }
+/* ─── Neutral (light) ─── */
+html.theme-l_aqua {
+  color-scheme: light;
+  --background: 249 248 246;
+  --foreground: 54 45 38;
+  --card: 253 253 252;
+  --card-foreground: 54 45 38;
+  --popover: 253 253 252;
+  --popover-foreground: 54 45 38;
+  --primary: 137 119 103;
+  --primary-foreground: 249 248 245;
+  --secondary: 235 230 224;
+  --secondary-foreground: 72 61 51;
+  --muted: 238 235 231;
+  --muted-foreground: 117 106 97;
+  --accent: 226 219 213;
+  --accent-foreground: 72 61 51;
+  --destructive: 234 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 220 215 208;
+  --input: 220 215 208;
+  --ring: 137 119 103;
+  --success: 40 175 96;
+  --success-foreground: 255 255 255;
+  --warning: 245 159 10;
+  --warning-foreground: 51 36 21;
+  --info: 60 131 246;
+  --info-foreground: 255 255 255;
+  --radius: 0.5rem;
+}
 
-  /* ─── Sorbet (light) ─── */
-  html.theme-l_mint, body.theme-l_mint {
-    color-scheme: light;
-    --background: 202 100% 98%;
-    --foreground: 208 43% 19%;
-    --card: 0 0% 100%;
-    --card-foreground: 208 43% 19%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 208 43% 19%;
-    --primary: 171 63% 63%;
-    --primary-foreground: 178 55% 18%;
-    --secondary: 268 95% 90%;
-    --secondary-foreground: 264 42% 27%;
-    --muted: 197 70% 94%;
-    --muted-foreground: 208 19% 46%;
-    --accent: 268 94% 82%;
-    --accent-foreground: 264 42% 27%;
-    --destructive: 0 79% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 195 50% 86%;
-    --input: 195 50% 86%;
-    --ring: 171 63% 63%;
-    --radius: 0.5rem;
-  }
+/* ─── Blossom (light) ─── */
+html.theme-l_rose {
+  color-scheme: light;
+  --background: 255 245 250;
+  --foreground: 67 25 45;
+  --card: 255 255 255;
+  --card-foreground: 67 25 45;
+  --popover: 255 255 255;
+  --popover-foreground: 67 25 45;
+  --primary: 251 112 172;
+  --primary-foreground: 68 24 46;
+  --secondary: 255 209 231;
+  --secondary-foreground: 89 34 60;
+  --muted: 254 231 241;
+  --muted-foreground: 147 98 122;
+  --accent: 254 185 202;
+  --accent-foreground: 89 34 60;
+  --destructive: 234 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 245 199 217;
+  --input: 245 199 217;
+  --ring: 251 112 172;
+  --success: 40 175 96;
+  --success-foreground: 255 255 255;
+  --warning: 245 159 10;
+  --warning-foreground: 51 36 21;
+  --info: 60 131 246;
+  --info-foreground: 255 255 255;
+  --radius: 0.5rem;
+}
 
-  /* ─── Midnight (dark) ─── */
-  html.theme-d_neo, body.theme-d_neo {
+/* ─── Sorbet (light) ─── */
+html.theme-l_mint {
+  color-scheme: light;
+  --background: 245 251 255;
+  --foreground: 28 50 69;
+  --card: 255 255 255;
+  --card-foreground: 28 50 69;
+  --popover: 255 255 255;
+  --popover-foreground: 28 50 69;
+  --primary: 101 220 202;
+  --primary-foreground: 21 71 69;
+  --secondary: 228 205 254;
+  --secondary-foreground: 63 40 98;
+  --muted: 229 244 250;
+  --muted-foreground: 95 119 140;
+  --accent: 206 166 252;
+  --accent-foreground: 63 40 98;
+  --destructive: 234 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 201 228 237;
+  --input: 201 228 237;
+  --ring: 101 220 202;
+  --success: 40 175 96;
+  --success-foreground: 255 255 255;
+  --warning: 245 159 10;
+  --warning-foreground: 51 36 21;
+  --info: 60 131 246;
+  --info-foreground: 255 255 255;
+  --radius: 0.5rem;
+}
+
+/* ─── Midnight (dark) ─── */
+html.theme-d_neo {
+  color-scheme: dark;
+  --background: 25 22 21;
+  --foreground: 240 235 229;
+  --card: 34 30 28;
+  --card-foreground: 240 235 229;
+  --popover: 34 30 28;
+  --popover-foreground: 240 235 229;
+  --primary: 187 177 165;
+  --primary-foreground: 28 25 23;
+  --secondary: 56 50 46;
+  --secondary-foreground: 240 235 229;
+  --muted: 45 40 37;
+  --muted-foreground: 163 153 143;
+  --accent: 67 61 56;
+  --accent-foreground: 240 235 229;
+  --destructive: 213 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 59 53 48;
+  --input: 59 53 48;
+  --ring: 187 177 165;
+  --success: 77 203 130;
+  --success-foreground: 18 33 24;
+  --warning: 244 174 52;
+  --warning-foreground: 36 26 15;
+  --info: 104 157 243;
+  --info-foreground: 15 23 36;
+  --radius: 0.5rem;
+}
+
+/* ─── Violet (dark) ─── */
+html.theme-d_ink {
+  color-scheme: dark;
+  --background: 29 21 35;
+  --foreground: 245 236 248;
+  --card: 37 27 44;
+  --card-foreground: 245 236 248;
+  --popover: 37 27 44;
+  --popover-foreground: 245 236 248;
+  --primary: 212 154 249;
+  --primary-foreground: 49 30 62;
+  --secondary: 65 42 81;
+  --secondary-foreground: 245 236 248;
+  --muted: 48 35 57;
+  --muted-foreground: 176 156 186;
+  --accent: 115 36 127;
+  --accent-foreground: 245 236 248;
+  --destructive: 213 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 58 44 68;
+  --input: 58 44 68;
+  --ring: 212 154 249;
+  --success: 77 203 130;
+  --success-foreground: 18 33 24;
+  --warning: 244 174 52;
+  --warning-foreground: 36 26 15;
+  --info: 104 157 243;
+  --info-foreground: 15 23 36;
+  --radius: 0.5rem;
+}
+
+/* ─── Aurora (dark) ─── */
+html.theme-d_ember {
+  color-scheme: dark;
+  --background: 18 25 38;
+  --foreground: 235 245 249;
+  --card: 25 34 51;
+  --card-foreground: 235 245 249;
+  --popover: 25 34 51;
+  --popover-foreground: 235 245 249;
+  --primary: 111 231 219;
+  --primary-foreground: 22 58 60;
+  --secondary: 240 132 175;
+  --secondary-foreground: 63 29 43;
+  --muted: 37 45 60;
+  --muted-foreground: 161 176 191;
+  --accent: 240 132 175;
+  --accent-foreground: 63 29 43;
+  --destructive: 213 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 45 55 73;
+  --input: 45 55 73;
+  --ring: 111 231 219;
+  --success: 77 203 130;
+  --success-foreground: 18 33 24;
+  --warning: 244 174 52;
+  --warning-foreground: 36 26 15;
+  --info: 104 157 243;
+  --info-foreground: 15 23 36;
+  --radius: 0.5rem;
+}
+
+/* ─── Auto: segue il sistema operativo ─── */
+html.theme-l_auto {
+  color-scheme: light;
+  --background: 249 248 246;
+  --foreground: 54 45 38;
+  --card: 253 253 252;
+  --card-foreground: 54 45 38;
+  --popover: 253 253 252;
+  --popover-foreground: 54 45 38;
+  --primary: 137 119 103;
+  --primary-foreground: 249 248 245;
+  --secondary: 235 230 224;
+  --secondary-foreground: 72 61 51;
+  --muted: 238 235 231;
+  --muted-foreground: 117 106 97;
+  --accent: 226 219 213;
+  --accent-foreground: 72 61 51;
+  --destructive: 234 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 220 215 208;
+  --input: 220 215 208;
+  --ring: 137 119 103;
+  --success: 40 175 96;
+  --success-foreground: 255 255 255;
+  --warning: 245 159 10;
+  --warning-foreground: 51 36 21;
+  --info: 60 131 246;
+  --info-foreground: 255 255 255;
+  --radius: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  html.theme-d_auto {
     color-scheme: dark;
-    --background: 24 10% 9%;
-    --foreground: 34 26% 92%;
-    --card: 24 10% 12%;
-    --card-foreground: 34 26% 92%;
-    --popover: 24 10% 12%;
-    --popover-foreground: 34 26% 92%;
-    --primary: 32 14% 69%;
-    --primary-foreground: 24 10% 10%;
-    --secondary: 26 10% 20%;
-    --secondary-foreground: 34 26% 92%;
-    --muted: 26 10% 16%;
-    --muted-foreground: 30 10% 60%;
-    --accent: 28 9% 24%;
-    --accent-foreground: 34 26% 92%;
-    --destructive: 0 63% 56%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 26 10% 21%;
-    --input: 26 10% 21%;
-    --ring: 32 14% 69%;
+    --background: 25 22 21;
+    --foreground: 240 235 229;
+    --card: 34 30 28;
+    --card-foreground: 240 235 229;
+    --popover: 34 30 28;
+    --popover-foreground: 240 235 229;
+    --primary: 187 177 165;
+    --primary-foreground: 28 25 23;
+    --secondary: 56 50 46;
+    --secondary-foreground: 240 235 229;
+    --muted: 45 40 37;
+    --muted-foreground: 163 153 143;
+    --accent: 67 61 56;
+    --accent-foreground: 240 235 229;
+    --destructive: 213 72 72;
+    --destructive-foreground: 255 255 255;
+    --border: 59 53 48;
+    --input: 59 53 48;
+    --ring: 187 177 165;
+    --success: 77 203 130;
+    --success-foreground: 18 33 24;
+    --warning: 244 174 52;
+    --warning-foreground: 36 26 15;
+    --info: 104 157 243;
+    --info-foreground: 15 23 36;
     --radius: 0.5rem;
-  }
-
-  /* ─── Violet (dark) ─── */
-  html.theme-d_ink, body.theme-d_ink {
-    color-scheme: dark;
-    --background: 275 24% 11%;
-    --foreground: 282 48% 95%;
-    --card: 275 24% 14%;
-    --card-foreground: 282 48% 95%;
-    --popover: 275 24% 14%;
-    --popover-foreground: 282 48% 95%;
-    --primary: 277 88% 79%;
-    --primary-foreground: 276 34% 18%;
-    --secondary: 276 32% 24%;
-    --secondary-foreground: 282 48% 95%;
-    --muted: 276 24% 18%;
-    --muted-foreground: 280 18% 67%;
-    --accent: 292 56% 32%;
-    --accent-foreground: 282 48% 95%;
-    --destructive: 0 63% 56%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 276 21% 22%;
-    --input: 276 21% 22%;
-    --ring: 277 88% 79%;
-    --radius: 0.5rem;
-  }
-
-  /* ─── Aurora (dark) ─── */
-  html.theme-d_ember, body.theme-d_ember {
-    color-scheme: dark;
-    --background: 218 36% 11%;
-    --foreground: 198 55% 95%;
-    --card: 219 34% 15%;
-    --card-foreground: 198 55% 95%;
-    --popover: 219 34% 15%;
-    --popover-foreground: 198 55% 95%;
-    --primary: 174 71% 67%;
-    --primary-foreground: 182 46% 16%;
-    --secondary: 336 78% 73%;
-    --secondary-foreground: 336 37% 18%;
-    --muted: 218 24% 19%;
-    --muted-foreground: 210 19% 69%;
-    --accent: 336 78% 73%;
-    --accent-foreground: 336 37% 18%;
-    --destructive: 0 63% 56%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 217 24% 23%;
-    --input: 217 24% 23%;
-    --ring: 174 71% 67%;
-    --radius: 0.5rem;
-  }
-
-  /* ─── Auto: segue il sistema operativo ─── */
-  html.theme-auto, body.theme-auto {
-    color-scheme: light dark;
-    --background: 36 24% 97%;
-    --foreground: 28 17% 18%;
-    --card: 40 20% 99%;
-    --card-foreground: 28 17% 18%;
-    --popover: 40 20% 99%;
-    --popover-foreground: 28 17% 18%;
-    --primary: 28 14% 47%;
-    --primary-foreground: 40 25% 97%;
-    --secondary: 34 22% 90%;
-    --secondary-foreground: 28 17% 24%;
-    --muted: 36 18% 92%;
-    --muted-foreground: 28 9% 42%;
-    --accent: 30 18% 86%;
-    --accent-foreground: 28 17% 24%;
-    --destructive: 0 79% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 32 15% 84%;
-    --input: 32 15% 84%;
-    --ring: 28 14% 47%;
-    --radius: 0.5rem;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    html.theme-auto, body.theme-auto {
-    color-scheme: light dark;
-      --background: 24 10% 9%;
-      --foreground: 34 26% 92%;
-      --card: 24 10% 12%;
-      --card-foreground: 34 26% 92%;
-      --popover: 24 10% 12%;
-      --popover-foreground: 34 26% 92%;
-      --primary: 32 14% 69%;
-      --primary-foreground: 24 10% 10%;
-      --secondary: 26 10% 20%;
-      --secondary-foreground: 34 26% 92%;
-      --muted: 26 10% 16%;
-      --muted-foreground: 30 10% 60%;
-      --accent: 28 9% 24%;
-      --accent-foreground: 34 26% 92%;
-      --destructive: 0 63% 56%;
-      --destructive-foreground: 0 0% 100%;
-      --border: 26 10% 21%;
-      --input: 26 10% 21%;
-      --ring: 32 14% 69%;
-      --radius: 0.5rem;
-    }
   }
 }
 

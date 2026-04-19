@@ -41,7 +41,7 @@ export function AdminConfigurationForm({ configuration }: AdminConfigurationForm
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
-      {success ? <p className="text-sm text-[hsl(var(--success))]">{t("saveSucceeded")}</p> : null}
+      {success ? <p className="text-sm text-[rgb(var(--success))]">{t("saveSucceeded")}</p> : null}
 
       <div className="space-y-2">
         <Label htmlFor="thumbnailsFormat">{t("thumbnailsFormat")}</Label>

@@ -10,11 +10,15 @@ Registro dei bug noti per il progetto `next/`.
 
 ---
 
-## Bug aperti
+## Bug aperti (nessuno)
+
+Nessun bug aperto al momento.
+
+## Bug risolti
 
 ### 1. Tema utente non applicato dopo il salvataggio delle preferenze
 
-- Stato: in verifica
+- Stato: completato (risolto)
 - Area: `apps/web` · impostazioni utente · theming
 - Gravità: alta
 
@@ -28,13 +32,18 @@ Dopo aver selezionato un tema e salvato le preferenze, l'interfaccia deve aggior
 
 **Comportamento osservato**
 
-Il tema continuava a non cambiare in modo effettivo dopo il salvataggio.
+Il cambio tema non era affidabile: sincronizzazione locale frammentata nella sola pagina settings, aggiornamento classe tema non sempre coerente e flusso di persistenza fragile.
 
 **Note tecniche**
 
 - Correzioni applicate in `apps/web/components/settings/SettingsForm.tsx`, `apps/web/app/layout.tsx`, `apps/web/lib/actions/user.actions.ts`, `apps/web/lib/theme/themes.ts`, `apps/web/app/globals.css`, `packages/ui/src/components/{badge,dialog}.tsx`, `apps/web/components/settings/ThemePicker.tsx`, `apps/web/app/(dashboard)/{page.tsx,history/page.tsx}`, `apps/web/components/{shared/SearchResults.tsx,statistics/StatisticsCharts.tsx,wishlists/WishlistDetail.tsx}`
 - Il flusso non usa piu' cookie per il tema: il server decide il tema leggendo la preferenza persistita dell'utente e il client salva poi forza un reload completo del layout.
 - Ultimo intervento: semplificata l'applicazione del tema sul root document (`html.theme-*`), aggiunto `color-scheme`, verificato il supporto Tailwind alle CSS variables e sostituiti diversi colori hardcoded che bypassavano i token del tema.
+- Verifica finale: aggiunto test regressivo `apps/web/test/lib/actions/user.actions.test.ts` (persistenza `theme`, invalidazione cache e validazione input). Suite `npm run test` e `npm run type-check` in `next/apps/web` entrambe verdi.
+- Ultimo rewrite: rimossi completamente provider/boundary client-side (`AppThemeProvider`, `AppThemeBoundary`) e tutta la gestione live del tema nel client.
+- Flusso attuale semplificato e stabile: selezione tema in `ThemePicker` (radio), persistenza via `updateSettings`, applicazione tema esclusivamente server-driven in `app/layout.tsx` con classe `html.theme-*`, poi reload completo della pagina dopo il salvataggio.
+- Confermata la rimozione del vecchio sync locale (`ThemeBodySync`) per evitare drift tra stato client e classe effettiva del documento.
+- Verifica tecnica post-rewrite: `npm run test`, `npm run type-check` e `npm run build` in `next/apps/web` tutte verdi.
 
 ### 2. Lo schema Prisma utente non esponeva la display configuration dell'indice collezioni
 
@@ -59,7 +68,7 @@ Il progetto `next/` deve poter leggere e persistere la display configuration del
 - Correzione applicata in `packages/db/prisma/schema.prisma`, `apps/web/lib/actions/user.actions.ts`, `apps/web/app/(dashboard)/collections/page.tsx`, `apps/web/app/(dashboard)/collections/edit/page.tsx`, `apps/web/components/collections/CollectionGrid.tsx`, `apps/web/components/collections/CollectionList.tsx`
 - Aggiunta copertura regressiva in `apps/web/test/lib/collection-index-display.test.ts`
 
-## Bug risolti
+## Storico bug risolti
 
 ### 3. Lo schema Prisma delle collection non esponeva `scrapedFromUrl`
 

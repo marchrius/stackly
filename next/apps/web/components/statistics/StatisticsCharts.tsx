@@ -16,14 +16,14 @@ interface Stats {
 
 export function StatisticsCharts({ stats }: { stats: Stats }) {
   const chartData = [
-    { name: "Collezioni", value: stats.collectionsCount, color: "hsl(var(--chart-1))" },
-    { name: "Oggetti", value: stats.itemsCount, color: "hsl(var(--chart-2))" },
-    { name: "Album", value: stats.albumsCount, color: "hsl(var(--chart-3))" },
-    { name: "Foto", value: stats.photosCount, color: "hsl(var(--chart-4))" },
-    { name: "Wishlist", value: stats.wishlistsCount, color: "hsl(var(--chart-5))" },
-    { name: "Desideri", value: stats.wishesCount, color: "hsl(var(--chart-6))" },
-    { name: "Tag", value: stats.tagsCount, color: "hsl(var(--chart-7))" },
-    { name: "Prestiti attivi", value: stats.loansCount, color: "hsl(var(--chart-8))" },
+    { name: "Collezioni", value: stats.collectionsCount, color: "rgb(var(--chart-1))" },
+    { name: "Oggetti", value: stats.itemsCount, color: "rgb(var(--chart-2))" },
+    { name: "Album", value: stats.albumsCount, color: "rgb(var(--chart-3))" },
+    { name: "Foto", value: stats.photosCount, color: "rgb(var(--chart-4))" },
+    { name: "Wishlist", value: stats.wishlistsCount, color: "rgb(var(--chart-5))" },
+    { name: "Desideri", value: stats.wishesCount, color: "rgb(var(--chart-6))" },
+    { name: "Tag", value: stats.tagsCount, color: "rgb(var(--chart-7))" },
+    { name: "Prestiti attivi", value: stats.loansCount, color: "rgb(var(--chart-8))" },
   ];
 
   return (

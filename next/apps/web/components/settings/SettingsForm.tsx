@@ -1,13 +1,13 @@
 "use client";
 
 import type { User } from "@koillection/db";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@koillection/ui";
 import { updateSettings, changePassword } from "@/lib/actions/user.actions";
 import { useTranslations } from "next-intl";
 import { SUPPORTED_LOCALES } from "@/i18n/locales";
 import { ThemePicker } from "@/components/settings/ThemePicker";
-import { normalizeTheme, type ThemeId } from "@/lib/theme/themes";
+import { normalizeTheme } from "@/lib/theme/themes";
 
 export function SettingsForm({ user }: { user: User }) {
   const t = useTranslations("settings");
@@ -15,21 +15,21 @@ export function SettingsForm({ user }: { user: User }) {
   const [pwLoading, setPwLoading] = useState(false);
   const [pwError, setPwError] = useState("");
   const [pwSuccess, setPwSuccess] = useState(false);
-  const [selectedTheme, setSelectedTheme] = useState<ThemeId>(normalizeTheme(user.theme));
 
-  useEffect(() => {
-    setSelectedTheme(normalizeTheme(user.theme));
-  }, [user.theme]);
-
-  async function handleSettings(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSettings(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
     setSaving(true);
 
-    await updateSettings(new FormData(e.currentTarget));
+    const result = await updateSettings(new FormData(e.currentTarget));
+    if (result?.error) {
+      setSaving(false);
+      return;
+    }
+
     window.location.reload();
   }
 
-  async function handlePassword(e: React.FormEvent<HTMLFormElement>) {
+  async function handlePassword(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
     setPwLoading(true);
     setPwError("");
@@ -85,7 +85,7 @@ export function SettingsForm({ user }: { user: User }) {
 
           <div className="space-y-3">
             <Label>{t("theme")}</Label>
-            <ThemePicker defaultValue={selectedTheme} onChange={setSelectedTheme} />
+            <ThemePicker defaultValue={normalizeTheme(user.theme)} />
           </div>
 
           <Button type="submit" disabled={saving}>
@@ -98,7 +98,7 @@ export function SettingsForm({ user }: { user: User }) {
         <h2 className="mb-4 text-lg font-semibold">{t("changePassword")}</h2>
         <form onSubmit={handlePassword} className="max-w-sm space-y-4">
           {pwError && <p className="text-sm text-destructive">{pwError}</p>}
-          {pwSuccess && <p className="text-sm text-[hsl(var(--success))]">{t("passwordUpdated")}</p>}
+          {pwSuccess && <p className="text-sm text-[rgb(var(--success))]">{t("passwordUpdated")}</p>}
           <div className="space-y-2">
             <Label htmlFor="currentPassword">{t("currentPassword")}</Label>
             <Input id="currentPassword" name="currentPassword" type="password" required />

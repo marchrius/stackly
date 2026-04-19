@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Check, Monitor } from "lucide-react";
 import { cn } from "@koillection/ui";
@@ -14,16 +14,18 @@ import {
 
 interface ThemePickerProps {
   defaultValue: ThemeId;
-  onChange?: (value: ThemeId) => void;
 }
 
-export function ThemePicker({ defaultValue, onChange }: ThemePickerProps) {
+export function ThemePicker({ defaultValue }: ThemePickerProps) {
   const t = useTranslations("settings");
   const [selected, setSelected] = useState<ThemeId>(defaultValue);
 
+  useEffect(() => {
+    setSelected(defaultValue);
+  }, [defaultValue]);
+
   function selectTheme(value: ThemeId) {
     setSelected(value);
-    onChange?.(value);
   }
 
   const lightThemes = APP_THEMES.filter((th) => th.mode === "light");
@@ -31,15 +33,13 @@ export function ThemePicker({ defaultValue, onChange }: ThemePickerProps) {
 
   return (
     <div className="space-y-5">
-      <input type="hidden" name="theme" value={selected} />
-
       <div className="space-y-2">
         <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
           {t("themes.autoSection")}
         </p>
         <AutoCard
           selected={selected === "auto"}
-          onClick={() => selectTheme("auto")}
+          onSelect={() => selectTheme("auto")}
           label={t("themes.auto")}
           subtitle={t("themes.autoSubtitle")}
           lightPreview={AUTO_PREVIEW_LIGHT}
@@ -57,7 +57,7 @@ export function ThemePicker({ defaultValue, onChange }: ThemePickerProps) {
               key={theme.id}
               theme={theme}
               selected={selected === theme.id}
-              onClick={() => selectTheme(theme.id)}
+              onSelect={() => selectTheme(theme.id)}
               label={t(`themes.${theme.id}` as never)}
             />
           ))}
@@ -74,7 +74,7 @@ export function ThemePicker({ defaultValue, onChange }: ThemePickerProps) {
               key={theme.id}
               theme={theme}
               selected={selected === theme.id}
-              onClick={() => selectTheme(theme.id)}
+              onSelect={() => selectTheme(theme.id)}
               label={t(`themes.${theme.id}` as never)}
             />
           ))}
@@ -87,26 +87,31 @@ export function ThemePicker({ defaultValue, onChange }: ThemePickerProps) {
 interface ThemeCardProps {
   theme: AppTheme;
   selected: boolean;
-  onClick: () => void;
+  onSelect: () => void;
   label: string;
 }
 
-function ThemeCard({ theme, selected, onClick, label }: ThemeCardProps) {
+function ThemeCard({ theme, selected, onSelect, label }: ThemeCardProps) {
   const [bg, primary, accent, text] = theme.preview;
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      title={label}
+    <label
       className={cn(
-        "relative w-24 overflow-hidden rounded-xl border-2 transition-all duration-150",
-        "hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "relative block w-24 cursor-pointer overflow-hidden rounded-xl border-2 transition-all duration-150",
+        "hover:scale-105",
         selected
           ? "border-primary shadow-md shadow-primary/20 scale-105"
           : "border-border hover:border-muted-foreground/60",
       )}
     >
+      <input
+        className="sr-only"
+        type="radio"
+        name="theme"
+        value={theme.id}
+        checked={selected}
+        onChange={onSelect}
+      />
       <div className="flex h-[60px] w-full items-center justify-center gap-2" style={{ backgroundColor: bg }}>
         <span className="h-6 w-6 rounded-full shadow-sm ring-1 ring-black/10" style={{ backgroundColor: primary }} />
         <span className="h-4 w-4 rounded-full shadow-sm ring-1 ring-black/10" style={{ backgroundColor: accent }} />
@@ -122,13 +127,13 @@ function ThemeCard({ theme, selected, onClick, label }: ThemeCardProps) {
           <Check className="h-2.5 w-2.5" strokeWidth={3} />
         </div>
       )}
-    </button>
+    </label>
   );
 }
 
 interface AutoCardProps {
   selected: boolean;
-  onClick: () => void;
+  onSelect: () => void;
   label: string;
   subtitle: string;
   lightPreview: readonly [string, string, string, string];
@@ -137,7 +142,7 @@ interface AutoCardProps {
 
 function AutoCard({
   selected,
-  onClick,
+  onSelect,
   label,
   subtitle,
   lightPreview,
@@ -147,39 +152,36 @@ function AutoCard({
   const [dBg, dPrimary, dAccent] = darkPreview;
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      title={label}
+    <label
       className={cn(
-        "relative flex items-stretch overflow-hidden rounded-xl border-2 transition-all duration-150",
-        "hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "relative flex w-24 cursor-pointer items-stretch overflow-hidden rounded-xl border-2 transition-all duration-150",
+        "hover:scale-105",
         selected
-          ? "border-primary shadow-md shadow-primary/20 scale-[1.02]"
+          ? "border-primary shadow-md shadow-primary/20 scale-105"
           : "border-border hover:border-muted-foreground/60",
       )}
     >
-      <div className="flex">
-        <div className="flex h-[60px] w-20 items-center justify-center gap-1.5" style={{ backgroundColor: lBg }}>
+      <input className="sr-only" type="radio" name="theme" value="auto" checked={selected} onChange={onSelect} />
+      <div className="flex w-full">
+        <div className="flex h-[60px] flex-1 items-center justify-center gap-1" style={{ backgroundColor: lBg }}>
           <span className="h-5 w-5 rounded-full shadow-sm ring-1 ring-black/10" style={{ backgroundColor: lPrimary }} />
           <span className="h-3 w-3 rounded-full shadow-sm ring-1 ring-black/10" style={{ backgroundColor: lAccent }} />
         </div>
 
         <div
-          className="relative h-[60px] w-4 shrink-0 overflow-hidden"
+          className="relative h-[60px] w-3 shrink-0 overflow-hidden"
           style={{ background: `linear-gradient(to bottom right, ${lBg} 50%, ${dBg} 50%)` }}
         />
 
-        <div className="flex h-[60px] w-20 items-center justify-center gap-1.5" style={{ backgroundColor: dBg }}>
+        <div className="flex h-[60px] flex-1 items-center justify-center gap-1" style={{ backgroundColor: dBg }}>
           <span className="h-3 w-3 rounded-full shadow-sm ring-1 ring-white/10" style={{ backgroundColor: dAccent }} />
           <span className="h-5 w-5 rounded-full shadow-sm ring-1 ring-white/10" style={{ backgroundColor: dPrimary }} />
         </div>
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-1.5 bg-gradient-to-r from-card to-muted/90 px-3 py-1.5 text-card-foreground">
-        <Monitor className="h-3 w-3 shrink-0 text-muted-foreground" />
-        <span className="text-xs font-semibold">{label}</span>
-        <span className="hidden text-[10px] text-muted-foreground sm:inline">- {subtitle}</span>
+      <div className="absolute inset-x-0 bottom-0 flex items-center justify-center bg-gradient-to-r from-card to-muted/90 px-1.5 py-1.5 text-card-foreground">
+        <Monitor className="mr-1 h-3 w-3 shrink-0 text-muted-foreground" />
+        <span className="truncate text-xs font-semibold">{label}</span>
       </div>
 
       {selected && (
@@ -187,6 +189,6 @@ function AutoCard({
           <Check className="h-2.5 w-2.5" strokeWidth={3} />
         </div>
       )}
-    </button>
+    </label>
   );
 }

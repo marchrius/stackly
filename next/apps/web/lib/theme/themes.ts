@@ -73,7 +73,8 @@ export const APP_THEMES: readonly AppTheme[] = [
 ];
 
 export const THEME_CLASSNAMES = [
-  "theme-auto",
+  "theme-l_auto",
+  "theme-d_auto",
   ...APP_THEMES.map((theme) => theme.className),
 ] as const;
 
@@ -93,7 +94,7 @@ export function normalizeTheme(value: string | null | undefined): ThemeId {
 
 export function getThemeClass(value: string | null | undefined): string {
   const themeId = normalizeTheme(value);
-  if (themeId === "auto") return "theme-auto";
+  if (themeId === "auto") return "theme-l_auto theme-d_auto";
   const theme = APP_THEMES.find((entry) => entry.id === themeId);
   return theme?.className ?? "theme-l_aqua";
 }

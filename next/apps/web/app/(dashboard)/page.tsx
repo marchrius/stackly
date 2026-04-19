@@ -23,10 +23,10 @@ export default async function DashboardPage() {
   ]);
 
   const stats = [
-    { label: t("collections"), count: collectionsCount, icon: Library, href: "/collections", colorClass: "text-[hsl(var(--chart-1))]" },
-    { label: t("albums"), count: albumsCount, icon: Image, href: "/albums", colorClass: "text-[hsl(var(--chart-2))]" },
-    { label: t("wishlists"), count: wishlistsCount, icon: Heart, href: "/wishlists", colorClass: "text-[hsl(var(--chart-3))]" },
-    { label: t("tags"), count: tagsCount, icon: Tag, href: "/tags", colorClass: "text-[hsl(var(--chart-7))]" },
+    { label: t("collections"), count: collectionsCount, icon: Library, href: "/collections", colorClass: "text-[rgb(var(--chart-1))]" },
+    { label: t("albums"), count: albumsCount, icon: Image, href: "/albums", colorClass: "text-[rgb(var(--chart-2))]" },
+    { label: t("wishlists"), count: wishlistsCount, icon: Heart, href: "/wishlists", colorClass: "text-[rgb(var(--chart-3))]" },
+    { label: t("tags"), count: tagsCount, icon: Tag, href: "/tags", colorClass: "text-[rgb(var(--chart-7))]" },
   ];
 
   return (
