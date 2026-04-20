@@ -1,5 +1,7 @@
 import { prisma } from "@koillection/db";
 import type { Account, Profile } from "next-auth";
+import { cookies } from "next/headers";
+import { OIDC_LINK_COOKIE_NAME, readOidcLinkCookieValue } from "@/lib/auth/oidc-link-cookie";
 
 function normalizeRoles(value: unknown): string[] {
   if (Array.isArray(value)) {
@@ -73,6 +75,13 @@ export async function resolveUserForOidcSignIn(input: {
     },
   });
 
+  const cookieStore = await cookies();
+  const linkCookieValue = cookieStore.get(OIDC_LINK_COOKIE_NAME)?.value;
+  const secret = process.env.NEXTAUTH_SECRET;
+  const linkContext =
+    linkCookieValue && secret ? await readOidcLinkCookieValue(linkCookieValue, secret) : null;
+  const isLinkRequest = Boolean(linkContext);
+
   if (linkedProvider) {
     const linkedUser = linkedProvider.user;
     if (!linkedUser.enabled) return null;
@@ -87,6 +96,10 @@ export async function resolveUserForOidcSignIn(input: {
         refreshToken: account.refresh_token ?? linkedProvider.refreshToken,
       },
     });
+
+    if (isLinkRequest) {
+      cookieStore.delete(OIDC_LINK_COOKIE_NAME);
+    }
 
     return {
       status: "ok" as const,
@@ -112,8 +125,13 @@ export async function resolveUserForOidcSignIn(input: {
   if (existingUser) {
     if (!existingUser.enabled) return null;
 
-    if (existingUser.primaryAuthMethod === "credentials") {
+    if (existingUser.primaryAuthMethod === "credentials" && !isLinkRequest) {
       return { status: "link_required" as const };
+    }
+
+    if (isLinkRequest && linkContext!.userId !== existingUser.id) {
+      cookieStore.delete(OIDC_LINK_COOKIE_NAME);
+      return { status: "link_forbidden" as const };
     }
 
     await prisma.oAuthProvider.create({
@@ -137,6 +155,10 @@ export async function resolveUserForOidcSignIn(input: {
       });
     }
 
+    if (isLinkRequest) {
+      cookieStore.delete(OIDC_LINK_COOKIE_NAME);
+    }
+
     return {
       status: "ok" as const,
       id: existingUser.id,
@@ -149,6 +171,11 @@ export async function resolveUserForOidcSignIn(input: {
       theme: existingUser.theme,
       dateFormat: existingUser.dateFormat,
     };
+  }
+
+  if (isLinkRequest) {
+    cookieStore.delete(OIDC_LINK_COOKIE_NAME);
+    return { status: "link_forbidden" as const };
   }
 
   const usernameSeed = user?.name ?? email.split("@")[0] ?? "user";
@@ -176,6 +203,10 @@ export async function resolveUserForOidcSignIn(input: {
       },
     },
   });
+
+  if (isLinkRequest) {
+    cookieStore.delete(OIDC_LINK_COOKIE_NAME);
+  }
 
   return {
     status: "ok" as const,

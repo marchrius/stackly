@@ -13,15 +13,31 @@ const prismaMock = vi.hoisted(() => ({
   },
 }));
 
+const cookieState = vi.hoisted(() => ({
+  value: undefined as string | undefined,
+  delete: vi.fn(),
+}));
+
 vi.mock("@koillection/db", () => ({
   prisma: prismaMock,
 }));
 
+vi.mock("next/headers", () => ({
+  cookies: vi.fn(async () => ({
+    get: (name: string) => (name === "koillection_oidc_link" && cookieState.value ? { value: cookieState.value } : undefined),
+    delete: cookieState.delete,
+  })),
+}));
+
 import { resolveUserForOidcSignIn } from "@/lib/auth/oidc-signin";
+import { createOidcLinkCookieValue } from "@/lib/auth/oidc-link-cookie";
 
 describe("resolveUserForOidcSignIn", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    cookieState.value = undefined;
+    cookieState.delete.mockReset();
+    process.env.NEXTAUTH_SECRET = "test-secret";
   });
 
   it("returns link_required when existing credentials user has same email", async () => {
@@ -77,5 +93,41 @@ describe("resolveUserForOidcSignIn", () => {
 
     expect((result as any)?.status).toBe("ok");
     expect(prismaMock.user.create).toHaveBeenCalled();
+  });
+
+  it("links an existing credentials user when the link cookie matches", async () => {
+    prismaMock.oAuthProvider.findUnique.mockResolvedValue(null);
+    prismaMock.user.findUnique.mockResolvedValue({
+      id: "u1",
+      username: "local-user",
+      email: "local@example.com",
+      enabled: true,
+      primaryAuthMethod: "credentials",
+    });
+    cookieState.value = await createOidcLinkCookieValue("u1", "test-secret", 300);
+
+    const result = await resolveUserForOidcSignIn({
+      account: {
+        type: "oidc",
+        provider: "oidc",
+        providerAccountId: "sub-3",
+        issuer: "https://issuer.example",
+      } as any,
+      profile: { sub: "sub-3", iss: "https://issuer.example" } as any,
+      user: { email: "local@example.com", name: "Local User", image: null },
+    });
+
+    expect((result as any)?.status).toBe("ok");
+    expect(prismaMock.oAuthProvider.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          userId: "u1",
+          providerName: "oidc",
+          subject: "sub-3",
+          email: "local@example.com",
+        }),
+      }),
+    );
+    expect(cookieState.delete).toHaveBeenCalledWith("koillection_oidc_link");
   });
 });

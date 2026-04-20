@@ -8,11 +8,11 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:migrate": "dotenv -e .env prisma migrate dev",
-    "db:studio": "prisma studio",
-    "db:seed": "prisma db seed"
+    "db:generate": "dotenv -e ../../.env -- prisma generate",
+    "db:push": "dotenv -e ../../.env -- prisma db push",
+    "db:migrate": "dotenv -e ../../.env -- prisma migrate dev",
+    "db:studio": "dotenv -e ../../.env -- prisma studio",
+    "db:seed": "dotenv -e ../../.env -- prisma db seed"
   },
   "dependencies": {
     "@prisma/client": "^6.2.1"

@@ -3,13 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "type-check": "tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "dev": "dotenv -e ../../.env -- next dev --turbopack",
+    "build": "dotenv -e ../../.env -- next build",
+    "start": "dotenv -e ../../.env -- next start",
+    "lint": "dotenv -e ../../.env -- next lint",
+    "type-check": "dotenv -e ../../.env -- tsc --noEmit",
+    "test": "dotenv -e ../../.env -- vitest run",
+    "test:watch": "dotenv -e ../../.env -- vitest"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

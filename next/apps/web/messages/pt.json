@@ -51,7 +51,8 @@
       "oidcSubmit": "Sign in with SSO",
       "orContinueWith": "or continue with username and password",
       "oidcLinkRequired": "This email is already used by a password account. Sign in with username/password first, then link OIDC from settings.",
-      "oidcFailed": "Single sign-on failed. Please try again."
+      "oidcFailed": "Single sign-on failed. Please try again.",
+      "oidcLinkForbidden": "This linking request is no longer valid. Start the connection from settings again."
     },
     "register": {
       "title": "Criar uma conta",
@@ -338,7 +339,15 @@
       "l_mint": "Sorbet",
       "d_neo": "Midnight",
       "d_ink": "Violet",
-      "d_ember": "Aurora"
+      "d_ember": "Aurora",
+      "l_sand": "Dune",
+      "l_lavender": "Lilac",
+      "l_sage": "Meadow",
+      "l_sunrise": "Apricot",
+      "d_forest": "Forest",
+      "d_ocean": "Tidal",
+      "d_copper": "Forge",
+      "d_graphite": "Graphite"
     },
     "languages": {
       "da": "Dansk",
@@ -369,7 +378,9 @@
       "unlink": "Unlink",
       "confirmUnlink": "Do you want to unlink provider \"{provider}\" from your account?",
       "notFound": "Provider not found.",
-      "lastProviderError": "You cannot unlink the last provider because no password login is configured on your account."
+      "lastProviderError": "You cannot unlink the last provider because no password login is configured on your account.",
+      "connectOidc": "Connect OIDC",
+      "connecting": "Connecting…"
     }
   },
   "search": {

@@ -42,18 +42,19 @@ cp .env.example .env
 # Modifica DATABASE_URL e NEXTAUTH_SECRET in .env
 
 # 3. Genera il client Prisma
-cd packages/db
-DATABASE_URL="<tua-url>" npx prisma generate
+npm run db:generate
 
 # 4. (Opzionale) Esegui le migrazioni su un nuovo DB
-DATABASE_URL="<tua-url>" npx prisma db push
+npm run db:push
 
 # 5. Avvia in sviluppo
-cd ../../
 npm run dev
 ```
 
 ## Variabili d'Ambiente (`next/.env`)
+
+Usa un solo file centrale: `next/.env`.
+Non creare `apps/web/.env` o `packages/db/.env`: tutti gli script workspace leggono `../../.env`.
 
 | Variabile | Descrizione | Esempio |
 |---|---|---|
@@ -284,4 +285,3 @@ Organizzati per modulo funzionale in `apps/web/components/`:
 | `settings/` | `ProfileForm`, `ChangePasswordForm` | Impostazioni utente |
 | `shared/` | `Sidebar`, `Navbar`, `Breadcrumb`, `LoadingSpinner`, `Dialog`, `Table` | Componenti shared UI |
 | `layout/` | `ProtectedLayout`, `AuthLayout`, `DashboardLayout` | Layout comuni |
-

@@ -117,6 +117,10 @@ const config: NextAuthConfig = {
         return "/login?error=oidc_link_required";
       }
 
+      if (resolved.status === "link_forbidden") {
+        return "/login?error=oidc_link_forbidden";
+      }
+
       Object.assign(user, resolved);
       return true;
     },

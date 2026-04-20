@@ -43,7 +43,7 @@ vi.mock("next-intl/server", () => ({
   getTranslations: vi.fn(async () => (key: string) => key),
 }));
 
-import { unlinkOidcProvider, updateSettings } from "@/lib/actions/user.actions";
+import { unlinkOidcProvider, updateSettings, startOidcLink } from "@/lib/actions/user.actions";
 
 describe("updateSettings", () => {
   beforeEach(() => {
@@ -51,6 +51,7 @@ describe("updateSettings", () => {
     mockPrisma.user.update.mockResolvedValue({});
     mockRevalidatePath.mockReset();
     mockCookieSet.mockReset();
+    process.env.NEXTAUTH_SECRET = "test-secret";
   });
 
   it("persists theme settings and revalidates layout", async () => {
@@ -104,6 +105,29 @@ describe("updateSettings", () => {
     expect(mockPrisma.user.update).not.toHaveBeenCalled();
     expect(mockCookieSet).not.toHaveBeenCalled();
     expect(mockRevalidatePath).not.toHaveBeenCalled();
+  });
+});
+
+describe("startOidcLink", () => {
+  beforeEach(() => {
+    mockRequireAuth.mockResolvedValue({ user: { id: "user-1" } });
+    mockCookieSet.mockReset();
+    process.env.NEXTAUTH_SECRET = "test-secret";
+  });
+
+  it("creates a short-lived linking cookie", async () => {
+    const result = await startOidcLink();
+
+    expect(result).toEqual({ success: true });
+    expect(mockCookieSet).toHaveBeenCalledWith(
+      "koillection_oidc_link",
+      expect.any(String),
+      expect.objectContaining({
+        path: "/",
+        sameSite: "lax",
+        httpOnly: true,
+      }),
+    );
   });
 });
 

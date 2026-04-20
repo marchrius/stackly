@@ -11,6 +11,7 @@ import { isValidLocale } from "@/i18n/locales";
 import { THEME_IDS } from "@/lib/theme/themes";
 import { getTranslations } from "next-intl/server";
 import { getCollectionDisplayConfigOptions, upsertDisplayConfiguration } from "@/lib/collection-display-config";
+import { OIDC_LINK_COOKIE_NAME, createOidcLinkCookieValue } from "@/lib/auth/oidc-link-cookie";
 
 const settingsSchema = z.object({
   currency: z.string().length(3).default("EUR"),
@@ -109,6 +110,29 @@ export async function unlinkOidcProvider(providerId: string) {
   }
 
   revalidatePath("/settings");
+  return { success: true };
+}
+
+export async function startOidcLink() {
+  const session = await requireAuth();
+  const cookieStore = await cookies();
+  const secret = process.env.NEXTAUTH_SECRET;
+  if (!secret) {
+    throw new Error("NEXTAUTH_SECRET is not configured");
+  }
+
+  cookieStore.set(
+    OIDC_LINK_COOKIE_NAME,
+    await createOidcLinkCookieValue(session.user.id, secret),
+    {
+      path: "/",
+      maxAge: 60 * 5,
+      sameSite: "lax",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    },
+  );
+
   return { success: true };
 }
 

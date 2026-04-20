@@ -51,7 +51,8 @@
       "oidcFailed": "Accesso SSO non riuscito. Riprova.",
       "noAccount": "Non hai un account?",
       "register": "Registrati",
-      "invalidCredentials": "Credenziali non valide. Riprova."
+      "invalidCredentials": "Credenziali non valide. Riprova.",
+      "oidcLinkForbidden": "This linking request is no longer valid. Start the connection from settings again."
     },
     "register": {
       "title": "Crea un account",
@@ -338,7 +339,15 @@
       "l_mint": "Sorbet",
       "d_neo": "Midnight",
       "d_ink": "Violet",
-      "d_ember": "Aurora"
+      "d_ember": "Aurora",
+      "l_sand": "Dune",
+      "l_lavender": "Lilac",
+      "l_sage": "Meadow",
+      "l_sunrise": "Apricot",
+      "d_forest": "Forest",
+      "d_ocean": "Tidal",
+      "d_copper": "Forge",
+      "d_graphite": "Graphite"
     },
     "visibilityOptions": {
       "public": "Pubblico",
@@ -367,7 +376,9 @@
       "unlink": "Scollega",
       "confirmUnlink": "Vuoi scollegare il provider \"{provider}\" dal tuo account?",
       "notFound": "Provider non trovato.",
-      "lastProviderError": "Non puoi scollegare l'ultimo provider perché sul tuo account non è configurato il login con password."
+      "lastProviderError": "Non puoi scollegare l'ultimo provider perché sul tuo account non è configurato il login con password.",
+      "connectOidc": "Connect OIDC",
+      "connecting": "Connecting…"
     },
     "userNotFound": "User not found.",
     "currentPasswordInvalid": "Current password is incorrect."

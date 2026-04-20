@@ -758,7 +758,7 @@ Definite in `next/.env` (non committato). Template in `next/.env.example`.
 | `UPLOAD_DIR` | ❌ | Path assoluto o relativo cartella upload | `./public/uploads` |
 | `NODE_ENV` | ❌ | `development` \| `production` | `development` |
 
-> `DATABASE_URL` è condivisa tra `apps/web/.env` e `packages/db/.env` perché sia Next.js che Prisma CLI la leggono dal proprio working directory.
+> File ambiente unico: usare solo `next/.env`. Gli script di `apps/web` e `packages/db` caricano esplicitamente `../../.env`.
 
 ---
 

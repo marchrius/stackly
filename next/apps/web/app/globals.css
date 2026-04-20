@@ -134,6 +134,130 @@ html.theme-l_mint {
   --radius: 0.5rem;
 }
 
+/* ─── Dune (light) ─── */
+html.theme-l_sand {
+  color-scheme: light;
+  --background: 255 248 239;
+  --foreground: 76 53 32;
+  --card: 255 252 246;
+  --card-foreground: 76 53 32;
+  --popover: 255 252 246;
+  --popover-foreground: 76 53 32;
+  --primary: 226 162 74;
+  --primary-foreground: 58 39 20;
+  --secondary: 249 226 189;
+  --secondary-foreground: 90 63 39;
+  --muted: 252 239 217;
+  --muted-foreground: 141 113 83;
+  --accent: 244 207 143;
+  --accent-foreground: 90 63 39;
+  --destructive: 234 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 242 220 184;
+  --input: 242 220 184;
+  --ring: 226 162 74;
+  --success: 40 175 96;
+  --success-foreground: 255 255 255;
+  --warning: 245 159 10;
+  --warning-foreground: 51 36 21;
+  --info: 60 131 246;
+  --info-foreground: 255 255 255;
+  --radius: 0.5rem;
+}
+
+/* ─── Lilac (light) ─── */
+html.theme-l_lavender {
+  color-scheme: light;
+  --background: 248 245 255;
+  --foreground: 47 37 87;
+  --card: 255 255 255;
+  --card-foreground: 47 37 87;
+  --popover: 255 255 255;
+  --popover-foreground: 47 37 87;
+  --primary: 159 140 255;
+  --primary-foreground: 47 37 87;
+  --secondary: 234 227 255;
+  --secondary-foreground: 67 53 126;
+  --muted: 241 236 255;
+  --muted-foreground: 119 107 166;
+  --accent: 210 198 255;
+  --accent-foreground: 67 53 126;
+  --destructive: 234 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 223 214 255;
+  --input: 223 214 255;
+  --ring: 159 140 255;
+  --success: 40 175 96;
+  --success-foreground: 255 255 255;
+  --warning: 245 159 10;
+  --warning-foreground: 51 36 21;
+  --info: 60 131 246;
+  --info-foreground: 255 255 255;
+  --radius: 0.5rem;
+}
+
+/* ─── Meadow (light) ─── */
+html.theme-l_sage {
+  color-scheme: light;
+  --background: 244 251 245;
+  --foreground: 31 67 50;
+  --card: 253 255 253;
+  --card-foreground: 31 67 50;
+  --popover: 253 255 253;
+  --popover-foreground: 31 67 50;
+  --primary: 95 168 120;
+  --primary-foreground: 22 61 44;
+  --secondary: 225 243 230;
+  --secondary-foreground: 45 93 67;
+  --muted: 232 247 236;
+  --muted-foreground: 102 136 115;
+  --accent: 184 223 194;
+  --accent-foreground: 45 93 67;
+  --destructive: 234 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 205 231 214;
+  --input: 205 231 214;
+  --ring: 95 168 120;
+  --success: 40 175 96;
+  --success-foreground: 255 255 255;
+  --warning: 245 159 10;
+  --warning-foreground: 51 36 21;
+  --info: 60 131 246;
+  --info-foreground: 255 255 255;
+  --radius: 0.5rem;
+}
+
+/* ─── Apricot (light) ─── */
+html.theme-l_sunrise {
+  color-scheme: light;
+  --background: 255 247 241;
+  --foreground: 91 47 37;
+  --card: 255 253 250;
+  --card-foreground: 91 47 37;
+  --popover: 255 253 250;
+  --popover-foreground: 91 47 37;
+  --primary: 255 143 90;
+  --primary-foreground: 91 47 37;
+  --secondary: 255 227 205;
+  --secondary-foreground: 113 62 47;
+  --muted: 255 236 223;
+  --muted-foreground: 152 108 92;
+  --accent: 255 195 163;
+  --accent-foreground: 113 62 47;
+  --destructive: 234 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 249 212 190;
+  --input: 249 212 190;
+  --ring: 255 143 90;
+  --success: 40 175 96;
+  --success-foreground: 255 255 255;
+  --warning: 245 159 10;
+  --warning-foreground: 51 36 21;
+  --info: 60 131 246;
+  --info-foreground: 255 255 255;
+  --radius: 0.5rem;
+}
+
 /* ─── Midnight (dark) ─── */
 html.theme-d_neo {
   color-scheme: dark;
@@ -218,6 +342,130 @@ html.theme-d_ember {
   --border: 45 55 73;
   --input: 45 55 73;
   --ring: 111 231 219;
+  --success: 77 203 130;
+  --success-foreground: 18 33 24;
+  --warning: 244 174 52;
+  --warning-foreground: 36 26 15;
+  --info: 104 157 243;
+  --info-foreground: 15 23 36;
+  --radius: 0.5rem;
+}
+
+/* ─── Forest (dark) ─── */
+html.theme-d_forest {
+  color-scheme: dark;
+  --background: 16 27 23;
+  --foreground: 226 243 234;
+  --card: 22 36 31;
+  --card-foreground: 226 243 234;
+  --popover: 22 36 31;
+  --popover-foreground: 226 243 234;
+  --primary: 137 211 165;
+  --primary-foreground: 22 61 44;
+  --secondary: 38 60 52;
+  --secondary-foreground: 226 243 234;
+  --muted: 31 47 41;
+  --muted-foreground: 153 183 167;
+  --accent: 79 157 109;
+  --accent-foreground: 226 243 234;
+  --destructive: 213 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 45 69 60;
+  --input: 45 69 60;
+  --ring: 137 211 165;
+  --success: 77 203 130;
+  --success-foreground: 18 33 24;
+  --warning: 244 174 52;
+  --warning-foreground: 36 26 15;
+  --info: 104 157 243;
+  --info-foreground: 15 23 36;
+  --radius: 0.5rem;
+}
+
+/* ─── Tidal (dark) ─── */
+html.theme-d_ocean {
+  color-scheme: dark;
+  --background: 15 23 38;
+  --foreground: 226 236 255;
+  --card: 21 32 51;
+  --card-foreground: 226 236 255;
+  --popover: 21 32 51;
+  --popover-foreground: 226 236 255;
+  --primary: 124 196 255;
+  --primary-foreground: 18 40 73;
+  --secondary: 34 53 86;
+  --secondary-foreground: 226 236 255;
+  --muted: 29 45 70;
+  --muted-foreground: 156 176 211;
+  --accent: 77 132 217;
+  --accent-foreground: 226 236 255;
+  --destructive: 213 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 40 62 96;
+  --input: 40 62 96;
+  --ring: 124 196 255;
+  --success: 77 203 130;
+  --success-foreground: 18 33 24;
+  --warning: 244 174 52;
+  --warning-foreground: 36 26 15;
+  --info: 104 157 243;
+  --info-foreground: 15 23 36;
+  --radius: 0.5rem;
+}
+
+/* ─── Forge (dark) ─── */
+html.theme-d_copper {
+  color-scheme: dark;
+  --background: 37 23 18;
+  --foreground: 253 233 221;
+  --card: 50 31 25;
+  --card-foreground: 253 233 221;
+  --popover: 50 31 25;
+  --popover-foreground: 253 233 221;
+  --primary: 255 178 125;
+  --primary-foreground: 89 47 32;
+  --secondary: 76 47 37;
+  --secondary-foreground: 253 233 221;
+  --muted: 63 40 32;
+  --muted-foreground: 205 161 136;
+  --accent: 213 122 79;
+  --accent-foreground: 253 233 221;
+  --destructive: 213 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 85 53 41;
+  --input: 85 53 41;
+  --ring: 255 178 125;
+  --success: 77 203 130;
+  --success-foreground: 18 33 24;
+  --warning: 244 174 52;
+  --warning-foreground: 36 26 15;
+  --info: 104 157 243;
+  --info-foreground: 15 23 36;
+  --radius: 0.5rem;
+}
+
+/* ─── Graphite (dark) ─── */
+html.theme-d_graphite {
+  color-scheme: dark;
+  --background: 21 23 28;
+  --foreground: 239 242 249;
+  --card: 28 31 37;
+  --card-foreground: 239 242 249;
+  --popover: 28 31 37;
+  --popover-foreground: 239 242 249;
+  --primary: 168 178 199;
+  --primary-foreground: 46 52 65;
+  --secondary: 47 53 66;
+  --secondary-foreground: 239 242 249;
+  --muted: 39 44 55;
+  --muted-foreground: 161 171 191;
+  --accent: 102 112 138;
+  --accent-foreground: 239 242 249;
+  --destructive: 213 72 72;
+  --destructive-foreground: 255 255 255;
+  --border: 57 63 78;
+  --input: 57 63 78;
+  --ring: 168 178 199;
   --success: 77 203 130;
   --success-foreground: 18 33 24;
   --warning: 244 174 52;

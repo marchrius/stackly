@@ -2,9 +2,11 @@
 
 import type { OAuthProvider } from "@koillection/db";
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@koillection/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle } from "@koillection/ui";
 import { useTranslations } from "next-intl";
+import { signIn } from "next-auth/react";
 import { unlinkOidcProvider } from "@/lib/actions/user.actions";
+import { startOidcLink } from "@/lib/actions/user.actions";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 
 function formatProviderName(name: string): string {
@@ -17,9 +19,16 @@ function formatProviderName(name: string): string {
   return map[name.toLowerCase()] ?? name;
 }
 
-export function ConnectedProvidersCard({ providers }: { providers: OAuthProvider[] }) {
+export function ConnectedProvidersCard({
+  providers,
+  oidcEnabled,
+}: {
+  providers: OAuthProvider[];
+  oidcEnabled: boolean;
+}) {
   const t = useTranslations("settings");
   const [error, setError] = useState("");
+  const [connecting, setConnecting] = useState(false);
 
   async function handleUnlink(providerId: string) {
     setError("");
@@ -31,10 +40,28 @@ export function ConnectedProvidersCard({ providers }: { providers: OAuthProvider
     window.location.reload();
   }
 
+  async function handleConnect() {
+    setError("");
+    setConnecting(true);
+    try {
+      await startOidcLink();
+      await signIn("oidc", { callbackUrl: "/settings" });
+    } finally {
+      setConnecting(false);
+    }
+  }
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("connectedProviders.title")}</CardTitle>
+        <div className="flex items-center justify-between gap-3">
+          <CardTitle>{t("connectedProviders.title")}</CardTitle>
+          {oidcEnabled ? (
+            <Button type="button" variant="secondary" size="sm" onClick={handleConnect} disabled={connecting}>
+              {connecting ? t("connectedProviders.connecting") : t("connectedProviders.connectOidc")}
+            </Button>
+          ) : null}
+        </div>
       </CardHeader>
       <CardContent className="space-y-3">
         {error ? <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</p> : null}

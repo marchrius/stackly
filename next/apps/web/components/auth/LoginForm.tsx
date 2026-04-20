@@ -6,16 +6,18 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button, Input, Label, Card, CardContent, CardFooter } from "@koillection/ui";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { isOidcEnabled } from "@/lib/oidc-config";
 
-export function LoginForm() {
+interface LoginFormProps {
+  oidcEnabled: boolean;
+}
+
+export function LoginForm({ oidcEnabled }: LoginFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [oidcLoading, setOidcLoading] = useState(false);
   const t = useTranslations("auth.login");
-  const oidcEnabled = isOidcEnabled();
   const authError = searchParams.get("error");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -75,7 +77,9 @@ export function LoginForm() {
             <div className="rounded-md bg-destructive/10 text-destructive text-sm p-3">
               {error ||
                 (authError === "oidc_link_required"
-                  ? t("oidcLinkRequired")
+                ? t("oidcLinkRequired")
+                  : authError === "oidc_link_forbidden"
+                    ? t("oidcLinkForbidden")
                   : authError === "OAuthSignin" || authError === "OAuthCallback"
                     ? t("oidcFailed")
                     : t("invalidCredentials"))}
