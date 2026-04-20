@@ -97,7 +97,7 @@ function ThemeCard({ theme, selected, onSelect, label }: ThemeCardProps) {
   return (
     <label
       className={cn(
-        "relative block w-24 cursor-pointer overflow-hidden rounded-xl border-2 transition-all duration-150",
+        "relative block w-28 cursor-pointer overflow-hidden rounded-xl border-2 transition-all duration-150",
         "hover:scale-105",
         selected
           ? "border-primary shadow-md shadow-primary/20 scale-105"
@@ -154,7 +154,7 @@ function AutoCard({
   return (
     <label
       className={cn(
-        "relative flex w-24 cursor-pointer items-stretch overflow-hidden rounded-xl border-2 transition-all duration-150",
+        "relative block w-28 cursor-pointer overflow-hidden rounded-xl border-2 transition-all duration-150",
         "hover:scale-105",
         selected
           ? "border-primary shadow-md shadow-primary/20 scale-105"
@@ -179,9 +179,9 @@ function AutoCard({
         </div>
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 flex items-center justify-center bg-gradient-to-r from-card to-muted/90 px-1.5 py-1.5 text-card-foreground">
-        <Monitor className="mr-1 h-3 w-3 shrink-0 text-muted-foreground" />
-        <span className="truncate text-xs font-semibold">{label}</span>
+      <div className="flex items-center justify-center gap-1 bg-card px-1.5 py-1.5 text-center text-xs font-semibold leading-none text-card-foreground">
+        <Monitor className="h-3 w-3 shrink-0 text-muted-foreground" />
+        <span className="whitespace-nowrap">{label}</span>
       </div>
 
       {selected && (
