@@ -66,6 +66,52 @@ export async function updateSettings(formData: FormData) {
   return { success: true };
 }
 
+export async function unlinkOidcProvider(providerId: string) {
+  const session = await requireAuth();
+  const t = await getTranslations("settings");
+
+  const provider = await prisma.oAuthProvider.findUnique({
+    where: { id: providerId },
+    select: { id: true, userId: true },
+  });
+
+  if (!provider || provider.userId !== session.user.id) {
+    return { error: t("connectedProviders.notFound") };
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { id: true, password: true },
+  });
+
+  if (!user) {
+    return { error: t("userNotFound") };
+  }
+
+  const providersCount = await prisma.oAuthProvider.count({
+    where: { userId: session.user.id },
+  });
+
+  const hasPassword = user.password.trim().length > 0;
+  if (!hasPassword && providersCount <= 1) {
+    return { error: t("connectedProviders.lastProviderError") };
+  }
+
+  await prisma.oAuthProvider.delete({
+    where: { id: providerId },
+  });
+
+  if (providersCount - 1 <= 0 && hasPassword) {
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data: { primaryAuthMethod: "credentials", updatedAt: new Date() },
+    });
+  }
+
+  revalidatePath("/settings");
+  return { success: true };
+}
+
 export async function updateCollectionIndexDisplayConfiguration(formData: FormData) {
   const session = await requireAuth();
 

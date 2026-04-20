@@ -16,7 +16,7 @@ export function SettingsForm({ user }: { user: User }) {
   const [pwError, setPwError] = useState("");
   const [pwSuccess, setPwSuccess] = useState(false);
 
-  async function handleSettings(e: React.ChangeEvent<HTMLFormElement>) {
+  async function handleSettings(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSaving(true);
 
@@ -29,7 +29,7 @@ export function SettingsForm({ user }: { user: User }) {
     window.location.reload();
   }
 
-  async function handlePassword(e: React.ChangeEvent<HTMLFormElement>) {
+  async function handlePassword(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setPwLoading(true);
     setPwError("");
@@ -98,7 +98,7 @@ export function SettingsForm({ user }: { user: User }) {
         <h2 className="mb-4 text-lg font-semibold">{t("changePassword")}</h2>
         <form onSubmit={handlePassword} className="max-w-sm space-y-4">
           {pwError && <p className="text-sm text-destructive">{pwError}</p>}
-          {pwSuccess && <p className="text-sm text-[rgb(var(--success))]">{t("passwordUpdated")}</p>}
+          {pwSuccess && <p className="text-sm text-[hsl(var(--success))]">{t("passwordUpdated")}</p>}
           <div className="space-y-2">
             <Label htmlFor="currentPassword">{t("currentPassword")}</Label>
             <Input id="currentPassword" name="currentPassword" type="password" required />

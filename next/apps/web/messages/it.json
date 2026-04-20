@@ -45,6 +45,10 @@
       "password": "Password",
       "submit": "Accedi",
       "submitting": "Accesso in corso…",
+      "oidcSubmit": "Accedi con SSO",
+      "orContinueWith": "oppure continua con username e password",
+      "oidcLinkRequired": "Questa email e' gia' associata a un account con password. Accedi prima con username/password, poi collega OIDC dalle impostazioni.",
+      "oidcFailed": "Accesso SSO non riuscito. Riprova.",
       "noAccount": "Non hai un account?",
       "register": "Registrati",
       "invalidCredentials": "Credenziali non valide. Riprova."
@@ -356,6 +360,14 @@
       "tr": "Türkçe",
       "uk": "Українська",
       "zh": "中文"
+    },
+    "connectedProviders": {
+      "title": "Provider di accesso collegati",
+      "empty": "Nessun provider esterno collegato.",
+      "unlink": "Scollega",
+      "confirmUnlink": "Vuoi scollegare il provider \"{provider}\" dal tuo account?",
+      "notFound": "Provider non trovato.",
+      "lastProviderError": "Non puoi scollegare l'ultimo provider perché sul tuo account non è configurato il login con password."
     },
     "userNotFound": "User not found.",
     "currentPasswordInvalid": "Current password is incorrect."

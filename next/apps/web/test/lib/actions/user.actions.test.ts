@@ -10,6 +10,12 @@ const { mockRequireAuth, mockRevalidatePath, mockCookieSet, mockPrisma } = vi.ho
       findUnique: vi.fn(),
       findFirst: vi.fn(),
       create: vi.fn(),
+      count: vi.fn(),
+    },
+    oAuthProvider: {
+      findUnique: vi.fn(),
+      count: vi.fn(),
+      delete: vi.fn(),
     },
     $transaction: vi.fn(),
   },
@@ -33,12 +39,18 @@ vi.mock("@koillection/db", () => ({
   prisma: mockPrisma,
 }));
 
-import { updateSettings } from "@/lib/actions/user.actions";
+vi.mock("next-intl/server", () => ({
+  getTranslations: vi.fn(async () => (key: string) => key),
+}));
+
+import { unlinkOidcProvider, updateSettings } from "@/lib/actions/user.actions";
 
 describe("updateSettings", () => {
   beforeEach(() => {
     mockRequireAuth.mockResolvedValue({ user: { id: "user-1" } });
     mockPrisma.user.update.mockResolvedValue({});
+    mockRevalidatePath.mockReset();
+    mockCookieSet.mockReset();
   });
 
   it("persists theme settings and revalidates layout", async () => {
@@ -92,5 +104,41 @@ describe("updateSettings", () => {
     expect(mockPrisma.user.update).not.toHaveBeenCalled();
     expect(mockCookieSet).not.toHaveBeenCalled();
     expect(mockRevalidatePath).not.toHaveBeenCalled();
+  });
+});
+
+describe("unlinkOidcProvider", () => {
+  beforeEach(() => {
+    mockRequireAuth.mockResolvedValue({ user: { id: "user-1" } });
+    mockPrisma.oAuthProvider.findUnique.mockReset();
+    mockPrisma.oAuthProvider.count.mockReset();
+    mockPrisma.oAuthProvider.delete.mockReset();
+    mockPrisma.user.findUnique.mockReset();
+    mockPrisma.user.update.mockReset();
+    mockRevalidatePath.mockReset();
+  });
+
+  it("blocks unlink when it is the last provider and no password exists", async () => {
+    mockPrisma.oAuthProvider.findUnique.mockResolvedValue({ id: "p1", userId: "user-1" });
+    mockPrisma.user.findUnique.mockResolvedValue({ id: "user-1", password: "" });
+    mockPrisma.oAuthProvider.count.mockResolvedValue(1);
+
+    const result = await unlinkOidcProvider("p1");
+
+    expect(result).toEqual({ error: "connectedProviders.lastProviderError" });
+    expect(mockPrisma.oAuthProvider.delete).not.toHaveBeenCalled();
+  });
+
+  it("deletes provider and revalidates settings when allowed", async () => {
+    mockPrisma.oAuthProvider.findUnique.mockResolvedValue({ id: "p1", userId: "user-1" });
+    mockPrisma.user.findUnique.mockResolvedValue({ id: "user-1", password: "hash" });
+    mockPrisma.oAuthProvider.count.mockResolvedValue(2);
+    mockPrisma.oAuthProvider.delete.mockResolvedValue({});
+
+    const result = await unlinkOidcProvider("p1");
+
+    expect(result).toEqual({ success: true });
+    expect(mockPrisma.oAuthProvider.delete).toHaveBeenCalledWith({ where: { id: "p1" } });
+    expect(mockRevalidatePath).toHaveBeenCalledWith("/settings");
   });
 });

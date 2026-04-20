@@ -20,6 +20,7 @@ model User {
   email               String    @unique
   password            String
   enabled             Boolean   @default(true)
+  primaryAuthMethod   String    @default("credentials") @map("primary_auth_method") @db.VarChar(20)
   roles               Json      @default("[\"ROLE_USER\"]")
   currency            String    @default("EUR") @db.VarChar(3)
   locale              String    @default("en") @db.VarChar(5)
@@ -56,8 +57,32 @@ model User {
   paths                 Path[]
   displayConfigurations DisplayConfiguration[]
   fields                Field[]
+  oauthProviders        OAuthProvider[]
 
   @@map("koi_user")
+}
+
+model OAuthProvider {
+  id                String    @id @default(uuid()) @db.Char(36)
+  userId            String    @db.Char(36) @map("user_id")
+  issuer            String    @db.VarChar(255)
+  providerName      String    @map("provider_name") @db.VarChar(50)
+  subject           String    @db.VarChar(255)
+  email             String?   @db.VarChar(255)
+  displayName       String?   @map("display_name") @db.VarChar(255)
+  picture           String?   @db.Text
+  accessTokenExpiry DateTime? @map("access_token_expiry")
+  refreshToken      String?   @map("refresh_token") @db.Text
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime? @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([issuer, subject])
+  @@unique([userId, providerName])
+  @@index([userId], name: "idx_oauth_provider_user")
+  @@index([issuer, subject], name: "idx_oauth_provider_issuer_subject")
+  @@map("koi_oauth_provider")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

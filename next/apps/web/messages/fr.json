@@ -47,7 +47,11 @@
       "submitting": "Connexion…",
       "noAccount": "Vous n’avez pas de compte ?",
       "register": "S’inscrire",
-      "invalidCredentials": "Identifiants invalides. Veuillez réessayer."
+      "invalidCredentials": "Identifiants invalides. Veuillez réessayer.",
+      "oidcSubmit": "Sign in with SSO",
+      "orContinueWith": "or continue with username and password",
+      "oidcLinkRequired": "This email is already used by a password account. Sign in with username/password first, then link OIDC from settings.",
+      "oidcFailed": "Single sign-on failed. Please try again."
     },
     "register": {
       "title": "Créer un compte",
@@ -358,7 +362,15 @@
       "private": "Privé"
     },
     "userNotFound": "User not found.",
-    "currentPasswordInvalid": "Current password is incorrect."
+    "currentPasswordInvalid": "Current password is incorrect.",
+    "connectedProviders": {
+      "title": "Connected sign-in providers",
+      "empty": "No external providers connected.",
+      "unlink": "Unlink",
+      "confirmUnlink": "Do you want to unlink provider \"{provider}\" from your account?",
+      "notFound": "Provider not found.",
+      "lastProviderError": "You cannot unlink the last provider because no password login is configured on your account."
+    }
   },
   "search": {
     "title": "Recherche",

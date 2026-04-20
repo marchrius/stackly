@@ -47,7 +47,11 @@
       "submitting": "Вхід…",
       "noAccount": "Немає облікового запису?",
       "register": "Зареєструватися",
-      "invalidCredentials": "Неправильні облікові дані. Спробуйте ще раз."
+      "invalidCredentials": "Неправильні облікові дані. Спробуйте ще раз.",
+      "oidcSubmit": "Sign in with SSO",
+      "orContinueWith": "or continue with username and password",
+      "oidcLinkRequired": "This email is already used by a password account. Sign in with username/password first, then link OIDC from settings.",
+      "oidcFailed": "Single sign-on failed. Please try again."
     },
     "register": {
       "title": "Створити обліковий запис",
@@ -358,7 +362,15 @@
       "private": "Приватний"
     },
     "userNotFound": "User not found.",
-    "currentPasswordInvalid": "Current password is incorrect."
+    "currentPasswordInvalid": "Current password is incorrect.",
+    "connectedProviders": {
+      "title": "Connected sign-in providers",
+      "empty": "No external providers connected.",
+      "unlink": "Unlink",
+      "confirmUnlink": "Do you want to unlink provider \"{provider}\" from your account?",
+      "notFound": "Provider not found.",
+      "lastProviderError": "You cannot unlink the last provider because no password login is configured on your account."
+    }
   },
   "search": {
     "title": "Пошук",
