@@ -104,9 +104,9 @@ docker compose -f docker-compose.next.dist.yml up --build
 
 ### Note operative di produzione
 
-- Montare una volume persistente su `/app/apps/web/public/uploads`
-- Eseguire `npm run db:generate` in fase di build immagine
-- Usare `npm run build` per generare `.next/` e `npm run start` come entrypoint runtime
+- Montare il volume persistente su `/var/lib/stackly/uploads` (il container lo collega a `/app/apps/web/public/uploads`)
+- Le operazioni DB avvengono a startup tramite `entrypoint.sh`: crea il DB se non esiste, poi esegue `prisma migrate deploy`
+- Usare `npm run build` per generare `.next/`; l'entrypoint avvia poi `npm run start`
 - `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL` e `UPLOAD_DIR` devono essere valorizzate a runtime
 - I comandi `maintenance:*` possono essere eseguiti nello stesso container applicativo
 

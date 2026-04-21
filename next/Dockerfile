@@ -1,4 +1,4 @@
-FROM node:20-bookworm-slim AS base
+FROM node:24-alpine AS base
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -13,35 +13,29 @@ COPY packages/db/package.json packages/db/package.json
 COPY packages/lib/package.json packages/lib/package.json
 COPY packages/ui/package.json packages/ui/package.json
 
-RUN npm ci
+RUN npm ci --include=dev
 
 FROM deps AS builder
 
-ARG DATABASE_URL="postgresql://build:build@localhost:5432/stackly"
-ARG NEXTAUTH_SECRET="build-time-secret-change-me"
-ARG NEXTAUTH_URL="http://localhost:3000"
-ARG UPLOAD_DIR="./apps/web/public/uploads"
-
-ENV DATABASE_URL=$DATABASE_URL
-ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
-ENV NEXTAUTH_URL=$NEXTAUTH_URL
-ENV UPLOAD_DIR=$UPLOAD_DIR
-
 COPY . .
 
-RUN npm run db:generate --workspace=@koillection/db
-RUN npm run build --workspace=@koillection/web
+RUN cd apps/web && npx next build
 
 FROM base AS runner
 
+RUN apk add --no-cache postgresql-client
+
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
-ENV UPLOAD_DIR="./apps/web/public/uploads"
+ENV UPLOAD_DIR=/var/lib/stackly/uploads
 
 COPY --from=builder /app /app
+COPY entrypoint.sh /entrypoint.sh
 
-RUN mkdir -p /app/apps/web/public/uploads
+RUN chmod +x /entrypoint.sh && mkdir -p /var/lib/stackly/uploads
+
+VOLUME ["/var/lib/stackly/uploads"]
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start", "--workspace=@koillection/web"]
+ENTRYPOINT ["/entrypoint.sh"]
