@@ -1,7 +1,7 @@
 "use client";
 
-import type { ChoiceList, Field, Template } from "@koillection/db";
-import { DATUM_TYPES } from "@koillection/lib";
+import type { ChoiceList, Field, Template } from "@stackly/db";
+import { DATUM_TYPES } from "@stackly/lib";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -13,7 +13,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@koillection/ui";
+} from "@stackly/ui";
 import { Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 

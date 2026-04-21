@@ -1,6 +1,6 @@
 import { rm } from "fs/promises";
 import path from "path";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 
 const VISIBILITY_ORDER = ["public", "internal", "private"] as const;
 const UPLOAD_DIR = process.env.UPLOAD_DIR ?? "./public/uploads";

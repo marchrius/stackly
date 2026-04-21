@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { DisplayConfiguration } from "@koillection/db";
-import { Badge, Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@koillection/ui";
+import type { DisplayConfiguration } from "@stackly/db";
+import { Badge, Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@stackly/ui";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { updateCollectionIndexDisplayConfiguration } from "@/lib/actions/user.actions";

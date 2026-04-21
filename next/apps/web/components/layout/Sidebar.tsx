@@ -7,7 +7,7 @@ import {
   Library, Image, Heart, Tag, FileText, List,
   BarChart2, Clock, Package, Wrench, Search, Shield,
 } from "lucide-react";
-import { cn } from "@koillection/ui";
+import { cn } from "@stackly/ui";
 
 export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
@@ -33,7 +33,7 @@ export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
       <div className="flex h-14 items-center border-b px-4">
         <Link href="/" className="flex items-center gap-2 font-bold text-lg">
           <Library className="h-5 w-5 text-primary" />
-          Koillection
+          Stackly
         </Link>
       </div>
       <nav className="flex-1 overflow-y-auto py-4">

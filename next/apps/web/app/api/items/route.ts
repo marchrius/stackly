@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { computeFinalVisibility, resolveItemContext, syncDatumEntries, type ManagedDatumPayload } from "@/lib/item-persistence";
 import { jsonError, logApiAction, parsePagination, requireApiSession } from "@/lib/api-helpers";
 

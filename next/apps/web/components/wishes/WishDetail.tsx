@@ -1,8 +1,8 @@
 "use client";
 
-import type { Wish } from "@koillection/db";
+import type { Wish } from "@stackly/db";
 import Link from "next/link";
-import { Badge, Button } from "@koillection/ui";
+import { Badge, Button } from "@stackly/ui";
 import { ChevronRight, Edit, ExternalLink, Heart } from "lucide-react";
 import { deleteWish } from "@/lib/actions/wish.actions";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";

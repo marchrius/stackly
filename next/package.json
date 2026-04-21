@@ -1,5 +1,5 @@
 {
-  "name": "koillection",
+  "name": "stackly",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -12,15 +12,15 @@
     "maintenance:refresh-cached-values": "dotenv -e .env -- node scripts/refresh-cached-values.mjs",
     "maintenance:regenerate-logs": "dotenv -e .env -- node scripts/regenerate-logs.mjs",
     "maintenance:regenerate-thumbnails": "dotenv -e .env -- node scripts/regenerate-thumbnails.mjs",
-    "start": "npm run start --workspace=@koillection/web",
+    "start": "npm run start --workspace=@stackly/web",
     "test": "turbo run test",
     "type-check": "dotenv -e .env -- turbo run type-check",
     "i18n:validate": "python3 scripts/validate_i18n_messages.py",
-    "db:generate": "dotenv -e .env -- turbo run db:generate --filter=@koillection/db",
-    "db:push": "dotenv -e .env -- turbo run db:push --filter=@koillection/db",
-    "db:migrate": "dotenv -e .env -- turbo run db:migrate --filter=@koillection/db",
-    "db:studio": "dotenv -e .env -- turbo run db:studio --filter=@koillection/db",
-    "db:seed": "dotenv -e .env -- npm run db:seed --workspace=@koillection/db",
+    "db:generate": "dotenv -e .env -- turbo run db:generate --filter=@stackly/db",
+    "db:push": "dotenv -e .env -- turbo run db:push --filter=@stackly/db",
+    "db:migrate": "dotenv -e .env -- turbo run db:migrate --filter=@stackly/db",
+    "db:studio": "dotenv -e .env -- turbo run db:studio --filter=@stackly/db",
+    "db:seed": "dotenv -e .env -- npm run db:seed --workspace=@stackly/db",
     "db:seed:demo": "dotenv -e .env -- node scripts/seed-demo-data.mjs"
   },
   "devDependencies": {

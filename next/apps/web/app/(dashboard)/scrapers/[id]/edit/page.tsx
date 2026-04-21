@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { requireAuth } from "@/lib/auth-utils";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { ScraperForm } from "@/components/scrapers/ScraperForm";
 import { getTranslations } from "next-intl/server";
 

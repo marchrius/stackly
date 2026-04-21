@@ -1,6 +1,6 @@
 "use client";
 
-import type { Item } from "@koillection/db";
+import type { Item } from "@stackly/db";
 import Link from "next/link";
 import { Box } from "lucide-react";
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
 import { getCollectionAncestors } from "@/lib/collections-tree";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { notFound } from "next/navigation";
 import { CollectionDetail } from "@/components/collections/CollectionDetail";
 import { getTranslations } from "next-intl/server";

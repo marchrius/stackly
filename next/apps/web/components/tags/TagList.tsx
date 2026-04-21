@@ -1,6 +1,6 @@
-import type { Tag, TagCategory } from "@koillection/db";
+import type { Tag, TagCategory } from "@stackly/db";
 import Link from "next/link";
-import { Badge } from "@koillection/ui";
+import { Badge } from "@stackly/ui";
 import { useTranslations } from "next-intl";
 
 type TagWithRelations = Tag & { category: TagCategory | null; _count: { items: number } };

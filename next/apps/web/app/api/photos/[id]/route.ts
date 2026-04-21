@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { computeFinalVisibility, deleteUploadImageVariants } from "@/lib/albums-tree";
 import { getAlbumAncestors } from "@/lib/albums-tree";
 

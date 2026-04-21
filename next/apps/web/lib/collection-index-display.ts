@@ -1,4 +1,4 @@
-import type { Collection, Datum, DisplayConfiguration } from "@koillection/db";
+import type { Collection, Datum, DisplayConfiguration } from "@stackly/db";
 import { RESERVED_SORTING_VALUES } from "@/lib/collection-display-config";
 import { getCollectionCachedSummary } from "@/lib/collection-detail";
 import { formatCountryValue, formatPriceValue, parseListValues, renderRatingValue } from "@/lib/datum-format";

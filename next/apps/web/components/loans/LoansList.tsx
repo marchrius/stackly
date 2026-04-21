@@ -1,10 +1,10 @@
 "use client";
 
-import type { Loan } from "@koillection/db";
+import type { Loan } from "@stackly/db";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Badge, Button } from "@koillection/ui";
+import { Badge, Button } from "@stackly/ui";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { useTranslations } from "next-intl";
 

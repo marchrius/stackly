@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import {
   computeFinalVisibility,
   deleteUploadImageVariants,

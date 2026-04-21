@@ -17,7 +17,7 @@ vi.mock("@/lib/api-helpers", () => ({
   parsePagination: mockParsePagination,
 }));
 
-vi.mock("@koillection/db", () => ({
+vi.mock("@stackly/db", () => ({
   prisma: mockPrisma,
 }));
 

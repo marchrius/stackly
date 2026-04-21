@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/auth-utils";
-import { prisma } from "@koillection/db";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@koillection/ui";
+import { prisma } from "@stackly/db";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@stackly/ui";
 import { AdminConfigurationForm } from "@/components/settings/AdminConfigurationForm";
 import { CONFIGURATION_LABELS, readAdminConfiguration } from "@/lib/configuration";
 import { getTranslations } from "next-intl/server";

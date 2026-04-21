@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { parsePagination, requireApiSession } from "@/lib/api-helpers";
 
 export async function GET(req: NextRequest) {

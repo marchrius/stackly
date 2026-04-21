@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
-import { prisma } from "@koillection/db";
-import { Input } from "@koillection/ui";
+import { prisma } from "@stackly/db";
+import { Input } from "@stackly/ui";
 import { SearchResults } from "@/components/shared/SearchResults";
 import { getTranslations } from "next-intl/server";
 

@@ -1,7 +1,7 @@
 "use server";
 
 import { requireAuth } from "@/lib/auth-utils";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { computeFinalVisibility, resolveItemContext, syncDatumEntries, type ManagedDatumPayload } from "@/lib/item-persistence";
 import { downloadRemoteAsset, saveUploadedAsset } from "@/lib/server/uploads";
 import { revalidatePath } from "next/cache";

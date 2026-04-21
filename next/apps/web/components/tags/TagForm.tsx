@@ -1,6 +1,6 @@
 "use client";
 
-import type { Tag, TagCategory } from "@koillection/db";
+import type { Tag, TagCategory } from "@stackly/db";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
-} from "@koillection/ui";
+} from "@stackly/ui";
 import { useTranslations } from "next-intl";
 
 type EditableTag = Pick<Tag, "id" | "label" | "description" | "visibility" | "categoryId">;

@@ -1,7 +1,7 @@
-import type { Tag, TagCategory, Item } from "@koillection/db";
+import type { Tag, TagCategory, Item } from "@stackly/db";
 import Link from "next/link";
 import { DeleteResourceButton } from "@/components/shared/DeleteResourceButton";
-import { Badge, Button } from "@koillection/ui";
+import { Badge, Button } from "@stackly/ui";
 import { Box, Edit } from "lucide-react";
 import { useTranslations } from "next-intl";
 

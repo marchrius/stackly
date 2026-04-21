@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
-import { ROLES } from "@koillection/lib";
-import { prisma } from "@koillection/db";
+import { ROLES } from "@stackly/lib";
+import { prisma } from "@stackly/db";
 import { NextResponse } from "next/server";
 
 export type ApiSession = {

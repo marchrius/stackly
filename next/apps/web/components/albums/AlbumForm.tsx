@@ -1,6 +1,6 @@
 "use client";
 
-import type { Album } from "@koillection/db";
+import type { Album } from "@stackly/db";
 import { useMemo, useRef, useState } from "react";
 import {
   Button,
@@ -11,9 +11,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@koillection/ui";
+} from "@stackly/ui";
 import { createAlbum, updateAlbum } from "@/lib/actions/media.actions";
-import { VISIBILITY_OPTIONS } from "@koillection/lib";
+import { VISIBILITY_OPTIONS } from "@stackly/lib";
 
 interface ParentOption {
   id: string;

@@ -1,8 +1,8 @@
 "use client";
 
-import type { DisplayConfiguration } from "@koillection/db";
+import type { DisplayConfiguration } from "@stackly/db";
 import Link from "next/link";
-import { Card, CardContent } from "@koillection/ui";
+import { Card, CardContent } from "@stackly/ui";
 import { Box, Layers } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslations } from "next-intl";

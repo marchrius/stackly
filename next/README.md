@@ -1,6 +1,6 @@
-# Koillection — Next.js (v2.x)
+# Stackly — Next.js (v2.x)
 
-Versione full-stack Next.js di Koillection. Monorepo Turborepo con App Router, Prisma, shadcn/ui e NextAuth.js v5.
+Versione full-stack Next.js di Stackly. Monorepo Turborepo con App Router, Prisma, shadcn/ui e NextAuth.js v5.
 
 ## Struttura
 
@@ -19,7 +19,7 @@ next/
 │       ├── auth.ts           ← Configurazione NextAuth.js v5
 │       └── middleware.ts     ← Protezione route
 └── packages/
-    ├── db/                   ← Prisma schema + client (tabelle koi_*)
+    ├── db/                   ← Prisma schema + client (tabelle stk_*)
     ├── lib/                  ← Tipi, utility, costanti condivisi
     └── ui/                   ← Componenti shadcn/ui condivisi
 ```
@@ -58,14 +58,14 @@ Non creare `apps/web/.env` o `packages/db/.env`: tutti gli script workspace legg
 
 | Variabile | Descrizione | Esempio |
 |---|---|---|
-| `DATABASE_URL` | DSN PostgreSQL | `postgresql://user:pass@localhost:5432/koillection` |
+| `DATABASE_URL` | DSN PostgreSQL | `postgresql://user:pass@localhost:5432/stackly` |
 | `NEXTAUTH_SECRET` | Secret JWT sessione (random 32 byte) | `openssl rand -base64 32` |
 | `NEXTAUTH_URL` | URL base app | `http://localhost:3000` |
 | `UPLOAD_DIR` | Cartella upload file | `./public/uploads` |
 
 ## Compatibilità con il DB Legacy
 
-Lo schema Prisma usa i **nomi di tabella originali** (`koi_*`), quindi è possibile puntare allo stesso PostgreSQL usato dal backend Symfony. Le password sono compatibili: Symfony usa `bcrypt $2y$` che viene normalizzato a `$2b$` per `bcryptjs` (Node.js).
+Lo schema Prisma usa i **nomi di tabella originali** (`stk_*`), quindi è possibile puntare allo stesso PostgreSQL usato dal backend Symfony. Le password sono compatibili: Symfony usa `bcrypt $2y$` che viene normalizzato a `$2b$` per `bcryptjs` (Node.js).
 
 ## Comandi
 
@@ -112,7 +112,7 @@ docker compose -f docker-compose.next.dist.yml up --build
 
 ## Internazionalizzazione (i18n)
 
-L'app usa `next-intl` con strategia cookie-based (`koillection_locale`).
+L'app usa `next-intl` con strategia cookie-based (`stk_locale`).
 
 **Source of truth locale:** `apps/web/i18n/locales.ts`
 

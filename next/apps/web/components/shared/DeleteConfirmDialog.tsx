@@ -9,7 +9,7 @@ import {
   DialogFooter,
   DialogDescription,
   Button,
-} from "@koillection/ui";
+} from "@stackly/ui";
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 

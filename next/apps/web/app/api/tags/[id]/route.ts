@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { jsonError, logApiAction, requireApiSession } from "@/lib/api-helpers";
 
 interface Params {

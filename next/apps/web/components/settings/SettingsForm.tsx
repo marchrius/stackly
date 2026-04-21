@@ -1,8 +1,8 @@
 "use client";
 
-import type { User } from "@koillection/db";
+import type { User } from "@stackly/db";
 import { useState } from "react";
-import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@koillection/ui";
+import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@stackly/ui";
 import { updateSettings, changePassword } from "@/lib/actions/user.actions";
 import { useTranslations } from "next-intl";
 import { SUPPORTED_LOCALES } from "@/i18n/locales";

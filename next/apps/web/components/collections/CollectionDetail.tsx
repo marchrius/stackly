@@ -1,8 +1,8 @@
 "use client";
 
-import type { Collection, Datum, Item } from "@koillection/db";
+import type { Collection, Datum, Item } from "@stackly/db";
 import Link from "next/link";
-import { Badge, Button } from "@koillection/ui";
+import { Badge, Button } from "@stackly/ui";
 import { CollectionGrid } from "./CollectionGrid";
 import { Box, ChevronRight, Edit, FileDown, Layers, Plus } from "lucide-react";
 import { deleteCollection } from "@/lib/actions/collection.actions";

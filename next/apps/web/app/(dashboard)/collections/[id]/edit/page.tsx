@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { getCollectionDisplayConfigOptions } from "@/lib/collection-display-config";
 import { notFound } from "next/navigation";
 import { CollectionForm } from "@/components/collections/CollectionForm";

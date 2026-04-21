@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Button, Input, Label, Card, CardContent, CardFooter } from "@koillection/ui";
+import { Button, Input, Label, Card, CardContent, CardFooter } from "@stackly/ui";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 

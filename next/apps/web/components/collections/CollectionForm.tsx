@@ -1,6 +1,6 @@
 "use client";
 
-import type { ChoiceList, Collection, Datum, DisplayConfiguration, Template } from "@koillection/db";
+import type { ChoiceList, Collection, Datum, DisplayConfiguration, Template } from "@stackly/db";
 import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
@@ -13,7 +13,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@koillection/ui";
+} from "@stackly/ui";
 import { createCollection, updateCollection } from "@/lib/actions/collection.actions";
 import {
   type DisplayConfigOption,
@@ -21,7 +21,7 @@ import {
   getDefaultDisplayConfig,
   RESERVED_SORTING_VALUES,
 } from "@/lib/collection-display-config";
-import { VISIBILITY_OPTIONS } from "@koillection/lib";
+import { VISIBILITY_OPTIONS } from "@stackly/lib";
 import { useTranslations } from "next-intl";
 
 type ChoiceListOption = Pick<ChoiceList, "id" | "name" | "choices">;

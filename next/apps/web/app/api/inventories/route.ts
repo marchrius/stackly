@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { Prisma, prisma } from "@koillection/db";
+import { Prisma, prisma } from "@stackly/db";
 import { jsonError, logApiAction, parsePagination, requireApiSession } from "@/lib/api-helpers";
 
 const inventorySchema = z.object({

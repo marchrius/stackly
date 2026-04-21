@@ -1,7 +1,7 @@
 "use server";
 
 import { requireAuth } from "@/lib/auth-utils";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
@@ -12,6 +12,7 @@ import { THEME_IDS } from "@/lib/theme/themes";
 import { getTranslations } from "next-intl/server";
 import { getCollectionDisplayConfigOptions, upsertDisplayConfiguration } from "@/lib/collection-display-config";
 import { OIDC_LINK_COOKIE_NAME, createOidcLinkCookieValue } from "@/lib/auth/oidc-link-cookie";
+import { STACKLY_LOCALE_COOKIE_NAME } from "@/lib/cookies";
 
 const settingsSchema = z.object({
   currency: z.string().length(3).default("EUR"),
@@ -55,7 +56,7 @@ export async function updateSettings(formData: FormData) {
 
   // Imposta il cookie locale affinché next-intl lo legga subito
   if (isValidLocale(parsed.data.locale)) {
-    cookieStore.set("koillection_locale", parsed.data.locale, {
+    cookieStore.set(STACKLY_LOCALE_COOKIE_NAME, parsed.data.locale, {
       path: "/",
       maxAge: 60 * 60 * 24 * 365,
       sameSite: "lax",

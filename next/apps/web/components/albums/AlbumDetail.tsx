@@ -1,8 +1,8 @@
 "use client";
 
-import type { Album, Photo } from "@koillection/db";
+import type { Album, Photo } from "@stackly/db";
 import Link from "next/link";
-import { Button, Badge } from "@koillection/ui";
+import { Button, Badge } from "@stackly/ui";
 import { AlbumGrid } from "./AlbumGrid";
 import { Edit, Plus, ChevronRight } from "lucide-react";
 import { deleteAlbum } from "@/lib/actions/media.actions";

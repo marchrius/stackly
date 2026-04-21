@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@koillection/ui";
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@stackly/ui";
 import { requireAuth } from "@/lib/auth-utils";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { DeleteResourceButton } from "@/components/shared/DeleteResourceButton";
 import { getTranslations } from "next-intl/server";
 

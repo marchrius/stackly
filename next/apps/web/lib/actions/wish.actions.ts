@@ -2,7 +2,7 @@
 
 import { requireAuth } from "@/lib/auth-utils";
 import { computeFinalVisibility, deleteUploadImageVariants } from "@/lib/wishlists-tree";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";

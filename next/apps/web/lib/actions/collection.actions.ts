@@ -9,7 +9,7 @@ import {
   TreeValidationError,
 } from "@/lib/collections-tree";
 import { syncCollectionDatumEntries, type ManagedCollectionDatumPayload } from "@/lib/collection-persistence";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { downloadRemoteAsset, saveUploadedAsset } from "@/lib/server/uploads";
 import {
   type DisplayConfigPayload,

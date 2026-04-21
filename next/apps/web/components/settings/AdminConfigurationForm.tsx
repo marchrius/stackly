@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from "@koillection/ui";
+import { Button, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from "@stackly/ui";
 import { useTranslations } from "next-intl";
 import { updateAdminConfiguration } from "@/lib/actions/admin.actions";
 import type { AdminConfigurationValues } from "@/lib/configuration";

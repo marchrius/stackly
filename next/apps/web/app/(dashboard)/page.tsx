@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
-import { prisma } from "@koillection/db";
-import { Card, CardContent, CardHeader, CardTitle } from "@koillection/ui";
+import { prisma } from "@stackly/db";
+import { Card, CardContent, CardHeader, CardTitle } from "@stackly/ui";
 import { Library, Image, Heart, Tag } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";

@@ -1,8 +1,8 @@
 "use client";
 
-import type { Photo } from "@koillection/db";
+import type { Photo } from "@stackly/db";
 import Link from "next/link";
-import { Button, Badge } from "@koillection/ui";
+import { Button, Badge } from "@stackly/ui";
 import { Edit, ChevronRight, MapPin, Calendar } from "lucide-react";
 import { deletePhoto } from "@/lib/actions/photo.actions";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";

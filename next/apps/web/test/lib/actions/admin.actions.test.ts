@@ -19,7 +19,7 @@ vi.mock("next/cache", () => ({
   revalidatePath: mockRevalidatePath,
 }));
 
-vi.mock("@koillection/db", () => ({
+vi.mock("@stackly/db", () => ({
   prisma: mockPrisma,
 }));
 

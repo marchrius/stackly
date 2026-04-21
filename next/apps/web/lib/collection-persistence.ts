@@ -1,4 +1,4 @@
-import { type Prisma } from "@koillection/db";
+import { type Prisma } from "@stackly/db";
 
 export type ManagedCollectionDatumPayload = {
   id?: string | null;

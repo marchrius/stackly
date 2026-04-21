@@ -1,4 +1,4 @@
-// Tipi condivisi per Koillection
+// Tipi condivisi per Stackly
 
 export type Visibility = "public" | "internal" | "private";
 export type DisplayMode = "grid" | "list";
@@ -65,4 +65,3 @@ export interface UploadResult {
   originalFilename?: string;
   size: number;
 }
-

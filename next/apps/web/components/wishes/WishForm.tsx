@@ -1,6 +1,6 @@
 "use client";
 
-import type { Wish } from "@koillection/db";
+import type { Wish } from "@stackly/db";
 import { useRef, useState } from "react";
 import {
   Button,
@@ -12,8 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
-} from "@koillection/ui";
-import { CURRENCIES, VISIBILITY_OPTIONS } from "@koillection/lib";
+} from "@stackly/ui";
+import { CURRENCIES, VISIBILITY_OPTIONS } from "@stackly/lib";
 import { createWish, updateWish } from "@/lib/actions/wish.actions";
 
 interface WishlistOption {

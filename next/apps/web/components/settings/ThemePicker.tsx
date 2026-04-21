@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Check, Monitor } from "lucide-react";
-import { cn } from "@koillection/ui";
+import { cn } from "@stackly/ui";
 import {
   APP_THEMES,
   AUTO_PREVIEW_LIGHT,

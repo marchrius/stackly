@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Button, Input } from "@koillection/ui";
-import { prisma } from "@koillection/db";
+import { Button, Input } from "@stackly/ui";
+import { prisma } from "@stackly/db";
 import { requireAuth } from "@/lib/auth-utils";
 import { notFound } from "next/navigation";
 import { getCollectionAncestors } from "@/lib/collections-tree";

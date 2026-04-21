@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { auth } from "@/auth";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { buildCustomThemeCss, CONFIGURATION_LABELS, readAdminConfiguration } from "@/lib/configuration";
 import { getThemeClass, normalizeTheme } from "@/lib/theme/themes";
 import "./globals.css";
@@ -12,8 +12,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Koillection",
-    default: "Koillection",
+    template: "%s | Stackly",
+    default: "Stackly",
   },
   description: "Gestisci le tue collezioni personali",
   icons: {

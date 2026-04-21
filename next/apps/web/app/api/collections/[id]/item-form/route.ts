@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { requireApiSession, jsonError } from "@/lib/api-helpers";
 
 interface Params {

@@ -34,7 +34,7 @@ vi.mock("@/lib/item-persistence", () => ({
   syncDatumEntries: mockSyncDatumEntries,
 }));
 
-vi.mock("@koillection/db", () => ({
+vi.mock("@stackly/db", () => ({
   prisma: mockPrisma,
 }));
 

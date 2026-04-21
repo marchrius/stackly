@@ -1,8 +1,8 @@
 "use client";
 
-import type { Wishlist, Wish } from "@koillection/db";
+import type { Wishlist, Wish } from "@stackly/db";
 import Link from "next/link";
-import { Button, Badge } from "@koillection/ui";
+import { Button, Badge } from "@stackly/ui";
 import { WishlistGrid } from "./WishlistGrid";
 import { Edit, ExternalLink, Heart, ChevronRight, Plus } from "lucide-react";
 import { deleteWishlist } from "@/lib/actions/media.actions";

@@ -2,6 +2,7 @@ import { auth } from "./auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { DEFAULT_LOCALE } from "./i18n/locales";
+import { STACKLY_LOCALE_COOKIE_NAME } from "@/lib/cookies";
 
 export async function middleware(request: NextRequest) {
   // Prima esegui l'auth check
@@ -14,8 +15,15 @@ export async function middleware(request: NextRequest) {
 
   // Propaga il cookie di locale se già presente, altrimenti imposta il default
   const response = authResult instanceof NextResponse ? authResult : NextResponse.next();
-  if (!request.cookies.get("koillection_locale")) {
-    response.cookies.set("koillection_locale", DEFAULT_LOCALE, {
+  const existingLocale = request.cookies.get(STACKLY_LOCALE_COOKIE_NAME)?.value;
+  if (!existingLocale) {
+    response.cookies.set(STACKLY_LOCALE_COOKIE_NAME, DEFAULT_LOCALE, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+    });
+  } else {
+    response.cookies.set(STACKLY_LOCALE_COOKIE_NAME, existingLocale, {
       path: "/",
       maxAge: 60 * 60 * 24 * 365,
       sameSite: "lax",

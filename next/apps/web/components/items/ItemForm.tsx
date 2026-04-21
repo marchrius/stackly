@@ -1,7 +1,7 @@
 "use client";
 
-import type { ChoiceList, Datum, Field, Item, Tag, Template } from "@koillection/db";
-import { CURRENCIES } from "@koillection/lib";
+import type { ChoiceList, Datum, Field, Item, Tag, Template } from "@stackly/db";
+import { CURRENCIES } from "@stackly/lib";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
-} from "@koillection/ui";
+} from "@stackly/ui";
 import { createItem, updateItem } from "@/lib/actions/item.actions";
 import { useTranslations } from "next-intl";
 

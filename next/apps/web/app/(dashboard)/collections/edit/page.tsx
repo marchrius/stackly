@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { getTranslations } from "next-intl/server";
 import { requireAuth } from "@/lib/auth-utils";
 import { getCollectionDisplayConfigOptions } from "@/lib/collection-display-config";

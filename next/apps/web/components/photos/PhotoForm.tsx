@@ -1,6 +1,6 @@
 "use client";
 
-import type { Photo, Album } from "@koillection/db";
+import type { Photo, Album } from "@stackly/db";
 import { useRef, useState } from "react";
 import {
   Button,
@@ -12,9 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
-} from "@koillection/ui";
+} from "@stackly/ui";
 import { createPhoto, updatePhoto } from "@/lib/actions/photo.actions";
-import { VISIBILITY_OPTIONS } from "@koillection/lib";
+import { VISIBILITY_OPTIONS } from "@stackly/lib";
 
 interface AlbumOption {
   id: string;

@@ -1,8 +1,8 @@
 "use client";
 
-import type { OAuthProvider } from "@koillection/db";
+import type { OAuthProvider } from "@stackly/db";
 import { useState } from "react";
-import { Button, Card, CardContent, CardHeader, CardTitle } from "@koillection/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle } from "@stackly/ui";
 import { useTranslations } from "next-intl";
 import { signIn } from "next-auth/react";
 import { unlinkOidcProvider } from "@/lib/actions/user.actions";

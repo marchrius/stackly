@@ -1,4 +1,5 @@
-export const OIDC_LINK_COOKIE_NAME = "koillection_oidc_link";
+export const OIDC_LINK_COOKIE_NAME = "stackly_oidc_link";
+export const LEGACY_OIDC_LINK_COOKIE_NAME = "koillection_oidc_link";
 
 interface OidcLinkPayload {
   userId: string;

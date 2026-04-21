@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 const DEMO_USER = {
   username: "demo",
-  email: "demo@koillection.local",
+  email: "demo@stackly.local",
   password: "demo12345",
 };
 

@@ -2,7 +2,7 @@
 
 import { signOut } from "next-auth/react";
 import { type Session } from "next-auth";
-import { Button } from "@koillection/ui";
+import { Button } from "@stackly/ui";
 import { Settings, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";

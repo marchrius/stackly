@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "koi_user" (
+CREATE TABLE "stk_user" (
     "id" CHAR(36) NOT NULL,
     "username" VARCHAR(32) NOT NULL,
     "email" TEXT NOT NULL,
@@ -21,11 +21,11 @@ CREATE TABLE "koi_user" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "koi_user_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_user_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_collection" (
+CREATE TABLE "stk_collection" (
     "id" CHAR(36) NOT NULL,
     "title" TEXT NOT NULL,
     "color" VARCHAR(7),
@@ -44,11 +44,11 @@ CREATE TABLE "koi_collection" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "koi_collection_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_collection_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_item" (
+CREATE TABLE "stk_item" (
     "id" CHAR(36) NOT NULL,
     "name" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL DEFAULT 1,
@@ -65,11 +65,11 @@ CREATE TABLE "koi_item" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "koi_item_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_item_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_datum" (
+CREATE TABLE "stk_datum" (
     "id" CHAR(36) NOT NULL,
     "type" VARCHAR(15) NOT NULL,
     "label" TEXT,
@@ -90,11 +90,11 @@ CREATE TABLE "koi_datum" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "koi_datum_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_datum_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_album" (
+CREATE TABLE "stk_album" (
     "id" CHAR(36) NOT NULL,
     "title" TEXT NOT NULL,
     "color" VARCHAR(7),
@@ -110,11 +110,11 @@ CREATE TABLE "koi_album" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "koi_album_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_album_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_photo" (
+CREATE TABLE "stk_photo" (
     "id" CHAR(36) NOT NULL,
     "title" TEXT NOT NULL,
     "comment" TEXT,
@@ -131,11 +131,11 @@ CREATE TABLE "koi_photo" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "koi_photo_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_photo_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_wishlist" (
+CREATE TABLE "stk_wishlist" (
     "id" CHAR(36) NOT NULL,
     "name" TEXT NOT NULL,
     "color" VARCHAR(7),
@@ -151,11 +151,11 @@ CREATE TABLE "koi_wishlist" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "koi_wishlist_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_wishlist_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_wish" (
+CREATE TABLE "stk_wish" (
     "id" CHAR(36) NOT NULL,
     "name" TEXT NOT NULL,
     "url" TEXT,
@@ -173,11 +173,11 @@ CREATE TABLE "koi_wish" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "koi_wish_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_wish_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_tag" (
+CREATE TABLE "stk_tag" (
     "id" CHAR(36) NOT NULL,
     "label" TEXT NOT NULL,
     "description" TEXT,
@@ -190,11 +190,11 @@ CREATE TABLE "koi_tag" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "koi_tag_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_tag_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_tag_category" (
+CREATE TABLE "stk_tag_category" (
     "id" CHAR(36) NOT NULL,
     "label" TEXT NOT NULL,
     "description" TEXT,
@@ -203,22 +203,22 @@ CREATE TABLE "koi_tag_category" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "koi_tag_category_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_tag_category_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_template" (
+CREATE TABLE "stk_template" (
     "id" CHAR(36) NOT NULL,
     "name" TEXT NOT NULL,
     "owner_id" CHAR(36),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "koi_template_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_template_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_field" (
+CREATE TABLE "stk_field" (
     "id" CHAR(36) NOT NULL,
     "name" TEXT NOT NULL,
     "position" INTEGER NOT NULL,
@@ -228,11 +228,11 @@ CREATE TABLE "koi_field" (
     "choice_list_id" CHAR(36),
     "owner_id" CHAR(36),
 
-    CONSTRAINT "koi_field_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_field_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_choice_list" (
+CREATE TABLE "stk_choice_list" (
     "id" CHAR(36) NOT NULL,
     "name" VARCHAR(255) NOT NULL,
     "choices" JSONB NOT NULL DEFAULT '[]',
@@ -240,11 +240,11 @@ CREATE TABLE "koi_choice_list" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "koi_choice_list_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_choice_list_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_inventory" (
+CREATE TABLE "stk_inventory" (
     "id" CHAR(36) NOT NULL,
     "name" TEXT NOT NULL,
     "content" JSONB NOT NULL DEFAULT '[]',
@@ -252,11 +252,11 @@ CREATE TABLE "koi_inventory" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "koi_inventory_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_inventory_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_loan" (
+CREATE TABLE "stk_loan" (
     "id" CHAR(36) NOT NULL,
     "lent_to" TEXT NOT NULL,
     "lent_at" TIMESTAMP(3) NOT NULL,
@@ -264,11 +264,11 @@ CREATE TABLE "koi_loan" (
     "item_id" CHAR(36),
     "owner_id" CHAR(36),
 
-    CONSTRAINT "koi_loan_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_loan_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_log" (
+CREATE TABLE "stk_log" (
     "id" CHAR(36) NOT NULL,
     "type" VARCHAR(6),
     "logged_at" TIMESTAMP(3),
@@ -278,11 +278,11 @@ CREATE TABLE "koi_log" (
     "object_deleted" BOOLEAN NOT NULL DEFAULT false,
     "owner_id" CHAR(36),
 
-    CONSTRAINT "koi_log_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_log_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_scraper" (
+CREATE TABLE "stk_scraper" (
     "id" CHAR(36) NOT NULL,
     "name" TEXT NOT NULL,
     "type" VARCHAR(15),
@@ -295,11 +295,11 @@ CREATE TABLE "koi_scraper" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "koi_scraper_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_scraper_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_path" (
+CREATE TABLE "stk_path" (
     "id" CHAR(36) NOT NULL,
     "name" TEXT NOT NULL,
     "type" VARCHAR(15) NOT NULL,
@@ -308,11 +308,11 @@ CREATE TABLE "koi_path" (
     "scraper_id" CHAR(36),
     "owner_id" CHAR(36),
 
-    CONSTRAINT "koi_path_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_path_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "koi_display_configuration" (
+CREATE TABLE "stk_display_configuration" (
     "id" CHAR(36) NOT NULL,
     "label" TEXT,
     "display_mode" VARCHAR(4) NOT NULL DEFAULT 'grid',
@@ -329,7 +329,7 @@ CREATE TABLE "koi_display_configuration" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "koi_display_configuration_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "stk_display_configuration_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -349,151 +349,151 @@ CREATE TABLE "_RelatedItems" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_user_username_key" ON "koi_user"("username");
+CREATE UNIQUE INDEX "stk_user_username_key" ON "stk_user"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_user_email_key" ON "koi_user"("email");
+CREATE UNIQUE INDEX "stk_user_email_key" ON "stk_user"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_user_avatar_key" ON "koi_user"("avatar");
+CREATE UNIQUE INDEX "stk_user_avatar_key" ON "stk_user"("avatar");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_collection_image_key" ON "koi_collection"("image");
+CREATE UNIQUE INDEX "stk_collection_image_key" ON "stk_collection"("image");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_collection_children_display_config_id_key" ON "koi_collection"("children_display_config_id");
+CREATE UNIQUE INDEX "stk_collection_children_display_config_id_key" ON "stk_collection"("children_display_config_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_collection_items_display_config_id_key" ON "koi_collection"("items_display_config_id");
+CREATE UNIQUE INDEX "stk_collection_items_display_config_id_key" ON "stk_collection"("items_display_config_id");
 
 -- CreateIndex
-CREATE INDEX "idx_collection_final_visibility" ON "koi_collection"("final_visibility");
+CREATE INDEX "idx_collection_final_visibility" ON "stk_collection"("final_visibility");
 
 -- CreateIndex
-CREATE INDEX "idx_collection_owner" ON "koi_collection"("owner_id");
+CREATE INDEX "idx_collection_owner" ON "stk_collection"("owner_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_item_image_key" ON "koi_item"("image");
+CREATE UNIQUE INDEX "stk_item_image_key" ON "stk_item"("image");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_item_image_small_thumbnail_key" ON "koi_item"("image_small_thumbnail");
+CREATE UNIQUE INDEX "stk_item_image_small_thumbnail_key" ON "stk_item"("image_small_thumbnail");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_item_image_large_thumbnail_key" ON "koi_item"("image_large_thumbnail");
+CREATE UNIQUE INDEX "stk_item_image_large_thumbnail_key" ON "stk_item"("image_large_thumbnail");
 
 -- CreateIndex
-CREATE INDEX "idx_item_final_visibility" ON "koi_item"("final_visibility");
+CREATE INDEX "idx_item_final_visibility" ON "stk_item"("final_visibility");
 
 -- CreateIndex
-CREATE INDEX "idx_item_collection" ON "koi_item"("collection_id");
+CREATE INDEX "idx_item_collection" ON "stk_item"("collection_id");
 
 -- CreateIndex
-CREATE INDEX "idx_item_owner" ON "koi_item"("owner_id");
+CREATE INDEX "idx_item_owner" ON "stk_item"("owner_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_datum_image_key" ON "koi_datum"("image");
+CREATE UNIQUE INDEX "stk_datum_image_key" ON "stk_datum"("image");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_datum_image_small_thumbnail_key" ON "koi_datum"("image_small_thumbnail");
+CREATE UNIQUE INDEX "stk_datum_image_small_thumbnail_key" ON "stk_datum"("image_small_thumbnail");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_datum_file_key" ON "koi_datum"("file");
+CREATE UNIQUE INDEX "stk_datum_file_key" ON "stk_datum"("file");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_datum_video_key" ON "koi_datum"("video");
+CREATE UNIQUE INDEX "stk_datum_video_key" ON "stk_datum"("video");
 
 -- CreateIndex
-CREATE INDEX "idx_datum_label" ON "koi_datum"("label");
+CREATE INDEX "idx_datum_label" ON "stk_datum"("label");
 
 -- CreateIndex
-CREATE INDEX "idx_datum_final_visibility" ON "koi_datum"("final_visibility");
+CREATE INDEX "idx_datum_final_visibility" ON "stk_datum"("final_visibility");
 
 -- CreateIndex
-CREATE INDEX "idx_datum_item" ON "koi_datum"("item_id");
+CREATE INDEX "idx_datum_item" ON "stk_datum"("item_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_album_image_key" ON "koi_album"("image");
+CREATE UNIQUE INDEX "stk_album_image_key" ON "stk_album"("image");
 
 -- CreateIndex
-CREATE INDEX "idx_album_final_visibility" ON "koi_album"("final_visibility");
+CREATE INDEX "idx_album_final_visibility" ON "stk_album"("final_visibility");
 
 -- CreateIndex
-CREATE INDEX "idx_album_owner" ON "koi_album"("owner_id");
+CREATE INDEX "idx_album_owner" ON "stk_album"("owner_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_photo_image_key" ON "koi_photo"("image");
+CREATE UNIQUE INDEX "stk_photo_image_key" ON "stk_photo"("image");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_photo_image_small_thumbnail_key" ON "koi_photo"("image_small_thumbnail");
+CREATE UNIQUE INDEX "stk_photo_image_small_thumbnail_key" ON "stk_photo"("image_small_thumbnail");
 
 -- CreateIndex
-CREATE INDEX "idx_photo_final_visibility" ON "koi_photo"("final_visibility");
+CREATE INDEX "idx_photo_final_visibility" ON "stk_photo"("final_visibility");
 
 -- CreateIndex
-CREATE INDEX "idx_photo_album" ON "koi_photo"("album_id");
+CREATE INDEX "idx_photo_album" ON "stk_photo"("album_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_wishlist_image_key" ON "koi_wishlist"("image");
+CREATE UNIQUE INDEX "stk_wishlist_image_key" ON "stk_wishlist"("image");
 
 -- CreateIndex
-CREATE INDEX "idx_wishlist_final_visibility" ON "koi_wishlist"("final_visibility");
+CREATE INDEX "idx_wishlist_final_visibility" ON "stk_wishlist"("final_visibility");
 
 -- CreateIndex
-CREATE INDEX "idx_wishlist_owner" ON "koi_wishlist"("owner_id");
+CREATE INDEX "idx_wishlist_owner" ON "stk_wishlist"("owner_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_wish_image_key" ON "koi_wish"("image");
+CREATE UNIQUE INDEX "stk_wish_image_key" ON "stk_wish"("image");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_wish_image_small_thumbnail_key" ON "koi_wish"("image_small_thumbnail");
+CREATE UNIQUE INDEX "stk_wish_image_small_thumbnail_key" ON "stk_wish"("image_small_thumbnail");
 
 -- CreateIndex
-CREATE INDEX "idx_wish_final_visibility" ON "koi_wish"("final_visibility");
+CREATE INDEX "idx_wish_final_visibility" ON "stk_wish"("final_visibility");
 
 -- CreateIndex
-CREATE INDEX "idx_wish_wishlist" ON "koi_wish"("wishlist_id");
+CREATE INDEX "idx_wish_wishlist" ON "stk_wish"("wishlist_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_tag_image_key" ON "koi_tag"("image");
+CREATE UNIQUE INDEX "stk_tag_image_key" ON "stk_tag"("image");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "koi_tag_image_small_thumbnail_key" ON "koi_tag"("image_small_thumbnail");
+CREATE UNIQUE INDEX "stk_tag_image_small_thumbnail_key" ON "stk_tag"("image_small_thumbnail");
 
 -- CreateIndex
-CREATE INDEX "idx_tag_visibility" ON "koi_tag"("visibility");
+CREATE INDEX "idx_tag_visibility" ON "stk_tag"("visibility");
 
 -- CreateIndex
-CREATE INDEX "idx_tag_owner" ON "koi_tag"("owner_id");
+CREATE INDEX "idx_tag_owner" ON "stk_tag"("owner_id");
 
 -- CreateIndex
-CREATE INDEX "idx_tag_category_owner" ON "koi_tag_category"("owner_id");
+CREATE INDEX "idx_tag_category_owner" ON "stk_tag_category"("owner_id");
 
 -- CreateIndex
-CREATE INDEX "idx_template_owner" ON "koi_template"("owner_id");
+CREATE INDEX "idx_template_owner" ON "stk_template"("owner_id");
 
 -- CreateIndex
-CREATE INDEX "idx_field_template" ON "koi_field"("template_id");
+CREATE INDEX "idx_field_template" ON "stk_field"("template_id");
 
 -- CreateIndex
-CREATE INDEX "idx_choice_list_owner" ON "koi_choice_list"("owner_id");
+CREATE INDEX "idx_choice_list_owner" ON "stk_choice_list"("owner_id");
 
 -- CreateIndex
-CREATE INDEX "idx_inventory_owner" ON "koi_inventory"("owner_id");
+CREATE INDEX "idx_inventory_owner" ON "stk_inventory"("owner_id");
 
 -- CreateIndex
-CREATE INDEX "idx_loan_owner" ON "koi_loan"("owner_id");
+CREATE INDEX "idx_loan_owner" ON "stk_loan"("owner_id");
 
 -- CreateIndex
-CREATE INDEX "idx_log_owner" ON "koi_log"("owner_id");
+CREATE INDEX "idx_log_owner" ON "stk_log"("owner_id");
 
 -- CreateIndex
-CREATE INDEX "idx_log_logged_at" ON "koi_log"("logged_at");
+CREATE INDEX "idx_log_logged_at" ON "stk_log"("logged_at");
 
 -- CreateIndex
-CREATE INDEX "idx_scraper_owner" ON "koi_scraper"("owner_id");
+CREATE INDEX "idx_scraper_owner" ON "stk_scraper"("owner_id");
 
 -- CreateIndex
-CREATE INDEX "idx_path_scraper" ON "koi_path"("scraper_id");
+CREATE INDEX "idx_path_scraper" ON "stk_path"("scraper_id");
 
 -- CreateIndex
 CREATE INDEX "_ItemTags_B_index" ON "_ItemTags"("B");
@@ -502,115 +502,115 @@ CREATE INDEX "_ItemTags_B_index" ON "_ItemTags"("B");
 CREATE INDEX "_RelatedItems_B_index" ON "_RelatedItems"("B");
 
 -- AddForeignKey
-ALTER TABLE "koi_collection" ADD CONSTRAINT "koi_collection_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_collection" ADD CONSTRAINT "stk_collection_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_collection" ADD CONSTRAINT "koi_collection_parent_id_fkey" FOREIGN KEY ("parent_id") REFERENCES "koi_collection"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_collection" ADD CONSTRAINT "stk_collection_parent_id_fkey" FOREIGN KEY ("parent_id") REFERENCES "stk_collection"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_collection" ADD CONSTRAINT "koi_collection_items_default_template_id_fkey" FOREIGN KEY ("items_default_template_id") REFERENCES "koi_template"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_collection" ADD CONSTRAINT "stk_collection_items_default_template_id_fkey" FOREIGN KEY ("items_default_template_id") REFERENCES "stk_template"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_collection" ADD CONSTRAINT "koi_collection_children_display_config_id_fkey" FOREIGN KEY ("children_display_config_id") REFERENCES "koi_display_configuration"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_collection" ADD CONSTRAINT "stk_collection_children_display_config_id_fkey" FOREIGN KEY ("children_display_config_id") REFERENCES "stk_display_configuration"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_collection" ADD CONSTRAINT "koi_collection_items_display_config_id_fkey" FOREIGN KEY ("items_display_config_id") REFERENCES "koi_display_configuration"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_collection" ADD CONSTRAINT "stk_collection_items_display_config_id_fkey" FOREIGN KEY ("items_display_config_id") REFERENCES "stk_display_configuration"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_item" ADD CONSTRAINT "koi_item_collection_id_fkey" FOREIGN KEY ("collection_id") REFERENCES "koi_collection"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_item" ADD CONSTRAINT "stk_item_collection_id_fkey" FOREIGN KEY ("collection_id") REFERENCES "stk_collection"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_item" ADD CONSTRAINT "koi_item_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_item" ADD CONSTRAINT "stk_item_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_datum" ADD CONSTRAINT "koi_datum_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "koi_item"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "stk_datum" ADD CONSTRAINT "stk_datum_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "stk_item"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_datum" ADD CONSTRAINT "koi_datum_collection_id_fkey" FOREIGN KEY ("collection_id") REFERENCES "koi_collection"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "stk_datum" ADD CONSTRAINT "stk_datum_collection_id_fkey" FOREIGN KEY ("collection_id") REFERENCES "stk_collection"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_datum" ADD CONSTRAINT "koi_datum_choice_list_id_fkey" FOREIGN KEY ("choice_list_id") REFERENCES "koi_choice_list"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_datum" ADD CONSTRAINT "stk_datum_choice_list_id_fkey" FOREIGN KEY ("choice_list_id") REFERENCES "stk_choice_list"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_album" ADD CONSTRAINT "koi_album_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_album" ADD CONSTRAINT "stk_album_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_album" ADD CONSTRAINT "koi_album_parent_id_fkey" FOREIGN KEY ("parent_id") REFERENCES "koi_album"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_album" ADD CONSTRAINT "stk_album_parent_id_fkey" FOREIGN KEY ("parent_id") REFERENCES "stk_album"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_photo" ADD CONSTRAINT "koi_photo_album_id_fkey" FOREIGN KEY ("album_id") REFERENCES "koi_album"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_photo" ADD CONSTRAINT "stk_photo_album_id_fkey" FOREIGN KEY ("album_id") REFERENCES "stk_album"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_photo" ADD CONSTRAINT "koi_photo_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_photo" ADD CONSTRAINT "stk_photo_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_wishlist" ADD CONSTRAINT "koi_wishlist_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_wishlist" ADD CONSTRAINT "stk_wishlist_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_wishlist" ADD CONSTRAINT "koi_wishlist_parent_id_fkey" FOREIGN KEY ("parent_id") REFERENCES "koi_wishlist"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_wishlist" ADD CONSTRAINT "stk_wishlist_parent_id_fkey" FOREIGN KEY ("parent_id") REFERENCES "stk_wishlist"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_wish" ADD CONSTRAINT "koi_wish_wishlist_id_fkey" FOREIGN KEY ("wishlist_id") REFERENCES "koi_wishlist"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_wish" ADD CONSTRAINT "stk_wish_wishlist_id_fkey" FOREIGN KEY ("wishlist_id") REFERENCES "stk_wishlist"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_wish" ADD CONSTRAINT "koi_wish_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_wish" ADD CONSTRAINT "stk_wish_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_tag" ADD CONSTRAINT "koi_tag_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_tag" ADD CONSTRAINT "stk_tag_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_tag" ADD CONSTRAINT "koi_tag_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "koi_tag_category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_tag" ADD CONSTRAINT "stk_tag_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "stk_tag_category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_tag_category" ADD CONSTRAINT "koi_tag_category_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_tag_category" ADD CONSTRAINT "stk_tag_category_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_template" ADD CONSTRAINT "koi_template_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_template" ADD CONSTRAINT "stk_template_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_field" ADD CONSTRAINT "koi_field_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "koi_template"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "stk_field" ADD CONSTRAINT "stk_field_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "stk_template"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_field" ADD CONSTRAINT "koi_field_choice_list_id_fkey" FOREIGN KEY ("choice_list_id") REFERENCES "koi_choice_list"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_field" ADD CONSTRAINT "stk_field_choice_list_id_fkey" FOREIGN KEY ("choice_list_id") REFERENCES "stk_choice_list"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_field" ADD CONSTRAINT "koi_field_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_field" ADD CONSTRAINT "stk_field_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_choice_list" ADD CONSTRAINT "koi_choice_list_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_choice_list" ADD CONSTRAINT "stk_choice_list_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_inventory" ADD CONSTRAINT "koi_inventory_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_inventory" ADD CONSTRAINT "stk_inventory_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_loan" ADD CONSTRAINT "koi_loan_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "koi_item"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_loan" ADD CONSTRAINT "stk_loan_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "stk_item"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_loan" ADD CONSTRAINT "koi_loan_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_loan" ADD CONSTRAINT "stk_loan_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_log" ADD CONSTRAINT "koi_log_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_log" ADD CONSTRAINT "stk_log_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_scraper" ADD CONSTRAINT "koi_scraper_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_scraper" ADD CONSTRAINT "stk_scraper_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_path" ADD CONSTRAINT "koi_path_scraper_id_fkey" FOREIGN KEY ("scraper_id") REFERENCES "koi_scraper"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "stk_path" ADD CONSTRAINT "stk_path_scraper_id_fkey" FOREIGN KEY ("scraper_id") REFERENCES "stk_scraper"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_path" ADD CONSTRAINT "koi_path_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_path" ADD CONSTRAINT "stk_path_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "koi_display_configuration" ADD CONSTRAINT "koi_display_configuration_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "koi_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "stk_display_configuration" ADD CONSTRAINT "stk_display_configuration_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "stk_user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_ItemTags" ADD CONSTRAINT "_ItemTags_A_fkey" FOREIGN KEY ("A") REFERENCES "koi_item"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_ItemTags" ADD CONSTRAINT "_ItemTags_A_fkey" FOREIGN KEY ("A") REFERENCES "stk_item"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_ItemTags" ADD CONSTRAINT "_ItemTags_B_fkey" FOREIGN KEY ("B") REFERENCES "koi_tag"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_ItemTags" ADD CONSTRAINT "_ItemTags_B_fkey" FOREIGN KEY ("B") REFERENCES "stk_tag"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_RelatedItems" ADD CONSTRAINT "_RelatedItems_A_fkey" FOREIGN KEY ("A") REFERENCES "koi_item"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_RelatedItems" ADD CONSTRAINT "_RelatedItems_A_fkey" FOREIGN KEY ("A") REFERENCES "stk_item"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_RelatedItems" ADD CONSTRAINT "_RelatedItems_B_fkey" FOREIGN KEY ("B") REFERENCES "koi_item"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_RelatedItems" ADD CONSTRAINT "_RelatedItems_B_fkey" FOREIGN KEY ("B") REFERENCES "stk_item"("id") ON DELETE CASCADE ON UPDATE CASCADE;

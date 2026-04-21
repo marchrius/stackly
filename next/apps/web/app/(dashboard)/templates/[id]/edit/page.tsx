@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { notFound } from "next/navigation";
 import { TemplateForm } from "@/components/templates/TemplateForm";
 import { getTranslations } from "next-intl/server";

@@ -18,13 +18,17 @@ const cookieState = vi.hoisted(() => ({
   delete: vi.fn(),
 }));
 
-vi.mock("@koillection/db", () => ({
+vi.mock("@stackly/db", () => ({
   prisma: prismaMock,
 }));
 
 vi.mock("next/headers", () => ({
   cookies: vi.fn(async () => ({
-    get: (name: string) => (name === "koillection_oidc_link" && cookieState.value ? { value: cookieState.value } : undefined),
+    get: (name: string) => (
+      (name === "stackly_oidc_link" || name === "koillection_oidc_link") && cookieState.value
+        ? { value: cookieState.value }
+        : undefined
+    ),
     delete: cookieState.delete,
   })),
 }));
@@ -128,6 +132,6 @@ describe("resolveUserForOidcSignIn", () => {
         }),
       }),
     );
-    expect(cookieState.delete).toHaveBeenCalledWith("koillection_oidc_link");
+    expect(cookieState.delete).toHaveBeenCalledWith("stackly_oidc_link");
   });
 });

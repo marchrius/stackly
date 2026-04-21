@@ -1,5 +1,5 @@
 {
-  "name": "@koillection/web",
+  "name": "@stackly/web",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -13,9 +13,9 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
-    "@koillection/db": "*",
-    "@koillection/lib": "*",
-    "@koillection/ui": "*",
+    "@stackly/db": "*",
+    "@stackly/lib": "*",
+    "@stackly/ui": "*",
     "bcryptjs": "^2.4.3",
     "jsdom": "^29.0.1",
     "next": "^15.1.6",

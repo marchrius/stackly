@@ -1,7 +1,7 @@
 "use client";
 
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@koillection/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@stackly/ui";
 
 interface Stats {
   collectionsCount: number;

@@ -1,8 +1,8 @@
 "use client";
 
-import type { Item, Datum, Tag, Loan } from "@koillection/db";
+import type { Item, Datum, Tag, Loan } from "@stackly/db";
 import Link from "next/link";
-import { Button, Badge } from "@koillection/ui";
+import { Button, Badge } from "@stackly/ui";
 import { ChevronLeft, ChevronRight, Edit, FileDown } from "lucide-react";
 import { deleteItem } from "@/lib/actions/item.actions";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";

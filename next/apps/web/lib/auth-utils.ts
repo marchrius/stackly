@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { ROLES } from "@koillection/lib";
+import { ROLES } from "@stackly/lib";
 import { redirect } from "next/navigation";
 
 export type AuthSession = {

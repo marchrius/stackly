@@ -1,7 +1,7 @@
 import { requireAuth } from "@/lib/auth-utils";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Navbar } from "@/components/layout/Navbar";
-import { ROLES } from "@koillection/lib";
+import { ROLES } from "@stackly/lib";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await requireAuth();

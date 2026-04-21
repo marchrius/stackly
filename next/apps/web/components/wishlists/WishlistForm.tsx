@@ -1,10 +1,10 @@
 "use client";
 
-import type { Wishlist } from "@koillection/db";
+import type { Wishlist } from "@stackly/db";
 import { useMemo, useRef, useState } from "react";
-import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@koillection/ui";
+import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@stackly/ui";
 import { createWishlist, updateWishlist } from "@/lib/actions/media.actions";
-import { VISIBILITY_OPTIONS } from "@koillection/lib";
+import { VISIBILITY_OPTIONS } from "@stackly/lib";
 
 interface ParentOption {
   id: string;

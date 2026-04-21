@@ -1,9 +1,9 @@
 "use client";
 
-import type { ChoiceList } from "@koillection/db";
+import type { ChoiceList } from "@stackly/db";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { Button, Input, Label, Textarea } from "@koillection/ui";
+import { Button, Input, Label, Textarea } from "@stackly/ui";
 import { useTranslations } from "next-intl";
 
 interface ChoiceListFormProps {

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { TagCategoryForm } from "@/components/tags/TagCategoryForm";
 import { requireAuth } from "@/lib/auth-utils";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 

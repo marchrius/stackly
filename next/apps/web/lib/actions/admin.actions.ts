@@ -6,7 +6,7 @@ import {
   THUMBNAIL_FORMAT_VALUES,
   type ThumbnailFormatValue,
 } from "@/lib/configuration";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 

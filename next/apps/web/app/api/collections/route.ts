@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { computeFinalVisibility, resolveCollectionParent, TreeValidationError } from "@/lib/collections-tree";
 import { syncCollectionDatumEntries, type ManagedCollectionDatumPayload } from "@/lib/collection-persistence";
 import { getCollectionDisplayConfigOptions, upsertDisplayConfiguration } from "@/lib/collection-display-config";

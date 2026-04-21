@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 
 interface Params {
   params: Promise<{ id: string }>;

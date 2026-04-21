@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import { CollectionGrid } from "@/components/collections/CollectionGrid";
 import { CollectionList } from "@/components/collections/CollectionList";
-import { Button } from "@koillection/ui";
+import { Button } from "@stackly/ui";
 import { Plus, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";

@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { mockRequireAuth, mockRevalidatePath, mockCookieSet, mockPrisma } = vi.hoisted(() => ({
+const { mockRequireAuth, mockRevalidatePath, mockCookieSet, mockCookieDelete, mockPrisma } = vi.hoisted(() => ({
   mockRequireAuth: vi.fn(),
   mockRevalidatePath: vi.fn(),
   mockCookieSet: vi.fn(),
+  mockCookieDelete: vi.fn(),
   mockPrisma: {
     user: {
       update: vi.fn(),
@@ -32,10 +33,11 @@ vi.mock("next/cache", () => ({
 vi.mock("next/headers", () => ({
   cookies: vi.fn(async () => ({
     set: mockCookieSet,
+    delete: mockCookieDelete,
   })),
 }));
 
-vi.mock("@koillection/db", () => ({
+vi.mock("@stackly/db", () => ({
   prisma: mockPrisma,
 }));
 
@@ -51,6 +53,7 @@ describe("updateSettings", () => {
     mockPrisma.user.update.mockResolvedValue({});
     mockRevalidatePath.mockReset();
     mockCookieSet.mockReset();
+    mockCookieDelete.mockReset();
     process.env.NEXTAUTH_SECRET = "test-secret";
   });
 
@@ -80,13 +83,14 @@ describe("updateSettings", () => {
       }),
     });
     expect(mockCookieSet).toHaveBeenCalledWith(
-      "koillection_locale",
+      "stackly_locale",
       "it",
       expect.objectContaining({
         path: "/",
         sameSite: "lax",
       }),
     );
+    expect(mockCookieDelete).toHaveBeenCalledWith("koillection_locale");
     expect(mockRevalidatePath).toHaveBeenNthCalledWith(1, "/", "layout");
     expect(mockRevalidatePath).toHaveBeenNthCalledWith(2, "/settings");
   });
@@ -120,7 +124,7 @@ describe("startOidcLink", () => {
 
     expect(result).toEqual({ success: true });
     expect(mockCookieSet).toHaveBeenCalledWith(
-      "koillection_oidc_link",
+      "stackly_oidc_link",
       expect.any(String),
       expect.objectContaining({
         path: "/",

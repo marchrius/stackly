@@ -1,9 +1,9 @@
 "use client";
 
-import type { Inventory } from "@koillection/db";
+import type { Inventory } from "@stackly/db";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Button, Input, Label, Textarea } from "@koillection/ui";
+import { Button, Input, Label, Textarea } from "@stackly/ui";
 import { useTranslations } from "next-intl";
 
 interface InventoryFormProps {

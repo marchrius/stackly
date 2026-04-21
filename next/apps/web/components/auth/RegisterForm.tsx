@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Input, Label, Card, CardContent, CardFooter } from "@koillection/ui";
+import { Button, Input, Label, Card, CardContent, CardFooter } from "@stackly/ui";
 import { registerUser } from "@/lib/actions/user.actions";
 import Link from "next/link";
 import { useTranslations } from "next-intl";

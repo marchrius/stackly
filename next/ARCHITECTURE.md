@@ -1,4 +1,4 @@
-# ARCHITECTURE.md — Stack Next.js di Koillection
+# ARCHITECTURE.md — Stack Next.js di Stackly
 
 > Documento tecnico dell'architettura del monorepo `next/`.  
 > Aggiornato al: **marzo 2026** — versione target **2.0.0-alpha**
@@ -34,7 +34,7 @@
 
 ## 1. Panoramica
 
-Il progetto è un **monorepo Turborepo + npm workspaces** che ospita la versione Next.js 15 di Koillection — una web app self-hosted per la gestione di collezioni personali.
+Il progetto è un **monorepo Turborepo + npm workspaces** che ospita la versione Next.js 15 di Stackly — una web app self-hosted per la gestione di collezioni personali.
 
 ```
 Turborepo
@@ -84,7 +84,7 @@ next/
 └── packages/
     ├── db/
     │   ├── prisma/
-    │   │   ├── schema.prisma ← schema Prisma (tabelle koi_*)
+    │   │   ├── schema.prisma ← schema Prisma (tabelle stk_*)
     │   │   └── migrations/   ← migrazioni PostgreSQL
     │   └── src/index.ts      ← singleton PrismaClient + re-export tipi
     ├── ui/
@@ -220,7 +220,7 @@ Le **Server Actions** (`"use server"`) sono la via preferita per le mutazioni da
 - operazioni Prisma,
 - gestione immagini (upload pre-eseguito via `/api/upload`),
 - propagazione visibilità nell'albero,
-- logging su `koi_log`,
+- logging su `stk_log`,
 - `revalidatePath` + `redirect`.
 
 ```
@@ -351,7 +351,7 @@ Configurazione **NextAuth.js v5** con:
 **File:** `apps/web/middleware.ts`
 
 Usa `auth` di NextAuth come middleware di protezione. Redireziona a `/login` se non autenticato.  
-Imposta il cookie `koillection_locale` alla prima visita (default `en`) se assente.
+Imposta il cookie `stk_locale` alla prima visita (default `en`) se assente.
 
 **Route escluse dalla protezione:**
 
@@ -387,7 +387,7 @@ I file sono serviti staticamente da Next.js tramite la cartella `public/`.
 ### 3.10 Internazionalizzazione (i18n)
 
 **Libreria:** [`next-intl`](https://next-intl-docs.vercel.app/) v3  
-**Strategia:** senza routing per locale nell'URL — il locale è determinato da un **cookie HTTP** (`koillection_locale`).
+**Strategia:** senza routing per locale nell'URL — il locale è determinato da un **cookie HTTP** (`stk_locale`).
 
 #### Lingue supportate
 
@@ -424,10 +424,12 @@ apps/web/
 #### Configurazione (`i18n/request.ts`)
 
 ```typescript
-// Legge il cookie "koillection_locale" (set dal middleware o da user.actions.ts)
+// Legge il cookie "stk_locale" (set dal middleware o da user.actions.ts)
 // Fallback: DEFAULT_LOCALE se il valore non è tra i locale supportati
 export default getRequestConfig(async () => {
-  const locale = cookies().get("koillection_locale")?.value ?? DEFAULT_LOCALE;
+  const locale = cookies().get("stk_locale")?.value
+    ?? cookies().get("koillection_locale")?.value
+    ?? DEFAULT_LOCALE;
   return { locale, messages: (await import(`../messages/${locale}.json`)).default };
 });
 ```
@@ -436,12 +438,12 @@ export default getRequestConfig(async () => {
 
 ```
 Prima visita
-  → middleware.ts imposta cookie koillection_locale=en
+  → middleware.ts imposta cookie stk_locale=en
 
 Cambio lingua (Settings → Preferenze → Lingua → Salva)
   → updateSettings() [user.actions.ts]
       ├── salva locale nel DB (campo User.locale)
-      ├── sovrascrive il cookie koillection_locale
+      ├── sovrascrive il cookie stk_locale
       └── revalidatePath("/", "layout")
   → SettingsForm chiama router.refresh()
   → RootLayout rilegge il cookie → NextIntlClientProvider usa nuovi messaggi
@@ -502,38 +504,38 @@ upload          → messaggi upload immagine
 
 ## 4. Package `packages/db`
 
-**Nome npm:** `@koillection/db`
+**Nome npm:** `@stackly/db`
 
 Espone:
 - `prisma` — singleton `PrismaClient` (pattern `globalThis` per hot-reload Next.js)
 - Tutti i tipi generati da Prisma (re-export di `@prisma/client`)
 
 **Schema:** `prisma/schema.prisma`  
-Rispecchia le tabelle PostgreSQL esistenti di Koillection (prefisso `koi_`).
+Rispecchia le tabelle PostgreSQL esistenti legacy di Stackly (prefisso storico `stk_`).
 
 **Modelli principali:**
 
 | Modello Prisma | Tabella DB | Descrizione |
 |---|---|---|
-| `User` | `koi_user` | Utente con ruoli, preferenze, quota disco |
-| `Collection` | `koi_collection` | Collezione con gerarchia parent/child |
-| `Item` | `koi_item` | Oggetto in una collezione |
-| `Datum` | `koi_datum` | Dato custom di un Item (tipo, valore, file) |
-| `Album` | `koi_album` | Album fotografico con gerarchia |
-| `Photo` | `koi_photo` | Foto in un Album |
-| `Wishlist` | `koi_wishlist` | Lista dei desideri con gerarchia |
-| `Wish` | `koi_wish` | Singolo desiderio |
-| `Tag` | `koi_tag` | Tag per gli Item |
-| `TagCategory` | `koi_tag_category` | Categoria di tag |
-| `Template` | `koi_template` | Template per struttura dati degli Item |
-| `Field` | `koi_field` | Campo di un Template |
-| `ChoiceList` | `koi_choice_list` | Lista valori predefiniti per Datum |
-| `Inventory` | `koi_inventory` | Inventario |
-| `Loan` | `koi_loan` | Prestito di un Item |
-| `Log` | `koi_log` | Log azioni (create/update/delete) |
-| `Scraper` | `koi_scraper` | Configurazione scraper |
-| `DisplayConfiguration` | `koi_display_configuration` | Preferenze di visualizzazione |
-| `Path` | `koi_path` | Path gerarchici (breadcrumb cache) |
+| `User` | `stk_user` | Utente con ruoli, preferenze, quota disco |
+| `Collection` | `stk_collection` | Collezione con gerarchia parent/child |
+| `Item` | `stk_item` | Oggetto in una collezione |
+| `Datum` | `stk_datum` | Dato custom di un Item (tipo, valore, file) |
+| `Album` | `stk_album` | Album fotografico con gerarchia |
+| `Photo` | `stk_photo` | Foto in un Album |
+| `Wishlist` | `stk_wishlist` | Lista dei desideri con gerarchia |
+| `Wish` | `stk_wish` | Singolo desiderio |
+| `Tag` | `stk_tag` | Tag per gli Item |
+| `TagCategory` | `stk_tag_category` | Categoria di tag |
+| `Template` | `stk_template` | Template per struttura dati degli Item |
+| `Field` | `stk_field` | Campo di un Template |
+| `ChoiceList` | `stk_choice_list` | Lista valori predefiniti per Datum |
+| `Inventory` | `stk_inventory` | Inventario |
+| `Loan` | `stk_loan` | Prestito di un Item |
+| `Log` | `stk_log` | Log azioni (create/update/delete) |
+| `Scraper` | `stk_scraper` | Configurazione scraper |
+| `DisplayConfiguration` | `stk_display_configuration` | Preferenze di visualizzazione |
+| `Path` | `stk_path` | Path gerarchici (breadcrumb cache) |
 
 **Script DB:**
 
@@ -548,7 +550,7 @@ npm run db:studio     # apre Prisma Studio nel browser
 
 ## 5. Package `packages/ui`
 
-**Nome npm:** `@koillection/ui`
+**Nome npm:** `@stackly/ui`
 
 Libreria di componenti UI basata su **shadcn/ui** + **Tailwind CSS**.
 
@@ -572,7 +574,7 @@ Tutti i componenti sono **Client Components** (compatibili con `"use client"`).
 
 ## 6. Package `packages/lib`
 
-**Nome npm:** `@koillection/lib`
+**Nome npm:** `@stackly/lib`
 
 Codice TypeScript condiviso tra app e packages, **senza dipendenze runtime** pesanti.
 
@@ -675,11 +677,11 @@ Quando un nodo cambia `visibility`, la propagazione ricorsiva aggiorna `parentVi
 ### Indici principali
 
 ```sql
-idx_collection_final_visibility  ON koi_collection(final_visibility)
-idx_album_final_visibility        ON koi_album(final_visibility)
-idx_item_final_visibility         ON koi_item(final_visibility)
-idx_photo_final_visibility        ON koi_photo(final_visibility)
-idx_datum_final_visibility        ON koi_datum(final_visibility)
+idx_collection_final_visibility  ON stk_collection(final_visibility)
+idx_album_final_visibility        ON stk_album(final_visibility)
+idx_item_final_visibility         ON stk_item(final_visibility)
+idx_photo_final_visibility        ON stk_photo(final_visibility)
+idx_datum_final_visibility        ON stk_datum(final_visibility)
 ```
 
 ---
@@ -713,7 +715,7 @@ Browser (Client Component)
           ├── prisma.album.update(…)
           ├── syncAlbumDescendantsVisibility(…)
           ├── prisma.photo.updateMany(…)
-          ├── logAction(…) → koi_log
+          ├── logAction(…) → stk_log
           ├── revalidatePath(…)
           └── redirect(/albums/[id])
 ```
@@ -741,7 +743,7 @@ Client → GET /api/albums/[id]
 | Utility/lib | `camelCase.ts` | `albums-tree.ts` |
 | Costanti | `UPPER_SNAKE_CASE` | `VISIBILITY_OPTIONS` |
 | Tipi condivisi | `PascalCase` | `Visibility`, `DatumType` |
-| Modelli Prisma | `PascalCase` (rispecchia tabella) | `Album` → `koi_album` |
+| Modelli Prisma | `PascalCase` (rispecchia tabella) | `Album` → `stk_album` |
 | Path param Next.js | `[id]` — sempre `id` come nome | `/albums/[id]` |
 
 ---

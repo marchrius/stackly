@@ -1,9 +1,9 @@
 "use client";
 
-import type { Loan } from "@koillection/db";
+import type { Loan } from "@stackly/db";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@koillection/ui";
+import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@stackly/ui";
 import { useTranslations } from "next-intl";
 
 interface ItemOption {

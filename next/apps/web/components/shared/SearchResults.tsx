@@ -1,8 +1,8 @@
 "use client";
 
-import type { Item, Collection, Tag, Wishlist, Wish } from "@koillection/db";
+import type { Item, Collection, Tag, Wishlist, Wish } from "@stackly/db";
 import Link from "next/link";
-import { Badge } from "@koillection/ui";
+import { Badge } from "@stackly/ui";
 import { Box, Heart, Layers, Tag as TagIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 

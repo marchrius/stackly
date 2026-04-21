@@ -1,7 +1,11 @@
-import { prisma } from "@koillection/db";
+import { prisma } from "@stackly/db";
 import type { Account, Profile } from "next-auth";
 import { cookies } from "next/headers";
-import { OIDC_LINK_COOKIE_NAME, readOidcLinkCookieValue } from "@/lib/auth/oidc-link-cookie";
+import {
+  LEGACY_OIDC_LINK_COOKIE_NAME,
+  OIDC_LINK_COOKIE_NAME,
+  readOidcLinkCookieValue,
+} from "@/lib/auth/oidc-link-cookie";
 
 function normalizeRoles(value: unknown): string[] {
   if (Array.isArray(value)) {
@@ -76,7 +80,8 @@ export async function resolveUserForOidcSignIn(input: {
   });
 
   const cookieStore = await cookies();
-  const linkCookieValue = cookieStore.get(OIDC_LINK_COOKIE_NAME)?.value;
+  const linkCookieValue = cookieStore.get(OIDC_LINK_COOKIE_NAME)?.value
+    ?? cookieStore.get(LEGACY_OIDC_LINK_COOKIE_NAME)?.value;
   const secret = process.env.NEXTAUTH_SECRET;
   const linkContext =
     linkCookieValue && secret ? await readOidcLinkCookieValue(linkCookieValue, secret) : null;
@@ -131,6 +136,7 @@ export async function resolveUserForOidcSignIn(input: {
 
     if (isLinkRequest && linkContext!.userId !== existingUser.id) {
       cookieStore.delete(OIDC_LINK_COOKIE_NAME);
+      cookieStore.delete(LEGACY_OIDC_LINK_COOKIE_NAME);
       return { status: "link_forbidden" as const };
     }
 
@@ -157,6 +163,7 @@ export async function resolveUserForOidcSignIn(input: {
 
     if (isLinkRequest) {
       cookieStore.delete(OIDC_LINK_COOKIE_NAME);
+      cookieStore.delete(LEGACY_OIDC_LINK_COOKIE_NAME);
     }
 
     return {
@@ -175,6 +182,7 @@ export async function resolveUserForOidcSignIn(input: {
 
   if (isLinkRequest) {
     cookieStore.delete(OIDC_LINK_COOKIE_NAME);
+    cookieStore.delete(LEGACY_OIDC_LINK_COOKIE_NAME);
     return { status: "link_forbidden" as const };
   }
 
@@ -206,6 +214,7 @@ export async function resolveUserForOidcSignIn(input: {
 
   if (isLinkRequest) {
     cookieStore.delete(OIDC_LINK_COOKIE_NAME);
+    cookieStore.delete(LEGACY_OIDC_LINK_COOKIE_NAME);
   }
 
   return {

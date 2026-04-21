@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
-import { prisma } from "@koillection/db";
-import { Badge } from "@koillection/ui";
+import { prisma } from "@stackly/db";
+import { Badge } from "@stackly/ui";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {

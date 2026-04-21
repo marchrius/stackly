@@ -1,4 +1,4 @@
-import type { DisplayConfiguration, Prisma } from "@koillection/db";
+import type { DisplayConfiguration, Prisma } from "@stackly/db";
 
 const TEXT_TYPES = ["text", "textarea", "country", "date", "rating", "number", "price", "link", "file", "list", "choice-list", "checkbox"];
 

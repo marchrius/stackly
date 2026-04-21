@@ -1,5 +1,5 @@
 // prisma/schema.prisma
-// Rispecchia il database PostgreSQL di Koillection (tabelle koi_*)
+// Rispecchia il database PostgreSQL di Stackly (tabelle stk_*)
 
 datasource db {
   provider = "postgresql"
@@ -59,7 +59,7 @@ model User {
   fields                Field[]
   oauthProviders        OAuthProvider[]
 
-  @@map("koi_user")
+  @@map("stk_user")
 }
 
 model OAuthProvider {
@@ -82,7 +82,7 @@ model OAuthProvider {
   @@unique([userId, providerName])
   @@index([userId], name: "idx_oauth_provider_user")
   @@index([issuer, subject], name: "idx_oauth_provider_issuer_subject")
-  @@map("koi_oauth_provider")
+  @@map("stk_oauth_provider")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -96,7 +96,7 @@ model Configuration {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
-  @@map("koi_configuration")
+  @@map("stk_configuration")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -136,7 +136,7 @@ model Collection {
 
   @@index([finalVisibility], name: "idx_collection_final_visibility")
   @@index([ownerId], name: "idx_collection_owner")
-  @@map("koi_collection")
+  @@map("stk_collection")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -174,7 +174,7 @@ model Item {
   @@index([finalVisibility], name: "idx_item_final_visibility")
   @@index([collectionId], name: "idx_item_collection")
   @@index([ownerId], name: "idx_item_owner")
-  @@map("koi_item")
+  @@map("stk_item")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -210,7 +210,7 @@ model Datum {
   @@index([label], name: "idx_datum_label")
   @@index([finalVisibility], name: "idx_datum_final_visibility")
   @@index([itemId], name: "idx_datum_item")
-  @@map("koi_datum")
+  @@map("stk_datum")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -242,7 +242,7 @@ model Album {
 
   @@index([finalVisibility], name: "idx_album_final_visibility")
   @@index([ownerId], name: "idx_album_owner")
-  @@map("koi_album")
+  @@map("stk_album")
 }
 
 model Photo {
@@ -268,7 +268,7 @@ model Photo {
 
   @@index([finalVisibility], name: "idx_photo_final_visibility")
   @@index([albumId], name: "idx_photo_album")
-  @@map("koi_photo")
+  @@map("stk_photo")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -300,7 +300,7 @@ model Wishlist {
 
   @@index([finalVisibility], name: "idx_wishlist_final_visibility")
   @@index([ownerId], name: "idx_wishlist_owner")
-  @@map("koi_wishlist")
+  @@map("stk_wishlist")
 }
 
 model Wish {
@@ -327,7 +327,7 @@ model Wish {
 
   @@index([finalVisibility], name: "idx_wish_final_visibility")
   @@index([wishlistId], name: "idx_wish_wishlist")
-  @@map("koi_wish")
+  @@map("stk_wish")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -355,7 +355,7 @@ model Tag {
 
   @@index([visibility], name: "idx_tag_visibility")
   @@index([ownerId], name: "idx_tag_owner")
-  @@map("koi_tag")
+  @@map("stk_tag")
 }
 
 model TagCategory {
@@ -373,7 +373,7 @@ model TagCategory {
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   @@index([ownerId], name: "idx_tag_category_owner")
-  @@map("koi_tag_category")
+  @@map("stk_tag_category")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -394,7 +394,7 @@ model Template {
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   @@index([ownerId], name: "idx_template_owner")
-  @@map("koi_template")
+  @@map("stk_template")
 }
 
 model Field {
@@ -412,7 +412,7 @@ model Field {
   ownerId      String?     @db.Char(36) @map("owner_id")
 
   @@index([templateId], name: "idx_field_template")
-  @@map("koi_field")
+  @@map("stk_field")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -434,7 +434,7 @@ model ChoiceList {
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   @@index([ownerId], name: "idx_choice_list_owner")
-  @@map("koi_choice_list")
+  @@map("stk_choice_list")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -453,7 +453,7 @@ model Inventory {
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   @@index([ownerId], name: "idx_inventory_owner")
-  @@map("koi_inventory")
+  @@map("stk_inventory")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -472,7 +472,7 @@ model Loan {
   ownerId String? @db.Char(36) @map("owner_id")
 
   @@index([ownerId], name: "idx_loan_owner")
-  @@map("koi_loan")
+  @@map("stk_loan")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -493,7 +493,7 @@ model Log {
 
   @@index([ownerId], name: "idx_log_owner")
   @@index([loggedAt], name: "idx_log_logged_at")
-  @@map("koi_log")
+  @@map("stk_log")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -519,7 +519,7 @@ model Scraper {
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   @@index([ownerId], name: "idx_scraper_owner")
-  @@map("koi_scraper")
+  @@map("stk_scraper")
 }
 
 model Path {
@@ -535,7 +535,7 @@ model Path {
   ownerId   String?  @db.Char(36) @map("owner_id")
 
   @@index([scraperId], name: "idx_path_scraper")
-  @@map("koi_path")
+  @@map("stk_path")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -556,7 +556,7 @@ model Search {
   blocks SearchBlock[]
 
   @@index([ownerId], name: "idx_search_owner")
-  @@map("koi_search")
+  @@map("stk_search")
 }
 
 model SearchBlock {
@@ -569,7 +569,7 @@ model SearchBlock {
   filters SearchFilter[]
 
   @@index([searchId], name: "idx_search_block_search")
-  @@map("koi_search_block")
+  @@map("stk_search_block")
 }
 
 model SearchFilter {
@@ -585,7 +585,7 @@ model SearchFilter {
   blockId String?      @db.Char(36) @map("block_id")
 
   @@index([blockId], name: "idx_search_filter_block")
-  @@map("koi_search_filter")
+  @@map("stk_search_filter")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -617,5 +617,5 @@ model DisplayConfiguration {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
-  @@map("koi_display_configuration")
+  @@map("stk_display_configuration")
 }

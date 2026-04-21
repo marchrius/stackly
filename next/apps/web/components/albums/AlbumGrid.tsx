@@ -1,8 +1,8 @@
 "use client";
 
-import type { Album } from "@koillection/db";
+import type { Album } from "@stackly/db";
 import Link from "next/link";
-import { Card, CardContent } from "@koillection/ui";
+import { Card, CardContent } from "@stackly/ui";
 import { Image, Layers } from "lucide-react";
 import { useTranslations } from "next-intl";
 

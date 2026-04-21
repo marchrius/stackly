@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
-import { prisma } from "@koillection/db";
-import { Button } from "@koillection/ui";
+import { prisma } from "@stackly/db";
+import { Button } from "@stackly/ui";
 import { WishlistGrid } from "@/components/wishlists/WishlistGrid";
 import { Plus } from "lucide-react";
 import Link from "next/link";

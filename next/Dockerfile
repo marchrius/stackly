@@ -17,7 +17,7 @@ RUN npm ci
 
 FROM deps AS builder
 
-ARG DATABASE_URL="postgresql://build:build@localhost:5432/koillection"
+ARG DATABASE_URL="postgresql://build:build@localhost:5432/stackly"
 ARG NEXTAUTH_SECRET="build-time-secret-change-me"
 ARG NEXTAUTH_URL="http://localhost:3000"
 ARG UPLOAD_DIR="./apps/web/public/uploads"

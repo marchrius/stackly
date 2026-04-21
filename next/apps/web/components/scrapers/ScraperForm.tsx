@@ -1,6 +1,6 @@
 "use client";
 
-import type { Path, Scraper } from "@koillection/db";
+import type { Path, Scraper } from "@stackly/db";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import {
@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
-} from "@koillection/ui";
+} from "@stackly/ui";
 import { Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 

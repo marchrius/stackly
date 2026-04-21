@@ -1,6 +1,6 @@
-import type { Template, Field } from "@koillection/db";
+import type { Template, Field } from "@stackly/db";
 import Link from "next/link";
-import { Badge, Card, CardContent, CardHeader, CardTitle } from "@koillection/ui";
+import { Badge, Card, CardContent, CardHeader, CardTitle } from "@stackly/ui";
 import { FileText, Layers } from "lucide-react";
 import { useTranslations } from "next-intl";
 
