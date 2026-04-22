@@ -41,6 +41,7 @@ const datumPayloadSchema = z.object({
   type: z.string().min(1),
   visibility: z.enum(["public", "internal", "private"]).default("public"),
   choiceListId: z.string().nullable().optional(),
+  displayMode: z.enum(["pill", "list"]).default("list"),
   position: z.number().int().optional(),
   value: z.string().nullable().optional(),
   file: z.string().nullable().optional(),

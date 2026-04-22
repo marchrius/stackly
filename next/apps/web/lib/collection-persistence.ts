@@ -6,6 +6,7 @@ export type ManagedCollectionDatumPayload = {
   type: string;
   visibility: "public" | "internal" | "private";
   choiceListId?: string | null;
+  displayMode?: "pill" | "list";
   position?: number;
   value?: string | null;
   file?: string | null;
@@ -54,6 +55,7 @@ export async function syncCollectionDatumEntries(
           label: normalized.label,
           type: normalized.type,
           value: normalized.value,
+          displayMode: normalized.displayMode,
           file: normalized.file,
           originalFilename: normalized.originalFilename,
           visibility: normalized.visibility,
@@ -73,6 +75,7 @@ export async function syncCollectionDatumEntries(
         label: normalized.label,
         type: normalized.type,
         value: normalized.value,
+        displayMode: normalized.displayMode,
         file: normalized.file,
         originalFilename: normalized.originalFilename,
         visibility: normalized.visibility,
@@ -100,6 +103,7 @@ function normalizeCollectionDatumEntry(entry: ManagedCollectionDatumPayload) {
     type: entry.type,
     visibility: entry.visibility,
     choiceListId: entry.choiceListId || null,
+    displayMode: entry.displayMode === "pill" ? "pill" : "list",
     position: entry.position ?? null,
     value: normalizeCollectionDatumValue(entry.type, entry.value ?? ""),
     file: entry.type === "file" ? entry.file ?? null : null,

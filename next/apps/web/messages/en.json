@@ -203,7 +203,12 @@
       "scrapeName": "Import name",
       "scrapeImage": "Import image",
       "previewScrape": "Preview scrape",
-      "scrapeFailed": "Unable to preview the scrape."
+      "scrapeFailed": "Unable to preview the scrape.",
+      "displayMode": "Display mode",
+      "displayModes": {
+        "list": "List",
+        "pill": "Pill"
+      }
     },
     "delete": {
       "confirm": "Do you want to delete the item \"{name}\"? This action is irreversible."
@@ -319,6 +324,9 @@
     "language": "Language",
     "currency": "Currency",
     "theme": "Theme",
+    "profileImage": "Profile image",
+    "profileImageHelp": "Upload an avatar that will appear in the top-right corner.",
+    "removeProfileImage": "Remove profile image",
     "dateFormat": "Date format",
     "visibility": "Default visibility",
     "savePreferences": "Save preferences",
@@ -482,7 +490,12 @@
       "fieldVisibility": "Field visibility",
       "choiceList": "Choice list",
       "noChoiceList": "No choice list",
-      "saveFailed": "Unable to save the template."
+      "saveFailed": "Unable to save the template.",
+      "displayMode": "Display mode",
+      "displayModes": {
+        "list": "List",
+        "pill": "Pill"
+      }
     },
     "fieldTypes": {
       "text": "Text",
@@ -526,6 +539,16 @@
       "choices": "Choices",
       "choicesPlaceholder": "One value per line",
       "choicesHelp": "Add one choice per line. Commas are also accepted.",
+      "displayMode": "Display mode",
+      "displayModes": {
+        "pill": "Pill",
+        "list": "List"
+      },
+      "selectionMode": "Selection mode",
+      "selectionModes": {
+        "single": "Single",
+        "multiple": "Multiple"
+      },
       "saveFailed": "Unable to save the choice list."
     }
   },

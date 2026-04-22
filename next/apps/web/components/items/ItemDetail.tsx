@@ -9,10 +9,15 @@ import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { buildItemMediaEntries, getDisplayData, mergeRelatedItems } from "@/lib/item-detail";
-import { formatCountryValue, formatDateValue, formatPriceValue, renderRatingValue } from "@/lib/datum-format";
+import { getChoiceListDisplayMode, limitChoiceValues, parseChoiceListValues } from "@/lib/choice-lists";
+import { formatCountryValue, formatDateValue, formatPriceValue, parseListValues, renderRatingValue } from "@/lib/datum-format";
+
+type DatumWithChoiceList = Datum & {
+  choiceList: { id: string; name: string; displayMode: string | null; selectionMode: string | null } | null;
+};
 
 type ItemWithRelations = Item & {
-  data: Datum[];
+  data: DatumWithChoiceList[];
   tags: Tag[];
   loans: Loan[];
   collection: { id: string; title: string } | null;
@@ -32,6 +37,56 @@ export function ItemDetail({ item, previousItem, nextItem }: { item: ItemWithRel
   const relatedItems = useMemo(() => mergeRelatedItems(item.relatedItems, item.relatedTo), [item.relatedItems, item.relatedTo]);
   const [selectedMediaId, setSelectedMediaId] = useState(mediaEntries[0]?.id ?? null);
   const selectedMedia = mediaEntries.find((entry) => entry.id === selectedMediaId) ?? mediaEntries[0] ?? null;
+
+  function renderChoiceListValue(datum: DatumWithChoiceList) {
+    const values = limitChoiceValues(parseChoiceListValues(datum.value), datum.choiceList);
+    if (values.length === 0) return <span className="text-sm text-muted-foreground">{tCommon("none")}</span>;
+
+    if (getChoiceListDisplayMode(datum.choiceList) === "list") {
+      return (
+        <ul className="list-disc space-y-1 pl-5 text-sm">
+          {values.map((choice) => (
+            <li key={choice}>{choice}</li>
+          ))}
+        </ul>
+      );
+    }
+
+    return (
+      <div className="flex flex-wrap gap-2">
+        {values.map((choice) => (
+          <Badge key={choice} variant="secondary" className="rounded-full px-3 py-1">
+            {choice}
+          </Badge>
+        ))}
+      </div>
+    );
+  }
+
+  function renderListValue(datum: DatumWithChoiceList) {
+    const values = parseListValues(datum.value);
+    if (values.length === 0) return <span className="text-sm text-muted-foreground">{tCommon("none")}</span>;
+
+    if (datum.displayMode === "pill") {
+      return (
+        <div className="flex flex-wrap gap-2">
+          {values.map((choice) => (
+            <Badge key={choice} variant="secondary" className="rounded-full px-3 py-1">
+              {choice}
+            </Badge>
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <ul className="list-disc space-y-1 pl-5 text-sm">
+        {values.map((choice) => (
+          <li key={choice}>{choice}</li>
+        ))}
+      </ul>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -142,7 +197,9 @@ export function ItemDetail({ item, previousItem, nextItem }: { item: ItemWithRel
                     </a>
                   ) : datum.type === "date" && datum.value ? (
                     <p className="break-words text-sm">{formatDateValue(datum.value)}</p>
-                  ) : datum.type === "list" || datum.type === "textarea" ? (
+                  ) : datum.type === "list" ? (
+                    renderListValue(datum)
+                  ) : datum.type === "textarea" ? (
                     <p className="whitespace-pre-line break-words text-sm">{datum.value ?? tCommon("none")}</p>
                   ) : datum.type === "file" && datum.file ? (
                     <a
@@ -155,6 +212,8 @@ export function ItemDetail({ item, previousItem, nextItem }: { item: ItemWithRel
                       <FileDown className="h-4 w-4" />
                       {datum.originalFilename ?? t("unknownFile")}
                     </a>
+                  ) : datum.type === "choice-list" ? (
+                    renderChoiceListValue(datum)
                   ) : datum.type === "price" ? (
                     <p className="break-words text-sm">{formatPriceValue(datum.value, datum.currency) ?? tCommon("none")}</p>
                   ) : datum.type === "rating" ? (

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@stackly/db";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@stackly/ui";
+import { Package } from "lucide-react";
+import { EmptyState } from "@/components/shared/EmptyState";
 import { getTranslations } from "next-intl/server";
 
 function getEntryCount(content: unknown) {
@@ -54,7 +56,7 @@ export default async function InventoriesPage() {
           ))}
         </div>
       ) : (
-        <p className="text-muted-foreground">{t("empty")}</p>
+        <EmptyState icon={Package} title={t("empty")} />
       )}
     </div>
   );

@@ -6,6 +6,7 @@ export type ManagedDatumPayload = {
   type: string;
   visibility: "public" | "internal" | "private";
   choiceListId?: string | null;
+  displayMode?: "pill" | "list";
   position?: number;
   value?: string | null;
   currency?: string | null;
@@ -95,11 +96,12 @@ export async function syncDatumEntries(
 
       await tx.datum.update({
         where: { id: entry.id },
-        data: {
-          label: normalized.label,
-          type: normalized.type,
-          value: normalized.value,
-          currency: normalized.currency,
+    data: {
+      label: normalized.label,
+      type: normalized.type,
+      value: normalized.value,
+      displayMode: normalized.displayMode,
+      currency: normalized.currency,
           image: normalized.image,
           imageSmallThumbnail: normalized.imageSmallThumbnail,
           file: normalized.file,
@@ -122,6 +124,7 @@ export async function syncDatumEntries(
         label: normalized.label,
         type: normalized.type,
         value: normalized.value,
+        displayMode: normalized.displayMode,
         currency: normalized.currency,
         image: normalized.image,
         imageSmallThumbnail: normalized.imageSmallThumbnail,
@@ -162,6 +165,7 @@ function normalizeDatumEntry(entry: ManagedDatumPayload) {
     type,
     visibility: entry.visibility,
     choiceListId: entry.choiceListId || null,
+    displayMode: entry.displayMode === "pill" ? "pill" : "list",
     position: entry.position ?? null,
     value,
     currency: type === "price" ? entry.currency ?? null : null,

@@ -119,7 +119,7 @@ describe("POST /api/items", () => {
       tx,
       "item-1",
       "internal",
-      [{ label: "Price", type: "price", visibility: "public", value: "19.99", currency: "EUR" }],
+      [{ label: "Price", type: "price", visibility: "public", value: "19.99", currency: "EUR", displayMode: "list" }],
       [],
     );
     expect(mockLogApiAction).toHaveBeenCalledWith("user-1", "create", "item-1", "Item test", "Item");

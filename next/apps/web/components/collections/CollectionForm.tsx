@@ -21,10 +21,11 @@ import {
   getDefaultDisplayConfig,
   RESERVED_SORTING_VALUES,
 } from "@/lib/collection-display-config";
+import { isSingleChoiceList, limitChoiceValues, normalizeChoiceValues, parseChoiceListValues } from "@/lib/choice-lists";
 import { VISIBILITY_OPTIONS } from "@stackly/lib";
 import { useTranslations } from "next-intl";
 
-type ChoiceListOption = Pick<ChoiceList, "id" | "name" | "choices">;
+type ChoiceListOption = Pick<ChoiceList, "id" | "name" | "choices" | "displayMode" | "selectionMode">;
 type CollectionWithData = Collection & {
   data: Datum[];
   childrenDisplayConfig: DisplayConfiguration | null;
@@ -78,29 +79,14 @@ function toUploadUrl(path: string | null): string | null {
   return path.startsWith("/") ? path : `/uploads/${path}`;
 }
 
-function normalizeChoiceValues(choices: unknown): string[] {
-  return Array.isArray(choices) ? choices.filter((choice): choice is string => typeof choice === "string") : [];
-}
-
-function parseChoiceValues(value: string | null | undefined) {
-  if (!value) return [];
-
-  try {
-    const parsed = JSON.parse(value) as unknown;
-    return Array.isArray(parsed) ? parsed.filter((choice): choice is string => typeof choice === "string") : [];
-  } catch {
-    return value ? [value] : [];
-  }
-}
-
 function buildManagedFields(collection: CollectionWithData | undefined, choiceLists: ChoiceListOption[]) {
   if (!collection) return [];
 
   return [...collection.data]
     .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
     .map((datum, index) => {
-      const fallbackChoiceList = choiceLists.find((choiceList) => choiceList.id === datum.choiceListId) ?? null;
-      return {
+        const fallbackChoiceList = choiceLists.find((choiceList) => choiceList.id === datum.choiceListId) ?? null;
+        return {
         key: `datum-${datum.id}`,
         datumId: datum.id,
         label: datum.label ?? "",
@@ -110,7 +96,7 @@ function buildManagedFields(collection: CollectionWithData | undefined, choiceLi
         position: datum.position ?? index,
         value: datum.type === "checkbox" ? (datum.value === "1" ? "1" : "0") : datum.value ?? "",
         choices: normalizeChoiceValues(fallbackChoiceList?.choices),
-        selectedChoices: datum.type === "choice-list" ? parseChoiceValues(datum.value) : [],
+        selectedChoices: datum.type === "choice-list" ? limitChoiceValues(parseChoiceListValues(datum.value), fallbackChoiceList) : [],
         file: datum.file ?? null,
         originalFilename: datum.originalFilename ?? null,
       } satisfies ManagedCollectionDatumField;
@@ -139,7 +125,7 @@ function buildFieldFromPreset(
     position,
     value: preset.type === "checkbox" ? (preset.value === "1" ? "1" : "0") : preset.value,
     choices: normalizeChoiceValues(fallbackChoiceList?.choices),
-    selectedChoices: preset.type === "choice-list" ? parseChoiceValues(preset.value) : [],
+    selectedChoices: preset.type === "choice-list" ? limitChoiceValues(parseChoiceListValues(preset.value), fallbackChoiceList) : [],
     file: null,
     originalFilename: null,
   } satisfies ManagedCollectionDatumField;
@@ -311,7 +297,10 @@ export function CollectionForm({
             ...next[existingIndex],
             visibility: preset.visibility ?? next[existingIndex].visibility,
             value: preset.type === "checkbox" ? (preset.value === "1" ? "1" : "0") : preset.value,
-            selectedChoices: preset.type === "choice-list" ? parseChoiceValues(preset.value) : next[existingIndex].selectedChoices,
+            selectedChoices:
+              preset.type === "choice-list"
+                ? limitChoiceValues(parseChoiceListValues(preset.value), choiceLists.find((choiceList) => choiceList.id === preset.choiceListId) ?? null)
+                : next[existingIndex].selectedChoices,
           };
           continue;
         }
@@ -823,7 +812,12 @@ export function CollectionForm({
           {managedFields.length > 0 ? managedFields.map((field, index) => (
             <div key={field.key} className="space-y-3 rounded-lg border p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-sm font-medium">{field.label || tItems("form.fieldFallback", { index: index + 1 })}</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-sm font-medium">{field.label || tItems("form.fieldFallback", { index: index + 1 })}</p>
+                  <Badge variant="outline" className="rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wide">
+                    {tTemplates(`fieldTypes.${field.type}` as never)}
+                  </Badge>
+                </div>
                 <div className="flex flex-wrap gap-2">
                   <Button type="button" variant="outline" size="sm" onClick={() => moveField(field.key, -1)} disabled={index === 0}>↑</Button>
                   <Button type="button" variant="outline" size="sm" onClick={() => moveField(field.key, 1)} disabled={index === managedFields.length - 1}>↓</Button>
@@ -853,18 +847,25 @@ export function CollectionForm({
                 <div className="space-y-2">
                   <div className="flex flex-wrap gap-2">
                     {field.choices.map((choice) => {
-                      const selected = field.selectedChoices.includes(choice);
+                      const choiceList = choiceLists.find((entry) => entry.id === field.choiceListId) ?? null;
+                      const selected = isSingleChoiceList(choiceList) ? field.selectedChoices[0] === choice : field.selectedChoices.includes(choice);
                       return (
                         <Badge
                           key={choice}
                           variant={selected ? "default" : "outline"}
-                          className="cursor-pointer"
-                          onClick={() => updateField(field.key, (current) => ({
-                            ...current,
-                            selectedChoices: selected
-                              ? current.selectedChoices.filter((entry) => entry !== choice)
-                              : [...current.selectedChoices, choice],
-                          }))}
+                          className="cursor-pointer rounded-full px-3 py-1"
+                          onClick={() =>
+                            updateField(field.key, (current) => ({
+                              ...current,
+                              selectedChoices: isSingleChoiceList(choiceList)
+                                ? selected
+                                  ? []
+                                  : [choice]
+                                : selected
+                                  ? current.selectedChoices.filter((entry) => entry !== choice)
+                                  : [...current.selectedChoices, choice],
+                            }))
+                          }
                         >
                           {choice}
                         </Badge>

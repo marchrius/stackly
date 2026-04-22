@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@stackly/db";
+import { ROLES } from "@stackly/lib";
 import { ScraperForm } from "@/components/scrapers/ScraperForm";
 import { getTranslations } from "next-intl/server";
 
@@ -18,9 +19,10 @@ export default async function EditScraperPage({ params }: Props) {
   const { id } = await params;
   const session = await requireAuth();
   const t = await getTranslations("scrapers");
+  const canManageAll = session.user.roles.includes(ROLES.ADMIN);
 
   const scraper = await prisma.scraper.findFirst({
-    where: { id, ownerId: session.user.id },
+    where: canManageAll ? { id } : { id, ownerId: session.user.id },
     include: { dataPaths: { orderBy: { position: "asc" } } },
   });
 

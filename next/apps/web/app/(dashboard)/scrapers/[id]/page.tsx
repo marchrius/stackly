@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@stackly/ui";
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@stackly/db";
+import { ROLES } from "@stackly/lib";
 import { DeleteResourceButton } from "@/components/shared/DeleteResourceButton";
 import { getTranslations } from "next-intl/server";
 
@@ -31,9 +32,10 @@ export default async function ScraperDetailPage({ params }: Props) {
   const { id } = await params;
   const session = await requireAuth();
   const t = await getTranslations("scrapers");
+  const canManageAll = session.user.roles.includes(ROLES.ADMIN);
 
   const scraper = await prisma.scraper.findFirst({
-    where: { id, ownerId: session.user.id },
+    where: canManageAll ? { id } : { id, ownerId: session.user.id },
     include: { dataPaths: { orderBy: { position: "asc" } } },
   });
 

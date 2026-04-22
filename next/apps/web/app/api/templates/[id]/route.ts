@@ -12,6 +12,7 @@ const fieldSchema = z.object({
   type: z.string().trim().min(1).max(15),
   visibility: z.enum(["public", "internal", "private"]).default("public"),
   choiceListId: z.string().nullable().optional(),
+  displayMode: z.enum(["pill", "list"]).default("list"),
 });
 
 const templateSchema = z.object({
@@ -70,6 +71,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
           type: field.type,
           visibility: field.visibility,
           choiceListId: field.choiceListId || null,
+          displayMode: field.displayMode,
           ownerId: result.session.user.id,
           templateId: id,
           position: index + 1,

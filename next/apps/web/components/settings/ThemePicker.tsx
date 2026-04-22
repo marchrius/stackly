@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Check, Monitor } from "lucide-react";
 import { cn } from "@stackly/ui";
 import {
   APP_THEMES,
-  AUTO_PREVIEW_LIGHT,
-  AUTO_PREVIEW_DARK,
+  getThemeClass,
   type ThemeId,
   type AppTheme,
 } from "@/lib/theme/themes";
@@ -19,10 +18,30 @@ interface ThemePickerProps {
 export function ThemePicker({ defaultValue }: ThemePickerProps) {
   const t = useTranslations("settings");
   const [selected, setSelected] = useState<ThemeId>(defaultValue);
+  const initialThemeClass = useRef<string | null>(null);
 
   useEffect(() => {
     setSelected(defaultValue);
   }, [defaultValue]);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    if (initialThemeClass.current === null) {
+      initialThemeClass.current = document.documentElement.className;
+    }
+
+    document.documentElement.className = getThemeClass(selected);
+  }, [selected]);
+
+  useEffect(() => {
+    return () => {
+      if (typeof document === "undefined") return;
+      if (initialThemeClass.current !== null) {
+        document.documentElement.className = initialThemeClass.current;
+      }
+    };
+  }, []);
 
   function selectTheme(value: ThemeId) {
     setSelected(value);
@@ -41,9 +60,6 @@ export function ThemePicker({ defaultValue }: ThemePickerProps) {
           selected={selected === "auto"}
           onSelect={() => selectTheme("auto")}
           label={t("themes.auto")}
-          subtitle={t("themes.autoSubtitle")}
-          lightPreview={AUTO_PREVIEW_LIGHT}
-          darkPreview={AUTO_PREVIEW_DARK}
         />
       </div>
 
@@ -95,9 +111,8 @@ function ThemeCard({ theme, selected, onSelect, label }: ThemeCardProps) {
   const [bg, primary, accent, text] = theme.preview;
 
   return (
-    <label
-      className={cn(
-        "relative block w-28 cursor-pointer overflow-hidden rounded-xl border-2 transition-all duration-150",
+    <label className={cn(
+        "relative block w-28 cursor-pointer overflow-visible rounded-xl border-2 transition-all duration-150",
         "hover:scale-105",
         selected
           ? "border-primary shadow-md shadow-primary/20 scale-105"
@@ -135,26 +150,12 @@ interface AutoCardProps {
   selected: boolean;
   onSelect: () => void;
   label: string;
-  subtitle: string;
-  lightPreview: readonly [string, string, string, string];
-  darkPreview: readonly [string, string, string, string];
 }
 
-function AutoCard({
-  selected,
-  onSelect,
-  label,
-  subtitle,
-  lightPreview,
-  darkPreview,
-}: AutoCardProps) {
-  const [lBg, lPrimary, lAccent] = lightPreview;
-  const [dBg, dPrimary, dAccent] = darkPreview;
-
+function AutoCard({ selected, onSelect, label }: AutoCardProps) {
   return (
-    <label
-      className={cn(
-        "relative block w-28 cursor-pointer overflow-hidden rounded-xl border-2 transition-all duration-150",
+    <label className={cn(
+        "relative block w-28 cursor-pointer overflow-visible rounded-xl border-2 transition-all duration-150",
         "hover:scale-105",
         selected
           ? "border-primary shadow-md shadow-primary/20 scale-105"
@@ -162,26 +163,9 @@ function AutoCard({
       )}
     >
       <input className="sr-only" type="radio" name="theme" value="auto" checked={selected} onChange={onSelect} />
-      <div className="flex w-full">
-        <div className="flex h-[60px] flex-1 items-center justify-center gap-1" style={{ backgroundColor: lBg }}>
-          <span className="h-5 w-5 rounded-full shadow-sm ring-1 ring-black/10" style={{ backgroundColor: lPrimary }} />
-          <span className="h-3 w-3 rounded-full shadow-sm ring-1 ring-black/10" style={{ backgroundColor: lAccent }} />
-        </div>
-
-        <div
-          className="relative h-[60px] w-3 shrink-0 overflow-hidden"
-          style={{ background: `linear-gradient(to bottom right, ${lBg} 50%, ${dBg} 50%)` }}
-        />
-
-        <div className="flex h-[60px] flex-1 items-center justify-center gap-1" style={{ backgroundColor: dBg }}>
-          <span className="h-3 w-3 rounded-full shadow-sm ring-1 ring-white/10" style={{ backgroundColor: dAccent }} />
-          <span className="h-5 w-5 rounded-full shadow-sm ring-1 ring-white/10" style={{ backgroundColor: dPrimary }} />
-        </div>
-      </div>
-
-      <div className="flex items-center justify-center gap-1 bg-card px-1.5 py-1.5 text-center text-xs font-semibold leading-none text-card-foreground">
+      <div className="flex h-[60px] items-center justify-center gap-2 bg-card">
         <Monitor className="h-3 w-3 shrink-0 text-muted-foreground" />
-        <span className="whitespace-nowrap">{label}</span>
+        <span className="whitespace-nowrap text-xs font-semibold">{label}</span>
       </div>
 
       {selected && (

@@ -6,6 +6,7 @@ import { prisma } from "@stackly/db";
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@stackly/ui";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { getChoiceListDisplayMode, isSingleChoiceList } from "@/lib/choice-lists";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -34,6 +35,8 @@ export default async function ChoiceListDetailPage({ params }: Props) {
   const choices = Array.isArray(choiceList.choices)
     ? choiceList.choices.filter((choice): choice is string => typeof choice === "string")
     : [];
+  const displayMode = getChoiceListDisplayMode(choiceList);
+  const selectionMode = isSingleChoiceList(choiceList) ? "single" : "multiple";
 
   return (
     <div className="space-y-6">
@@ -44,6 +47,10 @@ export default async function ChoiceListDetailPage({ params }: Props) {
             {t("choicesCount", { count: choices.length })}
             {choiceList.fields.length > 0 ? ` · ${t("fieldsCount", { count: choiceList.fields.length })}` : ""}
           </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Badge variant="outline">{t(`form.displayModes.${displayMode}`)}</Badge>
+            <Badge variant="outline">{t(`form.selectionModes.${selectionMode}`)}</Badge>
+          </div>
         </div>
         <div className="flex gap-2">
           <Button asChild variant="outline">
@@ -64,11 +71,21 @@ export default async function ChoiceListDetailPage({ params }: Props) {
         </CardHeader>
         <CardContent>
           {choices.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {choices.map((choice) => (
-                <Badge key={choice} variant="secondary">{choice}</Badge>
-              ))}
-            </div>
+            displayMode === "list" ? (
+              <ul className="list-disc space-y-1 pl-5 text-sm">
+                {choices.map((choice) => (
+                  <li key={choice}>{choice}</li>
+                ))}
+              </ul>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {choices.map((choice) => (
+                  <Badge key={choice} variant="secondary">
+                    {choice}
+                  </Badge>
+                ))}
+              </div>
+            )
           ) : (
             <p className="text-sm text-muted-foreground">{t("emptyChoices")}</p>
           )}

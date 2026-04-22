@@ -1,7 +1,7 @@
 "use client";
 
 import type { User } from "@stackly/db";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@stackly/ui";
 import { updateSettings, changePassword } from "@/lib/actions/user.actions";
 import { useTranslations } from "next-intl";
@@ -15,6 +15,26 @@ export function SettingsForm({ user }: { user: User }) {
   const [pwLoading, setPwLoading] = useState(false);
   const [pwError, setPwError] = useState("");
   const [pwSuccess, setPwSuccess] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(user.avatar ? `/uploads/${user.avatar}` : null);
+  const [avatarRemoved, setAvatarRemoved] = useState(false);
+  const [avatarFileName, setAvatarFileName] = useState("");
+
+  useEffect(() => {
+    if (avatarRemoved) {
+      setAvatarPreview(null);
+      setAvatarFileName("");
+    }
+  }, [avatarRemoved]);
+
+  const avatarInitials = useMemo(() => {
+    if (!user.username) return "?";
+    return user.username
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() ?? "")
+      .join("");
+  }, [user.username]);
 
   async function handleSettings(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -80,6 +100,44 @@ export function SettingsForm({ user }: { user: User }) {
                   <SelectItem value="private">{t("visibilityOptions.private")}</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <Label htmlFor="avatarFile">{t("profileImage")}</Label>
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border bg-muted text-lg font-semibold text-muted-foreground">
+                {avatarPreview ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={avatarPreview} alt={user.username} className="h-full w-full object-cover" />
+                ) : (
+                  <span>{avatarInitials}</span>
+                )}
+              </div>
+              <div className="space-y-3">
+                <Input
+                  id="avatarFile"
+                  type="file"
+                  name="avatarFile"
+                  accept="image/*"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (!file) return;
+
+                    setAvatarRemoved(false);
+                    setAvatarFileName(file.name);
+                    setAvatarPreview(URL.createObjectURL(file));
+                  }}
+                />
+                <input type="hidden" name="removeAvatar" value={avatarRemoved ? "1" : ""} />
+                <div className="flex flex-wrap gap-2">
+                  <Button type="button" variant="outline" onClick={() => setAvatarRemoved(true)}>
+                    {t("removeProfileImage")}
+                  </Button>
+                  {avatarFileName ? <span className="self-center text-sm text-muted-foreground">{avatarFileName}</span> : null}
+                </div>
+                <p className="text-sm text-muted-foreground">{t("profileImageHelp")}</p>
+              </div>
             </div>
           </div>
 

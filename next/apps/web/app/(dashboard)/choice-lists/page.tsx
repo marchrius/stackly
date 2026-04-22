@@ -3,7 +3,9 @@ import Link from "next/link";
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@stackly/db";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@stackly/ui";
+import { List } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("choiceLists");
@@ -53,7 +55,7 @@ export default async function ChoiceListsPage() {
           })}
         </div>
       ) : (
-        <p className="text-muted-foreground">{t("empty")}</p>
+        <EmptyState icon={List} title={t("empty")} />
       )}
     </div>
   );

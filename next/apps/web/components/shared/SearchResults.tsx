@@ -15,9 +15,10 @@ interface SearchResultsProps {
   wishlists: Wishlist[];
   wishes: WishWithWishlist[];
   query: string;
+  totalCount?: number;
 }
 
-export function SearchResults({ items, collections, tags, wishlists, wishes, query }: SearchResultsProps) {
+export function SearchResults({ items, collections, tags, wishlists, wishes, query, totalCount }: SearchResultsProps) {
   const t = useTranslations("search");
   const tNav = useTranslations("nav");
   const tItems = useTranslations("items");
@@ -25,12 +26,14 @@ export function SearchResults({ items, collections, tags, wishlists, wishes, que
   const total = items.length + collections.length + tags.length + wishlists.length + wishes.length;
 
   if (total === 0) {
-    return <p className="text-muted-foreground">{t("noResultsFor", { query })}</p>;
+    return <p className="text-muted-foreground">{query ? t("noResultsFor", { query }) : t("noResults")}</p>;
   }
 
   return (
     <div className="space-y-6">
-      <p className="text-sm text-muted-foreground">{t("resultsFor", { count: total, query })}</p>
+      <p className="text-sm text-muted-foreground">
+        {query ? t("resultsFor", { count: totalCount ?? total, query }) : t("results")}
+      </p>
 
       {collections.length > 0 && (
         <section>

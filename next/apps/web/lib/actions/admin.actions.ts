@@ -7,6 +7,7 @@ import {
   type ThumbnailFormatValue,
 } from "@/lib/configuration";
 import { prisma } from "@stackly/db";
+import { ROLES } from "@stackly/lib";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -67,6 +68,34 @@ export async function updateAdminConfiguration(formData: FormData) {
   revalidatePath("/", "layout");
 
   return { success: true };
+}
+
+export async function updateUserAdminRole(userId: string, formData: FormData): Promise<void> {
+  await requireAdmin();
+
+  const isAdmin = formData.get("isAdmin") === "on";
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { id: true, roles: true },
+  });
+
+  if (!user) {
+    throw new Error("User not found.");
+  }
+
+  const roles = Array.isArray(user.roles) ? user.roles.filter((role): role is string => typeof role === "string") : [];
+  const nextRoles = new Set<string>(roles.filter((role) => role !== ROLES.ADMIN && role !== ROLES.USER));
+  nextRoles.add(ROLES.USER);
+  if (isAdmin) nextRoles.add(ROLES.ADMIN);
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { roles: Array.from(nextRoles) },
+  });
+
+  revalidatePath("/settings/admin");
+  revalidatePath("/", "layout");
+
 }
 
 function normalizeTextConfiguration(value: string): string | null {

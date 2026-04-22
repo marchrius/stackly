@@ -17,6 +17,12 @@ import {
   Textarea,
 } from "@stackly/ui";
 import { createItem, updateItem } from "@/lib/actions/item.actions";
+import {
+  isSingleChoiceList,
+  limitChoiceValues,
+  normalizeChoiceValues,
+  parseChoiceListValues,
+} from "@/lib/choice-lists";
 import { useTranslations } from "next-intl";
 
 type ItemWithRelations = Item & {
@@ -26,9 +32,9 @@ type ItemWithRelations = Item & {
   relatedTo: Pick<Item, "id" | "name">[];
 };
 
-type ChoiceListOption = Pick<ChoiceList, "id" | "name" | "choices">;
-type TemplateField = Pick<Field, "id" | "name" | "type" | "visibility" | "position" | "choiceListId"> & {
-  choiceList?: ChoiceListOption | null;
+type ChoiceListOption = Pick<ChoiceList, "id" | "name" | "choices" | "displayMode" | "selectionMode">;
+type TemplateField = Pick<Field, "id" | "name" | "type" | "visibility" | "position" | "choiceListId" | "displayMode"> & {
+  choiceList?: Pick<ChoiceList, "id" | "name" | "choices"> | null;
 };
 type ItemTemplate = Pick<Template, "id" | "name"> & { fields: TemplateField[] };
 type CollectionOption = { id: string; title: string; itemsDefaultTemplate: ItemTemplate | null };
@@ -39,6 +45,7 @@ type PresetField = {
   type: string;
   visibility: "public" | "internal" | "private";
   choiceListId: string | null;
+  displayMode?: "pill" | "list";
   value: string;
 };
 
@@ -49,6 +56,7 @@ type ManagedDatumField = {
   type: string;
   visibility: "public" | "internal" | "private";
   choiceListId: string | null;
+  displayMode: "pill" | "list";
   position: number;
   value: string;
   currency: string | null;
@@ -82,21 +90,6 @@ const MEDIA_FIELD_TYPES = ["image", "file", "video", "sign"];
 const STRUCTURE_FIELD_TYPES = ["section", "blank-line"];
 const MEDIA_TYPES = new Set(MEDIA_FIELD_TYPES);
 
-function normalizeChoiceValues(choices: unknown): string[] {
-  return Array.isArray(choices) ? choices.filter((choice): choice is string => typeof choice === "string") : [];
-}
-
-function parseChoiceValues(value: string | null | undefined) {
-  if (!value) return [];
-
-  try {
-    const parsed = JSON.parse(value) as unknown;
-    return Array.isArray(parsed) ? parsed.filter((choice): choice is string => typeof choice === "string") : [];
-  } catch {
-    return value ? [value] : [];
-  }
-}
-
 function parseListValue(value: string | null | undefined) {
   if (!value) return "";
 
@@ -121,6 +114,7 @@ function buildManagedFields(item: ItemWithRelations | undefined, template: ItemT
           type: datum.type,
           visibility: datum.visibility as ManagedDatumField["visibility"],
           choiceListId: datum.choiceListId ?? null,
+          displayMode: datum.displayMode === "pill" ? "pill" : "list",
           position: datum.position ?? index,
           value:
             datum.type === "list"
@@ -132,7 +126,7 @@ function buildManagedFields(item: ItemWithRelations | undefined, template: ItemT
                 : datum.value ?? "",
           currency: datum.type === "price" ? datum.currency ?? null : null,
           choices: normalizeChoiceValues(fallbackChoiceList?.choices),
-          selectedChoices: datum.type === "choice-list" ? parseChoiceValues(datum.value) : [],
+          selectedChoices: datum.type === "choice-list" ? limitChoiceValues(parseChoiceListValues(datum.value), fallbackChoiceList) : [],
           image: datum.image ?? null,
           imageSmallThumbnail: datum.imageSmallThumbnail ?? null,
           file: datum.file ?? null,
@@ -148,29 +142,30 @@ function buildManagedFields(item: ItemWithRelations | undefined, template: ItemT
 
   return [...template.fields]
     .sort((a, b) => a.position - b.position)
-    .map((field, index) => {
-      const fallbackChoiceList = choiceLists.find((choiceList) => choiceList.id === field.choiceListId) ?? null;
-      return {
-        key: `field-${field.id}`,
-        datumId: null,
-        label: field.name,
-        type: field.type,
-        visibility: field.visibility as ManagedDatumField["visibility"],
-        choiceListId: field.choiceListId ?? null,
-        position: field.position ?? index,
-        value: field.type === "checkbox" ? "0" : "",
-        currency: null,
-        choices: normalizeChoiceValues(field.choiceList?.choices ?? fallbackChoiceList?.choices),
-        selectedChoices: [],
-        image: null,
-        imageSmallThumbnail: null,
-        file: null,
-        video: null,
-        originalFilename: null,
-        previewUrl: null,
-        remoteUrl: null,
-      } satisfies ManagedDatumField;
-    });
+      .map((field, index) => {
+        const fallbackChoiceList = choiceLists.find((choiceList) => choiceList.id === field.choiceListId) ?? null;
+        return {
+          key: `field-${field.id}`,
+          datumId: null,
+          label: field.name,
+          type: field.type,
+          visibility: field.visibility as ManagedDatumField["visibility"],
+          choiceListId: field.choiceListId ?? null,
+          displayMode: field.displayMode === "pill" ? "pill" : "list",
+          position: field.position ?? index,
+          value: field.type === "checkbox" ? "0" : "",
+          currency: null,
+          choices: normalizeChoiceValues(field.choiceList?.choices ?? fallbackChoiceList?.choices),
+          selectedChoices: [],
+          image: null,
+          imageSmallThumbnail: null,
+          file: null,
+          video: null,
+          originalFilename: null,
+          previewUrl: null,
+          remoteUrl: null,
+        } satisfies ManagedDatumField;
+      });
 }
 
 function buildFieldFromPreset(
@@ -187,11 +182,12 @@ function buildFieldFromPreset(
     type: preset.type,
     visibility: preset.visibility,
     choiceListId: preset.choiceListId,
+    displayMode: preset.type === "list" ? (preset.displayMode ?? "list") : "list",
     position,
     value: preset.type === "list" ? parseListValue(preset.value) : preset.type === "checkbox" ? (preset.value === "1" ? "1" : "0") : preset.value,
     currency: null,
     choices: normalizeChoiceValues(fallbackChoiceList?.choices),
-    selectedChoices: preset.type === "choice-list" ? parseChoiceValues(preset.value) : [],
+    selectedChoices: preset.type === "choice-list" ? limitChoiceValues(parseChoiceListValues(preset.value), fallbackChoiceList) : [],
     image: null,
     imageSmallThumbnail: null,
     file: null,
@@ -222,6 +218,7 @@ function serializeField(field: ManagedDatumField, position: number) {
     type: field.type,
     visibility: field.visibility,
     choiceListId: field.choiceListId,
+    displayMode: field.displayMode,
     position,
     value,
     currency: field.type === "price" ? field.currency : null,
@@ -348,7 +345,8 @@ export function ItemForm({
         value: type === "checkbox" ? "0" : type === "list" ? parseListValue(preset?.value ?? "") : (preset?.value ?? ""),
         currency: null,
         choices: normalizeChoiceValues(fallbackChoiceList?.choices),
-        selectedChoices: type === "choice-list" ? parseChoiceValues(preset?.value ?? "") : [],
+        selectedChoices: type === "choice-list" ? limitChoiceValues(parseChoiceListValues(preset?.value ?? ""), fallbackChoiceList) : [],
+        displayMode: type === "list" ? ((preset?.displayMode as "pill" | "list" | undefined) ?? "list") : "list",
         image: null,
         imageSmallThumbnail: null,
         file: null,
@@ -399,7 +397,9 @@ export function ItemForm({
             ...next[existingIndex],
             visibility: preset.visibility,
             value: preset.type === "list" ? parseListValue(preset.value) : preset.value,
-            selectedChoices: preset.type === "choice-list" ? parseChoiceValues(preset.value) : next[existingIndex].selectedChoices,
+            displayMode: preset.type === "list" ? (preset.displayMode ?? next[existingIndex].displayMode) : next[existingIndex].displayMode,
+            selectedChoices:
+              preset.type === "choice-list" ? limitChoiceValues(parseChoiceListValues(preset.value), choiceLists.find((choiceList) => choiceList.id === preset.choiceListId) ?? null) : next[existingIndex].selectedChoices,
           };
           continue;
         }
@@ -459,7 +459,7 @@ export function ItemForm({
       name: string | null;
       imageUrl: string | null;
       scrapedUrl: string | null;
-      data: Array<{ id: string; label: string; type: string; value: string | null }>;
+      data: Array<{ id: string; label: string; type: string; value: string | null; displayMode?: string | null }>;
     };
 
     if (data.name) setName(data.name);
@@ -478,11 +478,12 @@ export function ItemForm({
       for (const datum of data.data) {
         if (!datum.value) continue;
         const existingIndex = next.findIndex((field) => field.label === datum.label && field.type === datum.type);
-        const common = {
+        const common: PresetField = {
           label: datum.label,
           type: datum.type,
           visibility: "public" as const,
           choiceListId: null,
+          displayMode: datum.displayMode === "pill" ? "pill" : "list",
           value: datum.value,
         };
 
@@ -498,7 +499,11 @@ export function ItemForm({
           next[existingIndex] = {
             ...next[existingIndex],
             value: datum.type === "list" ? parseListValue(datum.value) : datum.value,
-            selectedChoices: datum.type === "choice-list" ? parseChoiceValues(datum.value) : next[existingIndex].selectedChoices,
+            displayMode: datum.type === "list" ? (datum.displayMode === "pill" ? "pill" : "list") : next[existingIndex].displayMode,
+            selectedChoices:
+              datum.type === "choice-list"
+                ? limitChoiceValues(parseChoiceListValues(datum.value), choiceLists.find((choiceList) => choiceList.id === next[existingIndex].choiceListId) ?? null)
+                : next[existingIndex].selectedChoices,
           };
           continue;
         }
@@ -552,7 +557,12 @@ export function ItemForm({
     return (
       <div key={field.key} className="space-y-3 rounded-lg border p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-sm font-medium">{fieldTitle}</p>
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-sm font-medium">{fieldTitle}</p>
+            <Badge variant="outline" className="rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wide">
+              {t(`fieldTypes.${field.type}` as never)}
+            </Badge>
+          </div>
           <div className="flex flex-wrap gap-2">
             <Button type="button" variant="outline" size="sm" onClick={() => moveField(field.key, -1)} disabled={index === 0}>
               ↑
@@ -630,25 +640,54 @@ export function ItemForm({
             </Button>
           </div>
         ) : field.type === "textarea" || field.type === "list" ? (
-          <Textarea
-            id={field.key}
-            value={field.value}
-            rows={field.type === "list" ? 5 : 4}
-            placeholder={field.type === "list" ? t("form.listPlaceholder") : undefined}
-            onChange={(event) => updateField(field.key, (current) => ({ ...current, value: event.target.value }))}
-          />
+          <div className="space-y-3">
+            {field.type === "list" && (
+              <div className="space-y-2">
+                <Label htmlFor={`${field.key}-display-mode`}>{t("form.displayMode")}</Label>
+                <Select value={field.displayMode} onValueChange={(value) => updateField(field.key, (current) => ({ ...current, displayMode: value as "pill" | "list" }))}>
+                  <SelectTrigger id={`${field.key}-display-mode`}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="list">{t("form.displayModes.list")}</SelectItem>
+                    <SelectItem value="pill">{t("form.displayModes.pill")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            <Textarea
+              id={field.key}
+              value={field.value}
+              rows={field.type === "list" ? 5 : 4}
+              placeholder={field.type === "list" ? t("form.listPlaceholder") : undefined}
+              onChange={(event) => updateField(field.key, (current) => ({ ...current, value: event.target.value }))}
+            />
+          </div>
         ) : field.type === "choice-list" ? (
           <div className="space-y-2">
             {choiceListOptions.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {choiceListOptions.map((choice) => {
-                  const selected = field.selectedChoices.includes(choice);
+                  const choiceList = choiceLists.find((entry) => entry.id === field.choiceListId) ?? null;
+                  const isSingleChoice = isSingleChoiceList(choiceList);
+                  const selected = isSingleChoice ? field.selectedChoices[0] === choice : field.selectedChoices.includes(choice);
                   return (
                     <Badge
                       key={choice}
                       variant={selected ? "default" : "outline"}
-                      className="cursor-pointer"
-                      onClick={() => updateField(field.key, (current) => ({ ...current, selectedChoices: selected ? current.selectedChoices.filter((entry) => entry !== choice) : [...current.selectedChoices, choice] }))}
+                      className="cursor-pointer rounded-full px-3 py-1"
+                      onClick={() =>
+                        updateField(field.key, (current) => ({
+                          ...current,
+                          selectedChoices: isSingleChoice
+                            ? selected
+                              ? []
+                              : [choice]
+                            : selected
+                              ? current.selectedChoices.filter((entry) => entry !== choice)
+                              : [...current.selectedChoices, choice],
+                        }))
+                      }
                     >
                       {choice}
                     </Badge>
@@ -715,8 +754,8 @@ export function ItemForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && <p className="text-sm text-destructive">{error}</p>}
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
-        <div className="space-y-6">
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="min-w-0 space-y-6">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2 md:col-span-2">
               <Label htmlFor="name">{t("form.name")}</Label>
@@ -862,7 +901,7 @@ export function ItemForm({
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 xl:sticky xl:top-6 xl:self-start xl:max-h-[calc(100vh-9rem)] xl:overflow-y-auto xl:pr-1">
           <div className="space-y-3 rounded-lg border p-4">
             <div>
               <h2 className="text-lg font-semibold">{t("form.scrape")}</h2>

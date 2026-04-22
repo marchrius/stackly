@@ -30,7 +30,10 @@ export default async function CollectionDetailPage({ params }: Props) {
         orderBy: { name: "asc" },
         take: 50,
       },
-      data: { orderBy: { position: "asc" } },
+       data: {
+         orderBy: { position: "asc" },
+         include: { choiceList: { select: { id: true, name: true, displayMode: true, selectionMode: true } } },
+       },
       _count: { select: { children: true, items: true } },
     },
   });

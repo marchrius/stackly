@@ -11,13 +11,18 @@ import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { getDisplayData } from "@/lib/item-detail";
 import { getCollectionCachedSummary } from "@/lib/collection-detail";
+import { limitChoiceValues, parseChoiceListValues } from "@/lib/choice-lists";
 import { formatCountryValue, formatCurrencyAmount, formatDateValue, formatPriceValue, parseListValues, renderRatingValue } from "@/lib/datum-format";
 import { CollectionItemsGrid } from "./CollectionItemsGrid";
+
+type DatumWithChoiceList = Datum & {
+  choiceList: { id: string; name: string; displayMode: string | null; selectionMode: string | null } | null;
+};
 
 type CollectionWithRelations = Collection & {
   children: (Collection & { _count: { children: number; items: number } })[];
   items: Item[];
-  data: Datum[];
+  data: DatumWithChoiceList[];
   _count: { children: number; items: number };
 };
 
@@ -39,6 +44,56 @@ export function CollectionDetail({ collection, ancestors }: CollectionDetailProp
   const cachedSummary = useMemo(() => getCollectionCachedSummary(collection.cachedValues), [collection.cachedValues]);
   const childrenCount = cachedSummary.counters.children || collection._count.children;
   const itemsCount = cachedSummary.counters.items || collection._count.items;
+
+  function renderChoiceListValue(datum: DatumWithChoiceList) {
+    const values = limitChoiceValues(parseChoiceListValues(datum.value), datum.choiceList);
+    if (values.length === 0) return <span className="text-sm text-muted-foreground">{tCommon("none")}</span>;
+
+    if (datum.choiceList?.displayMode === "list") {
+      return (
+        <ul className="list-disc space-y-1 pl-5 text-sm">
+          {values.map((choice) => (
+            <li key={choice}>{choice}</li>
+          ))}
+        </ul>
+      );
+    }
+
+    return (
+      <div className="flex flex-wrap gap-2">
+        {values.map((choice) => (
+          <Badge key={choice} variant="secondary" className="rounded-full px-3 py-1">
+            {choice}
+          </Badge>
+        ))}
+      </div>
+    );
+  }
+
+  function renderListValue(datum: DatumWithChoiceList) {
+    const values = parseListValues(datum.value);
+    if (values.length === 0) return <span className="text-sm text-muted-foreground">{tCommon("none")}</span>;
+
+    if (datum.displayMode === "pill") {
+      return (
+        <div className="flex flex-wrap gap-2">
+          {values.map((value) => (
+            <Badge key={value} variant="secondary" className="rounded-full px-3 py-1">
+              {value}
+            </Badge>
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <ul className="list-disc space-y-1 pl-5 text-sm">
+        {values.map((value) => (
+          <li key={value}>{value}</li>
+        ))}
+      </ul>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -130,7 +185,9 @@ export function CollectionDetail({ collection, ancestors }: CollectionDetailProp
                   </a>
                 ) : datum.type === "date" && datum.value ? (
                   <p className="break-words text-sm">{formatDateValue(datum.value)}</p>
-                ) : datum.type === "list" || datum.type === "textarea" ? (
+                ) : datum.type === "list" ? (
+                  renderListValue(datum)
+                ) : datum.type === "textarea" ? (
                   <p className="whitespace-pre-line break-words text-sm">{datum.value ?? tCommon("none")}</p>
                 ) : datum.type === "file" && datum.file ? (
                   <a
@@ -150,7 +207,7 @@ export function CollectionDetail({ collection, ancestors }: CollectionDetailProp
                 ) : datum.type === "country" ? (
                   <p className="break-words text-sm">{formatCountryValue(datum.value) ?? tCommon("none")}</p>
                 ) : datum.type === "choice-list" ? (
-                  <p className="break-words text-sm">{parseListValues(datum.value).join(", ") || tCommon("none")}</p>
+                  renderChoiceListValue(datum)
                 ) : (
                   <p className="break-words text-sm">{datum.value ?? tCommon("none")}</p>
                 )}

@@ -19,7 +19,17 @@ export function Navbar({ user }: NavbarProps) {
       <div className="flex items-center gap-2" />
 
       <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground hidden sm:block">{user.name}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground hidden sm:block">{user.name}</span>
+          <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border bg-muted text-xs font-semibold text-muted-foreground">
+            {user.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={user.image} alt={user.name ?? ""} className="h-full w-full object-cover" />
+            ) : (
+              <span>{getInitials(user.name)}</span>
+            )}
+          </div>
+        </div>
 
         <Button variant="ghost" size="icon" asChild>
           <Link href="/settings" title={t("settings")}>
@@ -38,4 +48,14 @@ export function Navbar({ user }: NavbarProps) {
       </div>
     </header>
   );
+}
+
+function getInitials(name?: string | null) {
+  if (!name) return "?";
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
 }

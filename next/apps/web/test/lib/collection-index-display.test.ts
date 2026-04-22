@@ -47,8 +47,8 @@ describe("collection-index-display", () => {
 
   it("sorts by datum values", () => {
     const collections = [
-      makeCollection({ title: "Comics", data: [{ id: "1", type: "text", label: "Author", value: "Zeta", position: null, currency: null, image: null, imageSmallThumbnail: null, file: null, video: null, originalFilename: null, visibility: "public", parentVisibility: "public", finalVisibility: "public", itemId: null, collectionId: null, choiceListId: null, createdAt: new Date(), updatedAt: null }] }),
-      makeCollection({ title: "Books", data: [{ id: "2", type: "text", label: "Author", value: "Alpha", position: null, currency: null, image: null, imageSmallThumbnail: null, file: null, video: null, originalFilename: null, visibility: "public", parentVisibility: "public", finalVisibility: "public", itemId: null, collectionId: null, choiceListId: null, createdAt: new Date(), updatedAt: null }] }),
+      makeCollection({ title: "Comics", data: [{ id: "1", type: "text", label: "Author", value: "Zeta", currency: null, file: null, originalFilename: null, displayMode: "list" }] }),
+      makeCollection({ title: "Books", data: [{ id: "2", type: "text", label: "Author", value: "Alpha", currency: null, file: null, originalFilename: null, displayMode: "list" }] }),
     ];
 
     const sorted = sortCollectionsForDisplay(collections, {
@@ -63,7 +63,7 @@ describe("collection-index-display", () => {
   it("formats datum values for list columns", () => {
     const collection = makeCollection({
       data: [
-        { id: "3", type: "choice-list", label: "Genres", value: '["Sci-Fi","Drama"]', position: null, currency: null, image: null, imageSmallThumbnail: null, file: null, video: null, originalFilename: null, visibility: "public", parentVisibility: "public", finalVisibility: "public", itemId: null, collectionId: null, choiceListId: null, createdAt: new Date(), updatedAt: null },
+        { id: "3", type: "choice-list", label: "Genres", value: '["Sci-Fi","Drama"]', currency: null, file: null, originalFilename: null, displayMode: "list" },
       ],
     });
 

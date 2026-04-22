@@ -5,6 +5,7 @@ import { DATUM_TYPES } from "@stackly/lib";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  Badge,
   Button,
   Input,
   Label,
@@ -25,6 +26,7 @@ type TemplateFieldState = {
   type: string;
   visibility: string;
   choiceListId: string;
+  displayMode: "pill" | "list";
 };
 
 interface TemplateFormProps {
@@ -39,6 +41,7 @@ function mapField(field?: Field): TemplateFieldState {
     type: field?.type ?? "text",
     visibility: field?.visibility ?? "public",
     choiceListId: field?.choiceListId ?? "",
+    displayMode: field?.displayMode === "pill" ? "pill" : "list",
   };
 }
 
@@ -85,6 +88,7 @@ export function TemplateForm({ template, choiceLists }: TemplateFormProps) {
         type: field.type,
         visibility: field.visibility,
         choiceListId: field.type === "choice-list" && field.choiceListId ? field.choiceListId : null,
+        displayMode: field.type === "list" ? field.displayMode : "list",
       })),
     };
 
@@ -132,7 +136,12 @@ export function TemplateForm({ template, choiceLists }: TemplateFormProps) {
             <div key={field.id ?? `new-${index}`} className="rounded-lg border p-4">
               <div className="grid gap-4 lg:grid-cols-[1.3fr_1fr_1fr_1fr_auto]">
                 <div className="space-y-2">
-                  <Label htmlFor={`field-name-${index}`}>{t("form.fieldName")}</Label>
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor={`field-name-${index}`}>{t("form.fieldName")}</Label>
+                    <Badge variant="outline" className="rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wide">
+                      {t(`fieldTypes.${field.type}` as never)}
+                    </Badge>
+                  </div>
                   <Input
                     id={`field-name-${index}`}
                     value={field.name}
@@ -156,6 +165,23 @@ export function TemplateForm({ template, choiceLists }: TemplateFormProps) {
                     </SelectContent>
                   </Select>
                 </div>
+
+                {field.type === "list" ? (
+                  <div className="space-y-2">
+                    <Label htmlFor={`field-display-mode-${index}`}>{t("form.displayMode")}</Label>
+                    <Select value={field.displayMode} onValueChange={(value) => updateField(index, { displayMode: value as "pill" | "list" })}>
+                      <SelectTrigger id={`field-display-mode-${index}`}>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="list">{t("form.displayModes.list")}</SelectItem>
+                        <SelectItem value="pill">{t("form.displayModes.pill")}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                ) : (
+                  <div />
+                )}
 
                 <div className="space-y-2">
                   <Label htmlFor={`field-visibility-${index}`}>{t("form.fieldVisibility")}</Label>

@@ -10,6 +10,8 @@ interface Params {
 const choiceListSchema = z.object({
   name: z.string().trim().min(1, "Il nome è obbligatorio").max(255),
   choices: z.array(z.string().trim().min(1)).default([]),
+  displayMode: z.enum(["pill", "list"]).default("pill"),
+  selectionMode: z.enum(["single", "multiple"]).default("multiple"),
 });
 
 function normalizeBody(body: unknown) {
@@ -26,6 +28,8 @@ function normalizeBody(body: unknown) {
   return {
     name: typeof record.name === "string" ? record.name : "",
     choices,
+    displayMode: record.displayMode === "list" ? "list" : "pill",
+    selectionMode: record.selectionMode === "single" ? "single" : "multiple",
   };
 }
 
@@ -59,6 +63,8 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     data: {
       name: parsed.data.name,
       choices: parsed.data.choices,
+      displayMode: parsed.data.displayMode,
+      selectionMode: parsed.data.selectionMode,
       updatedAt: new Date(),
     },
     include: { _count: { select: { fields: true, data: true } } },

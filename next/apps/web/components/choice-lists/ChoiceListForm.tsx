@@ -3,11 +3,12 @@
 import type { ChoiceList } from "@stackly/db";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { Button, Input, Label, Textarea } from "@stackly/ui";
+import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from "@stackly/ui";
 import { useTranslations } from "next-intl";
+import { normalizeChoiceValues } from "@/lib/choice-lists";
 
 interface ChoiceListFormProps {
-  choiceList?: Pick<ChoiceList, "id" | "name" | "choices">;
+  choiceList?: Pick<ChoiceList, "id" | "name" | "choices" | "displayMode" | "selectionMode">;
 }
 
 export function ChoiceListForm({ choiceList }: ChoiceListFormProps) {
@@ -16,11 +17,11 @@ export function ChoiceListForm({ choiceList }: ChoiceListFormProps) {
   const tCommon = useTranslations("common");
   const [name, setName] = useState(choiceList?.name ?? "");
   const [choicesText, setChoicesText] = useState(() => {
-    const choices = Array.isArray(choiceList?.choices)
-      ? choiceList?.choices.filter((choice): choice is string => typeof choice === "string")
-      : [];
+    const choices = normalizeChoiceValues(choiceList?.choices);
     return choices.join("\n");
   });
+  const [displayMode, setDisplayMode] = useState(choiceList?.displayMode === "list" ? "list" : "pill");
+  const [selectionMode, setSelectionMode] = useState(choiceList?.selectionMode === "single" ? "single" : "multiple");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const isEdit = Boolean(choiceList);
@@ -38,6 +39,8 @@ export function ChoiceListForm({ choiceList }: ChoiceListFormProps) {
     const payload = {
       name: name.trim(),
       choices: choicesPreview,
+      displayMode,
+      selectionMode,
     };
 
     const response = await fetch(isEdit ? `/api/choice-lists/${choiceList!.id}` : "/api/choice-lists", {
@@ -78,6 +81,34 @@ export function ChoiceListForm({ choiceList }: ChoiceListFormProps) {
           placeholder={t("form.choicesPlaceholder")}
         />
         <p className="text-sm text-muted-foreground">{t("form.choicesHelp")}</p>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="displayMode">{t("form.displayMode")}</Label>
+          <Select value={displayMode} onValueChange={(value) => setDisplayMode(value as "pill" | "list")}>
+            <SelectTrigger id="displayMode">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="pill">{t("form.displayModes.pill")}</SelectItem>
+              <SelectItem value="list">{t("form.displayModes.list")}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="selectionMode">{t("form.selectionMode")}</Label>
+          <Select value={selectionMode} onValueChange={(value) => setSelectionMode(value as "single" | "multiple")}>
+            <SelectTrigger id="selectionMode">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="single">{t("form.selectionModes.single")}</SelectItem>
+              <SelectItem value="multiple">{t("form.selectionModes.multiple")}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {choicesPreview.length > 0 && (

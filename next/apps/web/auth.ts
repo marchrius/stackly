@@ -90,6 +90,7 @@ const config: NextAuthConfig = {
       if (user) {
         const u = user as Record<string, unknown>;
         token["id"] = u["id"] as string;
+        token["image"] = (u["image"] as string | null | undefined) ?? null;
         token["roles"] = u["roles"] as string[];
         token["currency"] = u["currency"] as string;
         token["locale"] = u["locale"] as string;
@@ -127,6 +128,7 @@ const config: NextAuthConfig = {
     session({ session, token }: { session: Session; token: JWT }) {
       const u = session.user as unknown as Record<string, unknown>;
       u["id"] = token["id"] as string;
+      u["image"] = token["image"] ?? null;
       u["roles"] = token["roles"];
       u["currency"] = token["currency"];
       u["locale"] = token["locale"];

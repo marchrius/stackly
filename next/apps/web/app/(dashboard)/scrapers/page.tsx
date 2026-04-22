@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@stackly/db";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@stackly/ui";
+import { Wrench } from "lucide-react";
 import Link from "next/link";
+import { EmptyState } from "@/components/shared/EmptyState";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -51,7 +53,7 @@ export default async function ScrapersPage() {
           ))}
         </div>
       ) : (
-        <p className="text-muted-foreground">{t("empty")}</p>
+        <EmptyState icon={Wrench} title={t("empty")} />
       )}
     </div>
   );

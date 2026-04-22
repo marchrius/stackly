@@ -3,8 +3,10 @@ import { RESERVED_SORTING_VALUES } from "@/lib/collection-display-config";
 import { getCollectionCachedSummary } from "@/lib/collection-detail";
 import { formatCountryValue, formatPriceValue, parseListValues, renderRatingValue } from "@/lib/datum-format";
 
+type CollectionIndexDatum = Pick<Datum, "id" | "label" | "type" | "value" | "currency" | "originalFilename" | "file" | "displayMode">;
+
 export type CollectionIndexCollection = Collection & {
-  data?: Datum[];
+  data?: CollectionIndexDatum[];
   _count: { children: number; items: number };
 };
 

@@ -203,7 +203,12 @@
       "scrapeName": "Import name",
       "scrapeImage": "Import image",
       "previewScrape": "Preview scrape",
-      "scrapeFailed": "Impossibile generare l'anteprima dello scrape."
+      "scrapeFailed": "Impossibile generare l'anteprima dello scrape.",
+      "displayMode": "Modalità di visualizzazione",
+      "displayModes": {
+        "list": "Lista",
+        "pill": "Badge"
+      }
     },
     "delete": {
       "confirm": "Vuoi eliminare l'oggetto \"{name}\"? Questa azione è irreversibile."
@@ -319,6 +324,9 @@
     "language": "Lingua",
     "currency": "Valuta",
     "theme": "Tema",
+    "profileImage": "Profile image",
+    "profileImageHelp": "Upload an avatar that will appear in the top-right corner.",
+    "removeProfileImage": "Remove profile image",
     "dateFormat": "Formato data",
     "visibility": "Visibilità predefinita",
     "savePreferences": "Salva preferenze",
@@ -482,7 +490,12 @@
       "fieldVisibility": "Field visibility",
       "choiceList": "Choice list",
       "noChoiceList": "No choice list",
-      "saveFailed": "Unable to save the template."
+      "saveFailed": "Unable to save the template.",
+      "displayMode": "Modalità di visualizzazione",
+      "displayModes": {
+        "list": "Lista",
+        "pill": "Badge"
+      }
     },
     "fieldTypes": {
       "text": "Text",
@@ -526,6 +539,16 @@
       "choices": "Scelte",
       "choicesPlaceholder": "Un valore per riga",
       "choicesHelp": "Aggiungi una scelta per riga. Anche le virgole sono accettate.",
+      "displayMode": "Modalità di visualizzazione",
+      "displayModes": {
+        "pill": "Badge",
+        "list": "Lista"
+      },
+      "selectionMode": "Modalità di selezione",
+      "selectionModes": {
+        "single": "Singola",
+        "multiple": "Multipla"
+      },
       "saveFailed": "Impossibile salvare la lista di scelte."
     }
   },

@@ -1,7 +1,9 @@
 import type { Tag, TagCategory } from "@stackly/db";
 import Link from "next/link";
 import { Badge } from "@stackly/ui";
+import { Tag as TagIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 type TagWithRelations = Tag & { category: TagCategory | null; _count: { items: number } };
 
@@ -9,11 +11,7 @@ export function TagList({ tags, categories }: { tags: TagWithRelations[]; catego
   const t = useTranslations("tags");
 
   if (tags.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
-        <p className="text-lg font-medium">{t("empty")}</p>
-      </div>
-    );
+    return <EmptyState icon={TagIcon} title={t("empty")} />;
   }
 
   // Raggruppa per categoria

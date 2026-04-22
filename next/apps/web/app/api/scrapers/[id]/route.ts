@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { Prisma, prisma } from "@stackly/db";
+import { ROLES } from "@stackly/lib";
 import { jsonError, logApiAction, requireApiSession } from "@/lib/api-helpers";
 
 interface Params {
@@ -38,8 +39,9 @@ export async function GET(_req: NextRequest, { params }: Params) {
   if ("response" in result) return result.response;
 
   const { id } = await params;
+  const canManageAll = result.session.user.roles?.includes(ROLES.ADMIN) ?? false;
   const scraper = await prisma.scraper.findFirst({
-    where: { id, ownerId: result.session.user.id },
+    where: canManageAll ? { id } : { id, ownerId: result.session.user.id },
     include: { dataPaths: { orderBy: { position: "asc" } }, _count: { select: { dataPaths: true } } },
   });
 
@@ -52,7 +54,10 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   if ("response" in result) return result.response;
 
   const { id } = await params;
-  const existing = await prisma.scraper.findFirst({ where: { id, ownerId: result.session.user.id } });
+  const canManageAll = result.session.user.roles?.includes(ROLES.ADMIN) ?? false;
+  const existing = await prisma.scraper.findFirst({
+    where: canManageAll ? { id } : { id, ownerId: result.session.user.id },
+  });
   if (!existing) return jsonError("Scraper non trovato", 404);
 
   const parsed = scraperSchema.safeParse(await req.json());
@@ -103,7 +108,10 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
   if ("response" in result) return result.response;
 
   const { id } = await params;
-  const existing = await prisma.scraper.findFirst({ where: { id, ownerId: result.session.user.id } });
+  const canManageAll = result.session.user.roles?.includes(ROLES.ADMIN) ?? false;
+  const existing = await prisma.scraper.findFirst({
+    where: canManageAll ? { id } : { id, ownerId: result.session.user.id },
+  });
   if (!existing) return jsonError("Scraper non trovato", 404);
 
   await prisma.scraper.delete({ where: { id } });

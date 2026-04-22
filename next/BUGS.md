@@ -68,9 +68,32 @@ Il progetto `next/` deve poter leggere e persistere la display configuration del
 - Correzione applicata in `packages/db/prisma/schema.prisma`, `apps/web/lib/actions/user.actions.ts`, `apps/web/app/(dashboard)/collections/page.tsx`, `apps/web/app/(dashboard)/collections/edit/page.tsx`, `apps/web/components/collections/CollectionGrid.tsx`, `apps/web/components/collections/CollectionList.tsx`
 - Aggiunta copertura regressiva in `apps/web/test/lib/collection-index-display.test.ts`
 
+### 3. `EmptyState` rompeva il rendering Server -> Client
+
+- Stato: completato (risolto)
+- Area: `apps/web` · componenti shared · empty states
+- Gravità: alta
+
+**Descrizione**
+
+`EmptyState` riceveva un componente icona come prop da vari componenti server (`TagList`, pagine empty state varie). In runtime Next.js serializzava quell'icona come funzione non supportata e generava errori di boundary Server -> Client.
+
+**Comportamento atteso**
+
+Le pagine e le liste con stato vuoto devono poter renderizzare l'icona senza errori di serializzazione tra Server Components e Client Components.
+
+**Comportamento osservato**
+
+Il rendering falliva con errori tipo "Functions cannot be passed directly to Client Components" e "Only plain objects can be passed to Client Components", bloccando la pagina dei tag e potenzialmente altre empty state server-side.
+
+**Note tecniche**
+
+- Correzione applicata in `apps/web/components/shared/EmptyState.tsx` rimuovendo il boundary client inutile.
+- Questo fix elimina il passaggio di un componente icona come prop serializzata; le empty state restano renderizzabili dai componenti server senza errori.
+
 ## Storico bug risolti
 
-### 3. Lo schema Prisma delle collection non esponeva `scrapedFromUrl`
+### 4. Lo schema Prisma delle collection non esponeva `scrapedFromUrl`
 
 - Stato: risolto
 - Area: `packages/db` · schema Prisma · collection form scraping
@@ -95,7 +118,7 @@ Il modello `Collection` del progetto `next/` deve leggere e persistere anche `sc
 
 ---
 
-### 4. La valuta dei datum `price` degli item non veniva persistita
+### 5. La valuta dei datum `price` degli item non veniva persistita
 
 - Stato: risolto
 - Area: `apps/web` · item form · datum persistence · item API

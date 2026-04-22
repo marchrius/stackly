@@ -186,6 +186,7 @@ model Datum {
   type                String    @db.VarChar(15)
   label               String?
   value               String?   @db.Text
+  displayMode         String    @default("list") @map("display_mode") @db.VarChar(10)
   position            Int?
   currency            String?   @db.VarChar(3)
   image               String?   @unique
@@ -402,6 +403,7 @@ model Field {
   name       String
   position   Int
   type       String  @db.VarChar(15)
+  displayMode String  @default("list") @map("display_mode") @db.VarChar(10)
   visibility String  @default("public") @db.VarChar(10)
 
   template     Template?   @relation(fields: [templateId], references: [id], onDelete: Cascade)
@@ -420,9 +422,11 @@ model Field {
 // ─────────────────────────────────────────────────────────────────────────────
 
 model ChoiceList {
-  id      String @id @default(uuid()) @db.Char(36)
-  name    String @db.VarChar(255)
-  choices Json   @default("[]")
+  id            String @id @default(uuid()) @db.Char(36)
+  name          String @db.VarChar(255)
+  choices       Json   @default("[]")
+  displayMode   String @default("pill") @map("display_mode") @db.VarChar(10)
+  selectionMode String @default("multiple") @map("selection_mode") @db.VarChar(10)
 
   owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
   ownerId String? @db.Char(36) @map("owner_id")

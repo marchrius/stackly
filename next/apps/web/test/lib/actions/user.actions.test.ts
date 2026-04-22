@@ -51,6 +51,7 @@ describe("updateSettings", () => {
   beforeEach(() => {
     mockRequireAuth.mockResolvedValue({ user: { id: "user-1" } });
     mockPrisma.user.update.mockResolvedValue({});
+    mockPrisma.user.findUnique.mockResolvedValue({ avatar: null });
     mockRevalidatePath.mockReset();
     mockCookieSet.mockReset();
     mockCookieDelete.mockReset();
@@ -90,7 +91,6 @@ describe("updateSettings", () => {
         sameSite: "lax",
       }),
     );
-    expect(mockCookieDelete).toHaveBeenCalledWith("koillection_locale");
     expect(mockRevalidatePath).toHaveBeenNthCalledWith(1, "/", "layout");
     expect(mockRevalidatePath).toHaveBeenNthCalledWith(2, "/settings");
   });

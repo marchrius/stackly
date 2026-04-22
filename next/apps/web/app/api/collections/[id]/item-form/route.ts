@@ -11,6 +11,7 @@ type PresetField = {
   type: string;
   visibility: "public" | "internal" | "private";
   choiceListId: string | null;
+  displayMode?: "pill" | "list";
   value: string;
 };
 
@@ -70,6 +71,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
           visibility: field.visibility,
           position: field.position,
           choiceListId: field.choiceListId,
+          displayMode: field.displayMode,
           choiceList: field.choiceList,
         })),
       }
@@ -82,6 +84,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
       type: datum.type,
       visibility: datum.visibility as PresetField["visibility"],
       choiceListId: datum.choiceListId ?? null,
+      displayMode: datum.displayMode === "pill" ? "pill" : "list",
       value: datum.value ?? "",
     }));
 
@@ -98,7 +101,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
   });
 }
 
-function buildCommonFields(items: Array<{ data: Array<{ label: string | null; type: string; value: string | null; choiceListId: string | null; visibility: string }> }>) {
+function buildCommonFields(items: Array<{ data: Array<{ label: string | null; type: string; value: string | null; choiceListId: string | null; visibility: string; displayMode: string | null }> }>) {
   const first = items[0];
   if (!first) return [];
 
@@ -106,13 +109,14 @@ function buildCommonFields(items: Array<{ data: Array<{ label: string | null; ty
   for (const datum of first.data) {
     if (!TEXT_AND_STRUCTURE_TYPES.has(datum.type)) continue;
     const label = datum.label ?? "";
-    initial.set(`${label}::${datum.type}`, {
-      label,
-      type: datum.type,
-      visibility: datum.visibility as PresetField["visibility"],
-      choiceListId: datum.choiceListId ?? null,
-      value: datum.value ?? "",
-    });
+      initial.set(`${label}::${datum.type}`, {
+        label,
+        type: datum.type,
+        visibility: datum.visibility as PresetField["visibility"],
+        choiceListId: datum.choiceListId ?? null,
+        displayMode: datum.displayMode === "pill" ? "pill" : "list",
+        value: datum.value ?? "",
+      });
   }
 
   for (const item of items.slice(1)) {

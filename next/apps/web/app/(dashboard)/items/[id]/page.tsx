@@ -19,7 +19,10 @@ export default async function ItemDetailPage({ params }: Props) {
   const item = await prisma.item.findFirst({
     where: { id, ownerId: session.user.id },
     include: {
-      data: { orderBy: { position: "asc" } },
+      data: {
+        orderBy: { position: "asc" },
+        include: { choiceList: { select: { id: true, name: true, displayMode: true, selectionMode: true } } },
+      },
       tags: true,
       loans: { orderBy: { lentAt: "desc" } },
       collection: { select: { id: true, title: true } },

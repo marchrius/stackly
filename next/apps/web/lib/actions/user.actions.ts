@@ -13,6 +13,8 @@ import { getTranslations } from "next-intl/server";
 import { getCollectionDisplayConfigOptions, upsertDisplayConfiguration } from "@/lib/collection-display-config";
 import { OIDC_LINK_COOKIE_NAME, createOidcLinkCookieValue } from "@/lib/auth/oidc-link-cookie";
 import { STACKLY_LOCALE_COOKIE_NAME } from "@/lib/cookies";
+import { deleteUploadImageVariants } from "@/lib/collections-tree";
+import { saveUploadedAsset } from "@/lib/server/uploads";
 
 const settingsSchema = z.object({
   currency: z.string().length(3).default("EUR"),
@@ -43,13 +45,43 @@ const indexDisplayConfigSchema = z.object({
 
 export async function updateSettings(formData: FormData) {
   const session = await requireAuth();
+  const t = await getTranslations("settings");
 
   const parsed = settingsSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: parsed.error.flatten().fieldErrors };
 
+  const avatarFile = formData.get("avatarFile");
+  const removeAvatar = formData.get("removeAvatar") === "1";
+  const currentUser = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { avatar: true },
+  });
+
+  if (!currentUser) {
+    return { error: { user: [t("userNotFound")] } };
+  }
+
+  let avatar = currentUser.avatar;
+
+  if (avatarFile instanceof File && avatarFile.size > 0) {
+    const stored = await saveUploadedAsset({
+      file: avatarFile,
+      userId: session.user.id,
+      entity: "avatars",
+      kind: "image",
+    });
+    avatar = stored.path;
+    if (currentUser.avatar) {
+      await deleteUploadImageVariants(currentUser.avatar);
+    }
+  } else if (removeAvatar && currentUser.avatar) {
+    await deleteUploadImageVariants(currentUser.avatar);
+    avatar = null;
+  }
+
   await prisma.user.update({
     where: { id: session.user.id },
-    data: { ...parsed.data, updatedAt: new Date() },
+    data: { ...parsed.data, avatar, updatedAt: new Date() },
   });
 
   const cookieStore = await cookies();

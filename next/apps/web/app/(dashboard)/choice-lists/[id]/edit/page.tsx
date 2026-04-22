@@ -21,7 +21,7 @@ export default async function EditChoiceListPage({ params }: Props) {
 
   const choiceList = await prisma.choiceList.findFirst({
     where: { id, ownerId: session.user.id },
-    select: { id: true, name: true, choices: true },
+    select: { id: true, name: true, choices: true, displayMode: true, selectionMode: true },
   });
 
   if (!choiceList) notFound();
