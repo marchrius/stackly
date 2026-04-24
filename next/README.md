@@ -81,9 +81,15 @@ npm run db:studio     # Apre Prisma Studio
 npm run maintenance:refresh-cached-values # Riallinea contatori/cachedValues
 npm run maintenance:regenerate-logs       # Rigenera create logs mancanti e marca delete logs
 npm run maintenance:regenerate-thumbnails # Rigenera thumbnails dai file originali
+npm run legacy:migrate                    # Migra un DB legacy PostgreSQL koi_* verso stk_* (dry-run di default)
+npm run legacy:validate                   # Valida conteggi e integrita' post-migrazione
+npm run legacy:uploads:audit              # Verifica i file upload referenziati dal DB migrato
+npm run legacy:uploads:copy               # Copia i file upload usando path sorgente/destinazione definiti dall'utente
 ```
 
 Tutti i comandi `maintenance:*` supportano `--help` e `--dry-run`.
+
+Per la migrazione PostgreSQL legacy verso il nuovo schema Prisma, vedere `LEGACY_DB_MIGRATION.md`.
 
 ## Deployment e runtime
 

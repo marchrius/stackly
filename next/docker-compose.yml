@@ -1,0 +1,46 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: stackly-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: stackly_transfer
+      POSTGRES_USER: stackly
+      POSTGRES_PASSWORD: stackly
+    ports:
+      - "5432:5432"
+    volumes:
+      - stackly_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stackly -d stackly_transfer"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  web:
+    image: ghcr.io/marchrius/koillection:next
+    container_name: stackly-web
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://stackly:stackly@postgres:5432/stackly_transfer
+      NEXTAUTH_SECRET: change-me-in-production-use-openssl-rand-base64-32
+      NEXTAUTH_URL: http://localhost:3000
+      UPLOAD_DIR: /var/lib/stackly/uploads
+      NODE_ENV: production
+      OIDC_ENABLED: "false"
+      OIDC_PROVIDER: generic
+      OIDC_ISSUER_URL: ""
+      OIDC_CLIENT_ID: ""
+      OIDC_CLIENT_SECRET: ""
+      OIDC_SCOPES: openid profile email
+    ports:
+      - "3000:3000"
+    volumes:
+      - stackly_uploads:/var/lib/stackly/uploads
+
+volumes:
+  stackly_postgres_data:
+  stackly_uploads:

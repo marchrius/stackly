@@ -19,6 +19,7 @@ FROM deps AS builder
 
 COPY . .
 
+RUN cd packages/db && npx prisma generate
 RUN cd apps/web && npx next build
 
 FROM base AS runner

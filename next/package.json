@@ -16,6 +16,10 @@
     "test": "turbo run test",
     "type-check": "dotenv -e .env -- turbo run type-check",
     "i18n:validate": "python3 scripts/validate_i18n_messages.py",
+    "legacy:migrate": "dotenv -e .env -- node scripts/legacy-migrate-db.mjs",
+    "legacy:validate": "dotenv -e .env -- node scripts/legacy-validate-db.mjs",
+    "legacy:uploads:audit": "dotenv -e .env -- node scripts/legacy-audit-uploads.mjs",
+    "legacy:uploads:copy": "dotenv -e .env -- node scripts/legacy-copy-uploads.mjs",
     "db:generate": "dotenv -e .env -- turbo run db:generate --filter=@stackly/db",
     "db:push": "dotenv -e .env -- turbo run db:push --filter=@stackly/db",
     "db:migrate": "dotenv -e .env -- turbo run db:migrate --filter=@stackly/db",
@@ -24,15 +28,18 @@
     "db:seed:demo": "dotenv -e .env -- node scripts/seed-demo-data.mjs"
   },
   "devDependencies": {
-    "dotenv-cli": "^8.0.0",
-    "turbo": "^2.3.3",
-    "typescript": "^5.7.3",
     "@types/node": "^22.10.7",
+    "dotenv-cli": "^8.0.0",
+    "eslint": "^9.18.0",
     "prettier": "^3.4.2",
-    "eslint": "^9.18.0"
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.3"
   },
   "packageManager": "npm@10.9.2",
   "engines": {
     "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "pg": "^8.20.0"
   }
 }

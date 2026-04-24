@@ -16,6 +16,54 @@ Nessun bug aperto al momento.
 
 ## Bug risolti
 
+### 0. Docker build non generava il client Prisma prima di `next build`
+
+- Stato: completato (risolto)
+- Area: `Dockerfile` · build produzione Next.js
+- Gravità: alta
+
+**Descrizione**
+
+La build dell'immagine Docker falliva durante `npx next build` perché `@prisma/client` non era stato generato nello stage builder.
+
+**Comportamento atteso**
+
+L'immagine Docker deve generare il client Prisma prima della build Next.js, così le pagine server possono importare `@stackly/db` senza errori.
+
+**Comportamento osservato**
+
+Il build falliva con errore `@prisma/client did not initialize yet. Please run "prisma generate"`.
+
+**Note tecniche**
+
+- Correzione applicata in `Dockerfile`: aggiunto `RUN cd packages/db && npx prisma generate` prima di `RUN cd apps/web && npx next build`.
+
+### 0. Migrazione legacy non convertiva array PostgreSQL/Doctrine in JSON valido
+
+- Stato: completato (risolto)
+- Area: `scripts` · migrazione legacy PostgreSQL
+- Gravità: alta
+
+**Descrizione**
+
+Durante l'import reale da `koi_*` a `stk_*`, i campi legacy salvati come array PostgreSQL/Doctrine, ad esempio `{"ROLE_USER"}`, venivano inoltrati ai campi JSONB target senza conversione.
+
+**Comportamento atteso**
+
+Lo script di migrazione deve convertire gli array legacy in array JSON validi prima dell'inserimento nel database target Prisma.
+
+**Comportamento osservato**
+
+PostgreSQL rifiutava l'inserimento su JSONB con errore `invalid input syntax for type json`.
+
+**Note tecniche**
+
+- Correzione applicata in `scripts/legacy-migrate-db.mjs`.
+- Aggiunto parsing per literal array PostgreSQL `{...}` oltre ai formati JSON e PHP serialized array gia' gestiti.
+- Corretto anche il mapping `null` delle colonne sorgente, ora interpretato come "usa la stessa colonna target", e forzata la serializzazione JSON valida per i campi JSONB.
+- Aggiunto uso dei fallback anche quando la colonna legacy esiste ma contiene `NULL`, necessario per colonne target `NOT NULL` come `parent_visibility`.
+- L'errore e' avvenuto dentro transazione: l'import parziale e' stato rollbackato.
+
 ### 1. Tema utente non applicato dopo il salvataggio delle preferenze
 
 - Stato: completato (risolto)
