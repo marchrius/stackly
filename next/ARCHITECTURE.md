@@ -1,102 +1,106 @@
-# ARCHITECTURE.md — Stack Next.js di Stackly
+# ARCHITECTURE.md — Stackly Next.js Architecture
 
-> Documento tecnico dell'architettura del monorepo `next/`.  
-> Aggiornato al: **marzo 2026** — versione target **2.0.0-alpha**
+> Technical architecture document for the `next/` monorepo.  
+> Updated: **April 2026** — target version **2.0.0-alpha**
 
 ---
 
-## Indice
+## Table of Contents
 
-1. [Panoramica](#1-panoramica)
-2. [Struttura del monorepo](#2-struttura-del-monorepo)
+1. [Overview](#1-overview)
+2. [Monorepo Structure](#2-monorepo-structure)
 3. [Package `apps/web`](#3-package-appsweb)
-   - [App Router — Route Groups](#31-app-router--route-groups)
-   - [Pagine (dashboard)](#32-pagine-dashboard)
-   - [Route Handler API](#33-route-handler-api)
-   - [Server Actions](#34-server-actions)
-   - [Componenti React](#35-componenti-react)
-   - [Utility di libreria (`lib/`)](#36-utility-di-libreria-lib)
-   - [Autenticazione](#37-autenticazione)
-   - [Middleware](#38-middleware)
-   - [Upload file](#39-upload-file)
-   - [Internazionalizzazione (i18n)](#310-internazionalizzazione-i18n)
 4. [Package `packages/db`](#4-package-packagesdb)
 5. [Package `packages/ui`](#5-package-packagesui)
 6. [Package `packages/lib`](#6-package-packageslib)
-7. [Toolchain e build](#7-toolchain-e-build)
-8. [Database e modello dati](#8-database-e-modello-dati)
-9. [Flusso di una richiesta tipica](#9-flusso-di-una-richiesta-tipica)
-10. [Convenzioni di naming](#10-convenzioni-di-naming)
-11. [Variabili d'ambiente](#11-variabili-dambiente)
-12. [Regola i18n — testo traducibile obbligatorio](#12-regola-i18n--testo-traducibile-obbligatorio)
+7. [Toolchain and Build](#7-toolchain-and-build)
+8. [Database and Data Model](#8-database-and-data-model)
+9. [Typical Request Flows](#9-typical-request-flows)
+10. [Deployment and Runtime](#10-deployment-and-runtime)
+11. [Naming Conventions](#11-naming-conventions)
+12. [Environment Variables](#12-environment-variables)
+13. [Mandatory i18n Rule](#13-mandatory-i18n-rule)
 
 ---
 
-## 1. Panoramica
+## 1. Overview
 
-Il progetto è un **monorepo Turborepo + npm workspaces** che ospita la versione Next.js 15 di Stackly — una web app self-hosted per la gestione di collezioni personali.
+Stackly's Next.js version is a self-hosted collection manager for physical collections of any kind. The application keeps the legacy directory/file-like model: users create collections and sub-collections, then add items with custom metadata, tags, media, files, and relationships.
 
-```
+The codebase is a **Turborepo + npm workspaces** monorepo.
+
+```text
 Turborepo
-├── apps/web          ← Next.js 15 (App Router) — frontend + API
-├── packages/db       ← Prisma ORM + client condiviso
-├── packages/ui       ← Componenti shadcn/ui condivisi
-└── packages/lib      ← Tipi, costanti e utility condivisi
+├── apps/web          ← Next.js 15 App Router app: frontend + API
+├── packages/db       ← Prisma ORM + shared client
+├── packages/ui       ← Shared shadcn/ui components
+└── packages/lib      ← Shared types, constants, and utilities
 ```
 
-**Stack principale:**
+**Main stack**
 
-| Livello | Tecnologia |
+| Layer | Technology |
 |---|---|
-| Framework | Next.js 15 (App Router, React 19) |
-| Runtime | Node.js ≥ 20 |
-| Linguaggio | TypeScript 5 (strict) |
-| ORM | Prisma 6 + PostgreSQL |
-| Auth | NextAuth.js v5 (Auth.js) — provider Credentials, sessione JWT |
+| Framework | Next.js 15 App Router, React 19 |
+| Runtime | Node.js >= 20 |
+| Language | TypeScript 5, strict mode |
+| ORM | Prisma 6 |
+| Database | PostgreSQL |
+| Auth | NextAuth.js v5 / Auth.js, Credentials provider, JWT sessions |
 | UI | shadcn/ui + Tailwind CSS 3 |
-| Bundler (dev) | Turbopack (`next dev --turbopack`) |
+| Dev bundler | Turbopack (`next dev --turbopack`) |
 | Monorepo runner | Turborepo 2 |
-| Gestione pacchetti | npm workspaces (npm ≥ 10) |
+| Package manager | npm workspaces, npm >= 10 |
+
+The Next.js v2 app is currently **PostgreSQL-only**. Legacy MySQL/MariaDB support is intentionally out of scope for this conversion cycle.
 
 ---
 
-## 2. Struttura del monorepo
+## 2. Monorepo Structure
 
-```
+```text
 next/
-├── package.json              ← root workspace, script Turbo globali
-├── turbo.json                ← pipeline Turbo (build, dev, lint, type-check, db:*)
-├── tsconfig.base.json        ← tsconfig condivisa (estesa da tutti i package)
-├── .env                      ← variabili d'ambiente (non committato)
-├── .env.example              ← template variabili d'ambiente
+├── package.json              ← root workspace scripts
+├── turbo.json                ← Turbo pipeline
+├── tsconfig.base.json        ← shared TypeScript config
+├── prisma.config.ts          ← Prisma CLI config
+├── .env                      ← local environment file, not committed
+├── .env.example              ← environment template
+├── Dockerfile                ← production standalone image
+├── Dockerfile.scratch        ← minimal scratch-based runtime variant
+├── docker-compose.yml        ← app + PostgreSQL runtime
+├── entrypoint.sh             ← runtime DB bootstrap + migration + server start
+├── scripts/                  ← migration and maintenance scripts
 ├── apps/
-│   └── web/                  ← applicazione principale
+│   └── web/
 │       ├── app/              ← Next.js App Router
-│       ├── components/       ← componenti React per dominio
-│       ├── lib/              ← utility lato server e server actions
-│       ├── types/            ← augmentation tipi NextAuth
-│       ├── public/           ← asset statici
-│       ├── auth.ts           ← configurazione NextAuth.js v5
-│       ├── middleware.ts     ← protezione route JWT
-│       ├── next.config.ts    ← configurazione Next.js
-│       ├── tailwind.config.js
+│       ├── components/       ← React components by domain
+│       ├── i18n/             ← locale source of truth and request config
+│       ├── lib/              ← server helpers, actions, domain utilities
+│       ├── messages/         ← next-intl catalogs
+│       ├── public/           ← static assets, icons, uploads in dev
+│       ├── test/             ← Vitest tests
+│       ├── types/            ← NextAuth type augmentation
+│       ├── auth.ts           ← NextAuth.js v5 configuration
+│       ├── middleware.ts     ← auth and locale middleware
+│       ├── next.config.ts    ← Next.js config, standalone output
 │       └── package.json
 └── packages/
     ├── db/
     │   ├── prisma/
-    │   │   ├── schema.prisma ← schema Prisma (tabelle stk_*)
-    │   │   └── migrations/   ← migrazioni PostgreSQL
-    │   └── src/index.ts      ← singleton PrismaClient + re-export tipi
+    │   │   ├── schema.prisma ← Prisma schema, stk_* tables
+    │   │   └── migrations/   ← PostgreSQL migrations
+    │   └── src/index.ts      ← PrismaClient singleton + type re-exports
     ├── ui/
     │   └── src/
-    │       ├── components/   ← componenti shadcn/ui (Button, Card, …)
-    │       ├── lib/utils.ts  ← helper cn()
+    │       ├── components/   ← shadcn/ui components
+    │       ├── lib/utils.ts  ← cn() helper
     │       └── index.ts      ← barrel export
     └── lib/
         └── src/
-            ├── types/        ← Visibility, DatumType, PaginatedResult, …
-            ├── constants/    ← DATUM_TYPES, VISIBILITY_OPTIONS, CURRENCIES, …
-            ├── utils/        ← computeFinalVisibility, buildPaginatedResult, normalizeSymfonyPassword, …
+            ├── constants/    ← datum, visibility, currency constants
+            ├── types/        ← shared TypeScript domain types
+            ├── utils/        ← shared utility functions
             └── index.ts      ← barrel export
 ```
 
@@ -104,707 +108,789 @@ next/
 
 ## 3. Package `apps/web`
 
-### 3.1 App Router — Route Groups
+### 3.1 App Router Layout
 
-Next.js 15 App Router organizza le route in due **route group**:
+The app uses the Next.js App Router with route groups for public auth pages and authenticated application pages.
 
-```
+```text
 app/
-├── layout.tsx              ← root layout (html, body, globals.css)
+├── layout.tsx                ← root layout, theme class, i18n provider, metadata
+├── manifest.ts               ← PWA manifest route
+├── not-found.tsx             ← localized not-found UI
+├── global-error.tsx          ← localized global error UI
 ├── globals.css
-├── (auth)/                 ← layout pubblico (no sidebar)
+├── (auth)/
 │   ├── layout.tsx
 │   ├── login/page.tsx
 │   └── register/page.tsx
-├── (dashboard)/            ← layout autenticato (sidebar + navbar)
-│   ├── layout.tsx          ← verifica sessione, struttura UI
-│   ├── page.tsx            ← homepage dashboard (statistiche rapide)
+├── (dashboard)/
+│   ├── layout.tsx            ← authenticated shell
+│   ├── page.tsx              ← dashboard
 │   ├── collections/…
+│   ├── items/…
 │   ├── albums/…
 │   ├── photos/…
-│   ├── items/…
 │   ├── wishlists/…
+│   ├── wishes/…
 │   ├── tags/…
 │   ├── templates/…
-│   ├── settings/…
-│   ├── statistics/…
-│   ├── history/…
+│   ├── choice-lists/…
+│   ├── inventories/…
 │   ├── loans/…
-│   └── search/…
-└── api/                    ← Route Handlers (REST JSON)
-    ├── auth/[...nextauth]/
-    ├── collections/
-    ├── albums/
-    ├── items/
-    ├── photos/
-    ├── logs/
-    ├── search/
-    └── upload/
+│   ├── scrapers/…
+│   ├── history/…
+│   ├── statistics/…
+│   ├── search/…
+│   └── settings/…
+├── public/
+│   ├── collections/[id]/page.tsx
+│   ├── items/[id]/page.tsx
+│   ├── albums/[id]/page.tsx
+│   └── wishlists/[id]/page.tsx
+├── user/[username]/wishlists/… ← compatibility public wishlist routes
+└── api/                       ← REST route handlers
 ```
 
-Il gruppo `(auth)` è pubblico; il gruppo `(dashboard)` richiede una sessione JWT valida (verificata sia nel layout che tramite `middleware.ts`).
+The `(auth)` group is public. The `(dashboard)` group requires a valid session. Public sharing routes under `/public/*` are intentionally accessible without authentication, but every query filters on `finalVisibility = "public"`.
 
----
+### 3.2 Dashboard Pages
 
-### 3.2 Pagine (dashboard)
+Dashboard pages are mostly Server Components. They usually:
 
-Tutte le pagine sono **Server Components** che:
-1. chiamano `requireAuth()` per recuperare la sessione,
-2. eseguono query Prisma direttamente (no fetch intermedi),
-3. passano i dati a Client Components per le interazioni.
+1. call `requireAuth()` to obtain the session,
+2. query Prisma directly,
+3. pass data to Client Components for interactive forms and local state.
 
-| Percorso | Descrizione |
+| Path | Description |
 |---|---|
-| `/` | Dashboard — statistiche rapide |
-| `/collections` | Lista collezioni radice dell'utente |
-| `/collections/new` | Form creazione collezione (con selezione parent e template) |
-| `/collections/[id]` | Dettaglio collezione: sotto-collezioni, oggetti, breadcrumb |
-| `/collections/[id]/edit` | Form modifica collezione |
-| `/items/new` | Nuovo oggetto (con `?collectionId` pre-selezionato) |
-| `/items/[id]` | Dettaglio oggetto (dati custom, tag, prestiti) |
-| `/items/[id]/edit` | Modifica oggetto |
-| `/albums` | Lista album radice dell'utente |
-| `/albums/new` | Form creazione album (con `?parentId` e selezione parent) |
-| `/albums/[id]` | Dettaglio album: sub-album, foto, breadcrumb |
-| `/albums/[id]/edit` | Form modifica album |
-| `/albums/[id]/photos/new` | Nuova foto nell'album corrente |
-| `/photos/[id]` | Dettaglio foto (immagine full, commento, luogo, data) |
-| `/photos/[id]/edit` | Modifica foto |
-| `/settings` | Impostazioni profilo utente |
-| `/statistics` | Grafici e statistiche (recharts) |
-| `/history` | Log delle azioni (create/update/delete) |
-| `/search` | Ricerca full-text |
+| `/` | Dashboard with quick statistics |
+| `/collections` | User collection index |
+| `/collections/new` | Create collection |
+| `/collections/[id]` | Collection detail: children, items, custom data, breadcrumb |
+| `/collections/[id]/edit` | Edit collection |
+| `/collections/[id]/items` | Full item list for a collection |
+| `/items/new` | Create item, optionally with `?collectionId` |
+| `/items/[id]` | Item detail: media, custom data, tags, loans, related items |
+| `/items/[id]/edit` | Edit item |
+| `/albums` | Album index |
+| `/albums/new` | Create album |
+| `/albums/[id]` | Album detail: children, photos, breadcrumb |
+| `/albums/[id]/photos/new` | Create photo in album |
+| `/photos/[id]` | Photo detail |
+| `/wishlists` | Wishlist index |
+| `/wishlists/[id]` | Wishlist detail: children and wishes |
+| `/wishes/[id]` | Wish detail |
+| `/tags` | Tags and tag categories |
+| `/templates` | Item templates and fields |
+| `/choice-lists` | Reusable choice lists |
+| `/inventories` | Inventories |
+| `/loans` | Active and returned loans |
+| `/scrapers` | Manual scraper configuration |
+| `/history` | Action log |
+| `/statistics` | Charts and statistics |
+| `/search` | Full-text search |
+| `/settings` | User preferences and password |
+| `/settings/admin` | Admin dashboard and instance configuration |
 
----
+### 3.3 Public Sharing
 
-### 3.3 Route Handler API
+Public sharing is implemented as explicit read-only routes:
 
-Tutti i route handler seguono lo schema:
-- **Autenticazione**: `const session = await auth(); if (!session) return 401`
-- **Risposta**: `NextResponse.json(...)` con status HTTP appropriato
-- **Errori di dominio**: `TreeValidationError` → 400/403
-
+```text
+/public/collections/[id]
+/public/items/[id]
+/public/albums/[id]
+/public/wishlists/[id]
 ```
+
+The implementation lives in:
+
+```text
+components/public/
+├── CopyPublicLinkButton.tsx
+├── PublicCards.tsx
+├── PublicDatumList.tsx
+└── PublicShell.tsx
+
+lib/public/
+└── public-queries.ts
+```
+
+Public queries are centralized in `lib/public/public-queries.ts` and must enforce `finalVisibility = "public"` on the root resource and on nested children, items, data, photos, and wishes.
+
+Authenticated detail pages for collections, items, albums, and wishlists expose a copy/open public link control only when the resource is public.
+
+### 3.4 Route Handler API
+
+Route handlers use `NextResponse.json(...)`, central auth helpers, Zod validation where needed, and owner-scoped Prisma queries.
+
+```text
 app/api/
-├── auth/
-│   └── [...nextauth]/route.ts     ← handler NextAuth (signIn, signOut, session)
-├── upload/
-│   └── route.ts                   ← POST multipart → salva file + genera thumbnail sharp
+├── auth/[...nextauth]/route.ts
+├── upload/route.ts
 ├── collections/
-│   ├── route.ts                   ← GET (lista paginata) · POST (crea)
-│   └── [id]/route.ts              ← GET · PATCH · DELETE (con ancestors, propagazione visibilità)
+│   ├── route.ts
+│   ├── [id]/route.ts
+│   └── [id]/item-form/route.ts
 ├── items/
-│   ├── route.ts                   ← GET · POST
-│   └── [id]/route.ts              ← GET · PATCH · DELETE
+│   ├── route.ts
+│   └── [id]/route.ts
 ├── albums/
-│   ├── route.ts                   ← GET · POST
-│   └── [id]/route.ts              ← GET · PATCH · DELETE (con ancestors, propagazione)
+│   ├── route.ts
+│   └── [id]/route.ts
 ├── photos/
-│   ├── route.ts                   ← GET (filtro ?albumId) · POST
-│   └── [id]/route.ts              ← GET · PATCH · DELETE
-├── logs/
-│   └── route.ts                   ← GET (log paginati dell'utente)
-└── search/
-    └── route.ts                   ← GET ?q= (ricerca multi-entità)
+│   ├── route.ts
+│   └── [id]/route.ts
+├── wishlists/
+│   ├── route.ts
+│   ├── [id]/route.ts
+│   ├── [id]/children/route.ts
+│   ├── [id]/parent/route.ts
+│   └── [id]/wishes/route.ts
+├── wishes/
+│   ├── route.ts
+│   ├── [id]/route.ts
+│   └── [id]/wishlist/route.ts
+├── tags/
+├── tag-categories/
+├── templates/
+├── choice-lists/
+├── inventories/
+├── loans/
+├── scrapers/
+│   ├── route.ts
+│   ├── [id]/route.ts
+│   ├── collection-preview/route.ts
+│   └── item-preview/route.ts
+├── logs/route.ts
+└── search/route.ts
 ```
 
-**Paginazione** (parametri comuni): `?page=1&perPage=30`  
-**Risposta paginata**: `{ data, total, page, perPage, totalPages }`
+Common pagination parameters: `?page=1&perPage=30`  
+Common paginated response shape: `{ data, total, page, perPage, totalPages }`
 
----
+### 3.5 Server Actions
 
-### 3.4 Server Actions
+Server Actions are used for form-driven mutations. They handle validation, Prisma writes, visibility propagation, logging, cache invalidation, and redirects.
 
-Le **Server Actions** (`"use server"`) sono la via preferita per le mutazioni da form React. Gestiscono:
-- validazione con **Zod**,
-- operazioni Prisma,
-- gestione immagini (upload pre-eseguito via `/api/upload`),
-- propagazione visibilità nell'albero,
-- logging su `stk_log`,
-- `revalidatePath` + `redirect`.
-
-```
+```text
 lib/actions/
-├── collection.actions.ts   ← createCollection · updateCollection · deleteCollection
-├── item.actions.ts         ← createItem · updateItem · deleteItem
-├── media.actions.ts        ← createAlbum · updateAlbum · deleteAlbum
-│                              createWishlist · updateWishlist · deleteWishlist
-├── photo.actions.ts        ← createPhoto · updatePhoto · deletePhoto
-└── user.actions.ts         ← updateProfile · updatePassword
+├── collection.actions.ts
+├── item.actions.ts
+├── media.actions.ts
+├── photo.actions.ts
+├── wish.actions.ts
+├── user.actions.ts
+└── admin.actions.ts
 ```
 
-**Schema di validazione** (`zod`): ogni action ha uno schema dedicato con `.safeParse()`. In caso di errore restituisce `{ error: fieldErrors }` senza lanciare eccezioni.
+Actions use `"use server"`, Zod schemas, `requireAuth()`, `revalidatePath`, and `redirect` where appropriate.
 
----
+### 3.6 React Components
 
-### 3.5 Componenti React
+Components are organized by domain. Server Components own data access; Client Components own local interactivity.
 
-I componenti sono suddivisi per **dominio** e distinguono chiaramente tra:
-- **Server Components** (pagine, layout): accesso diretto a Prisma e sessione
-- **Client Components** (`"use client"`): form interattivi, upload, stato locale
-
-```
+```text
 components/
-├── layout/
-│   ├── Navbar.tsx          ← barra superiore (utente, tema)
-│   └── Sidebar.tsx         ← navigazione laterale
-├── auth/
-│   ├── LoginForm.tsx
-│   └── RegisterForm.tsx
-├── collections/
-│   ├── CollectionGrid.tsx  ← griglia card collezioni
-│   ├── CollectionForm.tsx  ← form crea/modifica (upload img, parent select, template)
-│   └── CollectionDetail.tsx ← dettaglio con breadcrumb, sotto-collezioni, oggetti
-├── items/
-│   ├── ItemForm.tsx        ← form con dati custom (Datum)
-│   └── ItemDetail.tsx      ← dettaglio oggetto
-├── albums/
-│   ├── AlbumGrid.tsx       ← griglia card album
-│   ├── AlbumForm.tsx       ← form crea/modifica (upload img, parent select)
-│   └── AlbumDetail.tsx     ← dettaglio con breadcrumb, sub-album, foto cliccabili
-├── photos/
-│   ├── PhotoForm.tsx       ← form (upload img, album, luogo, data scatto)
-│   └── PhotoDetail.tsx     ← dettaglio foto full-size con breadcrumb
-└── shared/
-    └── SearchResults.tsx   ← risultati ricerca multi-entità
+├── layout/        ← Navbar, Sidebar
+├── auth/          ← login/register forms
+├── collections/   ← collection grids, lists, forms, details
+├── items/         ← item form/detail
+├── albums/        ← album grids, forms, details
+├── photos/        ← photo form/detail
+├── wishlists/     ← wishlist form/detail/grid
+├── wishes/        ← wish form/detail
+├── tags/          ← tag and category forms/lists
+├── templates/     ← templates and fields
+├── choice-lists/  ← reusable choice list UI
+├── inventories/   ← inventory UI
+├── loans/         ← loan UI
+├── scrapers/      ← scraper configuration form
+├── public/        ← public read-only UI
+├── settings/      ← user/admin settings
+├── shared/        ← reusable app components
+└── statistics/    ← charts
 ```
 
-**Pattern upload immagine** (usato in `CollectionForm`, `AlbumForm`, `PhotoForm`):
-1. L'utente seleziona un file → `fetch POST /api/upload` con `FormData`
-2. Il server salva il file e genera i thumbnail, restituisce `{ path, smallThumbnail, largeThumbnail }`
-3. Il componente salva il path nello stato locale
-4. Al submit del form, il path viene incluso nel `FormData` della Server Action
+Image cards use the established app pattern: `aspect-[10/13]`, `object-contain`, and `repeat(auto-fill, minmax(160px, 1fr))`.
 
----
+### 3.7 Domain Utilities
 
-### 3.6 Utility di libreria (`lib/`)
+Important utilities in `apps/web/lib/` include:
 
-```
-lib/
-├── auth-utils.ts         ← requireAuth(): recupera sessione o redirect /login
-├── collections-tree.ts   ← logica dominio per la gerarchia collezioni:
-│                            resolveCollectionParent (con cycle-detection)
-│                            syncCollectionDescendantsVisibility
-│                            getCollectionAncestors
-│                            computeFinalVisibility
-│                            deleteUploadImageVariants
-└── albums-tree.ts        ← logica dominio per la gerarchia album:
-                             resolveAlbumParent (con cycle-detection)
-                             syncAlbumDescendantsVisibility (propaga anche alle foto)
-                             getAlbumAncestors
-                             re-export di computeFinalVisibility e deleteUploadImageVariants
-```
-
-#### Visibilità a cascata
-
-Sia per collezioni che per album la visibilità finale è calcolata come il valore **più restrittivo** tra la visibilità propria e quella del padre:
-
-```
-public < internal < private
-
-finalVisibility = max(ownVisibility, parentVisibility)
+```text
+auth-utils.ts              ← requireAuth()
+api-helpers.ts             ← API auth/errors/pagination/logging helpers
+collections-tree.ts        ← collection parent/cycle/ancestor/visibility logic
+albums-tree.ts             ← album parent/cycle/ancestor/visibility logic
+wishlists-tree.ts          ← wishlist ancestor helpers
+wishlist-visibility.ts     ← shared wishlist visibility filters
+collection-detail.ts       ← cached collection detail summaries
+collection-display-config.ts
+item-detail.ts             ← display data and media entry helpers
+item-persistence.ts        ← item datum persistence logic
+datum-format.ts            ← datum formatting helpers
+choice-lists.ts            ← choice parsing and limiting
+configuration.ts           ← admin configuration and custom theme CSS
+theme/                     ← theme normalization and CSS variables
+server/
+  ├── scraper-preview.ts   ← collection scraper preview
+  └── item-scraper.ts      ← item scraper preview
+public/
+  └── public-queries.ts    ← public resource queries
 ```
 
-Quando un nodo cambia visibilità, la funzione `sync*DescendantsVisibility` aggiorna ricorsivamente tutti i figli (e le foto, per gli album).
-
-#### Gestione file upload
-
-`deleteUploadImageVariants(relativePath)` calcola i path di tutte le varianti (`_small`, `_large`) e li elimina dal filesystem con `fs/promises.rm`, ignorando gli errori di cleanup.
-
----
-
-### 3.7 Autenticazione
+### 3.8 Authentication
 
 **File:** `apps/web/auth.ts`
 
-Configurazione **NextAuth.js v5** con:
+NextAuth.js v5 is configured with:
 
-| Parametro | Valore |
+| Setting | Value |
 |---|---|
-| Provider | `Credentials` (username o email + password) |
-| Strategia sessione | JWT (`maxAge`: 30 giorni) |
-| Hash password | bcrypt — normalizzazione `$2y$` → `$2b$` (compatibilità Symfony) |
-| Pagina login | `/login` |
+| Main provider | Credentials: username/email + password |
+| Optional provider | OIDC, controlled by environment variables |
+| Session strategy | JWT, 30-day max age |
+| Password hash compatibility | bcrypt `$2y$` normalized to `$2b$` for Symfony compatibility |
+| Login page | `/login` |
 
-**Dati nel token JWT** (e quindi in `session.user`):
+Custom session fields include:
 
 ```typescript
 {
-  id: string           // UUID utente
-  name: string         // username
-  email: string
-  image: string | null // avatar
-  roles: string[]      // ["ROLE_USER"] | ["ROLE_ADMIN"]
-  currency: string     // "EUR", "USD", …
-  locale: string       // "it", "en", …
-  theme: string        // "light" | "dark" | "auto"
-  dateFormat: string   // "Y-m-d", "d/m/Y", …
+  id: string;
+  name: string;
+  email: string;
+  image: string | null;
+  roles: string[];
+  currency: string;
+  locale: string;
+  theme: string;
+  dateFormat: string;
 }
 ```
 
-**Augmentation tipi** in `types/next-auth.d.ts`: estende `Session["user"]` con i campi custom.
+Type augmentation lives in `apps/web/types/next-auth.d.ts`.
 
----
-
-### 3.8 Middleware
+### 3.9 Middleware
 
 **File:** `apps/web/middleware.ts`
 
-Usa `auth` di NextAuth come middleware di protezione. Redireziona a `/login` se non autenticato.  
-Imposta il cookie `stk_locale` alla prima visita (default `en`) se assente.
+The middleware protects authenticated routes and keeps locale cookies initialized.
 
-**Route escluse dalla protezione:**
+Excluded paths include:
 
+```text
+/login, /register
+/api/auth/*
+/public/*
+/user/*/wishlists*
+/_next/static, /_next/image
+/uploads/*
+/favicon.ico, /robots.txt
 ```
-/login, /register                  ← pagine auth
-/api/auth/*                        ← handler NextAuth
-/_next/static, /_next/image        ← asset Next.js
-/uploads/*                         ← file upload statici
-/favicon.ico, /robots.txt          ← file statici
-```
 
----
+The middleware sets the `stk_locale` cookie when missing. `koillection_locale` is still read as a compatibility fallback in the i18n request config.
 
-### 3.9 Upload file
+### 3.10 Uploads
 
 **Route:** `POST /api/upload`
 
-Flusso:
-1. Riceve `multipart/form-data` con `file` (File) e `entity` (string, es. `"collection"`, `"album"`, `"photo"`)
-2. Valida tipo MIME (`image/jpeg`, `image/png`, `image/webp`, `image/gif`, `image/avif`) e dimensione (max 10 MB)
-3. Genera un UUID per il nome file
-4. Salva l'originale in `UPLOAD_DIR/{userId}/{entity}/{uuid}{ext}`
-5. Genera con **sharp**:
-   - `{uuid}_small{ext}` — 200×200 px (cover)
-   - `{uuid}_large{ext}` — 600×600 px (inside, senza ingrandimento)
-6. Risponde con `{ path, smallThumbnail, largeThumbnail }`
+Upload flow:
 
-**Variabile d'ambiente:** `UPLOAD_DIR` (default `./public/uploads`)  
-I file sono serviti staticamente da Next.js tramite la cartella `public/`.
+1. receives `multipart/form-data` with `file` and `entity`,
+2. validates MIME type and size,
+3. writes the original file under `UPLOAD_DIR/{userId}/{entity}/`,
+4. generates thumbnails with `sharp`,
+5. returns `{ path, smallThumbnail, largeThumbnail }`.
 
----
+`UPLOAD_DIR` defaults to `./public/uploads`. In Docker, `/var/lib/stackly/uploads` is mounted and linked to `/app/apps/web/public/uploads`.
 
-### 3.10 Internazionalizzazione (i18n)
+All rendering should use `getUploadUrl()` from `@stackly/lib`, which normalizes new and legacy paths such as:
 
-**Libreria:** [`next-intl`](https://next-intl-docs.vercel.app/) v3  
-**Strategia:** senza routing per locale nell'URL — il locale è determinato da un **cookie HTTP** (`stk_locale`).
+```text
+<user>/<file>
+uploads/<user>/<file>
+/uploads/<user>/<file>
+public/uploads/<user>/<file>
+```
 
-#### Lingue supportate
+### 3.11 Internationalization
 
-| Codice | Lingua |
+The app uses `next-intl` with cookie-based locale selection.
+
+| Concern | Location |
 |---|---|
-| `da` | Danish |
-| `de` | German |
-| `en` | English (default) |
-| `es` | Spanish |
-| `fr` | French |
-| `it` | Italiano |
-| `nl` | Dutch |
-| `pl` | Polish |
-| `pt` | Portuguese |
-| `pt_BR` | Portuguese (Brazil) |
-| `ru` | Russian |
-| `tr` | Turkish |
-| `uk` | Ukrainian |
-| `zh` | Chinese |
+| Supported locales | `apps/web/i18n/locales.ts` |
+| Request config | `apps/web/i18n/request.ts` |
+| Messages | `apps/web/messages/*.json` |
+| Locale cookie | `stk_locale` |
+| Legacy fallback cookie | `koillection_locale` |
 
-#### Struttura file
+Supported locales:
 
-```
-apps/web/
-├── i18n/
-│   ├── locales.ts          ← source-of-truth locale (`SUPPORTED_LOCALES`, `DEFAULT_LOCALE`)
-│   └── request.ts          ← configurazione next-intl: legge cookie → carica messaggi
-└── messages/
-    ├── en.json             ← tutte le stringhe in inglese
-    ├── it.json             ← tutte le stringhe in italiano
-    └── *.json              ← altri locale supportati
+```text
+da, de, en, es, fr, it, nl, pl, pt, pt_BR, ru, tr, uk, zh
 ```
 
-#### Configurazione (`i18n/request.ts`)
+Use `useTranslations("namespace")` in Client Components and `getTranslations("namespace")` in Server Components and `generateMetadata()`.
 
-```typescript
-// Legge il cookie "stk_locale" (set dal middleware o da user.actions.ts)
-// Fallback: DEFAULT_LOCALE se il valore non è tra i locale supportati
-export default getRequestConfig(async () => {
-  const locale = cookies().get("stk_locale")?.value
-    ?? cookies().get("koillection_locale")?.value
-    ?? DEFAULT_LOCALE;
-  return { locale, messages: (await import(`../messages/${locale}.json`)).default };
-});
+### 3.12 PWA
+
+The app exposes an installable PWA manifest through `app/manifest.ts`, available as `/manifest.webmanifest`.
+
+Icons live in:
+
+```text
+apps/web/public/icons/
+├── apple-touch-icon.svg
+├── icon-192.svg
+├── icon-512.svg
+└── maskable-icon.svg
 ```
 
-#### Flusso del locale
+The app intentionally does not register an aggressive service worker by default. Authenticated pages and private data are not cached offline automatically.
 
+### 3.13 Manual Scrapers
+
+Scrapers are user-defined extraction rules. They are manual by design:
+
+- no automatic metadata download runs in the background,
+- collection/item forms expose preview/import controls,
+- remote fetches run only after explicit user action,
+- preview endpoints require an authenticated user and owner-scoped scraper,
+- remote source URLs are limited to `http` and `https`,
+- custom request headers are stored as JSON and sent during preview.
+
+Relevant files:
+
+```text
+components/scrapers/ScraperForm.tsx
+components/collections/CollectionForm.tsx
+components/items/ItemForm.tsx
+app/api/scrapers/collection-preview/route.ts
+app/api/scrapers/item-preview/route.ts
+lib/server/scraper-preview.ts
+lib/server/item-scraper.ts
 ```
-Prima visita
-  → middleware.ts imposta cookie stk_locale=en
-
-Cambio lingua (Settings → Preferenze → Lingua → Salva)
-  → updateSettings() [user.actions.ts]
-      ├── salva locale nel DB (campo User.locale)
-      ├── sovrascrive il cookie stk_locale
-      └── revalidatePath("/", "layout")
-  → SettingsForm chiama router.refresh()
-  → RootLayout rilegge il cookie → NextIntlClientProvider usa nuovi messaggi
-```
-
-#### Utilizzo nei componenti
-
-| Tipo componente | Hook / funzione | Import |
-|---|---|---|
-| Client Component (`"use client"`) | `useTranslations("namespace")` | `next-intl` |
-| Server Component / Page | `getTranslations("namespace")` | `next-intl/server` |
-| `generateMetadata()` | `getTranslations("namespace")` | `next-intl/server` |
-
-```typescript
-// Client Component
-const t = useTranslations("collections");
-<h1>{t("title")}</h1>
-<p>{t("delete.confirm", { name: collection.title })}</p>
-
-// Server Component
-const t = await getTranslations("albums");
-return <h1>{t("title")}</h1>;
-```
-
-#### Struttura dei messaggi (`messages/*.json`)
-
-I messaggi sono organizzati per **namespace** corrispondente al dominio:
-
-```
-common          → azioni generiche (save, cancel, edit, delete, …)
-nav             → voci del menu laterale
-auth.login      → pagina login
-auth.register   → pagina registrazione
-dashboard       → homepage
-collections     → collezioni e form
-items           → oggetti e form
-albums          → album e form
-photos          → foto e form
-wishlists       → wishlist e form
-wishes          → desideri e form
-settings        → preferenze utente e password
-search          → ricerca
-history         → storico modifiche
-statistics      → statistiche
-deleteDialog    → modale conferma eliminazione
-visibility      → etichette visibilità
-upload          → messaggi upload immagine
-```
-
-#### Aggiungere una nuova lingua
-
-1. Creare `messages/<codice>.json` copiando `messages/en.json` e traducendo tutti i valori
-2. Aggiungere il codice a `SUPPORTED_LOCALES` in `i18n/locales.ts`
-3. Aggiungere `<SelectItem value="<codice>">` in `SettingsForm.tsx`
-4. Aggiungere `"languages.<codice>": "Nome lingua"` in **tutti** i file `messages/*.json`
 
 ---
 
 ## 4. Package `packages/db`
 
-**Nome npm:** `@stackly/db`
+**npm name:** `@stackly/db`
 
-Espone:
-- `prisma` — singleton `PrismaClient` (pattern `globalThis` per hot-reload Next.js)
-- Tutti i tipi generati da Prisma (re-export di `@prisma/client`)
+Exports:
 
-**Schema:** `prisma/schema.prisma`  
-Rispecchia le tabelle PostgreSQL esistenti legacy di Stackly (prefisso storico `stk_`).
+- `prisma`: a PrismaClient singleton using the `globalThis` pattern for Next.js hot reload,
+- all generated Prisma types re-exported from `@prisma/client`.
 
-**Modelli principali:**
+The schema lives in `packages/db/prisma/schema.prisma` and maps to PostgreSQL `stk_*` tables.
 
-| Modello Prisma | Tabella DB | Descrizione |
+Main models:
+
+| Prisma Model | Table | Description |
 |---|---|---|
-| `User` | `stk_user` | Utente con ruoli, preferenze, quota disco |
-| `Collection` | `stk_collection` | Collezione con gerarchia parent/child |
-| `Item` | `stk_item` | Oggetto in una collezione |
-| `Datum` | `stk_datum` | Dato custom di un Item (tipo, valore, file) |
-| `Album` | `stk_album` | Album fotografico con gerarchia |
-| `Photo` | `stk_photo` | Foto in un Album |
-| `Wishlist` | `stk_wishlist` | Lista dei desideri con gerarchia |
-| `Wish` | `stk_wish` | Singolo desiderio |
-| `Tag` | `stk_tag` | Tag per gli Item |
-| `TagCategory` | `stk_tag_category` | Categoria di tag |
-| `Template` | `stk_template` | Template per struttura dati degli Item |
-| `Field` | `stk_field` | Campo di un Template |
-| `ChoiceList` | `stk_choice_list` | Lista valori predefiniti per Datum |
-| `Inventory` | `stk_inventory` | Inventario |
-| `Loan` | `stk_loan` | Prestito di un Item |
-| `Log` | `stk_log` | Log azioni (create/update/delete) |
-| `Scraper` | `stk_scraper` | Configurazione scraper |
-| `DisplayConfiguration` | `stk_display_configuration` | Preferenze di visualizzazione |
-| `Path` | `stk_path` | Path gerarchici (breadcrumb cache) |
+| `User` | `stk_user` | User, roles, preferences, disk quota |
+| `OAuthProvider` | `stk_oauth_provider` | OIDC account links |
+| `Configuration` | `stk_configuration` | Instance configuration |
+| `Collection` | `stk_collection` | Hierarchical collection |
+| `Item` | `stk_item` | Item inside a collection |
+| `Datum` | `stk_datum` | Custom data attached to item or collection |
+| `Album` | `stk_album` | Hierarchical photo album |
+| `Photo` | `stk_photo` | Photo inside an album |
+| `Wishlist` | `stk_wishlist` | Hierarchical wishlist |
+| `Wish` | `stk_wish` | Single wish |
+| `Tag` | `stk_tag` | Item tag |
+| `TagCategory` | `stk_tag_category` | Tag category |
+| `Template` | `stk_template` | Item data template |
+| `Field` | `stk_field` | Template field |
+| `ChoiceList` | `stk_choice_list` | Reusable value list |
+| `Inventory` | `stk_inventory` | Inventory |
+| `Loan` | `stk_loan` | Item loan |
+| `Log` | `stk_log` | Action log |
+| `Scraper` | `stk_scraper` | Scraper configuration |
+| `Path` | `stk_path` | Scraper extraction path |
+| `DisplayConfiguration` | `stk_display_configuration` | Display preferences |
+| `Search` | `stk_search` | Search history |
 
-**Script DB:**
+Database scripts:
 
 ```bash
-npm run db:generate   # genera il client Prisma da schema.prisma
-npm run db:push       # applica schema senza migrazione (dev)
-npm run db:migrate    # crea e applica una migrazione
-npm run db:studio     # apre Prisma Studio nel browser
+npm run db:generate
+npm run db:push
+npm run db:migrate
+npm run db:studio
 ```
 
 ---
 
 ## 5. Package `packages/ui`
 
-**Nome npm:** `@stackly/ui`
+**npm name:** `@stackly/ui`
 
-Libreria di componenti UI basata su **shadcn/ui** + **Tailwind CSS**.
+Shared UI library based on shadcn/ui and Tailwind CSS.
 
-**Componenti esportati:**
+Exported components include:
 
-| Componente | Descrizione |
+| Component | Description |
 |---|---|
-| `Button` | Bottone con varianti (`default`, `outline`, `destructive`, `ghost`) e `size` |
-| `Card`, `CardContent` | Card contenitore |
-| `Input` | Campo input testuale |
-| `Label` | Etichetta form |
-| `Badge` | Badge colorato (varianti: `default`, `outline`, `secondary`) |
+| `Button` | Button variants and sizes |
+| `Card`, `CardContent`, `CardDescription`, `CardHeader`, `CardTitle` | Card primitives |
+| `Input` | Text input |
+| `Label` | Form label |
+| `Badge` | Badge variants |
 | `Dialog`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogTrigger` | Modal dialog |
 | `Select`, `SelectContent`, `SelectItem`, `SelectTrigger`, `SelectValue` | Select dropdown |
-| `Textarea` | Campo testo multiriga |
-| `cn()` | Utility `clsx` + `tailwind-merge` |
+| `Textarea` | Multiline text input |
+| `cn()` | `clsx` + `tailwind-merge` utility |
 
-Tutti i componenti sono **Client Components** (compatibili con `"use client"`).
+Most UI primitives are Client Components and can be safely imported by Client Components.
 
 ---
 
 ## 6. Package `packages/lib`
 
-**Nome npm:** `@stackly/lib`
+**npm name:** `@stackly/lib`
 
-Codice TypeScript condiviso tra app e packages, **senza dipendenze runtime** pesanti.
+Shared TypeScript code used by apps and packages. It should remain lightweight and avoid heavy runtime dependencies.
 
-### Tipi (`types/`)
+### Types
 
 ```typescript
-type Visibility = "public" | "internal" | "private"
-type DisplayMode = "grid" | "list"
-type LogType = "create" | "update" | "delete"
-type DatumType = "text" | "textarea" | "number" | "price" | "date" | "rating"
-               | "country" | "link" | "list" | "choice-list" | "checkbox"
-               | "image" | "file" | "video" | "sign" | "blank-line" | "section"
-type ScraperType = "html" | "json" | "isbn" | "barcode"
+type Visibility = "public" | "internal" | "private";
+type DisplayMode = "grid" | "list";
+type LogType = "create" | "update" | "delete";
+type DatumType =
+  | "text" | "textarea" | "number" | "price" | "date" | "rating"
+  | "country" | "link" | "list" | "choice-list" | "checkbox"
+  | "image" | "file" | "video" | "sign" | "blank-line" | "section";
 
-interface PaginatedResult<T> { data: T[]; total: number; page: number; perPage: number; totalPages: number }
+interface PaginatedResult<T> {
+  data: T[];
+  total: number;
+  page: number;
+  perPage: number;
+  totalPages: number;
+}
 ```
 
-### Costanti (`constants/`)
+### Constants
 
-- `DATUM_TYPES` — array con metadata per ogni tipo dato (label, hasFile, hasImage)
-- `DATUM_TYPES_WITH_VALUE` — tipi che hanno un campo `value`
-- `VISIBILITY_OPTIONS` — array `{ value, label }` per i select
-- `CURRENCIES` — codici valuta con simbolo
-- `DEFAULT_PAGE_SIZE` — 30
+- `DATUM_TYPES`
+- `DATUM_TYPES_WITH_VALUE`
+- `VISIBILITY_OPTIONS`
+- `CURRENCIES`
+- `DEFAULT_PAGE_SIZE`
+- `ROLES`
 
-### Utility (`utils/`)
+### Utilities
 
-- `computeFinalVisibility(own, parent)` — calcola visibilità finale
-- `buildPaginatedResult(data, total, page, perPage)` — costruisce risposta paginata
-- `normalizeSymfonyPassword(hash)` — converte `$2y$` → `$2b$` per `bcryptjs`
+- `computeFinalVisibility(own, parent)`
+- `buildPaginatedResult(data, total, page, perPage)`
+- `normalizeSymfonyPassword(hash)`
+- `getUploadUrl(path)`
 
 ---
 
-## 7. Toolchain e build
+## 7. Toolchain and Build
 
 ### Turborepo
 
-`turbo.json` definisce la pipeline con dipendenze tra task:
+`turbo.json` defines the pipeline:
 
-```
-build       → dipende da ^build (prima costruisce i package dipendenti)
-dev         → parallelo, persistente (no cache)
-lint        → dipende da ^build
-type-check  → dipende da ^build
-db:*        → no cache
+```text
+build       → depends on ^build
+dev         → persistent, uncached
+lint        → depends on ^build
+type-check  → depends on ^build
+test        → depends on ^build
+db:*        → uncached
 ```
 
-### Script radice
+### Root Scripts
 
 ```bash
-npm run dev           # avvia tutti i package in watch mode (Turbopack per web)
-npm run build         # build di produzione completo
-npm run type-check    # tsc --noEmit su tutti i package
-npm run lint          # ESLint su tutti i package
-npm run db:generate   # genera client Prisma
-npm run db:push       # push schema (dev)
-npm run db:migrate    # migrazione DB
-npm run db:studio     # Prisma Studio
+npm run dev
+npm run build
+npm run type-check
+npm run test
+npm run lint
+npm run i18n:validate
+npm run db:generate
+npm run db:push
+npm run db:migrate
+npm run db:studio
+npm run maintenance:refresh-cached-values
+npm run maintenance:regenerate-logs
+npm run maintenance:regenerate-thumbnails
+npm run legacy:migrate
+npm run legacy:validate
+npm run legacy:uploads:audit
+npm run legacy:uploads:copy
 ```
 
-> ⚠️ Tutti gli script leggono `.env` dalla root tramite `dotenv-cli`.
+All workspace scripts load `next/.env` through `dotenv-cli`. Build scripts force `NODE_ENV=production` after loading `.env` so a local `NODE_ENV=development` value cannot break `next build`.
 
 ### TypeScript
 
-- `tsconfig.base.json` (root) — configurazione base condivisa (`strict: true`, `moduleResolution: bundler`)
-- Ogni package estende la base con il proprio `tsconfig.json`
-- `next.config.ts` ha `typescript.ignoreBuildErrors: true` temporaneamente (da rimuovere a stabilizzazione)
+- `tsconfig.base.json` provides shared strict configuration.
+- Every package extends the root config.
+- `next.config.ts` currently allows production builds while TypeScript is verified separately with `npm run type-check`.
 
-### Stato avanzamento conversione (Next.js stack)
+### Current Conversion Status
 
-| # | Feature | Stato | Note |
-|---|---------|-------|------|
-| 1 | **Auth** | ✅ Completato | NextAuth.js v5 · provider Credentials · JWT · hash `$2y$→$2b$` · 2 errori TS2742 (non bloccanti, soppresse) |
-| 2 | **Collections** | ✅ Completato | CRUD collezioni + Items · gerarchia parent/child · upload immagine · type-check pulito |
-| 3 | **Album** | ✅ Completato | CRUD album + Foto · gerarchia parent/child · upload immagine · breadcrumb · propagazione visibilità · type-check pulito |
-| 4 | **Wishlist** | ✅ Completato | CRUD wishlist + Wish · gerarchia parent/child · upload immagine · breadcrumb · API REST (`/api/wishlists`, `/api/wishlists/[id]`, `/api/wishes`, `/api/wishes/[id]`) · server actions · propagazione visibilità |
-| 5 | **i18n** | ✅ Completato | `next-intl` v3 · cookie-based · lingue: `da`, `de`, `en`, `es`, `fr`, `it`, `nl`, `pl`, `pt`, `pt_BR`, `ru`, `tr`, `uk`, `zh` · selettore in impostazioni utente |
-| 6 | **Tags / Template / ChoiceList** | 🔲 Da fare | Backend API + frontend components |
-| 7 | **Admin / Statistics / Tools** | 🔲 Da fare | Dashboard admin + statistiche + inventory/loans |
+| # | Feature | Status | Notes |
+|---|---|---|---|
+| 1 | Auth | ✅ Complete | NextAuth.js v5, Credentials, optional OIDC, JWT, Symfony bcrypt compatibility |
+| 2 | Collections | ✅ Complete | CRUD, hierarchy, items, upload, display config |
+| 3 | Items | ✅ Complete | CRUD, metadata, media, tags, loans, related items |
+| 4 | Albums | ✅ Complete | CRUD, hierarchy, photos, upload, visibility propagation |
+| 5 | Wishlists | ✅ Complete | CRUD, hierarchy, wishes, public views |
+| 6 | Tags | ✅ Complete | Tags and categories |
+| 7 | Templates / Fields / Choice Lists | ✅ Complete | Custom item data structure |
+| 8 | Loans | ✅ Complete | Active/returned item loans |
+| 9 | Inventories | ✅ Complete | Inventory pages and API |
+| 10 | Scrapers | ✅ Complete | Manual configurable preview/import flow |
+| 11 | Public sharing | ✅ Complete | Public views for collections, items, albums, wishlists |
+| 12 | i18n | ✅ Complete | 14 locales, cookie-based `next-intl` |
+| 13 | PWA | ✅ Complete | Manifest and icons, no aggressive private-data caching |
+| 14 | Admin / Statistics / Tools | ✅ Implemented | Admin settings, statistics, history, maintenance scripts |
 
 ---
 
-## 8. Database e modello dati
+## 8. Database and Data Model
 
-**DBMS:** PostgreSQL (condiviso con il backend Symfony legacy)  
+**DBMS:** PostgreSQL  
 **ORM:** Prisma 6
 
-### Gerarchia e visibilità
+### Hierarchy and Visibility
 
-Sia `Collection` che `Album` (e `Wishlist`) implementano una **gerarchia parent/child** con tre campi di visibilità:
+`Collection`, `Album`, and `Wishlist` implement parent/child hierarchies with visibility propagation.
 
-| Campo | Descrizione |
+| Field | Description |
 |---|---|
-| `visibility` | Visibilità impostata dall'utente |
-| `parentVisibility` | Visibilità finale del nodo padre (snapshot) |
-| `finalVisibility` | `max(visibility, parentVisibility)` — usato per filtri e ACL |
+| `visibility` | User-selected visibility |
+| `parentVisibility` | Final visibility snapshot of the parent |
+| `finalVisibility` | Effective visibility used by filters and public access |
 
-Quando un nodo cambia `visibility`, la propagazione ricorsiva aggiorna `parentVisibility` e `finalVisibility` di tutti i discendenti (e delle foto per gli album).
+Visibility order:
 
-### Indici principali
+```text
+public < internal < private
+
+finalVisibility = max(ownVisibility, parentVisibility)
+```
+
+When a node changes visibility, descendants are updated recursively. Album visibility also propagates to photos; wishlist visibility propagates to nested wishlists and wishes; collection visibility propagates to nested collections, items, and public datum filtering.
+
+### Main Indexes
 
 ```sql
 idx_collection_final_visibility  ON stk_collection(final_visibility)
-idx_album_final_visibility        ON stk_album(final_visibility)
-idx_item_final_visibility         ON stk_item(final_visibility)
-idx_photo_final_visibility        ON stk_photo(final_visibility)
-idx_datum_final_visibility        ON stk_datum(final_visibility)
+idx_album_final_visibility       ON stk_album(final_visibility)
+idx_item_final_visibility        ON stk_item(final_visibility)
+idx_photo_final_visibility       ON stk_photo(final_visibility)
+idx_wishlist_final_visibility    ON stk_wishlist(final_visibility)
+idx_wish_final_visibility        ON stk_wish(final_visibility)
+idx_datum_final_visibility       ON stk_datum(final_visibility)
 ```
+
+### Legacy Migration
+
+Legacy PostgreSQL `koi_*` databases are migrated to the Prisma `stk_*` target schema through scripts in `next/scripts/`.
+
+Important scripts:
+
+```bash
+npm run legacy:migrate
+npm run legacy:validate
+npm run legacy:uploads:audit
+npm run legacy:uploads:copy
+```
+
+Upload migration is intentionally separated from database migration and uses user-defined source/destination paths.
 
 ---
 
-## 9. Flusso di una richiesta tipica
+## 9. Typical Request Flows
 
-### A. Navigazione pagina autenticata (Server Component)
+### A. Authenticated Page Navigation
 
+```text
+Browser → middleware.ts
+        ├── valid JWT/session? → continue
+        └── no session → redirect /login
+
+Next.js → Server Component, for example /albums/[id]/page.tsx
+        ├── requireAuth()
+        ├── prisma.album.findFirst(...)
+        ├── getAlbumAncestors(...)
+        └── <AlbumDetail album={...} /> → RSC stream
 ```
-Browser → Next.js middleware
-         ├── JWT valido? → continua
-         └── no JWT → redirect /login
 
-Next.js → Server Component (es. /albums/[id]/page.tsx)
-         ├── requireAuth() → Session
-         ├── prisma.album.findFirst(…) → dati DB
-         ├── getAlbumAncestors(…) → breadcrumb
-         └── <AlbumDetail album={…} /> → RSC stream al browser
+### B. Public Page Navigation
+
+```text
+Browser → /public/items/[id]
+        ├── middleware allows public route
+        ├── getPublicItem(id)
+        ├── query requires finalVisibility = "public"
+        ├── nested data also filtered by public visibility
+        └── render read-only PublicShell
 ```
 
-### B. Submit form (Server Action)
+### C. Form Submit with Server Action
 
-```
+```text
 Browser (Client Component)
-  → handleSubmit()
-    ├── (opzionale) fetch POST /api/upload → { path, smallThumbnail }
-    └── Server Action (es. updateAlbum)
-          ├── requireAuth()
-          ├── albumSchema.safeParse(formData)
-          ├── resolveAlbumParent() → valida parent + cycle-detection
-          ├── prisma.album.update(…)
-          ├── syncAlbumDescendantsVisibility(…)
-          ├── prisma.photo.updateMany(…)
-          ├── logAction(…) → stk_log
-          ├── revalidatePath(…)
-          └── redirect(/albums/[id])
+  → optional POST /api/upload
+  → Server Action, for example updateAlbum
+      ├── requireAuth()
+      ├── schema.safeParse(formData)
+      ├── resolveAlbumParent()
+      ├── prisma.album.update(...)
+      ├── syncAlbumDescendantsVisibility(...)
+      ├── logAction(...) → stk_log
+      ├── revalidatePath(...)
+      └── redirect(...)
 ```
 
-### C. Chiamata API REST (client esterno o SPA)
+### D. REST API Call
 
+```text
+Client → GET /api/items/[id]
+       ├── requireApiSession()
+       ├── 401 if unauthenticated
+       ├── owner-scoped prisma.item.findFirst(...)
+       └── NextResponse.json(...)
 ```
-Client → GET /api/albums/[id]
-         ├── auth() → Session | null
-         ├── 401 se non autenticato
-         ├── prisma.album.findFirst(…)
-         ├── getAlbumAncestors(…)
-         └── NextResponse.json({ ...album, ancestors })
+
+### E. Manual Scraper Preview
+
+```text
+Browser (CollectionForm or ItemForm)
+  → user selects scraper and source URL/HTML file
+  → POST /api/scrapers/*-preview
+      ├── requireApiSession()
+      ├── load owner-scoped scraper
+      ├── validate remote URL as http/https
+      ├── fetch remote HTML or read uploaded HTML
+      ├── extract values with configured paths
+      └── return preview payload
+  → form applies previewed values only after explicit user action
 ```
 
 ---
 
-## 10. Convenzioni di naming
+## 10. Deployment and Runtime
 
-| Tipo | Convenzione | Esempio |
+### Docker Images
+
+`next/Dockerfile` builds the production standalone app:
+
+1. installs workspace dependencies,
+2. generates Prisma client,
+3. builds `apps/web`,
+4. copies standalone output and Prisma CLI runtime dependencies,
+5. runs `entrypoint.sh`.
+
+`next/Dockerfile.scratch` creates a minimal runtime image from `scratch`. It reuses the same `entrypoint.sh` and includes only the runtime filesystem, Node binary/libraries, selected BusyBox applets, `psql`, app artifacts, and required Prisma runtime files.
+
+### Runtime Entrypoint
+
+`entrypoint.sh`:
+
+1. waits for PostgreSQL,
+2. creates the configured database if needed,
+3. runs `prisma migrate deploy`,
+4. prepares the upload symlink,
+5. starts `node /app/apps/web/server.js`.
+
+### Compose
+
+`next/docker-compose.yml` starts:
+
+- `postgres`, database `stackly_transfer`,
+- `web`, image `ghcr.io/marchrius/koillection:next`,
+- persistent volumes for PostgreSQL data and uploads.
+
+---
+
+## 11. Naming Conventions
+
+| Type | Convention | Example |
 |---|---|---|
-| Componenti React | `PascalCase.tsx` | `AlbumDetail.tsx` |
-| Server Actions | `[risorsa].actions.ts` | `photo.actions.ts` |
-| Route Handlers | `app/api/[risorsa]/route.ts` | `app/api/albums/route.ts` |
-| Utility/lib | `camelCase.ts` | `albums-tree.ts` |
-| Costanti | `UPPER_SNAKE_CASE` | `VISIBILITY_OPTIONS` |
-| Tipi condivisi | `PascalCase` | `Visibility`, `DatumType` |
-| Modelli Prisma | `PascalCase` (rispecchia tabella) | `Album` → `stk_album` |
-| Path param Next.js | `[id]` — sempre `id` come nome | `/albums/[id]` |
+| React components | `PascalCase.tsx` | `AlbumDetail.tsx` |
+| Server Actions | `[resource].actions.ts` | `photo.actions.ts` |
+| Route Handlers | `app/api/[resource]/route.ts` | `app/api/albums/route.ts` |
+| Utilities | `kebab-case.ts` or local existing style | `albums-tree.ts` |
+| Constants | `UPPER_SNAKE_CASE` | `VISIBILITY_OPTIONS` |
+| Shared types | `PascalCase` | `Visibility`, `DatumType` |
+| Prisma models | `PascalCase` mapped to table | `Album` → `stk_album` |
+| Next path params | `[id]`, always named `id` unless domain requires otherwise | `/albums/[id]` |
 
 ---
 
-## 11. Variabili d'ambiente
+## 12. Environment Variables
 
-Definite in `next/.env` (non committato). Template in `next/.env.example`.
+Defined in `next/.env`, with a template in `next/.env.example`.
 
-| Variabile | Obbligatoria | Descrizione | Default |
+| Variable | Required | Description | Default |
 |---|---|---|---|
-| `DATABASE_URL` | ✅ | Connection string PostgreSQL | — |
-| `NEXTAUTH_SECRET` | ✅ | Secret JWT NextAuth (min 32 char) | — |
-| `NEXTAUTH_URL` | ✅ (prod) | URL pubblico dell'app | — |
-| `UPLOAD_DIR` | ❌ | Path assoluto o relativo cartella upload | `./public/uploads` |
-| `NODE_ENV` | ❌ | `development` \| `production` | `development` |
+| `DATABASE_URL` | ✅ | PostgreSQL connection string | none |
+| `NEXTAUTH_SECRET` | ✅ | NextAuth JWT secret, at least 32 chars | none |
+| `NEXTAUTH_URL` | ✅ in production | Public app URL | none |
+| `UPLOAD_DIR` | ❌ | Absolute or relative upload directory | `./public/uploads` |
+| `NODE_ENV` | ❌ | Runtime mode | development locally; build scripts force production |
+| `OIDC_ENABLED` | ❌ | Enables OIDC login | `false` |
+| `OIDC_PROVIDER` | ❌ | OIDC provider label | `generic` |
+| `OIDC_ISSUER_URL` | ❌ | OIDC issuer URL | empty |
+| `OIDC_CLIENT_ID` | ❌ | OIDC client id | empty |
+| `OIDC_CLIENT_SECRET` | ❌ | OIDC client secret | empty |
+| `OIDC_SCOPES` | ❌ | OIDC scopes | `openid profile email` |
 
-> File ambiente unico: usare solo `next/.env`. Gli script di `apps/web` e `packages/db` caricano esplicitamente `../../.env`.
+Use only `next/.env`; workspace scripts explicitly load it from app/package directories.
 
 ---
 
-## 12. Regola i18n — testo traducibile obbligatorio
+## 13. Mandatory i18n Rule
 
-> **Regola fondamentale — applicata a tutto il codice in `next/`:**
->
-> Ogni qualvolta viene aggiunta o modificata una funzionalità che include **testo leggibile dall'utente** (etichette, titoli, messaggi di errore, stati vuoti, bottoni, toast, placeholder, testi di conferma, ecc.), tale testo **deve** essere gestito tramite il sistema i18n (`next-intl`) e **non** hardcodato come stringa letterale nel codice.
+> Every user-visible string added or changed in `next/` must go through the `next-intl` message catalogs. Do not hardcode UI text in JSX/TSX.
 
-### Checklist obbligatoria per ogni nuova feature
+### Checklist for Any Feature with UI Text
 
-1. **Nessuna stringa letterale UI nel codice** — ogni testo visibile dall'utente va in `messages/*.json`
-2. **Aggiornare tutti i file lingua** — ogni nuova chiave deve essere aggiunta in **tutti** i file `messages/` esistenti (`en.json`, `it.json`, e qualsiasi altra lingua aggiunta in futuro)
-3. **Namespace coerente** — usare il namespace del dominio della feature (es. `"tags"` per tutto ciò che riguarda i tag); crearne uno nuovo se il dominio non esiste ancora
-4. **Interpolazione per valori dinamici** — usare `{variabile}` per nomi, contatori e altri valori runtime (es. `"delete.confirm": "Vuoi eliminare {name}?"`)
-5. **Client vs Server** — usare `useTranslations()` nei Client Components e `getTranslations()` nei Server Components e in `generateMetadata()`
-6. **Metadata pagina** — il `title` di ogni pagina deve essere tradotto tramite `generateMetadata()` + `getTranslations()`
+1. No hardcoded user-visible strings in JSX/TSX.
+2. Add every new key to all files in `apps/web/messages/`.
+3. Use a namespace that matches the feature domain.
+4. Use interpolation for runtime values: `{name}`, `{count}`, etc.
+5. Use `useTranslations()` in Client Components.
+6. Use `getTranslations()` in Server Components and `generateMetadata()`.
+7. Run `npm run i18n:validate`.
 
-### Esempio — aggiunta feature "Tags"
+### Example
 
 ```typescript
-// ✅ CORRETTO — testo via i18n
-// messages/en.json  →  "tags": { "title": "Tags", "new": "New Tag", "empty": "No tags yet." }
-// messages/it.json  →  "tags": { "title": "Tag", "new": "Nuovo Tag", "empty": "Nessun tag." }
-
+// Correct: text through i18n
 const t = useTranslations("tags");
 <h1>{t("title")}</h1>
 <p>{t("empty")}</p>
 
-// ❌ VIETATO — stringa hardcodata
+// Wrong: hardcoded UI strings
 <h1>Tags</h1>
 <p>No tags yet.</p>
 ```
 
-### Lingue attualmente supportate
+### Supported Locales
 
-| Codice | Lingua | File messaggi |
+| Code | Language | Message file |
 |---|---|---|
 | `da` | Danish | `messages/da.json` |
 | `de` | German | `messages/de.json` |
 | `en` | English | `messages/en.json` |
 | `es` | Spanish | `messages/es.json` |
 | `fr` | French | `messages/fr.json` |
-| `it` | Italiano | `messages/it.json` |
+| `it` | Italian | `messages/it.json` |
 | `nl` | Dutch | `messages/nl.json` |
 | `pl` | Polish | `messages/pl.json` |
 | `pt` | Portuguese | `messages/pt.json` |
@@ -814,4 +900,4 @@ const t = useTranslations("tags");
 | `uk` | Ukrainian | `messages/uk.json` |
 | `zh` | Chinese | `messages/zh.json` |
 
-> Ogni nuova lingua aggiunta al progetto richiede la traduzione **completa** di tutte le chiavi presenti in `messages/en.json` prima di poter essere considerata pronta per la produzione.
+Any new locale must include a complete translation of all keys present in `messages/en.json` before it is considered production-ready.

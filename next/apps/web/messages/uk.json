@@ -227,7 +227,8 @@
     "media": "ЗМІ",
     "video": "відео",
     "unknownFile": "Завантажити файл",
-    "relatedItems": "{count} пов'язані елементи"
+    "relatedItems": "{count} пов'язані елементи",
+    "mainImage": "Основне зображення"
   },
   "albums": {
     "title": "Альбоми",

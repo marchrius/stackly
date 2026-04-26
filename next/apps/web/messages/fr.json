@@ -227,7 +227,8 @@
     "media": "Médias",
     "video": "Vidéo",
     "unknownFile": "Télécharger le fichier",
-    "relatedItems": "Articles liés à {count}"
+    "relatedItems": "Articles liés à {count}",
+    "mainImage": "Image principale"
   },
   "albums": {
     "title": "Albums photo",

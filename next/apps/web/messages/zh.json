@@ -227,7 +227,8 @@
     "media": "媒体",
     "video": "视频",
     "unknownFile": "下载文件",
-    "relatedItems": "{count} 相关项目"
+    "relatedItems": "{count} 相关项目",
+    "mainImage": "主图"
   },
   "albums": {
     "title": "相册",

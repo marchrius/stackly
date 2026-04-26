@@ -227,7 +227,8 @@
     "media": "Medier",
     "video": "Videoklip",
     "unknownFile": "Download fil",
-    "relatedItems": "{count} relaterede varer"
+    "relatedItems": "{count} relaterede varer",
+    "mainImage": "Hovedbillede"
   },
   "albums": {
     "title": "Album",

@@ -227,7 +227,8 @@
     "media": "Media-inhoud",
     "video": "Videobestand",
     "unknownFile": "Bestand downloaden",
-    "relatedItems": "{count}-gerelateerde artikelen"
+    "relatedItems": "{count}-gerelateerde artikelen",
+    "mainImage": "Hoofdafbeelding"
   },
   "albums": {
     "title": "Fotoalbums",

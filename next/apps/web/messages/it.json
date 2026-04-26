@@ -227,7 +227,8 @@
     "media": "Contenuti multimediali",
     "video": "Filmato",
     "unknownFile": "Scarica file",
-    "relatedItems": "Articoli correlati a {count}"
+    "relatedItems": "Articoli correlati a {count}",
+    "mainImage": "Immagine principale"
   },
   "albums": {
     "title": "Album",

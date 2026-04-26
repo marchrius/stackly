@@ -90,35 +90,72 @@ export function ItemDetail({ item, previousItem, nextItem }: { item: ItemWithRel
     );
   }
 
+  function renderDetailValue(datum: DatumWithChoiceList) {
+    if (datum.type === "checkbox") {
+      return <span>{datum.value === "1" ? tCommon("yes") : tCommon("no")}</span>;
+    }
+
+    if (datum.type === "link" && datum.value) {
+      return (
+        <a href={datum.value} target="_blank" rel="noreferrer" className="break-all text-primary hover:underline">
+          {datum.value}
+        </a>
+      );
+    }
+
+    if (datum.type === "date" && datum.value) return <span>{formatDateValue(datum.value)}</span>;
+    if (datum.type === "list") return renderListValue(datum);
+    if (datum.type === "textarea") return <span className="whitespace-pre-line break-words">{datum.value ?? tCommon("none")}</span>;
+
+    if (datum.type === "file" && datum.file) {
+      return (
+        <a
+          href={getUploadUrl(datum.file) ?? ""}
+          target="_blank"
+          rel="noreferrer"
+          download={datum.originalFilename ?? undefined}
+          className="inline-flex items-center gap-2 text-primary hover:underline"
+        >
+          <FileDown className="h-4 w-4" />
+          {datum.originalFilename ?? t("unknownFile")}
+        </a>
+      );
+    }
+
+    if (datum.type === "choice-list") return renderChoiceListValue(datum);
+    if (datum.type === "price") return <span>{formatPriceValue(datum.value, datum.currency) ?? tCommon("none")}</span>;
+    if (datum.type === "rating") return <span>{renderRatingValue(datum.value) ?? tCommon("none")}</span>;
+    if (datum.type === "country") return <span>{formatCountryValue(datum.value) ?? tCommon("none")}</span>;
+
+    return <span>{datum.value ?? tCommon("none")}</span>;
+  }
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{item.name}</h1>
-          <div className="mt-1 flex flex-wrap items-center gap-2">
-            {item.collection && (
-              <Link href={`/collections/${item.collection.id}`} className="text-sm text-primary hover:underline">
-                {t("fromCollection", { name: item.collection.title })}
-              </Link>
-            )}
-            {item.quantity > 1 && <Badge variant="secondary">×{item.quantity}</Badge>}
+    <div className="mx-auto max-w-5xl space-y-8">
+      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div className="min-w-0 flex-1 text-center">
+          {item.collection ? (
+            <Link href={`/collections/${item.collection.id}`} className="mb-3 inline-block text-xs font-medium text-primary hover:underline">
+              {t("fromCollection", { name: item.collection.title })}
+            </Link>
+          ) : null}
+          <h1 className="text-3xl font-bold tracking-tight md:text-4xl">{item.name}</h1>
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+            {item.quantity > 1 ? <Badge variant="secondary">x{item.quantity}</Badge> : null}
             <Badge variant="outline">{tVisibility(item.finalVisibility as "public" | "internal" | "private")}</Badge>
-            {item.tags.map((tag) => (
-              <Badge key={tag.id} variant="secondary">
-                <Link href={`/tags/${tag.id}`} className="hover:underline">
-                  {tag.label}
-                </Link>
-              </Badge>
-            ))}
           </div>
         </div>
-        <div className="flex gap-2">
+
+        <div className="flex flex-wrap justify-center gap-2 md:justify-end">
           {item.finalVisibility === "public" ? <CopyPublicLinkButton path={`/public/items/${item.id}`} /> : null}
           <Button asChild variant="outline" size="sm">
             <Link href={`/loans/new?itemId=${item.id}`}>{t("loanItem")}</Link>
           </Button>
           <Button asChild variant="outline" size="sm">
-            <Link href={`/items/${item.id}/edit`}><Edit className="mr-1 h-4 w-4" />{tCommon("edit")}</Link>
+            <Link href={`/items/${item.id}/edit`}>
+              <Edit className="mr-1 h-4 w-4" />
+              {tCommon("edit")}
+            </Link>
           </Button>
           <DeleteConfirmDialog
             description={t("delete.confirm", { name: item.name })}
@@ -127,193 +164,144 @@ export function ItemDetail({ item, previousItem, nextItem }: { item: ItemWithRel
         </div>
       </div>
 
-      {selectedMedia && (
-        <section className="space-y-4">
-          <div>
-            <h2 className="text-lg font-semibold">{t("media")}</h2>
-            {selectedMedia.label !== "main" && <p className="text-sm text-muted-foreground">{selectedMedia.label}</p>}
-          </div>
-
-          <div className="rounded-lg border bg-muted/30 p-4">
-            {selectedMedia.kind === "video" ? (
-              <video controls className="max-h-[28rem] w-full rounded-lg bg-black" src={selectedMedia.src}>
-                <track kind="captions" />
-              </video>
+      <section className="grid gap-8 lg:grid-cols-[minmax(260px,360px)_minmax(0,1fr)] lg:items-start lg:justify-center">
+        <div className="space-y-4">
+          <div className="flex min-h-[22rem] items-center justify-center bg-background">
+            {selectedMedia ? (
+              selectedMedia.kind === "video" ? (
+                <video controls className="max-h-[32rem] w-full rounded bg-black" src={selectedMedia.src}>
+                  <track kind="captions" />
+                </video>
+              ) : (
+                <img
+                  src={selectedMedia.src}
+                  alt={selectedMedia.label === "main" ? item.name : selectedMedia.label}
+                  className="max-h-[32rem] max-w-full object-contain"
+                />
+              )
             ) : (
-              <img src={selectedMedia.src} alt={selectedMedia.label === "main" ? item.name : selectedMedia.label} className="max-h-[28rem] w-full rounded-lg object-contain" />
+              <div className="flex aspect-[10/13] w-full max-w-[20rem] items-center justify-center rounded-lg bg-muted text-sm text-muted-foreground">
+                {t("media")}
+              </div>
             )}
           </div>
 
-          {mediaEntries.length > 1 && (
-            <div className="flex flex-wrap gap-2">
+          {selectedMedia ? (
+            <p className="text-center text-xs text-muted-foreground">
+              {selectedMedia.label === "main" ? t("mainImage") : selectedMedia.label}
+            </p>
+          ) : null}
+
+          {mediaEntries.length > 1 ? (
+            <div className="flex flex-wrap justify-center gap-2">
               {mediaEntries.map((entry) => (
                 <button
                   key={entry.id}
                   type="button"
                   onClick={() => setSelectedMediaId(entry.id)}
-                  className={`rounded-lg border p-1 transition ${entry.id === selectedMedia.id ? "border-primary ring-2 ring-primary/20" : "border-border"}`}
-                  aria-label={entry.label || item.name}
+                  className={`h-20 w-16 rounded border p-1 transition ${entry.id === selectedMedia?.id ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/60"}`}
+                  aria-label={entry.label === "main" ? t("mainImage") : entry.label || item.name}
                 >
                   {entry.kind === "video" ? (
-                    <div className="flex h-16 w-16 items-center justify-center rounded bg-black text-xs font-medium text-white">
+                    <div className="flex h-full w-full items-center justify-center rounded bg-black text-[0.65rem] font-medium text-white">
                       {t("video")}
                     </div>
                   ) : (
                     <img
                       src={entry.thumbnailSrc ?? entry.src}
-                      alt={entry.label || item.name}
-                      className="h-16 w-16 rounded object-cover"
+                      alt={entry.label === "main" ? item.name : entry.label || item.name}
+                      className="h-full w-full rounded object-contain"
                     />
                   )}
                 </button>
               ))}
             </div>
-          )}
-        </section>
-      )}
+          ) : null}
+        </div>
 
-      {displayData.length > 0 && (
-        <section>
-          <h2 className="mb-3 text-lg font-semibold">{t("form.data")}</h2>
-          <div className="space-y-3">
-            {displayData.map((datum) => {
-              if (datum.type === "section") {
+        <div className="space-y-5 pt-1">
+          {displayData.length > 0 ? (
+            <div className="space-y-2 text-sm leading-6">
+              {displayData.map((datum) => {
+                if (datum.type === "section") {
+                  return (
+                    <h2 key={datum.id} className="pt-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                      {datum.label}
+                    </h2>
+                  );
+                }
+
+                if (datum.type === "blank-line") return <div key={datum.id} className="h-2" />;
+
                 return (
-                  <div key={datum.id} className="pt-2">
-                    <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">{datum.label}</h3>
+                  <div key={datum.id} className="grid gap-x-2 sm:grid-cols-[max-content_1fr]">
+                    {datum.label ? <dt className="font-semibold text-foreground">{datum.label}:</dt> : null}
+                    <dd className="min-w-0 text-foreground">{renderDetailValue(datum)}</dd>
                   </div>
                 );
-              }
+              })}
+            </div>
+          ) : null}
 
-              if (datum.type === "blank-line") {
-                return <div key={datum.id} className="border-t" />;
-              }
-
-              return (
-                <div key={datum.id} className="rounded-lg border p-3">
-                  {datum.label && <p className="mb-1 text-xs font-medium text-muted-foreground">{datum.label}</p>}
-                  {datum.type === "checkbox" ? (
-                    <span className="text-sm">{datum.value === "1" ? `✓ ${tCommon("yes")}` : `✗ ${tCommon("no")}`}</span>
-                  ) : datum.type === "link" && datum.value ? (
-                    <a href={datum.value} target="_blank" rel="noreferrer" className="text-sm text-primary hover:underline break-all">
-                      {datum.value}
-                    </a>
-                  ) : datum.type === "date" && datum.value ? (
-                    <p className="break-words text-sm">{formatDateValue(datum.value)}</p>
-                  ) : datum.type === "list" ? (
-                    renderListValue(datum)
-                  ) : datum.type === "textarea" ? (
-                    <p className="whitespace-pre-line break-words text-sm">{datum.value ?? tCommon("none")}</p>
-                  ) : datum.type === "file" && datum.file ? (
-                    <a
-                      href={getUploadUrl(datum.file) ?? ""}
-                      target="_blank"
-                      rel="noreferrer"
-                      download={datum.originalFilename ?? undefined}
-                      className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-                    >
-                      <FileDown className="h-4 w-4" />
-                      {datum.originalFilename ?? t("unknownFile")}
-                    </a>
-                  ) : datum.type === "choice-list" ? (
-                    renderChoiceListValue(datum)
-                  ) : datum.type === "price" ? (
-                    <p className="break-words text-sm">{formatPriceValue(datum.value, datum.currency) ?? tCommon("none")}</p>
-                  ) : datum.type === "rating" ? (
-                    <p className="break-words text-sm">{renderRatingValue(datum.value) ?? tCommon("none")}</p>
-                  ) : datum.type === "country" ? (
-                    <p className="break-words text-sm">{formatCountryValue(datum.value) ?? tCommon("none")}</p>
-                  ) : (
-                    <p className="break-words text-sm">{datum.value ?? tCommon("none")}</p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
-      {relatedItems.length > 0 && (
-        <section>
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <h2 className="text-lg font-semibold">{t("relatedItems", { count: relatedItems.length })}</h2>
-          </div>
-          <div
-            className="grid gap-x-2.5 gap-y-4"
-            style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}
-          >
-            {relatedItems.map((relatedItem) => (
-              <Link
-                key={relatedItem.id}
-                href={`/items/${relatedItem.id}`}
-                className="group block cursor-pointer overflow-hidden rounded-lg border bg-card hover:shadow-md transition-shadow"
-              >
-                <div className="relative aspect-[10/13] bg-muted flex items-center justify-center overflow-hidden">
-                  {relatedItem.imageSmallThumbnail ? (
-                    <img
-                      src={getUploadUrl(relatedItem.imageSmallThumbnail) ?? ""}
-                      alt={relatedItem.name}
-                      loading="lazy"
-                      className="max-h-full max-w-full object-contain transition-transform group-hover:scale-105"
-                    />
-                  ) : (
-                    <span className="p-3 text-center text-xs text-muted-foreground">{relatedItem.name}</span>
-                  )}
-                </div>
-                <div className="p-2">
-                  <p className="truncate text-xs font-medium">{relatedItem.name}</p>
-                </div>
+          {activeLoans.length > 0 ? (
+            <div className="space-y-2 text-sm">
+              <p className="font-semibold">{t("activeLoans", { count: activeLoans.length })}</p>
+              {activeLoans.map((loan) => (
+                <Link key={loan.id} href={`/loans/${loan.id}/edit`} className="block text-primary hover:underline">
+                  {loan.lentTo} - {new Date(loan.lentAt).toLocaleDateString()}
+                </Link>
+              ))}
+              <Link href="/loans" className="text-xs text-muted-foreground hover:text-foreground">
+                {t("viewAllLoans")}
               </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <section>
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold">{t("activeLoans", { count: activeLoans.length })}</h2>
-          {activeLoans.length > 0 && (
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/loans">{t("viewAllLoans")}</Link>
-            </Button>
-          )}
+            </div>
+          ) : null}
         </div>
-        {activeLoans.length > 0 ? (
-          <div className="space-y-2">
-            {activeLoans.map((loan) => (
-              <Link key={loan.id} href={`/loans/${loan.id}/edit`} className="block rounded-lg border p-3 text-sm hover:bg-accent">
-                {loan.lentTo} — {new Date(loan.lentAt).toLocaleDateString()}
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">{t("noActiveLoans")}</p>
-        )}
       </section>
 
-      {(previousItem || nextItem) && (
-        <nav className="flex flex-wrap items-center justify-between gap-3 border-t pt-4">
-          {previousItem ? (
-            <Button asChild variant="ghost" size="sm">
-              <Link href={`/items/${previousItem.id}`}>
-                <ChevronLeft className="mr-1 h-4 w-4" />
-                {previousItem.name}
+      {relatedItems.length > 0 ? (
+        <section className="text-center text-sm">
+          <span className="font-semibold">{t("relatedItems", { count: relatedItems.length })}: </span>
+          <span className="inline-flex flex-wrap justify-center gap-x-2 gap-y-1">
+            {relatedItems.map((relatedItem, index) => (
+              <Link key={relatedItem.id} href={`/items/${relatedItem.id}`} className="text-primary hover:underline">
+                {relatedItem.name}
+                {index < relatedItems.length - 1 ? "," : ""}
               </Link>
-            </Button>
-          ) : (
-            <span />
-          )}
+            ))}
+          </span>
+        </section>
+      ) : null}
+
+      {item.tags.length > 0 ? (
+        <section className="flex flex-wrap justify-center gap-2">
+          {item.tags.map((tag) => (
+            <Badge key={tag.id} variant="secondary" className="rounded-full px-3 py-1">
+              <Link href={`/tags/${tag.id}`} className="hover:underline">
+                {tag.label}
+              </Link>
+            </Badge>
+          ))}
+        </section>
+      ) : null}
+
+      {(previousItem || nextItem) ? (
+        <nav className="flex flex-wrap items-center justify-center gap-6 pt-2 text-sm">
+          {previousItem ? (
+            <Link href={`/items/${previousItem.id}`} className="inline-flex items-center text-primary hover:underline">
+              <ChevronLeft className="mr-1 h-4 w-4" />
+              {previousItem.name}
+            </Link>
+          ) : null}
 
           {nextItem ? (
-            <Button asChild variant="ghost" size="sm">
-              <Link href={`/items/${nextItem.id}`}>
-                {nextItem.name}
-                <ChevronRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
+            <Link href={`/items/${nextItem.id}`} className="inline-flex items-center text-primary hover:underline">
+              {nextItem.name}
+              <ChevronRight className="ml-1 h-4 w-4" />
+            </Link>
           ) : null}
         </nav>
-      )}
+      ) : null}
     </div>
   );
 }

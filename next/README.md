@@ -1,168 +1,168 @@
 # Stackly — Next.js (v2.x)
 
-Versione full-stack Next.js di Stackly, il collection manager self-hosted per catalogare collezioni fisiche di qualsiasi tipo: libri, DVD, fumetti, giochi, francobolli, album fotografici e wishlist.
+Stackly's full-stack Next.js version: a self-hosted collection manager for cataloging physical collections of any kind, including books, DVDs, comics, games, stamps, photo albums, and wishlists.
 
-La nuova app mantiene il modello a gerarchia tipo directory/file: puoi creare collezioni e sottocollezioni, poi inserire oggetti con metadata personalizzati, tag, immagini, file, link e campi definiti dall'utente. Gli scraper sono configurabili dall'utente e vengono eseguiti solo manualmente tramite preview/import: Stackly non scarica metadata automaticamente.
+The new app keeps the directory/file-like hierarchy model: you can create collections and sub-collections, then add items with custom metadata, tags, images, files, links, and user-defined fields. Scrapers are user-configurable and run only through explicit preview/import actions: Stackly does not download metadata automatically.
 
-Stack tecnico: monorepo Turborepo con Next.js App Router, Prisma, shadcn/ui, Tailwind CSS, NextAuth.js v5 e PostgreSQL.
+Technical stack: Turborepo monorepo with Next.js App Router, Prisma, shadcn/ui, Tailwind CSS, NextAuth.js v5, and PostgreSQL.
 
-## Funzionalita' prodotto
+## Product Features
 
-| Funzionalita' | Stato |
+| Feature | Status |
 |---|---|
-| Gestione collezioni, sottocollezioni e oggetti | ✅ Implementata |
-| Metadata liberi sugli oggetti e sulle collezioni (`Datum`, template, choice list) | ✅ Implementata |
-| Tag e categorie tag per raggruppare oggetti tra collezioni diverse | ✅ Implementata |
-| Sharing pubblico base per collezioni, oggetti, album e wishlist pubbliche | ✅ Implementato |
-| Wishlist e wish | ✅ Implementate |
-| Prestiti oggetti | ✅ Implementati |
-| Multi-user con ruoli utente/admin | ✅ Implementato |
-| Dark mode e temi personalizzabili | ✅ Implementati |
-| i18n multi-lingua | ✅ Implementato |
-| PWA installabile tramite manifest e icone | ✅ Implementata |
-| REST API | ✅ Implementata |
-| Scraper manuali/configurabili | ✅ Implementati |
+| Collections, sub-collections, and items management | ✅ Implemented |
+| Free-form metadata on items and collections (`Datum`, templates, choice lists) | ✅ Implemented |
+| Tags and tag categories to group items across collections | ✅ Implemented |
+| Basic public sharing for collections, items, albums, and public wishlists | ✅ Implemented |
+| Wishlists and wishes | ✅ Implemented |
+| Item loans | ✅ Implemented |
+| Multi-user support with user/admin roles | ✅ Implemented |
+| Dark mode and customizable themes | ✅ Implemented |
+| Multi-language i18n | ✅ Implemented |
+| Installable PWA through manifest and icons | ✅ Implemented |
+| REST API | ✅ Implemented |
+| Manual/configurable scrapers | ✅ Implemented |
 
-## Compatibilita' database
+## Database Compatibility
 
-La versione Next.js v2 usa **PostgreSQL** tramite Prisma. Il supporto legacy a MySQL/MariaDB non fa parte di questo ciclo di conversione ed e' intenzionalmente escluso dalla configurazione attuale.
+The Next.js v2 version uses **PostgreSQL** through Prisma. Legacy MySQL/MariaDB support is not part of this conversion cycle and is intentionally excluded from the current configuration.
 
-## Struttura
+## Structure
 
-```
+```text
 next/
 ├── apps/
-│   └── web/                  ← App Next.js 15 (frontend + API)
+│   └── web/                  ← Next.js 15 app (frontend + API)
 │       ├── app/
 │       │   ├── (auth)/       ← /login, /register
-│       │   ├── (dashboard)/  ← Pagine autenticate
-│       │   └── api/          ← Route Handlers REST
-│       ├── components/       ← Componenti React per modulo
+│       │   ├── (dashboard)/  ← Authenticated pages
+│       │   └── api/          ← REST route handlers
+│       ├── components/       ← React components by module
 │       ├── lib/
 │       │   ├── actions/      ← Server Actions (CRUD)
-│       │   └── auth-utils.ts ← Helper requireAuth()
-│       ├── auth.ts           ← Configurazione NextAuth.js v5
-│       └── middleware.ts     ← Protezione route
+│       │   └── auth-utils.ts ← requireAuth() helpers
+│       ├── auth.ts           ← NextAuth.js v5 configuration
+│       └── middleware.ts     ← Route protection
 └── packages/
-    ├── db/                   ← Prisma schema + client (tabelle stk_*)
-    ├── lib/                  ← Tipi, utility, costanti condivisi
-    └── ui/                   ← Componenti shadcn/ui condivisi
+    ├── db/                   ← Prisma schema + client (stk_* tables)
+    ├── lib/                  ← Shared types, utilities, constants
+    └── ui/                   ← Shared shadcn/ui components
 ```
 
-## Prerequisiti
+## Requirements
 
-- Node.js ≥ 20
-- npm ≥ 10
-- PostgreSQL (stesso DB del legacy, o nuovo)
+- Node.js >= 20
+- npm >= 10
+- PostgreSQL, either the migrated legacy database or a new one
 
 ## Setup
 
 ```bash
-# 1. Dalla cartella next/
+# 1. From the next/ directory
 cd next
 npm install
 
-# 2. Configura le variabili d'ambiente
+# 2. Configure environment variables
 cp .env.example .env
-# Modifica DATABASE_URL e NEXTAUTH_SECRET in .env
+# Edit DATABASE_URL and NEXTAUTH_SECRET in .env
 
-# 3. Genera il client Prisma
+# 3. Generate the Prisma client
 npm run db:generate
 
-# 4. (Opzionale) Esegui le migrazioni su un nuovo DB
+# 4. Optional: apply schema changes to a new database
 npm run db:push
 
-# 5. Avvia in sviluppo
+# 5. Start development
 npm run dev
 ```
 
-## Variabili d'Ambiente (`next/.env`)
+## Environment Variables (`next/.env`)
 
-Usa un solo file centrale: `next/.env`.
-Non creare `apps/web/.env` o `packages/db/.env`: tutti gli script workspace leggono `../../.env`.
+Use one central file: `next/.env`.
+Do not create `apps/web/.env` or `packages/db/.env`: all workspace scripts read `../../.env`.
 
-| Variabile | Descrizione | Esempio |
+| Variable | Description | Example |
 |---|---|---|
-| `DATABASE_URL` | DSN PostgreSQL | `postgresql://user:pass@localhost:5432/stackly` |
-| `NEXTAUTH_SECRET` | Secret JWT sessione (random 32 byte) | `openssl rand -base64 32` |
-| `NEXTAUTH_URL` | URL base app | `http://localhost:3000` |
-| `UPLOAD_DIR` | Cartella upload file | `./public/uploads` |
+| `DATABASE_URL` | PostgreSQL DSN | `postgresql://user:pass@localhost:5432/stackly` |
+| `NEXTAUTH_SECRET` | JWT session secret, random 32 bytes | `openssl rand -base64 32` |
+| `NEXTAUTH_URL` | App base URL | `http://localhost:3000` |
+| `UPLOAD_DIR` | File upload directory | `./public/uploads` |
 
-## Compatibilità con il DB Legacy
+## Legacy Database Compatibility
 
-Lo schema Prisma usa i **nomi di tabella target** (`stk_*`) e PostgreSQL. Le password legacy sono compatibili: Symfony usa `bcrypt $2y$` che viene normalizzato a `$2b$` per `bcryptjs` (Node.js).
+The Prisma schema uses the target table names (`stk_*`) and PostgreSQL. Legacy passwords are compatible: Symfony uses `bcrypt $2y$`, which is normalized to `$2b$` for `bcryptjs` in Node.js.
 
-Per importare un database legacy `koi_*` verso il nuovo schema `stk_*`, usare gli script `legacy:migrate`, `legacy:validate` e `legacy:uploads:*`.
+To import a legacy `koi_*` database into the new `stk_*` schema, use the `legacy:migrate`, `legacy:validate`, and `legacy:uploads:*` scripts.
 
-## Comandi
+## Commands
 
 ```bash
-npm run dev           # Avvia in development (Turbopack)
-npm run build         # Build di produzione
-npm run start         # Avvia il server Next.js built in produzione
-npm run i18n:validate # Valida schema/placeholder dei cataloghi messages/*.json
-npm run db:generate   # Rigenera client Prisma
-npm run db:push       # Sincronizza schema sul DB (dev)
-npm run db:migrate    # Crea migration (produzione)
-npm run db:studio     # Apre Prisma Studio
-npm run maintenance:refresh-cached-values # Riallinea contatori/cachedValues
-npm run maintenance:regenerate-logs       # Rigenera create logs mancanti e marca delete logs
-npm run maintenance:regenerate-thumbnails # Rigenera thumbnails dai file originali
-npm run legacy:migrate                    # Migra un DB legacy PostgreSQL koi_* verso stk_* (dry-run di default)
-npm run legacy:validate                   # Valida conteggi e integrita' post-migrazione
-npm run legacy:uploads:audit              # Verifica i file upload referenziati dal DB migrato
-npm run legacy:uploads:copy               # Copia i file upload usando path sorgente/destinazione definiti dall'utente
+npm run dev           # Start development (Turbopack)
+npm run build         # Production build
+npm run start         # Start the production Next.js server
+npm run i18n:validate # Validate messages/*.json schema/placeholders
+npm run db:generate   # Regenerate Prisma client
+npm run db:push       # Sync schema to the database (development)
+npm run db:migrate    # Create a migration (production)
+npm run db:studio     # Open Prisma Studio
+npm run maintenance:refresh-cached-values # Reconcile counters/cachedValues
+npm run maintenance:regenerate-logs       # Regenerate missing create logs and mark delete logs
+npm run maintenance:regenerate-thumbnails # Regenerate thumbnails from original files
+npm run legacy:migrate                    # Migrate a PostgreSQL legacy koi_* DB to stk_* (dry-run by default)
+npm run legacy:validate                   # Validate counts and integrity after migration
+npm run legacy:uploads:audit              # Check upload files referenced by the migrated DB
+npm run legacy:uploads:copy               # Copy upload files using user-defined source/destination paths
 ```
 
-Tutti i comandi `maintenance:*` supportano `--help` e `--dry-run`.
+All `maintenance:*` commands support `--help` and `--dry-run`.
 
-Per la migrazione PostgreSQL legacy verso il nuovo schema Prisma, vedere `LEGACY_DB_MIGRATION.md`.
+For the PostgreSQL legacy-to-Prisma migration, see `LEGACY_DB_MIGRATION.md`.
 
-## Deployment e runtime
+## Deployment and Runtime
 
-Il legacy espone solo il runtime Symfony/PHP dai file Docker alla root del repository. Per il nuovo stack Next.js usare invece:
+The legacy project exposes only the Symfony/PHP runtime through the Docker files at the repository root. For the new Next.js stack, use:
 
-- `next/Dockerfile` per la build/runtime container del monorepo `next/`
-- `next/Dockerfile.scratch` per una variante runtime minimale basata su `scratch`
-- `next/docker-compose.yml` per avviare app Next.js + PostgreSQL usando l'immagine pubblicata su GHCR
+- `next/Dockerfile` for the monorepo build/runtime container
+- `next/Dockerfile.scratch` for a minimal `scratch`-based runtime variant
+- `next/docker-compose.yml` to start the Next.js app and PostgreSQL using the image published on GHCR
 
-### Avvio locale del runtime container
+### Local Container Runtime
 
 ```bash
-# Dalla cartella next/
+# From the next/ directory
 docker compose up -d
 ```
 
-### Note operative di produzione
+### Production Notes
 
-- Montare il volume persistente su `/var/lib/stackly/uploads` (il container lo collega a `/app/apps/web/public/uploads`)
-- Le operazioni DB avvengono a startup tramite `entrypoint.sh`: crea il DB se non esiste, poi esegue `prisma migrate deploy`
-- La build produzione usa output standalone di Next.js; l'entrypoint avvia `apps/web/server.js`
-- `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL` e `UPLOAD_DIR` devono essere valorizzate a runtime
-- I comandi `maintenance:*` possono essere eseguiti nello stesso container applicativo
+- Mount the persistent volume at `/var/lib/stackly/uploads`; the container links it to `/app/apps/web/public/uploads`
+- Database operations run at startup through `entrypoint.sh`: it creates the database if it does not exist, then runs `prisma migrate deploy`
+- The production build uses Next.js standalone output; the entrypoint starts `apps/web/server.js`
+- `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, and `UPLOAD_DIR` must be set at runtime
+- `maintenance:*` commands can be run inside the same application container
 
 ## PWA
 
-Stackly include un manifest installabile (`/manifest.webmanifest`) e icone applicazione in `apps/web/public/icons/`.
+Stackly includes an installable manifest (`/manifest.webmanifest`) and application icons in `apps/web/public/icons/`.
 
-Il progetto non registra un service worker aggressivo per impostazione predefinita: le pagine autenticate e i dati privati non vengono messi in cache offline automaticamente.
+The project does not register an aggressive service worker by default: authenticated pages and private data are not cached offline automatically.
 
-## Internazionalizzazione (i18n)
+## Internationalization (i18n)
 
-L'app usa `next-intl` con strategia cookie-based (`stk_locale`).
+The app uses `next-intl` with a cookie-based strategy (`stk_locale`).
 
-**Source of truth locale:** `apps/web/i18n/locales.ts`
+**Locale source of truth:** `apps/web/i18n/locales.ts`
 
-Locale supportati in `next/apps/web/messages/`:
+Supported locales in `next/apps/web/messages/`:
 
-| Codice | Lingua |
+| Code | Language |
 |---|---|
 | `da` | Danish |
 | `de` | German |
 | `en` | English (default) |
 | `es` | Spanish |
 | `fr` | French |
-| `it` | Italiano |
+| `it` | Italian |
 | `nl` | Dutch |
 | `pl` | Polish |
 | `pt` | Portuguese |
@@ -172,184 +172,184 @@ Locale supportati in `next/apps/web/messages/`:
 | `uk` | Ukrainian |
 | `zh` | Chinese |
 
-Prima di aprire una PR con modifiche ai testi UI, eseguire:
+Before opening a PR that changes UI text, run:
 
 ```bash
 npm run i18n:validate
 ```
 
-## Route Disponibili
+## Available Routes
 
-### Autenticazione
+### Authentication
 
-| Route | Descrizione | Stato |
+| Route | Description | Status |
 |---|---|---|
-| `/login` | Accesso (provider Credentials) | ✅ Implementato |
-| `/register` | Registrazione nuovo utente | ✅ Implementato |
+| `/login` | Sign in with the Credentials provider | ✅ Implemented |
+| `/register` | Register a new user | ✅ Implemented |
 
-### Dashboard e principale
+### Dashboard
 
-| Route | Descrizione | Stato |
+| Route | Description | Status |
 |---|---|---|
-| `/` | Dashboard (statistiche rapide) | ✅ Implementato |
+| `/` | Dashboard with quick statistics | ✅ Implemented |
 
-### Collezioni e Oggetti
+### Collections and Items
 
-| Route | Descrizione | Stato |
+| Route | Description | Status |
 |---|---|---|
-| `/collections` | Gestione collezioni (lista, create, hierarchical) | ✅ Implementato |
-| `/collections/[id]` | Dettaglio collezione con oggetti annidati | ✅ Implementato |
-| `/collections/[id]/edit` | Modifica collezione | ✅ Implementato |
-| `/items/[id]` | Dettaglio oggetto con dati custom (Datum) | ✅ Implementato |
-| `/items/[id]/edit` | Modifica oggetto | ✅ Implementato |
+| `/collections` | Collection management: list, create, hierarchy | ✅ Implemented |
+| `/collections/[id]` | Collection detail with nested items | ✅ Implemented |
+| `/collections/[id]/edit` | Edit collection | ✅ Implemented |
+| `/items/[id]` | Item detail with custom data (`Datum`) | ✅ Implemented |
+| `/items/[id]/edit` | Edit item | ✅ Implemented |
 
-### Album e Foto
+### Albums and Photos
 
-| Route | Descrizione | Stato |
+| Route | Description | Status |
 |---|---|---|
-| `/albums` | Gestione album fotografici (lista, create, hierarchical) | ✅ Implementato |
-| `/albums/[id]` | Dettaglio album con foto | ✅ Implementato |
-| `/albums/[id]/edit` | Modifica album | ✅ Implementato |
-| `/photos/[id]` | Dettaglio foto | ✅ Implementato |
+| `/albums` | Photo album management: list, create, hierarchy | ✅ Implemented |
+| `/albums/[id]` | Album detail with photos | ✅ Implemented |
+| `/albums/[id]/edit` | Edit album | ✅ Implemented |
+| `/photos/[id]` | Photo detail | ✅ Implemented |
 
-### Wishlist e Wish
+### Wishlists and Wishes
 
-| Route | Descrizione | Stato |
+| Route | Description | Status |
 |---|---|---|
-| `/wishlists` | Gestione liste desideri (lista, create, hierarchical) | ✅ Implementato |
-| `/wishlists/[id]` | Dettaglio wishlist con wish | ✅ Implementato |
-| `/wishlists/[id]/edit` | Modifica wishlist | ✅ Implementato |
-| `/wishes/[id]` | Dettaglio wish | ✅ Implementato |
+| `/wishlists` | Wishlist management: list, create, hierarchy | ✅ Implemented |
+| `/wishlists/[id]` | Wishlist detail with wishes | ✅ Implemented |
+| `/wishlists/[id]/edit` | Edit wishlist | ✅ Implemented |
+| `/wishes/[id]` | Wish detail | ✅ Implemented |
 
-### Sharing pubblico
+### Public Sharing
 
-| Route | Descrizione | Stato |
+| Route | Description | Status |
 |---|---|---|
-| `/public/collections/[id]` | Vista pubblica collezione/sottocollezione | ✅ Implementato |
-| `/public/items/[id]` | Vista pubblica oggetto | ✅ Implementato |
-| `/public/albums/[id]` | Vista pubblica album/sotto-album | ✅ Implementato |
-| `/public/wishlists/[id]` | Vista pubblica wishlist/sotto-wishlist | ✅ Implementato |
-| `/user/[username]/wishlists` | Vista compatibile per wishlist pubbliche utente | ✅ Implementato |
+| `/public/collections/[id]` | Public collection/sub-collection view | ✅ Implemented |
+| `/public/items/[id]` | Public item view | ✅ Implemented |
+| `/public/albums/[id]` | Public album/sub-album view | ✅ Implemented |
+| `/public/wishlists/[id]` | Public wishlist/sub-wishlist view | ✅ Implemented |
+| `/user/[username]/wishlists` | Compatibility view for public user wishlists | ✅ Implemented |
 
-### Funzionalità secondarie
+### Secondary Features
 
-| Route | Descrizione | Stato |
+| Route | Description | Status |
 |---|---|---|
-| `/tags` | Gestione tag e categorie tag | ✅ Implementato |
-| `/templates` | Template per struttura oggetti + Field | ✅ Implementato |
-| `/choice-lists` | Liste di valori riusabili per i campi custom | ✅ Implementato |
-| `/loans` | Prestiti attivi e restituiti | ✅ Implementato |
-| `/inventories` | Inventari | ✅ Implementato |
-| `/scrapers` | Configurazione scraper manuali | ✅ Implementato |
-| `/history` | Storico modifiche (Log) | ✅ Implementato |
-| `/statistics` | Statistiche e grafici | ✅ Implementato |
-| `/search` | Ricerca full-text (Collections, Items, Albums, Photos, Wishlists, Wishes) | ✅ Implementato |
-| `/settings` | Impostazioni profilo utente | ✅ Implementato |
+| `/tags` | Tags and tag categories management | ✅ Implemented |
+| `/templates` | Item structure templates + fields | ✅ Implemented |
+| `/choice-lists` | Reusable value lists for custom fields | ✅ Implemented |
+| `/loans` | Active and returned loans | ✅ Implemented |
+| `/inventories` | Inventories | ✅ Implemented |
+| `/scrapers` | Manual scraper configuration | ✅ Implemented |
+| `/history` | Change history (`Log`) | ✅ Implemented |
+| `/statistics` | Statistics and charts | ✅ Implemented |
+| `/search` | Full-text search across Collections, Items, Albums, Photos, Wishlists, and Wishes | ✅ Implemented |
+| `/settings` | User profile settings | ✅ Implemented |
 
-## API REST
+## REST API
 
-### Autenticazione
+### Authentication
 
-| Endpoint | Metodi | Descrizione | Stato |
+| Endpoint | Methods | Description | Status |
 |---|---|---|---|
-| `/api/auth/[...nextauth]` | GET, POST | Handler NextAuth.js (login, logout, session) | ✅ |
+| `/api/auth/[...nextauth]` | GET, POST | NextAuth.js handler: login, logout, session | ✅ |
 
-### Collezioni
+### Collections
 
-| Endpoint | Metodi | Descrizione | Stato |
+| Endpoint | Methods | Description | Status |
 |---|---|---|---|
-| `/api/collections` | GET, POST | Lista e crea collezioni | ✅ |
-| `/api/collections/[id]` | GET, PATCH, DELETE | CRUD collezione | ✅ |
+| `/api/collections` | GET, POST | List and create collections | ✅ |
+| `/api/collections/[id]` | GET, PATCH, DELETE | Collection CRUD | ✅ |
 
-### Oggetti
+### Items
 
-| Endpoint | Metodi | Descrizione | Stato |
+| Endpoint | Methods | Description | Status |
 |---|---|---|---|
-| `/api/items` | GET, POST | Lista e crea oggetti | ✅ |
-| `/api/items/[id]` | GET, PATCH, DELETE | CRUD oggetto | ✅ |
+| `/api/items` | GET, POST | List and create items | ✅ |
+| `/api/items/[id]` | GET, PATCH, DELETE | Item CRUD | ✅ |
 
-### Album
+### Albums
 
-| Endpoint | Metodi | Descrizione | Stato |
+| Endpoint | Methods | Description | Status |
 |---|---|---|---|
-| `/api/albums` | GET, POST | Lista e crea album | ✅ |
-| `/api/albums/[id]` | GET, PATCH, DELETE | CRUD album | ✅ |
+| `/api/albums` | GET, POST | List and create albums | ✅ |
+| `/api/albums/[id]` | GET, PATCH, DELETE | Album CRUD | ✅ |
 
-### Foto
+### Photos
 
-| Endpoint | Metodi | Descrizione | Stato |
+| Endpoint | Methods | Description | Status |
 |---|---|---|---|
-| `/api/photos` | GET, POST | Lista e crea foto | ✅ |
-| `/api/photos/[id]` | GET, PATCH, DELETE | CRUD foto | ✅ |
+| `/api/photos` | GET, POST | List and create photos | ✅ |
+| `/api/photos/[id]` | GET, PATCH, DELETE | Photo CRUD | ✅ |
 
-### Wishlist
+### Wishlists
 
-| Endpoint | Metodi | Descrizione | Stato |
+| Endpoint | Methods | Description | Status |
 |---|---|---|---|
-| `/api/wishlists` | GET, POST | Lista e crea wishlist | ✅ |
-| `/api/wishlists/[id]` | GET, PATCH, DELETE | CRUD wishlist | ✅ |
+| `/api/wishlists` | GET, POST | List and create wishlists | ✅ |
+| `/api/wishlists/[id]` | GET, PATCH, DELETE | Wishlist CRUD | ✅ |
 
-### Wish
+### Wishes
 
-| Endpoint | Metodi | Descrizione | Stato |
+| Endpoint | Methods | Description | Status |
 |---|---|---|---|
-| `/api/wishes` | GET, POST | Lista e crea wish | ✅ |
-| `/api/wishes/[id]` | GET, PATCH, DELETE | CRUD wish | ✅ |
+| `/api/wishes` | GET, POST | List and create wishes | ✅ |
+| `/api/wishes/[id]` | GET, PATCH, DELETE | Wish CRUD | ✅ |
 
-### Funzionalita' secondarie
+### Secondary Features
 
-| Endpoint | Metodi | Descrizione | Stato |
+| Endpoint | Methods | Description | Status |
 |---|---|---|---|
-| `/api/tags` | GET, POST | Lista e crea tag | ✅ |
-| `/api/tags/[id]` | GET, PATCH, DELETE | CRUD tag | ✅ |
-| `/api/tag-categories` | GET, POST | Lista e crea categorie tag | ✅ |
-| `/api/templates` | GET, POST | Lista e crea template | ✅ |
-| `/api/templates/[id]` | GET, PATCH, DELETE | CRUD template | ✅ |
-| `/api/choice-lists` | GET, POST | Lista e crea choice list | ✅ |
-| `/api/inventories` | GET, POST | Lista e crea inventari | ✅ |
-| `/api/loans` | GET, POST | Lista e crea prestiti | ✅ |
-| `/api/scrapers` | GET, POST | Lista e crea scraper manuali | ✅ |
-| `/api/scrapers/collection-preview` | POST | Preview/import manuale metadata collezione | ✅ |
-| `/api/scrapers/item-preview` | POST | Preview/import manuale metadata oggetto | ✅ |
+| `/api/tags` | GET, POST | List and create tags | ✅ |
+| `/api/tags/[id]` | GET, PATCH, DELETE | Tag CRUD | ✅ |
+| `/api/tag-categories` | GET, POST | List and create tag categories | ✅ |
+| `/api/templates` | GET, POST | List and create templates | ✅ |
+| `/api/templates/[id]` | GET, PATCH, DELETE | Template CRUD | ✅ |
+| `/api/choice-lists` | GET, POST | List and create choice lists | ✅ |
+| `/api/inventories` | GET, POST | List and create inventories | ✅ |
+| `/api/loans` | GET, POST | List and create loans | ✅ |
+| `/api/scrapers` | GET, POST | List and create manual scrapers | ✅ |
+| `/api/scrapers/collection-preview` | POST | Manual collection metadata preview/import | ✅ |
+| `/api/scrapers/item-preview` | POST | Manual item metadata preview/import | ✅ |
 
-### Utility
+### Utilities
 
-| Endpoint | Metodi | Descrizione | Stato |
+| Endpoint | Methods | Description | Status |
 |---|---|---|---|
-| `/api/search` | GET | Ricerca full-text su tutte le entità | ✅ |
-| `/api/upload` | POST | Upload immagini con auto-resize thumbnail | ✅ |
-| `/api/logs` | GET | Storico modifiche | ✅ |
+| `/api/search` | GET | Full-text search across all entities | ✅ |
+| `/api/upload` | POST | Image upload with automatic thumbnail resize | ✅ |
+| `/api/logs` | GET | Change history | ✅ |
 
 ## Server Actions
 
-Tutte le operazioni CRUD sono implementate anche come **Server Actions** (file `lib/actions/*.actions.ts`) per integrazione diretta nei component React:
+All CRUD operations are also implemented as **Server Actions** in `lib/actions/*.actions.ts` for direct integration with React components:
 
-| File | Descrizione | Stato |
+| File | Description | Status |
 |---|---|---|
-| `lib/actions/collection.actions.ts` | CRUD collezioni | ✅ |
-| `lib/actions/item.actions.ts` | CRUD oggetti | ✅ |
-| `lib/actions/media.actions.ts` | CRUD media (helper per upload) | ✅ |
-| `lib/actions/photo.actions.ts` | CRUD foto | ✅ |
-| `lib/actions/wish.actions.ts` | CRUD wish | ✅ |
-| `lib/actions/user.actions.ts` | Azioni utente (profilo, settings) | ✅ |
+| `lib/actions/collection.actions.ts` | Collection CRUD | ✅ |
+| `lib/actions/item.actions.ts` | Item CRUD | ✅ |
+| `lib/actions/media.actions.ts` | Media CRUD and upload helpers | ✅ |
+| `lib/actions/photo.actions.ts` | Photo CRUD | ✅ |
+| `lib/actions/wish.actions.ts` | Wish CRUD | ✅ |
+| `lib/actions/user.actions.ts` | User actions: profile and settings | ✅ |
 
-## Componenti React (shadcn/ui)
+## React Components (shadcn/ui)
 
-Organizzati per modulo funzionale in `apps/web/components/`:
+Components are organized by functional module in `apps/web/components/`:
 
-| Modulo | Componenti | Descrizione |
+| Module | Components | Description |
 |---|---|---|
-| `auth/` | `LoginForm`, `RegisterForm` | Form autenticazione |
-| `collections/` | `CollectionList`, `CollectionForm`, `CollectionBreadcrumb`, `ItemTree`, `ItemForm`, `ItemDetail` | Componenti collezioni e oggetti |
-| `albums/` | `AlbumList`, `AlbumForm`, `AlbumBreadcrumb`, `PhotoGrid`, `PhotoUpload` | Componenti album e foto |
-| `wishlists/` | `WishlistList`, `WishlistForm`, `WishlistBreadcrumb`, `WishGrid`, `WishForm` | Componenti wishlist e wish |
-| `tags/` | `TagList`, `TagForm` | Gestione tag |
-| `templates/` | `TemplateList`, `TemplateForm`, `FieldEditor` | Template e field |
-| `scrapers/` | `ScraperForm` | Configurazione scraper manuali |
-| `public/` | `PublicShell`, `PublicCards`, `CopyPublicLinkButton` | Viste pubbliche e sharing |
-| `statistics/` | `StatsCard`, `CollectionsChart`, `ItemsChart` | Visualizzazione statistiche |
-| `history/` | `LogTable`, `LogFilter` | Storico modifiche |
-| `search/` | `SearchBox`, `SearchResults` | Ricerca full-text |
-| `settings/` | `ProfileForm`, `ChangePasswordForm` | Impostazioni utente |
-| `shared/` | `Sidebar`, `Navbar`, `Breadcrumb`, `LoadingSpinner`, `Dialog`, `Table` | Componenti shared UI |
-| `layout/` | `ProtectedLayout`, `AuthLayout`, `DashboardLayout` | Layout comuni |
+| `auth/` | `LoginForm`, `RegisterForm` | Authentication forms |
+| `collections/` | `CollectionList`, `CollectionForm`, `CollectionBreadcrumb`, `ItemTree`, `ItemForm`, `ItemDetail` | Collections and items components |
+| `albums/` | `AlbumList`, `AlbumForm`, `AlbumBreadcrumb`, `PhotoGrid`, `PhotoUpload` | Albums and photos components |
+| `wishlists/` | `WishlistList`, `WishlistForm`, `WishlistBreadcrumb`, `WishGrid`, `WishForm` | Wishlists and wishes components |
+| `tags/` | `TagList`, `TagForm` | Tag management |
+| `templates/` | `TemplateList`, `TemplateForm`, `FieldEditor` | Templates and fields |
+| `scrapers/` | `ScraperForm` | Manual scraper configuration |
+| `public/` | `PublicShell`, `PublicCards`, `CopyPublicLinkButton` | Public views and sharing |
+| `statistics/` | `StatsCard`, `CollectionsChart`, `ItemsChart` | Statistics visualization |
+| `history/` | `LogTable`, `LogFilter` | Change history |
+| `search/` | `SearchBox`, `SearchResults` | Full-text search |
+| `settings/` | `ProfileForm`, `ChangePasswordForm` | User settings |
+| `shared/` | `Sidebar`, `Navbar`, `Breadcrumb`, `LoadingSpinner`, `Dialog`, `Table` | Shared UI components |
+| `layout/` | `ProtectedLayout`, `AuthLayout`, `DashboardLayout` | Shared layouts |

@@ -227,7 +227,8 @@
     "media": "Głoska bezdźwięczna",
     "video": "Wideo",
     "unknownFile": "Pobierz plik",
-    "relatedItems": "Elementy powiązane z {count}"
+    "relatedItems": "Elementy powiązane z {count}",
+    "mainImage": "Główny obraz"
   },
   "albums": {
     "title": "Albumy",

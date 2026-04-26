@@ -15,7 +15,7 @@
     "start": "npm run start --workspace=@stackly/web",
     "test": "turbo run test",
     "type-check": "dotenv -e .env -- turbo run type-check",
-    "i18n:validate": "python3 scripts/validate_i18n_messages.py",
+    "i18n:validate": "node scripts/validate-i18n-messages.mjs",
     "legacy:migrate": "dotenv -e .env -- node scripts/legacy-migrate-db.mjs",
     "legacy:validate": "dotenv -e .env -- node scripts/legacy-validate-db.mjs",
     "legacy:uploads:audit": "dotenv -e .env -- node scripts/legacy-audit-uploads.mjs",

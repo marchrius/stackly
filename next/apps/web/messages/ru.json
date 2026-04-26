@@ -227,7 +227,8 @@
     "media": "СМИ",
     "video": "Видео",
     "unknownFile": "Скачать файл",
-    "relatedItems": "{count} сопутствующие товары"
+    "relatedItems": "{count} сопутствующие товары",
+    "mainImage": "Основное изображение"
   },
   "albums": {
     "title": "Альбомы",

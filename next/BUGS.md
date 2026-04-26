@@ -1,284 +1,284 @@
 # BUGS.md
 
-Registro dei bug noti per il progetto `next/`.
+Known bug register for the `next/` project.
 
-## Regola operativa
+## Operating Rule
 
-- Ogni volta che viene individuato un bug funzionale, di UX, di build o di integrazione nel progetto `next/`, va aggiunto qui subito.
-- Ogni entry deve includere almeno: stato, area coinvolta, descrizione del problema, comportamento atteso e note utili per la riproduzione o la diagnosi.
-- Quando un bug viene risolto, la relativa entry va aggiornata esplicitando la correzione o lo stato finale.
+- Whenever a functional, UX, build, or integration bug is found in the `next/` project, add it here immediately.
+- Each entry must include at least: status, affected area, problem description, expected behavior, and useful reproduction or diagnostic notes.
+- When a bug is fixed, update the related entry with the fix or final status.
 
 ---
 
-## Bug aperti (nessuno)
+## Open Bugs (none)
 
-Nessun bug aperto al momento.
+No open bugs at the moment.
 
-## Bug risolti
+## Fixed Bugs
 
-### 0. Build Next falliva durante il prerender delle pagine 404/500
+### 0. Next build failed while prerendering 404/500 pages
 
-- Stato: completato (risolto)
-- Area: `apps/web` · App Router · build produzione
-- Gravità: alta
+- Status: completed (fixed)
+- Area: `apps/web` · App Router · production build
+- Severity: high
 
-**Descrizione**
+**Description**
 
-Durante `npm run build`, Next.js tentava di prerenderizzare le pagine di errore e falliva con `Error: <Html> should not be imported outside of pages/_document`.
+During `npm run build`, Next.js tried to prerender error pages and failed with `Error: <Html> should not be imported outside of pages/_document`.
 
-**Comportamento atteso**
+**Expected Behavior**
 
-La build produzione deve completare anche per le route di errore/not-found dell'App Router.
+The production build must complete successfully, including App Router error and not-found routes.
 
-**Comportamento osservato**
+**Observed Behavior**
 
-La build si interrompeva su `/_error` durante il prerender di `/404` o `/500`.
+The build stopped on `/_error` while prerendering `/404` or `/500`.
 
-**Note tecniche**
+**Technical Notes**
 
-- Causa individuata: `dotenv` caricava `NODE_ENV="development"` da `next/.env` anche durante `next build`.
-- Correzione applicata forzando `NODE_ENV=production` negli script `build` root/web dopo il caricamento dell'ambiente.
-- Aggiunte anche pagine App Router dedicate per `not-found` e `global-error`, così la UI di errore resta controllata e localizzata.
+- Root cause: `dotenv` loaded `NODE_ENV="development"` from `next/.env` during `next build`.
+- Fixed by forcing `NODE_ENV=production` in the root/web `build` scripts after loading the environment.
+- Added dedicated App Router pages for `not-found` and `global-error`, keeping the error UI controlled and localized.
 
-### 0. Preview scraper item ignorava gli header HTTP personalizzati
+### 0. Item scraper preview ignored custom HTTP headers
 
-- Stato: completato (risolto)
-- Area: `apps/web` · scraper item preview · header HTTP
-- Gravità: media
+- Status: completed (fixed)
+- Area: `apps/web` · item scraper preview · HTTP headers
+- Severity: medium
 
-**Descrizione**
+**Description**
 
-La preview degli scraper item leggeva gli header salvati cercando le chiavi `name/value`, mentre il form e la preview collection salvano e leggono `header/value`.
+The item scraper preview read saved headers by looking for `name/value` keys, while the form and collection preview save and read `header/value`.
 
-**Comportamento atteso**
+**Expected Behavior**
 
-La preview item deve inviare gli stessi header personalizzati configurati dall'utente nello scraper, in modo coerente con la preview collection.
+The item preview must send the same custom headers configured by the user in the scraper, consistently with the collection preview.
 
-**Comportamento osservato**
+**Observed Behavior**
 
-Gli header personalizzati venivano scartati durante la fetch della sorgente remota per gli item, causando preview diverse o fallite per siti che richiedono header specifici.
+Custom headers were discarded while fetching the remote source for items, causing different or failed previews for sites that require specific headers.
 
-**Note tecniche**
+**Technical Notes**
 
-- Correzione applicata in `apps/web/app/api/scrapers/item-preview/route.ts`.
-- Il flusso di scraping resta manuale: la fetch remota parte solo dopo l'azione esplicita di preview/import dell'utente.
+- Fixed in `apps/web/app/api/scrapers/item-preview/route.ts`.
+- The scraping flow remains manual: the remote fetch starts only after the user's explicit preview/import action.
 
-### 0. Immagine Docker standalone mancava dipendenze runtime del CLI Prisma
+### 0. Standalone Docker image was missing Prisma CLI runtime dependencies
 
-- Stato: completato (risolto)
-- Area: `Dockerfile` · runtime container · Prisma migrations
-- Gravità: alta
+- Status: completed (fixed)
+- Area: `Dockerfile` · container runtime · Prisma migrations
+- Severity: high
 
-**Descrizione**
+**Description**
 
-Dopo l'ottimizzazione dell'immagine Docker con output standalone, il runtime copiava il CLI Prisma e `@prisma/*` ma non tutte le dipendenze transitive necessarie al comando `prisma migrate deploy`.
+After optimizing the Docker image with standalone output, the runtime copied the Prisma CLI and `@prisma/*`, but not all transitive dependencies required by `prisma migrate deploy`.
 
-**Comportamento atteso**
+**Expected Behavior**
 
-Il container deve poter applicare le migration Prisma all'avvio senza copiare l'intera `node_modules` di build.
+The container must be able to apply Prisma migrations at startup without copying the entire build `node_modules`.
 
-**Comportamento osservato**
+**Observed Behavior**
 
-L'entrypoint falliva con `Cannot find module 'effect'` importato da `@prisma/config`.
+The entrypoint failed with `Cannot find module 'effect'`, imported by `@prisma/config`.
 
-**Note tecniche**
+**Technical Notes**
 
-- Correzione applicata in `Dockerfile`.
-- Copiate nel runtime standalone le dipendenze transitive del CLI Prisma necessarie a `@prisma/config` e ai loader usati da `prisma migrate deploy`.
+- Fixed in `Dockerfile`.
+- The standalone runtime now copies the Prisma CLI transitive dependencies required by `@prisma/config` and the loaders used by `prisma migrate deploy`.
 
-### 0. URL upload legacy con prefisso duplicato nelle immagini
+### 0. Legacy upload URLs could duplicate the upload prefix in image paths
 
-- Stato: completato (risolto)
-- Area: `apps/web` · rendering immagini upload · migrazione legacy
-- Gravità: alta
+- Status: completed (fixed)
+- Area: `apps/web` · upload image rendering · legacy migration
+- Severity: high
 
-**Descrizione**
+**Description**
 
-Le immagini migrate dal legacy potevano non caricarsi nella UI perché i path salvati nel database includevano gia' il prefisso `uploads/`, mentre molti componenti aggiungevano sempre `/uploads/` durante il rendering.
+Images migrated from the legacy app could fail to load in the UI because paths saved in the database already included the `uploads/` prefix, while many components always prepended `/uploads/` during rendering.
 
-**Comportamento atteso**
+**Expected Behavior**
 
-I path upload devono essere normalizzati in modo unico, accettando sia valori nuovi come `<user>/<file>` sia valori legacy come `uploads/<user>/<file>` o `/uploads/<user>/<file>`.
+Upload paths must be normalized consistently, accepting both new values like `<user>/<file>` and legacy values like `uploads/<user>/<file>` or `/uploads/<user>/<file>`.
 
-**Comportamento osservato**
+**Observed Behavior**
 
-La UI generava URL come `/uploads/uploads/...`, causando immagini rotte per cover, thumbnail, media item e avatar utente.
+The UI generated URLs like `/uploads/uploads/...`, causing broken cover images, thumbnails, item media, and user avatars.
 
-**Note tecniche**
+**Technical Notes**
 
-- Correzione applicata in `packages/lib/src/utils/index.ts` centralizzando la normalizzazione in `getUploadUrl`.
-- Aggiornati componenti e helper web che costruivano manualmente URL upload.
-- Aggiunta copertura regressiva in `apps/web/test/lib/item-detail.test.ts` per i path legacy con prefisso `uploads/`.
+- Fixed in `packages/lib/src/utils/index.ts` by centralizing normalization in `getUploadUrl`.
+- Updated web components and helpers that manually built upload URLs.
+- Added regression coverage in `apps/web/test/lib/item-detail.test.ts` for legacy paths prefixed with `uploads/`.
 
-### 0. Docker build non generava il client Prisma prima di `next build`
+### 0. Docker build did not generate the Prisma client before `next build`
 
-- Stato: completato (risolto)
-- Area: `Dockerfile` · build produzione Next.js
-- Gravità: alta
+- Status: completed (fixed)
+- Area: `Dockerfile` · Next.js production build
+- Severity: high
 
-**Descrizione**
+**Description**
 
-La build dell'immagine Docker falliva durante `npx next build` perché `@prisma/client` non era stato generato nello stage builder.
+The Docker image build failed during `npx next build` because `@prisma/client` had not been generated in the builder stage.
 
-**Comportamento atteso**
+**Expected Behavior**
 
-L'immagine Docker deve generare il client Prisma prima della build Next.js, così le pagine server possono importare `@stackly/db` senza errori.
+The Docker image must generate the Prisma client before the Next.js build, so server pages can import `@stackly/db` without errors.
 
-**Comportamento osservato**
+**Observed Behavior**
 
-Il build falliva con errore `@prisma/client did not initialize yet. Please run "prisma generate"`.
+The build failed with `@prisma/client did not initialize yet. Please run "prisma generate"`.
 
-**Note tecniche**
+**Technical Notes**
 
-- Correzione applicata in `Dockerfile`: aggiunto `RUN cd packages/db && npx prisma generate` prima di `RUN cd apps/web && npx next build`.
+- Fixed in `Dockerfile`: added `RUN cd packages/db && npx prisma generate` before `RUN cd apps/web && npx next build`.
 
-### 0. Migrazione legacy non convertiva array PostgreSQL/Doctrine in JSON valido
+### 0. Legacy migration did not convert PostgreSQL/Doctrine arrays to valid JSON
 
-- Stato: completato (risolto)
-- Area: `scripts` · migrazione legacy PostgreSQL
-- Gravità: alta
+- Status: completed (fixed)
+- Area: `scripts` · PostgreSQL legacy migration
+- Severity: high
 
-**Descrizione**
+**Description**
 
-Durante l'import reale da `koi_*` a `stk_*`, i campi legacy salvati come array PostgreSQL/Doctrine, ad esempio `{"ROLE_USER"}`, venivano inoltrati ai campi JSONB target senza conversione.
+During the real import from `koi_*` to `stk_*`, legacy fields stored as PostgreSQL/Doctrine arrays, for example `{"ROLE_USER"}`, were sent to target JSONB fields without conversion.
 
-**Comportamento atteso**
+**Expected Behavior**
 
-Lo script di migrazione deve convertire gli array legacy in array JSON validi prima dell'inserimento nel database target Prisma.
+The migration script must convert legacy arrays to valid JSON arrays before inserting into the Prisma target database.
 
-**Comportamento osservato**
+**Observed Behavior**
 
-PostgreSQL rifiutava l'inserimento su JSONB con errore `invalid input syntax for type json`.
+PostgreSQL rejected the JSONB insert with `invalid input syntax for type json`.
 
-**Note tecniche**
+**Technical Notes**
 
-- Correzione applicata in `scripts/legacy-migrate-db.mjs`.
-- Aggiunto parsing per literal array PostgreSQL `{...}` oltre ai formati JSON e PHP serialized array gia' gestiti.
-- Corretto anche il mapping `null` delle colonne sorgente, ora interpretato come "usa la stessa colonna target", e forzata la serializzazione JSON valida per i campi JSONB.
-- Aggiunto uso dei fallback anche quando la colonna legacy esiste ma contiene `NULL`, necessario per colonne target `NOT NULL` come `parent_visibility`.
-- L'errore e' avvenuto dentro transazione: l'import parziale e' stato rollbackato.
+- Fixed in `scripts/legacy-migrate-db.mjs`.
+- Added parsing for PostgreSQL array literals `{...}` in addition to the already supported JSON and PHP serialized array formats.
+- Also fixed `null` mapping for source columns, now interpreted as "use the same target column", and forced valid JSON serialization for JSONB fields.
+- Added fallback usage even when the legacy column exists but contains `NULL`, which is required for `NOT NULL` target columns like `parent_visibility`.
+- The error happened inside a transaction: the partial import was rolled back.
 
-### 1. Tema utente non applicato dopo il salvataggio delle preferenze
+### 1. User theme was not applied after saving preferences
 
-- Stato: completato (risolto)
-- Area: `apps/web` · impostazioni utente · theming
-- Gravità: alta
+- Status: completed (fixed)
+- Area: `apps/web` · user settings · theming
+- Severity: high
 
-**Descrizione**
+**Description**
 
-La selezione del tema nelle impostazioni veniva salvata, ma il tema scelto non veniva applicato correttamente all'interfaccia dopo il salvataggio delle preferenze.
+The theme selection in settings was saved, but the selected theme was not applied correctly to the interface after saving preferences.
 
-**Comportamento atteso**
+**Expected Behavior**
 
-Dopo aver selezionato un tema e salvato le preferenze, l'interfaccia deve aggiornarsi usando il tema scelto dall'utente.
+After selecting a theme and saving preferences, the UI must update using the user's selected theme.
 
-**Comportamento osservato**
+**Observed Behavior**
 
-Il cambio tema non era affidabile: sincronizzazione locale frammentata nella sola pagina settings, aggiornamento classe tema non sempre coerente e flusso di persistenza fragile.
+Theme switching was unreliable: local synchronization was fragmented inside the settings page only, theme class updates were not always consistent, and the persistence flow was fragile.
 
-**Note tecniche**
+**Technical Notes**
 
-- Correzioni applicate in `apps/web/components/settings/SettingsForm.tsx`, `apps/web/app/layout.tsx`, `apps/web/lib/actions/user.actions.ts`, `apps/web/lib/theme/themes.ts`, `apps/web/app/globals.css`, `packages/ui/src/components/{badge,dialog}.tsx`, `apps/web/components/settings/ThemePicker.tsx`, `apps/web/app/(dashboard)/{page.tsx,history/page.tsx}`, `apps/web/components/{shared/SearchResults.tsx,statistics/StatisticsCharts.tsx,wishlists/WishlistDetail.tsx}`
-- Il flusso non usa piu' cookie per il tema: il server decide il tema leggendo la preferenza persistita dell'utente e il client salva poi forza un reload completo del layout.
-- Ultimo intervento: semplificata l'applicazione del tema sul root document (`html.theme-*`), aggiunto `color-scheme`, verificato il supporto Tailwind alle CSS variables e sostituiti diversi colori hardcoded che bypassavano i token del tema.
-- Verifica finale: aggiunto test regressivo `apps/web/test/lib/actions/user.actions.test.ts` (persistenza `theme`, invalidazione cache e validazione input). Suite `npm run test` e `npm run type-check` in `next/apps/web` entrambe verdi.
-- Ultimo rewrite: rimossi completamente provider/boundary client-side (`AppThemeProvider`, `AppThemeBoundary`) e tutta la gestione live del tema nel client.
-- Flusso attuale semplificato e stabile: selezione tema in `ThemePicker` (radio), persistenza via `updateSettings`, applicazione tema esclusivamente server-driven in `app/layout.tsx` con classe `html.theme-*`, poi reload completo della pagina dopo il salvataggio.
-- Confermata la rimozione del vecchio sync locale (`ThemeBodySync`) per evitare drift tra stato client e classe effettiva del documento.
-- Verifica tecnica post-rewrite: `npm run test`, `npm run type-check` e `npm run build` in `next/apps/web` tutte verdi.
+- Fixes applied in `apps/web/components/settings/SettingsForm.tsx`, `apps/web/app/layout.tsx`, `apps/web/lib/actions/user.actions.ts`, `apps/web/lib/theme/themes.ts`, `apps/web/app/globals.css`, `packages/ui/src/components/{badge,dialog}.tsx`, `apps/web/components/settings/ThemePicker.tsx`, `apps/web/app/(dashboard)/{page.tsx,history/page.tsx}`, `apps/web/components/{shared/SearchResults.tsx,statistics/StatisticsCharts.tsx,wishlists/WishlistDetail.tsx}`.
+- The flow no longer uses cookies for the theme: the server decides the theme by reading the user's persisted preference, and the client then forces a full layout reload after saving.
+- Last intervention: simplified theme application on the root document (`html.theme-*`), added `color-scheme`, verified Tailwind CSS variable support, and replaced several hardcoded colors that bypassed theme tokens.
+- Final verification: added regression test `apps/web/test/lib/actions/user.actions.test.ts` for `theme` persistence, cache invalidation, and input validation. Both `npm run test` and `npm run type-check` in `next/apps/web` passed.
+- Last rewrite: fully removed client-side providers/boundaries (`AppThemeProvider`, `AppThemeBoundary`) and all live theme management in the client.
+- Current flow is simpler and stable: theme selection in `ThemePicker` (radio), persistence through `updateSettings`, server-driven theme application in `app/layout.tsx` through the `html.theme-*` class, then full page reload after saving.
+- Confirmed removal of the old local sync (`ThemeBodySync`) to avoid drift between client state and the effective document class.
+- Post-rewrite technical verification: `npm run test`, `npm run type-check`, and `npm run build` in `next/apps/web` all passed.
 
-### 2. Lo schema Prisma utente non esponeva la display configuration dell'indice collezioni
+### 2. The Prisma user schema did not expose the collection index display configuration
 
-- Stato: risolto
-- Area: `packages/db` · schema Prisma · collections index
-- Gravità: media
+- Status: fixed
+- Area: `packages/db` · Prisma schema · collections index
+- Severity: medium
 
-**Descrizione**
+**Description**
 
-Il legacy salva l'indice collezioni tramite `User.collectionsDisplayConfiguration`, ma il modello Prisma del progetto `next/` non esponeva ancora la relativa relazione utente.
+The legacy app stores the collection index through `User.collectionsDisplayConfiguration`, but the Prisma model in the `next/` project did not yet expose the related user relation.
 
-**Comportamento atteso**
+**Expected Behavior**
 
-Il progetto `next/` deve poter leggere e persistere la display configuration dell'utente per la pagina `/collections`, così la lista collezioni può ripristinare modalità griglia/lista, ordinamento e colonne.
+The `next/` project must be able to read and persist the user's display configuration for `/collections`, so the collection list can restore grid/list mode, sorting, and columns.
 
-**Comportamento osservato**
+**Observed Behavior**
 
-`schema.prisma` esponeva `DisplayConfiguration` per collection children/items e search, ma non la relazione `User.collectionsDisplayConfiguration`, quindi la schermata indice collezioni non poteva offrire né consumare le opzioni di visualizzazione legacy.
+`schema.prisma` exposed `DisplayConfiguration` for collection children/items and search, but not the `User.collectionsDisplayConfiguration` relation. As a result, the collection index screen could neither offer nor consume legacy display options.
 
-**Note tecniche**
+**Technical Notes**
 
-- Correzione applicata in `packages/db/prisma/schema.prisma`, `apps/web/lib/actions/user.actions.ts`, `apps/web/app/(dashboard)/collections/page.tsx`, `apps/web/app/(dashboard)/collections/edit/page.tsx`, `apps/web/components/collections/CollectionGrid.tsx`, `apps/web/components/collections/CollectionList.tsx`
-- Aggiunta copertura regressiva in `apps/web/test/lib/collection-index-display.test.ts`
+- Fixed in `packages/db/prisma/schema.prisma`, `apps/web/lib/actions/user.actions.ts`, `apps/web/app/(dashboard)/collections/page.tsx`, `apps/web/app/(dashboard)/collections/edit/page.tsx`, `apps/web/components/collections/CollectionGrid.tsx`, `apps/web/components/collections/CollectionList.tsx`.
+- Added regression coverage in `apps/web/test/lib/collection-index-display.test.ts`.
 
-### 3. `EmptyState` rompeva il rendering Server -> Client
+### 3. `EmptyState` broke Server -> Client rendering
 
-- Stato: completato (risolto)
-- Area: `apps/web` · componenti shared · empty states
-- Gravità: alta
+- Status: completed (fixed)
+- Area: `apps/web` · shared components · empty states
+- Severity: high
 
-**Descrizione**
+**Description**
 
-`EmptyState` riceveva un componente icona come prop da vari componenti server (`TagList`, pagine empty state varie). In runtime Next.js serializzava quell'icona come funzione non supportata e generava errori di boundary Server -> Client.
+`EmptyState` received an icon component as a prop from several server components (`TagList`, various empty-state pages). At runtime, Next.js serialized that icon as an unsupported function and generated Server -> Client boundary errors.
 
-**Comportamento atteso**
+**Expected Behavior**
 
-Le pagine e le liste con stato vuoto devono poter renderizzare l'icona senza errori di serializzazione tra Server Components e Client Components.
+Pages and lists with empty states must be able to render the icon without serialization errors between Server Components and Client Components.
 
-**Comportamento osservato**
+**Observed Behavior**
 
-Il rendering falliva con errori tipo "Functions cannot be passed directly to Client Components" e "Only plain objects can be passed to Client Components", bloccando la pagina dei tag e potenzialmente altre empty state server-side.
+Rendering failed with errors like "Functions cannot be passed directly to Client Components" and "Only plain objects can be passed to Client Components", blocking the tags page and potentially other server-side empty states.
 
-**Note tecniche**
+**Technical Notes**
 
-- Correzione applicata in `apps/web/components/shared/EmptyState.tsx` rimuovendo il boundary client inutile.
-- Questo fix elimina il passaggio di un componente icona come prop serializzata; le empty state restano renderizzabili dai componenti server senza errori.
+- Fixed in `apps/web/components/shared/EmptyState.tsx` by removing the unnecessary client boundary.
+- This fix removes the icon component passing as a serialized prop; empty states remain renderable from server components without errors.
 
-## Storico bug risolti
+## Fixed Bug History
 
-### 4. Lo schema Prisma delle collection non esponeva `scrapedFromUrl`
+### 4. The Prisma collection schema did not expose `scrapedFromUrl`
 
-- Stato: risolto
-- Area: `packages/db` · schema Prisma · collection form scraping
-- Gravità: media
+- Status: fixed
+- Area: `packages/db` · Prisma schema · collection form scraping
+- Severity: medium
 
-**Descrizione**
+**Description**
 
-Il legacy espone `Collection.scrapedFromUrl` e il form collezione usa questo dato nel workflow di scraping/import, ma il modello Prisma del progetto `next/` non includeva ancora la colonna.
+The legacy app exposes `Collection.scrapedFromUrl`, and the collection form uses that value in the scraping/import workflow, but the Prisma model in the `next/` project did not yet include the column.
 
-**Comportamento atteso**
+**Expected Behavior**
 
-Il modello `Collection` del progetto `next/` deve leggere e persistere anche `scrapedFromUrl`, così il form può salvare l'URL sorgente dello scrape e mantenere la parità con il legacy.
+The `Collection` model in the `next/` project must read and persist `scrapedFromUrl` as well, so the form can save the scrape source URL and keep parity with the legacy app.
 
-**Comportamento osservato**
+**Observed Behavior**
 
-`schema.prisma` includeva `scrapedFromUrl` per `Item` ma non per `Collection`, quindi il nuovo form collezione non poteva completare correttamente il flow di scraping/import.
+`schema.prisma` included `scrapedFromUrl` for `Item` but not for `Collection`, so the new collection form could not complete the scraping/import flow correctly.
 
-**Note tecniche**
+**Technical Notes**
 
-- Correzione applicata in `packages/db/prisma/schema.prisma`, `apps/web/lib/actions/collection.actions.ts`, `apps/web/app/api/collections/route.ts`, `apps/web/app/api/collections/[id]/route.ts`, `apps/web/components/collections/CollectionForm.tsx`
-- Aggiunti `apps/web/app/api/scrapers/collection-preview/route.ts`, `apps/web/lib/server/scraper-preview.ts` e copertura regressiva in `apps/web/test/lib/scraper-preview.test.ts`
+- Fixed in `packages/db/prisma/schema.prisma`, `apps/web/lib/actions/collection.actions.ts`, `apps/web/app/api/collections/route.ts`, `apps/web/app/api/collections/[id]/route.ts`, `apps/web/components/collections/CollectionForm.tsx`.
+- Added `apps/web/app/api/scrapers/collection-preview/route.ts`, `apps/web/lib/server/scraper-preview.ts`, and regression coverage in `apps/web/test/lib/scraper-preview.test.ts`.
 
 ---
 
-### 5. La valuta dei datum `price` degli item non veniva persistita
+### 5. Item `price` datum currency was not persisted
 
-- Stato: risolto
+- Status: fixed
 - Area: `apps/web` · item form · datum persistence · item API
-- Gravità: media
+- Severity: medium
 
-**Descrizione**
+**Description**
 
-I campi custom di tipo `price` negli item salvavano il valore numerico ma non la valuta associata, quindi la parità con il comportamento legacy restava incompleta.
+Custom `price` fields in items saved the numeric value but not the associated currency, leaving parity with the legacy behavior incomplete.
 
-**Comportamento atteso**
+**Expected Behavior**
 
-Quando un utente compila o modifica un datum `price`, la valuta selezionata deve viaggiare dal form alla persistenza e tornare correttamente nelle pagine dettaglio e nelle API item.
+When a user fills in or edits a `price` datum, the selected currency must travel from the form to persistence and return correctly in detail pages and item APIs.
 
-**Comportamento osservato**
+**Observed Behavior**
 
-`Datum.currency` rimaneva `null` perché il payload item non la serializzava/persistiva, e il dettaglio item mostrava `USD` come fallback implicito anche in assenza di una valuta reale.
+`Datum.currency` remained `null` because the item payload did not serialize/persist it, and the item detail showed `USD` as an implicit fallback even when no real currency existed.
 
-**Note tecniche**
+**Technical Notes**
 
-- Correzione applicata in `apps/web/components/items/ItemForm.tsx`, `apps/web/lib/actions/item.actions.ts`, `apps/web/lib/item-persistence.ts`, `apps/web/app/api/items/route.ts`, `apps/web/app/api/items/[id]/route.ts`, `apps/web/components/items/ItemDetail.tsx`
-- Aggiunta copertura regressiva in `apps/web/test/lib/item-persistence.test.ts` e aggiornato `apps/web/test/app/api/items.route.test.ts`
+- Fixed in `apps/web/components/items/ItemForm.tsx`, `apps/web/lib/actions/item.actions.ts`, `apps/web/lib/item-persistence.ts`, `apps/web/app/api/items/route.ts`, `apps/web/app/api/items/[id]/route.ts`, `apps/web/components/items/ItemDetail.tsx`.
+- Added regression coverage in `apps/web/test/lib/item-persistence.test.ts` and updated `apps/web/test/app/api/items.route.test.ts`.

@@ -227,7 +227,8 @@
     "media": "Medya",
     "video": "Video dosyası",
     "unknownFile": "Dosyayı indir",
-    "relatedItems": "{count} ile ilgili öğeler"
+    "relatedItems": "{count} ile ilgili öğeler",
+    "mainImage": "Ana görsel"
   },
   "albums": {
     "title": "Albümler",
