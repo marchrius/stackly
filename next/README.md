@@ -1,6 +1,31 @@
 # Stackly — Next.js (v2.x)
 
-Versione full-stack Next.js di Stackly. Monorepo Turborepo con App Router, Prisma, shadcn/ui e NextAuth.js v5.
+Versione full-stack Next.js di Stackly, il collection manager self-hosted per catalogare collezioni fisiche di qualsiasi tipo: libri, DVD, fumetti, giochi, francobolli, album fotografici e wishlist.
+
+La nuova app mantiene il modello a gerarchia tipo directory/file: puoi creare collezioni e sottocollezioni, poi inserire oggetti con metadata personalizzati, tag, immagini, file, link e campi definiti dall'utente. Gli scraper sono configurabili dall'utente e vengono eseguiti solo manualmente tramite preview/import: Stackly non scarica metadata automaticamente.
+
+Stack tecnico: monorepo Turborepo con Next.js App Router, Prisma, shadcn/ui, Tailwind CSS, NextAuth.js v5 e PostgreSQL.
+
+## Funzionalita' prodotto
+
+| Funzionalita' | Stato |
+|---|---|
+| Gestione collezioni, sottocollezioni e oggetti | ✅ Implementata |
+| Metadata liberi sugli oggetti e sulle collezioni (`Datum`, template, choice list) | ✅ Implementata |
+| Tag e categorie tag per raggruppare oggetti tra collezioni diverse | ✅ Implementata |
+| Sharing pubblico base per collezioni, oggetti, album e wishlist pubbliche | ✅ Implementato |
+| Wishlist e wish | ✅ Implementate |
+| Prestiti oggetti | ✅ Implementati |
+| Multi-user con ruoli utente/admin | ✅ Implementato |
+| Dark mode e temi personalizzabili | ✅ Implementati |
+| i18n multi-lingua | ✅ Implementato |
+| PWA installabile tramite manifest e icone | ✅ Implementata |
+| REST API | ✅ Implementata |
+| Scraper manuali/configurabili | ✅ Implementati |
+
+## Compatibilita' database
+
+La versione Next.js v2 usa **PostgreSQL** tramite Prisma. Il supporto legacy a MySQL/MariaDB non fa parte di questo ciclo di conversione ed e' intenzionalmente escluso dalla configurazione attuale.
 
 ## Struttura
 
@@ -65,7 +90,9 @@ Non creare `apps/web/.env` o `packages/db/.env`: tutti gli script workspace legg
 
 ## Compatibilità con il DB Legacy
 
-Lo schema Prisma usa i **nomi di tabella originali** (`stk_*`), quindi è possibile puntare allo stesso PostgreSQL usato dal backend Symfony. Le password sono compatibili: Symfony usa `bcrypt $2y$` che viene normalizzato a `$2b$` per `bcryptjs` (Node.js).
+Lo schema Prisma usa i **nomi di tabella target** (`stk_*`) e PostgreSQL. Le password legacy sono compatibili: Symfony usa `bcrypt $2y$` che viene normalizzato a `$2b$` per `bcryptjs` (Node.js).
+
+Per importare un database legacy `koi_*` verso il nuovo schema `stk_*`, usare gli script `legacy:migrate`, `legacy:validate` e `legacy:uploads:*`.
 
 ## Comandi
 
@@ -96,25 +123,29 @@ Per la migrazione PostgreSQL legacy verso il nuovo schema Prisma, vedere `LEGACY
 Il legacy espone solo il runtime Symfony/PHP dai file Docker alla root del repository. Per il nuovo stack Next.js usare invece:
 
 - `next/Dockerfile` per la build/runtime container del monorepo `next/`
-- `docker-compose.next.dist.yml` alla root per un setup di esempio con app Next.js + PostgreSQL
+- `next/Dockerfile.scratch` per una variante runtime minimale basata su `scratch`
+- `next/docker-compose.yml` per avviare app Next.js + PostgreSQL usando l'immagine pubblicata su GHCR
 
 ### Avvio locale del runtime container
 
 ```bash
-# Dalla root del repository
-cp next/.env.example next/.env
-
-# Modifica DATABASE_URL, NEXTAUTH_SECRET e NEXTAUTH_URL
-docker compose -f docker-compose.next.dist.yml up --build
+# Dalla cartella next/
+docker compose up -d
 ```
 
 ### Note operative di produzione
 
 - Montare il volume persistente su `/var/lib/stackly/uploads` (il container lo collega a `/app/apps/web/public/uploads`)
 - Le operazioni DB avvengono a startup tramite `entrypoint.sh`: crea il DB se non esiste, poi esegue `prisma migrate deploy`
-- Usare `npm run build` per generare `.next/`; l'entrypoint avvia poi `npm run start`
+- La build produzione usa output standalone di Next.js; l'entrypoint avvia `apps/web/server.js`
 - `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL` e `UPLOAD_DIR` devono essere valorizzate a runtime
 - I comandi `maintenance:*` possono essere eseguiti nello stesso container applicativo
+
+## PWA
+
+Stackly include un manifest installabile (`/manifest.webmanifest`) e icone applicazione in `apps/web/public/icons/`.
+
+Il progetto non registra un service worker aggressivo per impostazione predefinita: le pagine autenticate e i dati privati non vengono messi in cache offline automaticamente.
 
 ## Internazionalizzazione (i18n)
 
@@ -190,13 +221,26 @@ npm run i18n:validate
 | `/wishlists/[id]/edit` | Modifica wishlist | ✅ Implementato |
 | `/wishes/[id]` | Dettaglio wish | ✅ Implementato |
 
+### Sharing pubblico
+
+| Route | Descrizione | Stato |
+|---|---|---|
+| `/public/collections/[id]` | Vista pubblica collezione/sottocollezione | ✅ Implementato |
+| `/public/items/[id]` | Vista pubblica oggetto | ✅ Implementato |
+| `/public/albums/[id]` | Vista pubblica album/sotto-album | ✅ Implementato |
+| `/public/wishlists/[id]` | Vista pubblica wishlist/sotto-wishlist | ✅ Implementato |
+| `/user/[username]/wishlists` | Vista compatibile per wishlist pubbliche utente | ✅ Implementato |
+
 ### Funzionalità secondarie
 
 | Route | Descrizione | Stato |
 |---|---|---|
-| `/tags` | Gestione tag e categorie tag | 🔲 Da implementare |
-| `/templates` | Template per struttura oggetti + Field | 🔲 Da implementare |
-| `/loans` | Prestiti attivi | 🔲 Da implementare |
+| `/tags` | Gestione tag e categorie tag | ✅ Implementato |
+| `/templates` | Template per struttura oggetti + Field | ✅ Implementato |
+| `/choice-lists` | Liste di valori riusabili per i campi custom | ✅ Implementato |
+| `/loans` | Prestiti attivi e restituiti | ✅ Implementato |
+| `/inventories` | Inventari | ✅ Implementato |
+| `/scrapers` | Configurazione scraper manuali | ✅ Implementato |
 | `/history` | Storico modifiche (Log) | ✅ Implementato |
 | `/statistics` | Statistiche e grafici | ✅ Implementato |
 | `/search` | Ricerca full-text (Collections, Items, Albums, Photos, Wishlists, Wishes) | ✅ Implementato |
@@ -252,6 +296,22 @@ npm run i18n:validate
 | `/api/wishes` | GET, POST | Lista e crea wish | ✅ |
 | `/api/wishes/[id]` | GET, PATCH, DELETE | CRUD wish | ✅ |
 
+### Funzionalita' secondarie
+
+| Endpoint | Metodi | Descrizione | Stato |
+|---|---|---|---|
+| `/api/tags` | GET, POST | Lista e crea tag | ✅ |
+| `/api/tags/[id]` | GET, PATCH, DELETE | CRUD tag | ✅ |
+| `/api/tag-categories` | GET, POST | Lista e crea categorie tag | ✅ |
+| `/api/templates` | GET, POST | Lista e crea template | ✅ |
+| `/api/templates/[id]` | GET, PATCH, DELETE | CRUD template | ✅ |
+| `/api/choice-lists` | GET, POST | Lista e crea choice list | ✅ |
+| `/api/inventories` | GET, POST | Lista e crea inventari | ✅ |
+| `/api/loans` | GET, POST | Lista e crea prestiti | ✅ |
+| `/api/scrapers` | GET, POST | Lista e crea scraper manuali | ✅ |
+| `/api/scrapers/collection-preview` | POST | Preview/import manuale metadata collezione | ✅ |
+| `/api/scrapers/item-preview` | POST | Preview/import manuale metadata oggetto | ✅ |
+
 ### Utility
 
 | Endpoint | Metodi | Descrizione | Stato |
@@ -283,8 +343,10 @@ Organizzati per modulo funzionale in `apps/web/components/`:
 | `collections/` | `CollectionList`, `CollectionForm`, `CollectionBreadcrumb`, `ItemTree`, `ItemForm`, `ItemDetail` | Componenti collezioni e oggetti |
 | `albums/` | `AlbumList`, `AlbumForm`, `AlbumBreadcrumb`, `PhotoGrid`, `PhotoUpload` | Componenti album e foto |
 | `wishlists/` | `WishlistList`, `WishlistForm`, `WishlistBreadcrumb`, `WishGrid`, `WishForm` | Componenti wishlist e wish |
-| `tags/` | `TagList`, `TagForm` | Gestione tag (🔲 da implementare) |
-| `templates/` | `TemplateList`, `TemplateForm`, `FieldEditor` | Template e field (🔲 da implementare) |
+| `tags/` | `TagList`, `TagForm` | Gestione tag |
+| `templates/` | `TemplateList`, `TemplateForm`, `FieldEditor` | Template e field |
+| `scrapers/` | `ScraperForm` | Configurazione scraper manuali |
+| `public/` | `PublicShell`, `PublicCards`, `CopyPublicLinkButton` | Viste pubbliche e sharing |
 | `statistics/` | `StatsCard`, `CollectionsChart`, `ItemsChart` | Visualizzazione statistiche |
 | `history/` | `LogTable`, `LogFilter` | Storico modifiche |
 | `search/` | `SearchBox`, `SearchResults` | Ricerca full-text |
