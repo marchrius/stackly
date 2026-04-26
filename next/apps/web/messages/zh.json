@@ -19,7 +19,8 @@
     "visibility": "可见性",
     "quantity": "数量",
     "name": "Name",
-    "actions": "Actions"
+    "actions": "Actions",
+    "update": "Update"
   },
   "nav": {
     "collections": "收藏",
@@ -241,7 +242,13 @@
       "visibility": "可见性",
       "changeImage": "更换图片",
       "removeImage": "移除图片",
-      "noParent": "无父级"
+      "noParent": "无父级",
+      "titlePlaceholder": "Album name",
+      "noRootParent": "None (root album)",
+      "colorHelp": "Album identifying color",
+      "previewAlt": "Album preview",
+      "uploadImage": "Upload image",
+      "create": "Create album"
     },
     "delete": {
       "confirm": "确定要删除相册“{name}”吗？此操作不可撤销。"
@@ -261,7 +268,15 @@
       "visibility": "可见性",
       "image": "图片",
       "changeImage": "更换图片",
-      "removeImage": "移除图片"
+      "removeImage": "移除图片",
+      "titlePlaceholder": "Photo title",
+      "album": "Album",
+      "albumPlaceholder": "Select an album",
+      "commentPlaceholder": "Description or notes about the photo",
+      "placePlaceholder": "E.g. Rome, Tuscany...",
+      "previewAlt": "Photo preview",
+      "uploadImage": "Upload image",
+      "save": "Save photo"
     },
     "delete": {
       "confirm": "确定要删除照片“{name}”吗？此操作不可撤销。"
@@ -311,7 +326,15 @@
       "visibility": "可见性",
       "image": "图片",
       "changeImage": "更换图片",
-      "removeImage": "移除图片"
+      "removeImage": "移除图片",
+      "namePlaceholder": "Wish name",
+      "wishlist": "Wishlist",
+      "wishlistPlaceholder": "Select a wishlist",
+      "pricePlaceholder": "E.g. 29.90",
+      "commentPlaceholder": "Additional notes",
+      "previewAlt": "Wish preview",
+      "uploadImage": "Upload image",
+      "create": "Create wish"
     },
     "delete": {
       "confirm": "确定要删除愿望“{name}”吗？此操作不可撤销。"
@@ -426,7 +449,9 @@
   },
   "upload": {
     "clickOrDrop": "点击或将图片拖放到此处",
-    "error": "上传错误"
+    "error": "上传错误",
+    "imageFailed": "Image upload failed",
+    "invalidResponse": "Invalid upload response"
   },
   "tags": {
     "title": "Tags",

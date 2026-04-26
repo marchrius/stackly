@@ -19,7 +19,8 @@
     "visibility": "Visibilità",
     "quantity": "Quantità",
     "name": "Nome",
-    "actions": "Azioni"
+    "actions": "Azioni",
+    "update": "Aggiorna"
   },
   "nav": {
     "collections": "Collezioni",
@@ -241,7 +242,13 @@
       "visibility": "Visibilità",
       "changeImage": "Cambia immagine",
       "removeImage": "Rimuovi immagine",
-      "noParent": "Nessun padre"
+      "noParent": "Nessun padre",
+      "titlePlaceholder": "Nome dell'album",
+      "noRootParent": "Nessuno (album principale)",
+      "colorHelp": "Colore identificativo dell'album",
+      "previewAlt": "Anteprima album",
+      "uploadImage": "Carica immagine",
+      "create": "Crea album"
     },
     "delete": {
       "confirm": "Vuoi eliminare l'album \"{name}\"? Questa azione è irreversibile."
@@ -261,7 +268,15 @@
       "visibility": "Visibilità",
       "image": "Immagine",
       "changeImage": "Cambia immagine",
-      "removeImage": "Rimuovi immagine"
+      "removeImage": "Rimuovi immagine",
+      "titlePlaceholder": "Titolo della foto",
+      "album": "Album",
+      "albumPlaceholder": "Seleziona un album",
+      "commentPlaceholder": "Descrizione o note sulla foto",
+      "placePlaceholder": "Es. Roma, Toscana...",
+      "previewAlt": "Anteprima foto",
+      "uploadImage": "Carica immagine",
+      "save": "Salva foto"
     },
     "delete": {
       "confirm": "Vuoi eliminare la foto \"{name}\"? Questa azione è irreversibile."
@@ -311,7 +326,15 @@
       "visibility": "Visibilità",
       "image": "Immagine",
       "changeImage": "Cambia immagine",
-      "removeImage": "Rimuovi immagine"
+      "removeImage": "Rimuovi immagine",
+      "namePlaceholder": "Nome del desiderio",
+      "wishlist": "Wishlist",
+      "wishlistPlaceholder": "Seleziona una wishlist",
+      "pricePlaceholder": "Es. 29.90",
+      "commentPlaceholder": "Note aggiuntive",
+      "previewAlt": "Anteprima desiderio",
+      "uploadImage": "Carica immagine",
+      "create": "Crea desiderio"
     },
     "delete": {
       "confirm": "Vuoi eliminare il desiderio \"{name}\"? Questa azione è irreversibile."
@@ -426,7 +449,9 @@
   },
   "upload": {
     "clickOrDrop": "Clicca o trascina un'immagine qui",
-    "error": "Errore di upload"
+    "error": "Errore di upload",
+    "imageFailed": "Upload immagine non riuscito",
+    "invalidResponse": "Risposta upload non valida"
   },
   "tags": {
     "title": "Tags",

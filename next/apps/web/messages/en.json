@@ -19,7 +19,8 @@
     "visibility": "Visibility",
     "quantity": "Quantity",
     "name": "Name",
-    "actions": "Actions"
+    "actions": "Actions",
+    "update": "Update"
   },
   "nav": {
     "collections": "Collections",
@@ -241,7 +242,13 @@
       "visibility": "Visibility",
       "changeImage": "Change image",
       "removeImage": "Remove image",
-      "noParent": "No parent"
+      "noParent": "No parent",
+      "titlePlaceholder": "Album name",
+      "noRootParent": "None (root album)",
+      "colorHelp": "Album identifying color",
+      "previewAlt": "Album preview",
+      "uploadImage": "Upload image",
+      "create": "Create album"
     },
     "delete": {
       "confirm": "Do you want to delete the album \"{name}\"? This action is irreversible."
@@ -261,7 +268,15 @@
       "visibility": "Visibility",
       "image": "Image",
       "changeImage": "Change image",
-      "removeImage": "Remove image"
+      "removeImage": "Remove image",
+      "titlePlaceholder": "Photo title",
+      "album": "Album",
+      "albumPlaceholder": "Select an album",
+      "commentPlaceholder": "Description or notes about the photo",
+      "placePlaceholder": "E.g. Rome, Tuscany...",
+      "previewAlt": "Photo preview",
+      "uploadImage": "Upload image",
+      "save": "Save photo"
     },
     "delete": {
       "confirm": "Do you want to delete the photo \"{name}\"? This action is irreversible."
@@ -311,7 +326,15 @@
       "visibility": "Visibility",
       "image": "Image",
       "changeImage": "Change image",
-      "removeImage": "Remove image"
+      "removeImage": "Remove image",
+      "namePlaceholder": "Wish name",
+      "wishlist": "Wishlist",
+      "wishlistPlaceholder": "Select a wishlist",
+      "pricePlaceholder": "E.g. 29.90",
+      "commentPlaceholder": "Additional notes",
+      "previewAlt": "Wish preview",
+      "uploadImage": "Upload image",
+      "create": "Create wish"
     },
     "delete": {
       "confirm": "Do you want to delete the wish \"{name}\"? This action is irreversible."
@@ -426,7 +449,9 @@
   },
   "upload": {
     "clickOrDrop": "Click or drop an image here",
-    "error": "Upload error"
+    "error": "Upload error",
+    "imageFailed": "Image upload failed",
+    "invalidResponse": "Invalid upload response"
   },
   "tags": {
     "title": "Tags",

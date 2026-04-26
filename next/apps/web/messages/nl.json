@@ -19,7 +19,8 @@
     "visibility": "Zichtbaarheid",
     "quantity": "Aantal",
     "name": "Name",
-    "actions": "Actions"
+    "actions": "Actions",
+    "update": "Update"
   },
   "nav": {
     "collections": "Collecties",
@@ -241,7 +242,13 @@
       "visibility": "Zichtbaarheid",
       "changeImage": "Afbeelding wijzigen",
       "removeImage": "Afbeelding verwijderen",
-      "noParent": "Geen bovenliggend element"
+      "noParent": "Geen bovenliggend element",
+      "titlePlaceholder": "Album name",
+      "noRootParent": "None (root album)",
+      "colorHelp": "Album identifying color",
+      "previewAlt": "Album preview",
+      "uploadImage": "Upload image",
+      "create": "Create album"
     },
     "delete": {
       "confirm": "Wil je het album \"{name}\" verwijderen? Deze actie is onomkeerbaar."
@@ -261,7 +268,15 @@
       "visibility": "Zichtbaarheid",
       "image": "Afbeelding",
       "changeImage": "Afbeelding wijzigen",
-      "removeImage": "Afbeelding verwijderen"
+      "removeImage": "Afbeelding verwijderen",
+      "titlePlaceholder": "Photo title",
+      "album": "Album",
+      "albumPlaceholder": "Select an album",
+      "commentPlaceholder": "Description or notes about the photo",
+      "placePlaceholder": "E.g. Rome, Tuscany...",
+      "previewAlt": "Photo preview",
+      "uploadImage": "Upload image",
+      "save": "Save photo"
     },
     "delete": {
       "confirm": "Wil je de foto \"{name}\" verwijderen? Deze actie is onomkeerbaar."
@@ -311,7 +326,15 @@
       "visibility": "Zichtbaarheid",
       "image": "Afbeelding",
       "changeImage": "Afbeelding wijzigen",
-      "removeImage": "Afbeelding verwijderen"
+      "removeImage": "Afbeelding verwijderen",
+      "namePlaceholder": "Wish name",
+      "wishlist": "Wishlist",
+      "wishlistPlaceholder": "Select a wishlist",
+      "pricePlaceholder": "E.g. 29.90",
+      "commentPlaceholder": "Additional notes",
+      "previewAlt": "Wish preview",
+      "uploadImage": "Upload image",
+      "create": "Create wish"
     },
     "delete": {
       "confirm": "Wil je de wens \"{name}\" verwijderen? Deze actie is onomkeerbaar."
@@ -426,7 +449,9 @@
   },
   "upload": {
     "clickOrDrop": "Klik of sleep hier een afbeelding neer",
-    "error": "Uploadfout"
+    "error": "Uploadfout",
+    "imageFailed": "Image upload failed",
+    "invalidResponse": "Invalid upload response"
   },
   "tags": {
     "title": "Tags",

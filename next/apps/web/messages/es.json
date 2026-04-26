@@ -19,7 +19,8 @@
     "visibility": "Visibilidad",
     "quantity": "Cantidad",
     "name": "Name",
-    "actions": "Actions"
+    "actions": "Actions",
+    "update": "Update"
   },
   "nav": {
     "collections": "Colecciones",
@@ -241,7 +242,13 @@
       "visibility": "Visibilidad",
       "changeImage": "Cambiar imagen",
       "removeImage": "Eliminar imagen",
-      "noParent": "Sin padre"
+      "noParent": "Sin padre",
+      "titlePlaceholder": "Album name",
+      "noRootParent": "None (root album)",
+      "colorHelp": "Album identifying color",
+      "previewAlt": "Album preview",
+      "uploadImage": "Upload image",
+      "create": "Create album"
     },
     "delete": {
       "confirm": "¿Quieres eliminar el álbum \"{name}\"? Esta acción es irreversible."
@@ -261,7 +268,15 @@
       "visibility": "Visibilidad",
       "image": "Imagen",
       "changeImage": "Cambiar imagen",
-      "removeImage": "Eliminar imagen"
+      "removeImage": "Eliminar imagen",
+      "titlePlaceholder": "Photo title",
+      "album": "Album",
+      "albumPlaceholder": "Select an album",
+      "commentPlaceholder": "Description or notes about the photo",
+      "placePlaceholder": "E.g. Rome, Tuscany...",
+      "previewAlt": "Photo preview",
+      "uploadImage": "Upload image",
+      "save": "Save photo"
     },
     "delete": {
       "confirm": "¿Quieres eliminar la foto \"{name}\"? Esta acción es irreversible."
@@ -311,7 +326,15 @@
       "visibility": "Visibilidad",
       "image": "Imagen",
       "changeImage": "Cambiar imagen",
-      "removeImage": "Eliminar imagen"
+      "removeImage": "Eliminar imagen",
+      "namePlaceholder": "Wish name",
+      "wishlist": "Wishlist",
+      "wishlistPlaceholder": "Select a wishlist",
+      "pricePlaceholder": "E.g. 29.90",
+      "commentPlaceholder": "Additional notes",
+      "previewAlt": "Wish preview",
+      "uploadImage": "Upload image",
+      "create": "Create wish"
     },
     "delete": {
       "confirm": "¿Quieres eliminar el deseo \"{name}\"? Esta acción es irreversible."
@@ -426,7 +449,9 @@
   },
   "upload": {
     "clickOrDrop": "Haz clic o suelta una imagen aquí",
-    "error": "Error de carga"
+    "error": "Error de carga",
+    "imageFailed": "Image upload failed",
+    "invalidResponse": "Invalid upload response"
   },
   "tags": {
     "title": "Tags",

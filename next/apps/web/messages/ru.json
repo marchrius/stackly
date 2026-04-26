@@ -19,7 +19,8 @@
     "visibility": "Видимость",
     "quantity": "Количество",
     "name": "Name",
-    "actions": "Actions"
+    "actions": "Actions",
+    "update": "Update"
   },
   "nav": {
     "collections": "Коллекции",
@@ -241,7 +242,13 @@
       "visibility": "Видимость",
       "changeImage": "Изменить изображение",
       "removeImage": "Удалить изображение",
-      "noParent": "Без родителя"
+      "noParent": "Без родителя",
+      "titlePlaceholder": "Album name",
+      "noRootParent": "None (root album)",
+      "colorHelp": "Album identifying color",
+      "previewAlt": "Album preview",
+      "uploadImage": "Upload image",
+      "create": "Create album"
     },
     "delete": {
       "confirm": "Удалить альбом «{name}»? Это действие необратимо."
@@ -261,7 +268,15 @@
       "visibility": "Видимость",
       "image": "Изображение",
       "changeImage": "Изменить изображение",
-      "removeImage": "Удалить изображение"
+      "removeImage": "Удалить изображение",
+      "titlePlaceholder": "Photo title",
+      "album": "Album",
+      "albumPlaceholder": "Select an album",
+      "commentPlaceholder": "Description or notes about the photo",
+      "placePlaceholder": "E.g. Rome, Tuscany...",
+      "previewAlt": "Photo preview",
+      "uploadImage": "Upload image",
+      "save": "Save photo"
     },
     "delete": {
       "confirm": "Удалить фото «{name}»? Это действие необратимо."
@@ -311,7 +326,15 @@
       "visibility": "Видимость",
       "image": "Изображение",
       "changeImage": "Изменить изображение",
-      "removeImage": "Удалить изображение"
+      "removeImage": "Удалить изображение",
+      "namePlaceholder": "Wish name",
+      "wishlist": "Wishlist",
+      "wishlistPlaceholder": "Select a wishlist",
+      "pricePlaceholder": "E.g. 29.90",
+      "commentPlaceholder": "Additional notes",
+      "previewAlt": "Wish preview",
+      "uploadImage": "Upload image",
+      "create": "Create wish"
     },
     "delete": {
       "confirm": "Удалить желание «{name}»? Это действие необратимо."
@@ -426,7 +449,9 @@
   },
   "upload": {
     "clickOrDrop": "Нажмите или перетащите изображение сюда",
-    "error": "Ошибка загрузки"
+    "error": "Ошибка загрузки",
+    "imageFailed": "Image upload failed",
+    "invalidResponse": "Invalid upload response"
   },
   "tags": {
     "title": "Tags",

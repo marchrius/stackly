@@ -19,7 +19,8 @@
     "visibility": "Widoczność",
     "quantity": "Ilość",
     "name": "Name",
-    "actions": "Actions"
+    "actions": "Actions",
+    "update": "Update"
   },
   "nav": {
     "collections": "Kolekcje",
@@ -241,7 +242,13 @@
       "visibility": "Widoczność",
       "changeImage": "Zmień obraz",
       "removeImage": "Usuń obraz",
-      "noParent": "Brak nadrzędnego"
+      "noParent": "Brak nadrzędnego",
+      "titlePlaceholder": "Album name",
+      "noRootParent": "None (root album)",
+      "colorHelp": "Album identifying color",
+      "previewAlt": "Album preview",
+      "uploadImage": "Upload image",
+      "create": "Create album"
     },
     "delete": {
       "confirm": "Czy chcesz usunąć album „{name}”? Ta operacja jest nieodwracalna."
@@ -261,7 +268,15 @@
       "visibility": "Widoczność",
       "image": "Obraz",
       "changeImage": "Zmień obraz",
-      "removeImage": "Usuń obraz"
+      "removeImage": "Usuń obraz",
+      "titlePlaceholder": "Photo title",
+      "album": "Album",
+      "albumPlaceholder": "Select an album",
+      "commentPlaceholder": "Description or notes about the photo",
+      "placePlaceholder": "E.g. Rome, Tuscany...",
+      "previewAlt": "Photo preview",
+      "uploadImage": "Upload image",
+      "save": "Save photo"
     },
     "delete": {
       "confirm": "Czy chcesz usunąć zdjęcie „{name}”? Ta operacja jest nieodwracalna."
@@ -311,7 +326,15 @@
       "visibility": "Widoczność",
       "image": "Obraz",
       "changeImage": "Zmień obraz",
-      "removeImage": "Usuń obraz"
+      "removeImage": "Usuń obraz",
+      "namePlaceholder": "Wish name",
+      "wishlist": "Wishlist",
+      "wishlistPlaceholder": "Select a wishlist",
+      "pricePlaceholder": "E.g. 29.90",
+      "commentPlaceholder": "Additional notes",
+      "previewAlt": "Wish preview",
+      "uploadImage": "Upload image",
+      "create": "Create wish"
     },
     "delete": {
       "confirm": "Czy chcesz usunąć życzenie „{name}”? Ta operacja jest nieodwracalna."
@@ -426,7 +449,9 @@
   },
   "upload": {
     "clickOrDrop": "Kliknij lub upuść tutaj obraz",
-    "error": "Błąd przesyłania"
+    "error": "Błąd przesyłania",
+    "imageFailed": "Image upload failed",
+    "invalidResponse": "Invalid upload response"
   },
   "tags": {
     "title": "Tags",

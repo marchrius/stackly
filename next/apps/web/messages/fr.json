@@ -19,7 +19,8 @@
     "visibility": "Visibilité",
     "quantity": "Quantité",
     "name": "Name",
-    "actions": "Actions"
+    "actions": "Actions",
+    "update": "Update"
   },
   "nav": {
     "collections": "Collections",
@@ -241,7 +242,13 @@
       "visibility": "Visibilité",
       "changeImage": "Changer l’image",
       "removeImage": "Supprimer l’image",
-      "noParent": "Aucun parent"
+      "noParent": "Aucun parent",
+      "titlePlaceholder": "Album name",
+      "noRootParent": "None (root album)",
+      "colorHelp": "Album identifying color",
+      "previewAlt": "Album preview",
+      "uploadImage": "Upload image",
+      "create": "Create album"
     },
     "delete": {
       "confirm": "Voulez-vous supprimer l’album \"{name}\" ? Cette action est irréversible."
@@ -261,7 +268,15 @@
       "visibility": "Visibilité",
       "image": "Image",
       "changeImage": "Changer l’image",
-      "removeImage": "Supprimer l’image"
+      "removeImage": "Supprimer l’image",
+      "titlePlaceholder": "Photo title",
+      "album": "Album",
+      "albumPlaceholder": "Select an album",
+      "commentPlaceholder": "Description or notes about the photo",
+      "placePlaceholder": "E.g. Rome, Tuscany...",
+      "previewAlt": "Photo preview",
+      "uploadImage": "Upload image",
+      "save": "Save photo"
     },
     "delete": {
       "confirm": "Voulez-vous supprimer la photo \"{name}\" ? Cette action est irréversible."
@@ -311,7 +326,15 @@
       "visibility": "Visibilité",
       "image": "Image",
       "changeImage": "Changer l’image",
-      "removeImage": "Supprimer l’image"
+      "removeImage": "Supprimer l’image",
+      "namePlaceholder": "Wish name",
+      "wishlist": "Wishlist",
+      "wishlistPlaceholder": "Select a wishlist",
+      "pricePlaceholder": "E.g. 29.90",
+      "commentPlaceholder": "Additional notes",
+      "previewAlt": "Wish preview",
+      "uploadImage": "Upload image",
+      "create": "Create wish"
     },
     "delete": {
       "confirm": "Voulez-vous supprimer le souhait \"{name}\" ? Cette action est irréversible."
@@ -426,7 +449,9 @@
   },
   "upload": {
     "clickOrDrop": "Cliquez ou déposez une image ici",
-    "error": "Erreur de téléversement"
+    "error": "Erreur de téléversement",
+    "imageFailed": "Image upload failed",
+    "invalidResponse": "Invalid upload response"
   },
   "tags": {
     "title": "Tags",

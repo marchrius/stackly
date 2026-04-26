@@ -19,7 +19,8 @@
     "visibility": "Видимість",
     "quantity": "Кількість",
     "name": "Name",
-    "actions": "Actions"
+    "actions": "Actions",
+    "update": "Update"
   },
   "nav": {
     "collections": "Колекції",
@@ -241,7 +242,13 @@
       "visibility": "Видимість",
       "changeImage": "Змінити зображення",
       "removeImage": "Видалити зображення",
-      "noParent": "Без батьківського елемента"
+      "noParent": "Без батьківського елемента",
+      "titlePlaceholder": "Album name",
+      "noRootParent": "None (root album)",
+      "colorHelp": "Album identifying color",
+      "previewAlt": "Album preview",
+      "uploadImage": "Upload image",
+      "create": "Create album"
     },
     "delete": {
       "confirm": "Ви хочете видалити альбом «{name}»? Цю дію не можна скасувати."
@@ -261,7 +268,15 @@
       "visibility": "Видимість",
       "image": "Зображення",
       "changeImage": "Змінити зображення",
-      "removeImage": "Видалити зображення"
+      "removeImage": "Видалити зображення",
+      "titlePlaceholder": "Photo title",
+      "album": "Album",
+      "albumPlaceholder": "Select an album",
+      "commentPlaceholder": "Description or notes about the photo",
+      "placePlaceholder": "E.g. Rome, Tuscany...",
+      "previewAlt": "Photo preview",
+      "uploadImage": "Upload image",
+      "save": "Save photo"
     },
     "delete": {
       "confirm": "Ви хочете видалити фото «{name}»? Цю дію не можна скасувати."
@@ -311,7 +326,15 @@
       "visibility": "Видимість",
       "image": "Зображення",
       "changeImage": "Змінити зображення",
-      "removeImage": "Видалити зображення"
+      "removeImage": "Видалити зображення",
+      "namePlaceholder": "Wish name",
+      "wishlist": "Wishlist",
+      "wishlistPlaceholder": "Select a wishlist",
+      "pricePlaceholder": "E.g. 29.90",
+      "commentPlaceholder": "Additional notes",
+      "previewAlt": "Wish preview",
+      "uploadImage": "Upload image",
+      "create": "Create wish"
     },
     "delete": {
       "confirm": "Ви хочете видалити бажання «{name}»? Цю дію не можна скасувати."
@@ -426,7 +449,9 @@
   },
   "upload": {
     "clickOrDrop": "Натисніть або перетягніть сюди зображення",
-    "error": "Помилка завантаження"
+    "error": "Помилка завантаження",
+    "imageFailed": "Image upload failed",
+    "invalidResponse": "Invalid upload response"
   },
   "tags": {
     "title": "Tags",

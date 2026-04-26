@@ -19,7 +19,8 @@
     "visibility": "Sichtbarkeit",
     "quantity": "Anzahl",
     "name": "Name",
-    "actions": "Actions"
+    "actions": "Actions",
+    "update": "Update"
   },
   "nav": {
     "collections": "Sammlungen",
@@ -241,7 +242,13 @@
       "visibility": "Sichtbarkeit",
       "changeImage": "Bild ändern",
       "removeImage": "Bild entfernen",
-      "noParent": "Kein übergeordnetes Element"
+      "noParent": "Kein übergeordnetes Element",
+      "titlePlaceholder": "Album name",
+      "noRootParent": "None (root album)",
+      "colorHelp": "Album identifying color",
+      "previewAlt": "Album preview",
+      "uploadImage": "Upload image",
+      "create": "Create album"
     },
     "delete": {
       "confirm": "Möchten Sie das Album \"{name}\" löschen? Diese Aktion kann nicht rückgängig gemacht werden."
@@ -261,7 +268,15 @@
       "visibility": "Sichtbarkeit",
       "image": "Bild",
       "changeImage": "Bild ändern",
-      "removeImage": "Bild entfernen"
+      "removeImage": "Bild entfernen",
+      "titlePlaceholder": "Photo title",
+      "album": "Album",
+      "albumPlaceholder": "Select an album",
+      "commentPlaceholder": "Description or notes about the photo",
+      "placePlaceholder": "E.g. Rome, Tuscany...",
+      "previewAlt": "Photo preview",
+      "uploadImage": "Upload image",
+      "save": "Save photo"
     },
     "delete": {
       "confirm": "Möchten Sie das Foto \"{name}\" löschen? Diese Aktion kann nicht rückgängig gemacht werden."
@@ -311,7 +326,15 @@
       "visibility": "Sichtbarkeit",
       "image": "Bild",
       "changeImage": "Bild ändern",
-      "removeImage": "Bild entfernen"
+      "removeImage": "Bild entfernen",
+      "namePlaceholder": "Wish name",
+      "wishlist": "Wishlist",
+      "wishlistPlaceholder": "Select a wishlist",
+      "pricePlaceholder": "E.g. 29.90",
+      "commentPlaceholder": "Additional notes",
+      "previewAlt": "Wish preview",
+      "uploadImage": "Upload image",
+      "create": "Create wish"
     },
     "delete": {
       "confirm": "Möchten Sie den Wunsch \"{name}\" löschen? Diese Aktion kann nicht rückgängig gemacht werden."
@@ -426,7 +449,9 @@
   },
   "upload": {
     "clickOrDrop": "Klicken Sie hier oder ziehen Sie ein Bild hierher",
-    "error": "Upload-Fehler"
+    "error": "Upload-Fehler",
+    "imageFailed": "Image upload failed",
+    "invalidResponse": "Invalid upload response"
   },
   "tags": {
     "title": "Tags",

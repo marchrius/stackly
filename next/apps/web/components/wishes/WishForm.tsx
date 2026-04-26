@@ -1,6 +1,7 @@
 "use client";
 
 import type { Wish } from "@stackly/db";
+import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import {
   Button,
@@ -32,6 +33,10 @@ function toUploadUrl(path: string | null | undefined): string | null {
 }
 
 export function WishForm({ wish, wishlists, wishlistId }: WishFormProps) {
+  const t = useTranslations("wishes");
+  const tCommon = useTranslations("common");
+  const tUpload = useTranslations("upload");
+  const tVisibility = useTranslations("visibility");
   const [loading, setLoading] = useState(false);
   const isEdit = !!wish;
 
@@ -78,16 +83,16 @@ export function WishForm({ wish, wishlists, wishlistId }: WishFormProps) {
 
       if (!response.ok) {
         const err = (await response.json().catch(() => null)) as { error?: string } | null;
-        throw new Error(err?.error ?? "Upload immagine non riuscito");
+        throw new Error(err?.error ?? tUpload("imageFailed"));
       }
 
       const result = (await response.json()) as { path?: string };
-      if (!result.path) throw new Error("Risposta upload non valida");
+      if (!result.path) throw new Error(tUpload("invalidResponse"));
 
       setImagePath(result.path);
       setDeleteImage(false);
     } catch (error) {
-      setUploadError(error instanceof Error ? error.message : "Upload immagine non riuscito");
+      setUploadError(error instanceof Error ? error.message : tUpload("imageFailed"));
     } finally {
       if (fileInputRef.current) fileInputRef.current.value = "";
       setLoading(false);
@@ -103,32 +108,32 @@ export function WishForm({ wish, wishlists, wishlistId }: WishFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="name">Nome *</Label>
-        <Input id="name" name="name" required defaultValue={wish?.name ?? ""} placeholder="Nome del desiderio" />
+        <Label htmlFor="name">{t("form.name")} *</Label>
+        <Input id="name" name="name" required defaultValue={wish?.name ?? ""} placeholder={t("form.namePlaceholder")} />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="imageFile">Immagine</Label>
+        <Label htmlFor="imageFile">{t("form.image")}</Label>
         <div className="flex flex-col gap-3 rounded-md border p-3">
           {toUploadUrl(wish?.imageSmallThumbnail ?? imagePath) ? (
             <div className="flex items-center gap-3">
               <img
                 src={toUploadUrl(wish?.imageSmallThumbnail ?? imagePath) ?? ""}
-                alt="Anteprima desiderio"
+                alt={t("form.previewAlt")}
                 className="h-20 w-20 rounded object-cover"
               />
               <div className="flex gap-2 flex-wrap">
                 <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={loading}>
-                  Sostituisci
+                  {t("form.changeImage")}
                 </Button>
                 <Button type="button" variant="outline" onClick={handleRemoveImage} disabled={loading}>
-                  Rimuovi
+                  {t("form.removeImage")}
                 </Button>
               </div>
             </div>
           ) : (
             <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={loading}>
-              Carica immagine
+              {t("form.uploadImage")}
             </Button>
           )}
 
@@ -149,10 +154,10 @@ export function WishForm({ wish, wishlists, wishlistId }: WishFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="wishlistId">Wishlist *</Label>
+        <Label htmlFor="wishlistId">{t("form.wishlist")} *</Label>
         <Select value={selectedWishlistId} onValueChange={setSelectedWishlistId}>
           <SelectTrigger id="wishlistId">
-            <SelectValue placeholder="Seleziona una wishlist" />
+            <SelectValue placeholder={t("form.wishlistPlaceholder")} />
           </SelectTrigger>
           <SelectContent>
             {wishlists.map((wishlist) => (
@@ -165,23 +170,23 @@ export function WishForm({ wish, wishlists, wishlistId }: WishFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="url">URL</Label>
+        <Label htmlFor="url">{t("form.url")}</Label>
         <Input id="url" name="url" type="url" defaultValue={wish?.url ?? ""} placeholder="https://…" />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="price">Prezzo</Label>
-          <Input id="price" name="price" defaultValue={wish?.price ?? ""} placeholder="Es. 29.90" />
+          <Label htmlFor="price">{t("form.price")}</Label>
+          <Input id="price" name="price" defaultValue={wish?.price ?? ""} placeholder={t("form.pricePlaceholder")} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="currency">Valuta</Label>
+          <Label htmlFor="currency">{t("form.currency")}</Label>
           <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
             <SelectTrigger id="currency">
-              <SelectValue placeholder="Nessuna" />
+              <SelectValue placeholder={tCommon("none")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="none">Nessuna</SelectItem>
+              <SelectItem value="none">{tCommon("none")}</SelectItem>
               {CURRENCIES.map((currency) => (
                 <SelectItem key={currency.code} value={currency.code}>
                   {currency.code} ({currency.symbol})
@@ -193,12 +198,12 @@ export function WishForm({ wish, wishlists, wishlistId }: WishFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="comment">Commento</Label>
-        <Textarea id="comment" name="comment" rows={4} defaultValue={wish?.comment ?? ""} placeholder="Note aggiuntive" />
+        <Label htmlFor="comment">{t("form.comment")}</Label>
+        <Textarea id="comment" name="comment" rows={4} defaultValue={wish?.comment ?? ""} placeholder={t("form.commentPlaceholder")} />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="visibility">Visibilità</Label>
+        <Label htmlFor="visibility">{t("form.visibility")}</Label>
         <Select value={visibility} onValueChange={setVisibility}>
           <SelectTrigger id="visibility">
             <SelectValue />
@@ -206,7 +211,7 @@ export function WishForm({ wish, wishlists, wishlistId }: WishFormProps) {
           <SelectContent>
             {VISIBILITY_OPTIONS.map((option) => (
               <SelectItem key={option.value} value={option.value}>
-                {option.label}
+                {tVisibility(option.value)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -221,10 +226,10 @@ export function WishForm({ wish, wishlists, wishlistId }: WishFormProps) {
 
       <div className="flex gap-3 pt-2">
         <Button type="submit" disabled={loading}>
-          {loading ? "Salvataggio…" : isEdit ? "Aggiorna" : "Crea desiderio"}
+          {loading ? tCommon("saving") : isEdit ? tCommon("update") : t("form.create")}
         </Button>
         <Button type="button" variant="outline" onClick={() => history.back()}>
-          Annulla
+          {tCommon("cancel")}
         </Button>
       </div>
     </form>

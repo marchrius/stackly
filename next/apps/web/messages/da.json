@@ -19,7 +19,8 @@
     "visibility": "Synlighed",
     "quantity": "Antal",
     "name": "Name",
-    "actions": "Actions"
+    "actions": "Actions",
+    "update": "Update"
   },
   "nav": {
     "collections": "Samlinger",
@@ -241,7 +242,13 @@
       "visibility": "Synlighed",
       "changeImage": "Skift billede",
       "removeImage": "Fjern billede",
-      "noParent": "Ingen overordnet"
+      "noParent": "Ingen overordnet",
+      "titlePlaceholder": "Album name",
+      "noRootParent": "None (root album)",
+      "colorHelp": "Album identifying color",
+      "previewAlt": "Album preview",
+      "uploadImage": "Upload image",
+      "create": "Create album"
     },
     "delete": {
       "confirm": "Vil du slette albummet \"{name}\"? Denne handling kan ikke fortrydes."
@@ -261,7 +268,15 @@
       "visibility": "Synlighed",
       "image": "Billede",
       "changeImage": "Skift billede",
-      "removeImage": "Fjern billede"
+      "removeImage": "Fjern billede",
+      "titlePlaceholder": "Photo title",
+      "album": "Album",
+      "albumPlaceholder": "Select an album",
+      "commentPlaceholder": "Description or notes about the photo",
+      "placePlaceholder": "E.g. Rome, Tuscany...",
+      "previewAlt": "Photo preview",
+      "uploadImage": "Upload image",
+      "save": "Save photo"
     },
     "delete": {
       "confirm": "Vil du slette fotoet \"{name}\"? Denne handling kan ikke fortrydes."
@@ -311,7 +326,15 @@
       "visibility": "Synlighed",
       "image": "Billede",
       "changeImage": "Skift billede",
-      "removeImage": "Fjern billede"
+      "removeImage": "Fjern billede",
+      "namePlaceholder": "Wish name",
+      "wishlist": "Wishlist",
+      "wishlistPlaceholder": "Select a wishlist",
+      "pricePlaceholder": "E.g. 29.90",
+      "commentPlaceholder": "Additional notes",
+      "previewAlt": "Wish preview",
+      "uploadImage": "Upload image",
+      "create": "Create wish"
     },
     "delete": {
       "confirm": "Vil du slette ønsket \"{name}\"? Denne handling kan ikke fortrydes."
@@ -426,7 +449,9 @@
   },
   "upload": {
     "clickOrDrop": "Klik eller slip et billede her",
-    "error": "Uploadfejl"
+    "error": "Uploadfejl",
+    "imageFailed": "Image upload failed",
+    "invalidResponse": "Invalid upload response"
   },
   "tags": {
     "title": "Tags",
