@@ -39,11 +39,12 @@ export const config = {
      * Protegge tutte le route eccetto:
      * - /login, /register (pagine auth pubbliche)
      * - /user/* (viste condivise pubbliche)
+     * - /public/* (viste pubbliche di collezioni, item e album)
      * - /api/auth/* (handler NextAuth)
      * - /_next (asset Next.js)
      * - /uploads/* (file statici upload)
      * - file statici (favicon, ecc.)
      */
-    "/((?!login|register|user|api/auth|_next/static|_next/image|uploads|favicon.ico|robots.txt).*)",
+    "/((?!login|register|user|public|api/auth|_next/static|_next/image|uploads|favicon.ico|robots.txt).*)",
   ],
 };

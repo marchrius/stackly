@@ -145,7 +145,10 @@
     "detailTitle": "Collection details",
     "editIndex": "Edit collections view",
     "indexDisplayTitle": "Collection display options",
-    "indexDisplayDescription": "Configure how top-level collections are shown in the collections index."
+    "indexDisplayDescription": "Configure how top-level collections are shown in the collections index.",
+    "childrenCount": "{count} sub-collections",
+    "itemsCount": "{count} items",
+    "cardMeta": "{children} sub-collections · {items} items"
   },
   "items": {
     "title": "Objetos",
@@ -253,7 +256,10 @@
     "delete": {
       "confirm": "¿Quieres eliminar el álbum \"{name}\"? Esta acción es irreversible."
     },
-    "detailTitle": "Album details"
+    "detailTitle": "Album details",
+    "childrenCount": "{count} sub-albums",
+    "photosCount": "{count} photos",
+    "cardMeta": "{children} sub-albums · {photos} photos"
   },
   "photos": {
     "title": "Fotos",
@@ -723,5 +729,9 @@
     "goToItems": "Go to items",
     "updateFailed": "Unable to update the loan.",
     "deleteFailed": "Unable to delete the loan."
+  },
+  "public": {
+    "eyebrow": "Public view",
+    "publicBadge": "Public"
   }
 }
