@@ -9,6 +9,7 @@ import { deleteAlbum } from "@/lib/actions/media.actions";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { useTranslations } from "next-intl";
 import { getUploadUrl } from "@stackly/lib";
+import { CopyPublicLinkButton } from "@/components/public/CopyPublicLinkButton";
 
 interface Ancestor {
   id: string;
@@ -78,6 +79,7 @@ export function AlbumDetail({ album }: { album: AlbumWithRelations }) {
         </div>
 
         <div className="flex gap-2">
+          {album.finalVisibility === "public" ? <CopyPublicLinkButton path={`/public/albums/${album.id}`} /> : null}
           <Button asChild variant="outline" size="sm">
             <Link href={`/albums/${album.id}/edit`}>
               <Edit className="mr-1 h-4 w-4" />

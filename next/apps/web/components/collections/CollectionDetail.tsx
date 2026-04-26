@@ -15,6 +15,7 @@ import { limitChoiceValues, parseChoiceListValues } from "@/lib/choice-lists";
 import { formatCountryValue, formatCurrencyAmount, formatDateValue, formatPriceValue, parseListValues, renderRatingValue } from "@/lib/datum-format";
 import { CollectionItemsGrid } from "./CollectionItemsGrid";
 import { getUploadUrl } from "@stackly/lib";
+import { CopyPublicLinkButton } from "@/components/public/CopyPublicLinkButton";
 
 type DatumWithChoiceList = Datum & {
   choiceList: { id: string; name: string; displayMode: string | null; selectionMode: string | null } | null;
@@ -139,6 +140,7 @@ export function CollectionDetail({ collection, ancestors }: CollectionDetailProp
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {collection.finalVisibility === "public" ? <CopyPublicLinkButton path={`/public/collections/${collection.id}`} /> : null}
           <Button asChild variant="outline" size="sm">
             <Link href={`/collections/new?parentId=${collection.id}`}>
               <Plus className="mr-1 h-4 w-4" />

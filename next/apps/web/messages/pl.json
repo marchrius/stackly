@@ -316,7 +316,10 @@
     "sharedTitle": "Udostępnione listy życzeń",
     "sharedDetailTitle": "Udostępniona lista życzeń",
     "sharedProfileSummary": "Profil {name} · {count} widoczne listy życzeń",
-    "sharedLoginHint": "<link>Zaloguj się</link>, aby wyświetlić dostępną dla Ciebie dodatkową zawartość wewnętrzną."
+    "sharedLoginHint": "<link>Zaloguj się</link>, aby wyświetlić dostępną dla Ciebie dodatkową zawartość wewnętrzną.",
+    "childrenCount": "{count} podlist życzeń",
+    "wishesCount": "{count} życzeń",
+    "cardMeta": "{children} podlist życzeń · {wishes} życzeń"
   },
   "wishes": {
     "title": "Życzenia",
@@ -732,6 +735,9 @@
   },
   "public": {
     "eyebrow": "Widok publiczny",
-    "publicBadge": "Publiczny"
+    "publicBadge": "Publiczny",
+    "copyLink": "Kopiuj link publiczny",
+    "copiedLink": "Link skopiowany",
+    "openPublicView": "Otwórz widok publiczny"
   }
 }

@@ -316,7 +316,10 @@
     "sharedTitle": "Paylaşılan istek listeleri",
     "sharedDetailTitle": "Paylaşılan istek listesi",
     "sharedProfileSummary": "{name} Profili · {count} görünür istek listeleri",
-    "sharedLoginHint": "<link>Oturum açın</link> kullanabileceğiniz ek dahili içerikleri görüntülemek için."
+    "sharedLoginHint": "<link>Oturum açın</link> kullanabileceğiniz ek dahili içerikleri görüntülemek için.",
+    "childrenCount": "{count} alt istek listesi",
+    "wishesCount": "{count} istek",
+    "cardMeta": "{children} alt istek listesi · {wishes} istek"
   },
   "wishes": {
     "title": "İstekler",
@@ -732,6 +735,9 @@
   },
   "public": {
     "eyebrow": "Herkese açık görünüm",
-    "publicBadge": "Halk"
+    "publicBadge": "Halk",
+    "copyLink": "Herkese açık bağlantıyı kopyala",
+    "copiedLink": "Bağlantı kopyalandı",
+    "openPublicView": "Herkese açık görünümü aç"
   }
 }

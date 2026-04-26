@@ -9,6 +9,7 @@ import { deleteWishlist } from "@/lib/actions/media.actions";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { useTranslations } from "next-intl";
 import { getUploadUrl } from "@stackly/lib";
+import { CopyPublicLinkButton } from "@/components/public/CopyPublicLinkButton";
 
 interface Ancestor {
   id: string;
@@ -70,6 +71,7 @@ export function WishlistDetail({ wishlist, readOnly = false, basePath = "/wishli
         </div>
         {!readOnly && (
           <div className="flex gap-2">
+            {wishlist.finalVisibility === "public" ? <CopyPublicLinkButton path={`/public/wishlists/${wishlist.id}`} /> : null}
             <Button asChild variant="outline" size="sm">
               <Link href={`/wishlists/${wishlist.id}/edit`}><Edit className="mr-1 h-4 w-4" />{tCommon("edit")}</Link>
             </Button>

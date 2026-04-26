@@ -316,7 +316,10 @@
     "sharedTitle": "Listes de souhaits partagées",
     "sharedDetailTitle": "Liste de souhaits partagée",
     "sharedProfileSummary": "Profil de {name} · Listes de souhaits visibles de {count}",
-    "sharedLoginHint": "<link>Connectez-vous</link> pour afficher tout contenu interne supplémentaire à votre disposition."
+    "sharedLoginHint": "<link>Connectez-vous</link> pour afficher tout contenu interne supplémentaire à votre disposition.",
+    "childrenCount": "{count} sous-listes d’envies",
+    "wishesCount": "{count} envies",
+    "cardMeta": "{children} sous-listes d’envies · {wishes} envies"
   },
   "wishes": {
     "title": "Souhaits",
@@ -732,6 +735,9 @@
   },
   "public": {
     "eyebrow": "Vue publique",
-    "publicBadge": "Publique"
+    "publicBadge": "Publique",
+    "copyLink": "Copier le lien public",
+    "copiedLink": "Lien copié",
+    "openPublicView": "Ouvrir la vue publique"
   }
 }

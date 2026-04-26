@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Badge } from "@stackly/ui";
-import { Image, Layers, Package } from "lucide-react";
+import { ExternalLink, Heart, Image, Layers, Package } from "lucide-react";
 import { getUploadUrl } from "@stackly/lib";
 
 interface PublicCollectionCardProps {
@@ -87,6 +87,46 @@ export function PublicPhotoCard({ title, image }: PublicPhotoCardProps) {
   );
 }
 
+interface PublicWishCardProps {
+  name: string;
+  image?: string | null;
+  price?: string | null;
+  currency?: string | null;
+  url?: string | null;
+}
+
+export function PublicWishCard({ name, image, price, currency, url }: PublicWishCardProps) {
+  const uploadUrl = getUploadUrl(image);
+  const content = (
+    <div className="group block overflow-hidden rounded-lg border bg-card transition-shadow hover:shadow-md">
+      <div className="relative flex aspect-[10/13] items-center justify-center overflow-hidden bg-muted">
+        {uploadUrl ? (
+          <img src={uploadUrl} alt={name} loading="lazy" className="max-h-full max-w-full object-contain transition-transform group-hover:scale-105" />
+        ) : (
+          <Heart className="h-9 w-9 text-muted-foreground opacity-50" />
+        )}
+        {url ? (
+          <span className="absolute right-2 top-2 rounded-full bg-background/80 p-1.5 text-foreground shadow-sm">
+            <ExternalLink className="h-3.5 w-3.5" />
+          </span>
+        ) : null}
+      </div>
+      <div className="space-y-1 p-3">
+        <p className="truncate text-sm font-medium">{name}</p>
+        {price ? <p className="text-xs text-muted-foreground">{[price, currency].filter(Boolean).join(" ")}</p> : null}
+      </div>
+    </div>
+  );
+
+  if (!url) return content;
+
+  return (
+    <a href={url} target="_blank" rel="noreferrer" className="block">
+      {content}
+    </a>
+  );
+}
+
 export function PublicGrid({ children }: { children: React.ReactNode }) {
   return (
     <div className="grid gap-x-2.5 gap-y-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}>
@@ -95,8 +135,8 @@ export function PublicGrid({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function PublicCount({ icon, label }: { icon: "layers" | "items" | "photos"; label: string }) {
-  const Icon = icon === "layers" ? Layers : icon === "items" ? Package : Image;
+export function PublicCount({ icon, label }: { icon: "layers" | "items" | "photos" | "wishes"; label: string }) {
+  const Icon = icon === "layers" ? Layers : icon === "items" ? Package : icon === "wishes" ? Heart : Image;
   return (
     <span className="inline-flex items-center gap-1 text-sm text-muted-foreground">
       <Icon className="h-4 w-4" />

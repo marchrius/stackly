@@ -103,3 +103,38 @@ export async function getPublicAlbumAncestors(parentId: string | null) {
 
   return ancestors;
 }
+
+export async function getPublicWishlist(id: string) {
+  return prisma.wishlist.findFirst({
+    where: { id, finalVisibility: PUBLIC_VISIBILITY },
+    include: {
+      children: {
+        where: { finalVisibility: PUBLIC_VISIBILITY },
+        include: { _count: { select: { children: true, wishes: true } } },
+        orderBy: { name: "asc" },
+      },
+      wishes: {
+        where: { finalVisibility: PUBLIC_VISIBILITY },
+        orderBy: { name: "asc" },
+      },
+      _count: { select: { children: true, wishes: true } },
+    },
+  });
+}
+
+export async function getPublicWishlistAncestors(parentId: string | null) {
+  const ancestors: { id: string; name: string }[] = [];
+  let cursor = parentId;
+
+  while (cursor) {
+    const parent = await prisma.wishlist.findFirst({
+      where: { id: cursor, finalVisibility: PUBLIC_VISIBILITY },
+      select: { id: true, name: true, parentId: true },
+    });
+    if (!parent) break;
+    ancestors.unshift({ id: parent.id, name: parent.name });
+    cursor = parent.parentId;
+  }
+
+  return ancestors;
+}

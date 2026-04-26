@@ -316,7 +316,10 @@
     "sharedTitle": "Shared wishlists",
     "sharedDetailTitle": "Shared wishlist",
     "sharedProfileSummary": "Profile of {name} · {count} visible wishlists",
-    "sharedLoginHint": "<link>Sign in</link> to view any additional internal content available to you."
+    "sharedLoginHint": "<link>Sign in</link> to view any additional internal content available to you.",
+    "childrenCount": "{count} sub-wishlists",
+    "wishesCount": "{count} wishes",
+    "cardMeta": "{children} sub-wishlists · {wishes} wishes"
   },
   "wishes": {
     "title": "Wishes",
@@ -732,6 +735,9 @@
   },
   "public": {
     "eyebrow": "Public view",
-    "publicBadge": "Public"
+    "publicBadge": "Public",
+    "copyLink": "Copy public link",
+    "copiedLink": "Link copied",
+    "openPublicView": "Open public view"
   }
 }

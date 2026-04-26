@@ -316,7 +316,10 @@
     "sharedTitle": "共享愿望清单",
     "sharedDetailTitle": "共享愿望清单",
     "sharedProfileSummary": "{name} 的个人资料 · {count} 可见愿望清单",
-    "sharedLoginHint": "<link>登录</link>以查看您可用的任何其他内部内容。"
+    "sharedLoginHint": "<link>登录</link>以查看您可用的任何其他内部内容。",
+    "childrenCount": "{count} 个子愿望清单",
+    "wishesCount": "{count} 个愿望",
+    "cardMeta": "{children} 个子愿望清单 · {wishes} 个愿望"
   },
   "wishes": {
     "title": "愿望",
@@ -732,6 +735,9 @@
   },
   "public": {
     "eyebrow": "公众视野",
-    "publicBadge": "民众"
+    "publicBadge": "民众",
+    "copyLink": "复制公开链接",
+    "copiedLink": "链接已复制",
+    "openPublicView": "打开公开视图"
   }
 }

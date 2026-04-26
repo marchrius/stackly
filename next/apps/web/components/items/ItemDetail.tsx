@@ -12,6 +12,7 @@ import { buildItemMediaEntries, getDisplayData, mergeRelatedItems } from "@/lib/
 import { getChoiceListDisplayMode, limitChoiceValues, parseChoiceListValues } from "@/lib/choice-lists";
 import { formatCountryValue, formatDateValue, formatPriceValue, parseListValues, renderRatingValue } from "@/lib/datum-format";
 import { getUploadUrl } from "@stackly/lib";
+import { CopyPublicLinkButton } from "@/components/public/CopyPublicLinkButton";
 
 type DatumWithChoiceList = Datum & {
   choiceList: { id: string; name: string; displayMode: string | null; selectionMode: string | null } | null;
@@ -112,6 +113,7 @@ export function ItemDetail({ item, previousItem, nextItem }: { item: ItemWithRel
           </div>
         </div>
         <div className="flex gap-2">
+          {item.finalVisibility === "public" ? <CopyPublicLinkButton path={`/public/items/${item.id}`} /> : null}
           <Button asChild variant="outline" size="sm">
             <Link href={`/loans/new?itemId=${item.id}`}>{t("loanItem")}</Link>
           </Button>

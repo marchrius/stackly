@@ -316,7 +316,10 @@
     "sharedTitle": "Delte ønskelister",
     "sharedDetailTitle": "Delt ønskeliste",
     "sharedProfileSummary": "Profil af {name} · {count} synlige ønskelister",
-    "sharedLoginHint": "<link>Tilmeld </link> for at se yderligere internt indhold, der er tilgængeligt for dig."
+    "sharedLoginHint": "<link>Tilmeld </link> for at se yderligere internt indhold, der er tilgængeligt for dig.",
+    "childrenCount": "{count} under-ønskelister",
+    "wishesCount": "{count} ønsker",
+    "cardMeta": "{children} under-ønskelister · {wishes} ønsker"
   },
   "wishes": {
     "title": "Ønsker",
@@ -732,6 +735,9 @@
   },
   "public": {
     "eyebrow": "Offentlig visning",
-    "publicBadge": "Offentlig"
+    "publicBadge": "Offentlig",
+    "copyLink": "Kopiér offentligt link",
+    "copiedLink": "Link kopieret",
+    "openPublicView": "Åbn offentlig visning"
   }
 }

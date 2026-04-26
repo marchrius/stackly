@@ -316,7 +316,10 @@
     "sharedTitle": "Gedeelde verlanglijstjes",
     "sharedDetailTitle": "Gedeelde verlanglijst",
     "sharedProfileSummary": "Profiel van {name} · {count} zichtbare verlanglijstjes",
-    "sharedLoginHint": "<link>Meld u aan</link> om eventuele aanvullende interne inhoud te bekijken die voor u beschikbaar is."
+    "sharedLoginHint": "<link>Meld u aan</link> om eventuele aanvullende interne inhoud te bekijken die voor u beschikbaar is.",
+    "childrenCount": "{count} sub-verlanglijsten",
+    "wishesCount": "{count} wensen",
+    "cardMeta": "{children} sub-verlanglijsten · {wishes} wensen"
   },
   "wishes": {
     "title": "Wensen",
@@ -732,6 +735,9 @@
   },
   "public": {
     "eyebrow": "Publieke weergave",
-    "publicBadge": "Openbaar"
+    "publicBadge": "Openbaar",
+    "copyLink": "Openbare link kopiëren",
+    "copiedLink": "Link gekopieerd",
+    "openPublicView": "Openbare weergave openen"
   }
 }
