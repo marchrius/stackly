@@ -3,6 +3,15 @@ import { prisma } from "@stackly/db";
 import { requireApiSession } from "@/lib/api-helpers";
 import { previewItemScrape } from "@/lib/server/item-scraper";
 
+function normalizeRemoteUrl(value: string) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function POST(req: NextRequest) {
   const result = await requireApiSession();
   if ("response" in result) return result.response;
@@ -32,15 +41,20 @@ export async function POST(req: NextRequest) {
   if (htmlFile instanceof File && htmlFile.size > 0) {
     html = await htmlFile.text();
   } else if (typeof url === "string" && url.length > 0) {
+    const remoteUrl = normalizeRemoteUrl(url);
+    if (!remoteUrl) {
+      return NextResponse.json({ error: "Invalid source URL" }, { status: 400 });
+    }
+
     const headers = Array.isArray(scraper.headers) ? Object.fromEntries(
       scraper.headers
-        .filter((entry): entry is { name: string; value: string } => typeof entry === "object" && entry !== null && typeof (entry as { name?: unknown }).name === "string" && typeof (entry as { value?: unknown }).value === "string")
-        .map((entry) => [entry.name, entry.value]),
+        .filter((entry): entry is { header: string; value: string } => typeof entry === "object" && entry !== null && typeof (entry as { header?: unknown }).header === "string" && typeof (entry as { value?: unknown }).value === "string")
+        .map((entry) => [entry.header, entry.value]),
     ) : {};
 
-    const response = await fetch(url, { headers, cache: "no-store" });
+    const response = await fetch(remoteUrl, { headers, cache: "no-store" });
     if (!response.ok) {
-      return NextResponse.json({ error: `Unable to fetch ${url}` }, { status: 400 });
+      return NextResponse.json({ error: `Unable to fetch ${remoteUrl}` }, { status: 400 });
     }
     html = await response.text();
   } else {
@@ -61,6 +75,6 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({
     ...preview,
-    scrapedUrl: typeof url === "string" ? url : null,
+    scrapedUrl: typeof url === "string" ? normalizeRemoteUrl(url) : null,
   });
 }

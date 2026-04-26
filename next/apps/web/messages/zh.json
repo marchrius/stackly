@@ -106,7 +106,7 @@
       "noDataFields": "还没有自定义字段。",
       "saveFailed": "无法保存集合。",
       "scrape": "刮取集合",
-      "scrapeHelp": "预览集合抓取器中的值并将其导入此表单中。",
+      "scrapeHelp": "预览集合抓取器中的值，并且只在启动预览时应用它们。",
       "scraper": "刮刀",
       "noScraper": "无刮刀",
       "scrapeUrl": "要抓取的网址",
@@ -137,7 +137,8 @@
       "showNumberOfItems": "显示商品数量",
       "showItemQuantities": "显示商品数量",
       "numberOfChildren": "儿童人数",
-      "numberOfItems": "商品数量"
+      "numberOfItems": "商品数量",
+      "scrapeManualNotice": "Koillection 不会自动下载元数据。请选择抓取器，提供 URL 或 HTML 文件，然后手动启动预览。"
     },
     "delete": {
       "confirm": "确定要删除收藏“{name}”吗？此操作不可撤销。"
@@ -199,7 +200,7 @@
       "saveAndAddAnother": "保存并添加另一个",
       "useSuggestedName": "用途：{name}",
       "scrape": "刮掉物品",
-      "scrapeHelp": "预览项目抓取器中的值并将其导入此表单中。",
+      "scrapeHelp": "预览物品抓取器中的值，并且只在启动预览时应用它们。",
       "scraper": "刮刀",
       "noScraper": "无刮刀",
       "scrapeUrl": "要抓取的网址",
@@ -212,7 +213,8 @@
       "displayModes": {
         "list": "列表",
         "pill": "丸"
-      }
+      },
+      "scrapeManualNotice": "Koillection 不会自动下载元数据。请选择抓取器，提供 URL 或 HTML 文件，然后手动启动预览。"
     },
     "delete": {
       "confirm": "确定要删除条目“{name}”吗？此操作不可撤销。"
@@ -661,7 +663,8 @@
       "removeHeader": "删除标题",
       "headerName": "标头",
       "headerValue": "价值",
-      "saveFailed": "无法保存刮刀。"
+      "saveFailed": "无法保存刮刀。",
+      "manualFlow": "抓取器是用户定义的规则。只有在集合或物品表单中手动预览/导入数据时才会运行。"
     },
     "delete": {
       "confirm": "您想删除抓取工具“{name}”吗？此操作是不可逆转的。"

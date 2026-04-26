@@ -610,6 +610,7 @@ export function CollectionForm({
             <h2 className="text-lg font-semibold">{t("form.scrape")}</h2>
             <p className="text-sm text-muted-foreground">{t("form.scrapeHelp")}</p>
           </div>
+          <p className="rounded-md border bg-muted/30 px-3 py-2 text-sm text-muted-foreground">{t("form.scrapeManualNotice")}</p>
 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">

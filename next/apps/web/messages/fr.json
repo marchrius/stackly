@@ -106,7 +106,7 @@
       "noDataFields": "Aucun champ personnalisé pour l'instant.",
       "saveFailed": "Impossible de sauvegarder la collection.",
       "scrape": "Collecte de grattage",
-      "scrapeHelp": "Prévisualisez les valeurs d’un grattoir de collection et importez-les dans ce formulaire.",
+      "scrapeHelp": "Prévisualisez les valeurs d’un scraper de collection et appliquez-les seulement lorsque vous lancez la prévisualisation.",
       "scraper": "Grattoir",
       "noScraper": "Pas de grattoir",
       "scrapeUrl": "URL à gratter",
@@ -137,7 +137,8 @@
       "showNumberOfItems": "Afficher le nombre d'éléments",
       "showItemQuantities": "Afficher les quantités d'articles",
       "numberOfChildren": "Nombre d'enfants",
-      "numberOfItems": "Nombre d'articles"
+      "numberOfItems": "Nombre d'articles",
+      "scrapeManualNotice": "Koillection ne télécharge pas les métadonnées automatiquement. Choisissez un scraper, indiquez une URL ou un fichier HTML, puis lancez la prévisualisation manuellement."
     },
     "delete": {
       "confirm": "Voulez-vous supprimer la collection \"{name}\" ? Cette action est irréversible."
@@ -199,7 +200,7 @@
       "saveAndAddAnother": "Enregistrez et ajoutez un autre",
       "useSuggestedName": "Utilisation : {name}",
       "scrape": "Grattez l'article",
-      "scrapeHelp": "Prévisualisez les valeurs d’un grattoir d’éléments et importez-les dans ce formulaire.",
+      "scrapeHelp": "Prévisualisez les valeurs d’un scraper d’objet et appliquez-les seulement lorsque vous lancez la prévisualisation.",
       "scraper": "Grattoir",
       "noScraper": "Pas de grattoir",
       "scrapeUrl": "URL à gratter",
@@ -212,7 +213,8 @@
       "displayModes": {
         "list": "Liste",
         "pill": "Pilule"
-      }
+      },
+      "scrapeManualNotice": "Koillection ne télécharge pas les métadonnées automatiquement. Choisissez un scraper, indiquez une URL ou un fichier HTML, puis lancez la prévisualisation manuellement."
     },
     "delete": {
       "confirm": "Voulez-vous supprimer l’objet \"{name}\" ? Cette action est irréversible."
@@ -661,7 +663,8 @@
       "removeHeader": "Supprimer l'en-tête",
       "headerName": "En-tête",
       "headerValue": "Valeur",
-      "saveFailed": "Impossible de sauvegarder le grattoir."
+      "saveFailed": "Impossible de sauvegarder le grattoir.",
+      "manualFlow": "Les scrapers sont des règles définies par l’utilisateur. Ils ne s’exécutent que lors d’une prévisualisation/import manuel depuis un formulaire de collection ou d’objet."
     },
     "delete": {
       "confirm": "Voulez-vous supprimer le scraper \"{name}\" ? Cette action est irréversible."

@@ -106,7 +106,7 @@
       "noDataFields": "Nog geen aangepaste velden.",
       "saveFailed": "Kan de collectie niet opslaan.",
       "scrape": "Schraap collectie",
-      "scrapeHelp": "Bekijk een voorbeeld van waarden uit een verzamelingsschraper en importeer ze in dit formulier.",
+      "scrapeHelp": "Bekijk waarden uit een collectie-scraper vooraf en pas ze alleen toe wanneer je de preview start.",
       "scraper": "Schraper",
       "noScraper": "Geen schraper",
       "scrapeUrl": "URL om te schrapen",
@@ -137,7 +137,8 @@
       "showNumberOfItems": "Toon aantal artikelen",
       "showItemQuantities": "Toon artikelhoeveelheden",
       "numberOfChildren": "Aantal kinderen",
-      "numberOfItems": "Aantal artikelen"
+      "numberOfItems": "Aantal artikelen",
+      "scrapeManualNotice": "Koillection downloadt metadata niet automatisch. Kies een scraper, geef een URL of HTML-bestand op en start de preview handmatig."
     },
     "delete": {
       "confirm": "Wil je de collectie \"{name}\" verwijderen? Deze actie is onomkeerbaar."
@@ -199,7 +200,7 @@
       "saveAndAddAnother": "Bewaar en voeg nog een toe",
       "useSuggestedName": "Gebruik: {name}",
       "scrape": "Artikel schrapen",
-      "scrapeHelp": "Bekijk een voorbeeld van waarden uit een itemschraper en importeer ze in dit formulier.",
+      "scrapeHelp": "Bekijk waarden uit een item-scraper vooraf en pas ze alleen toe wanneer je de preview start.",
       "scraper": "Schraper",
       "noScraper": "Geen schraper",
       "scrapeUrl": "URL om te schrapen",
@@ -212,7 +213,8 @@
       "displayModes": {
         "list": "Lijst",
         "pill": "Pil"
-      }
+      },
+      "scrapeManualNotice": "Koillection downloadt metadata niet automatisch. Kies een scraper, geef een URL of HTML-bestand op en start de preview handmatig."
     },
     "delete": {
       "confirm": "Wil je het object \"{name}\" verwijderen? Deze actie is onomkeerbaar."
@@ -661,7 +663,8 @@
       "removeHeader": "Kop verwijderen",
       "headerName": "Koptekst",
       "headerValue": "Waarde",
-      "saveFailed": "Kan de schraper niet opslaan."
+      "saveFailed": "Kan de schraper niet opslaan.",
+      "manualFlow": "Scrapers zijn door de gebruiker gedefinieerde regels. Ze draaien alleen wanneer je handmatig gegevens previewt/importeert vanuit een collectie- of itemformulier."
     },
     "delete": {
       "confirm": "Wilt u de schraper \"{name}\" verwijderen? Deze actie is onomkeerbaar."

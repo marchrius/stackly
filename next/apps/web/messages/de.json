@@ -106,7 +106,7 @@
       "noDataFields": "Noch keine benutzerdefinierten Felder.",
       "saveFailed": "Die Sammlung kann nicht gespeichert werden.",
       "scrape": "Kratzsammlung",
-      "scrapeHelp": "Sehen Sie sich Werte aus einem Collection Scraper in der Vorschau an und importieren Sie sie in dieses Formular.",
+      "scrapeHelp": "Vorschauwerte aus einem Collection-Scraper anzeigen und erst anwenden, wenn du die Vorschau startest.",
       "scraper": "Schaber",
       "noScraper": "Kein Schaber",
       "scrapeUrl": "URL zum Scrapen",
@@ -137,7 +137,8 @@
       "showNumberOfItems": "Anzahl der Artikel anzeigen",
       "showItemQuantities": "Artikelmengen anzeigen",
       "numberOfChildren": "Anzahl der Kinder",
-      "numberOfItems": "Anzahl der Artikel"
+      "numberOfItems": "Anzahl der Artikel",
+      "scrapeManualNotice": "Koillection lädt Metadaten nicht automatisch herunter. Wähle einen Scraper, gib eine URL oder HTML-Datei an und starte die Vorschau manuell."
     },
     "delete": {
       "confirm": "Möchten Sie die Sammlung \"{name}\" löschen? Diese Aktion kann nicht rückgängig gemacht werden."
@@ -199,7 +200,7 @@
       "saveAndAddAnother": "Speichern und ein weiteres hinzufügen",
       "useSuggestedName": "Verwendung: {name}",
       "scrape": "Gegenstand abkratzen",
-      "scrapeHelp": "Sehen Sie sich die Werte eines Item Scrapers in der Vorschau an und importieren Sie sie in dieses Formular.",
+      "scrapeHelp": "Vorschauwerte aus einem Item-Scraper anzeigen und erst anwenden, wenn du die Vorschau startest.",
       "scraper": "Schaber",
       "noScraper": "Kein Schaber",
       "scrapeUrl": "URL zum Scrapen",
@@ -212,7 +213,8 @@
       "displayModes": {
         "list": "Liste",
         "pill": "Pille"
-      }
+      },
+      "scrapeManualNotice": "Koillection lädt Metadaten nicht automatisch herunter. Wähle einen Scraper, gib eine URL oder HTML-Datei an und starte die Vorschau manuell."
     },
     "delete": {
       "confirm": "Möchten Sie das Objekt \"{name}\" löschen? Diese Aktion kann nicht rückgängig gemacht werden."
@@ -661,7 +663,8 @@
       "removeHeader": "Kopfzeile entfernen",
       "headerName": "Kopfzeile",
       "headerValue": "Wert",
-      "saveFailed": "Der Scraper kann nicht gespeichert werden."
+      "saveFailed": "Der Scraper kann nicht gespeichert werden.",
+      "manualFlow": "Scraper sind benutzerdefinierte Regeln. Sie laufen nur, wenn du Daten für eine Collection oder ein Item manuell in der Vorschau importierst."
     },
     "delete": {
       "confirm": "Möchten Sie den Scraper „{name}“ löschen? Diese Aktion ist irreversibel."

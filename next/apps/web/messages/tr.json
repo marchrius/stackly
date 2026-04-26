@@ -106,7 +106,7 @@
       "noDataFields": "Henüz özel alan yok.",
       "saveFailed": "Koleksiyon kaydedilemiyor.",
       "scrape": "Kazıma koleksiyonu",
-      "scrapeHelp": "Bir koleksiyon kazıyıcıdaki değerleri önizleyin ve bunları bu forma aktarın.",
+      "scrapeHelp": "Bir koleksiyon kazıyıcısından değerleri önizleyin ve yalnızca önizlemeyi başlattığınızda uygulayın.",
       "scraper": "Kazıyıcı",
       "noScraper": "Kazıyıcı yok",
       "scrapeUrl": "Kazınacak URL",
@@ -137,7 +137,8 @@
       "showNumberOfItems": "Öğe sayısını göster",
       "showItemQuantities": "Ürün adetlerini göster",
       "numberOfChildren": "Çocuk sayısı",
-      "numberOfItems": "Öğe sayısı"
+      "numberOfItems": "Öğe sayısı",
+      "scrapeManualNotice": "Koillection metadata’yı otomatik indirmez. Bir kazıyıcı seçin, URL veya HTML dosyası girin ve önizlemeyi elle başlatın."
     },
     "delete": {
       "confirm": "\"{name}\" koleksiyonunu silmek istiyor musunuz? Bu işlem geri alınamaz."
@@ -199,7 +200,7 @@
       "saveAndAddAnother": "Kaydet ve başka bir tane ekle",
       "useSuggestedName": "Kullanım: {name}",
       "scrape": "Öğeyi kazı",
-      "scrapeHelp": "Değerleri bir öğe kazıyıcıdan önizleyin ve bunları bu forma aktarın.",
+      "scrapeHelp": "Bir öğe kazıyıcısından değerleri önizleyin ve yalnızca önizlemeyi başlattığınızda uygulayın.",
       "scraper": "Kazıyıcı",
       "noScraper": "Kazıyıcı yok",
       "scrapeUrl": "Kazınacak URL",
@@ -212,7 +213,8 @@
       "displayModes": {
         "list": "Liste",
         "pill": "Hap"
-      }
+      },
+      "scrapeManualNotice": "Koillection metadata’yı otomatik indirmez. Bir kazıyıcı seçin, URL veya HTML dosyası girin ve önizlemeyi elle başlatın."
     },
     "delete": {
       "confirm": "\"{name}\" öğesini silmek istiyor musunuz? Bu işlem geri alınamaz."
@@ -661,7 +663,8 @@
       "removeHeader": "Başlığı kaldır",
       "headerName": "Başlık",
       "headerValue": "Değer",
-      "saveFailed": "Kazıyıcı kaydedilemiyor."
+      "saveFailed": "Kazıyıcı kaydedilemiyor.",
+      "manualFlow": "Kazıyıcılar kullanıcı tanımlı kurallardır. Yalnızca koleksiyon veya öğe formunda verileri elle önizlediğiniz/içe aktardığınız zaman çalışır."
     },
     "delete": {
       "confirm": "\"{name}\" kazıyıcıyı silmek istiyor musunuz? Bu eylem geri döndürülemez."

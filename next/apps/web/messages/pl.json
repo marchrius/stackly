@@ -106,7 +106,7 @@
       "noDataFields": "Nie ma jeszcze pól niestandardowych.",
       "saveFailed": "Nie można zapisać kolekcji.",
       "scrape": "Kolekcja złomu",
-      "scrapeHelp": "Wyświetl podgląd wartości ze skrobaka kolekcji i zaimportuj je do tego formularza.",
+      "scrapeHelp": "Podejrzyj wartości ze scrapera kolekcji i zastosuj je dopiero po uruchomieniu podglądu.",
       "scraper": "Skrobak",
       "noScraper": "Brak skrobaka",
       "scrapeUrl": "Adres URL do zeskrobania",
@@ -137,7 +137,8 @@
       "showNumberOfItems": "Pokaż liczbę elementów",
       "showItemQuantities": "Pokaż ilości artykułów",
       "numberOfChildren": "Liczba dzieci",
-      "numberOfItems": "Liczba elementów"
+      "numberOfItems": "Liczba elementów",
+      "scrapeManualNotice": "Koillection nie pobiera metadanych automatycznie. Wybierz scraper, podaj URL lub plik HTML, a następnie ręcznie uruchom podgląd."
     },
     "delete": {
       "confirm": "Czy chcesz usunąć kolekcję „{name}”? Ta operacja jest nieodwracalna."
@@ -199,7 +200,7 @@
       "saveAndAddAnother": "Zapisz i dodaj kolejny",
       "useSuggestedName": "Zastosowanie: {name}",
       "scrape": "Zeskrob przedmiot",
-      "scrapeHelp": "Wyświetl podgląd wartości ze skrobaka elementów i zaimportuj je do tego formularza.",
+      "scrapeHelp": "Podejrzyj wartości ze scrapera przedmiotu i zastosuj je dopiero po uruchomieniu podglądu.",
       "scraper": "Skrobak",
       "noScraper": "Brak skrobaka",
       "scrapeUrl": "Adres URL do zeskrobania",
@@ -212,7 +213,8 @@
       "displayModes": {
         "list": "Lista",
         "pill": "Pigułka"
-      }
+      },
+      "scrapeManualNotice": "Koillection nie pobiera metadanych automatycznie. Wybierz scraper, podaj URL lub plik HTML, a następnie ręcznie uruchom podgląd."
     },
     "delete": {
       "confirm": "Czy chcesz usunąć obiekt „{name}”? Ta operacja jest nieodwracalna."
@@ -661,7 +663,8 @@
       "removeHeader": "Usuń nagłówek",
       "headerName": "Chodnikowiec",
       "headerValue": "Wartość",
-      "saveFailed": "Nie można zapisać skrobaka."
+      "saveFailed": "Nie można zapisać skrobaka.",
+      "manualFlow": "Scrapery to reguły zdefiniowane przez użytkownika. Uruchamiają się tylko podczas ręcznego podglądu/importu danych z formularza kolekcji lub przedmiotu."
     },
     "delete": {
       "confirm": "Czy chcesz usunąć skrobak „{name}”? To działanie jest nieodwracalne."

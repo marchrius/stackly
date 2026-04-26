@@ -169,6 +169,10 @@ export function ScraperForm({ scraper }: { scraper?: EditableScraper }) {
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && <p className="text-sm text-destructive">{error}</p>}
 
+      <div className="rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground">
+        <p>{t("form.manualFlow")}</p>
+      </div>
+
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="name">{t("form.name")}</Label>

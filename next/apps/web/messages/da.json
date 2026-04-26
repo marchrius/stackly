@@ -106,7 +106,7 @@
       "noDataFields": "Ingen brugerdefinerede felter endnu.",
       "saveFailed": "Samlingen kunne ikke gemmes.",
       "scrape": "Skrabesamling",
-      "scrapeHelp": "Se forhåndsvisning af værdier fra en indsamlingsskraber, og importer dem til denne formular.",
+      "scrapeHelp": "Forhåndsvis værdier fra en collection-scraper, og anvend dem først, når du vælger forhåndsvisning.",
       "scraper": "Skraber",
       "noScraper": "Ingen skraber",
       "scrapeUrl": "URL til at skrabe",
@@ -137,7 +137,8 @@
       "showNumberOfItems": "Vis antal varer",
       "showItemQuantities": "Vis varemængder",
       "numberOfChildren": "Antal børn",
-      "numberOfItems": "Antal varer"
+      "numberOfItems": "Antal varer",
+      "scrapeManualNotice": "Koillection henter ikke metadata automatisk. Vælg en scraper, angiv en URL eller HTML-fil, og start forhåndsvisningen manuelt."
     },
     "delete": {
       "confirm": "Vil du slette samlingen \"{name}\"? Denne handling kan ikke fortrydes."
@@ -199,7 +200,7 @@
       "saveAndAddAnother": "Gem og tilføj en anden",
       "useSuggestedName": "Brug: {name}",
       "scrape": "Skrab emne",
-      "scrapeHelp": "Se forhåndsvisning af værdier fra en vareskraber, og importer dem til denne formular.",
+      "scrapeHelp": "Forhåndsvis værdier fra en item-scraper, og anvend dem først, når du vælger forhåndsvisning.",
       "scraper": "Skraber",
       "noScraper": "Ingen skraber",
       "scrapeUrl": "URL til at skrabe",
@@ -212,7 +213,8 @@
       "displayModes": {
         "list": "Liste",
         "pill": "Pille"
-      }
+      },
+      "scrapeManualNotice": "Koillection henter ikke metadata automatisk. Vælg en scraper, angiv en URL eller HTML-fil, og start forhåndsvisningen manuelt."
     },
     "delete": {
       "confirm": "Vil du slette objektet \"{name}\"? Denne handling kan ikke fortrydes."
@@ -661,7 +663,8 @@
       "removeHeader": "Fjern overskriften",
       "headerName": "Overskrift",
       "headerValue": "Værdi",
-      "saveFailed": "Kan ikke gemme skraberen."
+      "saveFailed": "Kan ikke gemme skraberen.",
+      "manualFlow": "Scrapere er brugerdefinerede regler. De kører kun, når du manuelt forhåndsviser/importerer data fra en collection eller et item."
     },
     "delete": {
       "confirm": "Vil du slette skraberen \"{name}\"? Denne handling er irreversibel."

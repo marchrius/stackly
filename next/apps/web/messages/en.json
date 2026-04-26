@@ -106,7 +106,7 @@
       "noDataFields": "No custom fields yet.",
       "saveFailed": "Unable to save the collection.",
       "scrape": "Scrape collection",
-      "scrapeHelp": "Preview values from a collection scraper and import them into this form.",
+      "scrapeHelp": "Preview values from a collection scraper and apply them only when you start the preview.",
       "scraper": "Scraper",
       "noScraper": "No scraper",
       "scrapeUrl": "URL to scrape",
@@ -137,7 +137,8 @@
       "showNumberOfItems": "Show number of items",
       "showItemQuantities": "Show item quantities",
       "numberOfChildren": "Number of children",
-      "numberOfItems": "Number of items"
+      "numberOfItems": "Number of items",
+      "scrapeManualNotice": "Koillection does not download metadata automatically. Choose a scraper, provide a URL or HTML file, then start the preview manually."
     },
     "delete": {
       "confirm": "Do you want to delete the collection \"{name}\"? This action is irreversible."
@@ -199,7 +200,7 @@
       "saveAndAddAnother": "Save and add another",
       "useSuggestedName": "Use: {name}",
       "scrape": "Scrape item",
-      "scrapeHelp": "Preview values from an item scraper and import them into this form.",
+      "scrapeHelp": "Preview values from an item scraper and apply them only when you start the preview.",
       "scraper": "Scraper",
       "noScraper": "No scraper",
       "scrapeUrl": "URL to scrape",
@@ -212,7 +213,8 @@
       "displayModes": {
         "list": "List",
         "pill": "Pill"
-      }
+      },
+      "scrapeManualNotice": "Koillection does not download metadata automatically. Choose a scraper, provide a URL or HTML file, then start the preview manually."
     },
     "delete": {
       "confirm": "Do you want to delete the item \"{name}\"? This action is irreversible."
@@ -661,7 +663,8 @@
       "removeHeader": "Remove header",
       "headerName": "Header",
       "headerValue": "Value",
-      "saveFailed": "Unable to save the scraper."
+      "saveFailed": "Unable to save the scraper.",
+      "manualFlow": "Scrapers are user-defined rules. They run only when you manually preview/import data from a collection or item form."
     },
     "delete": {
       "confirm": "Do you want to delete the scraper \"{name}\"? This action is irreversible."

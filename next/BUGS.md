@@ -16,6 +16,29 @@ Nessun bug aperto al momento.
 
 ## Bug risolti
 
+### 0. Preview scraper item ignorava gli header HTTP personalizzati
+
+- Stato: completato (risolto)
+- Area: `apps/web` · scraper item preview · header HTTP
+- Gravità: media
+
+**Descrizione**
+
+La preview degli scraper item leggeva gli header salvati cercando le chiavi `name/value`, mentre il form e la preview collection salvano e leggono `header/value`.
+
+**Comportamento atteso**
+
+La preview item deve inviare gli stessi header personalizzati configurati dall'utente nello scraper, in modo coerente con la preview collection.
+
+**Comportamento osservato**
+
+Gli header personalizzati venivano scartati durante la fetch della sorgente remota per gli item, causando preview diverse o fallite per siti che richiedono header specifici.
+
+**Note tecniche**
+
+- Correzione applicata in `apps/web/app/api/scrapers/item-preview/route.ts`.
+- Il flusso di scraping resta manuale: la fetch remota parte solo dopo l'azione esplicita di preview/import dell'utente.
+
 ### 0. Immagine Docker standalone mancava dipendenze runtime del CLI Prisma
 
 - Stato: completato (risolto)

@@ -106,7 +106,7 @@
       "noDataFields": "Nessun campo personalizzato ancora.",
       "saveFailed": "Impossibile salvare la collezione.",
       "scrape": "Importa con scraper",
-      "scrapeHelp": "Anteprima dei valori da uno scraper di collezione e importazione nel form.",
+      "scrapeHelp": "Mostra l’anteprima dei valori da uno scraper collezione e applicali solo quando avvii l’anteprima.",
       "scraper": "Raschietto",
       "noScraper": "Nessuno scraper",
       "scrapeUrl": "URL da importare",
@@ -137,7 +137,8 @@
       "showNumberOfItems": "Mostra numero di oggetti",
       "showItemQuantities": "Mostra quantità oggetti",
       "numberOfChildren": "Numero di sotto-collezioni",
-      "numberOfItems": "Numero di oggetti"
+      "numberOfItems": "Numero di oggetti",
+      "scrapeManualNotice": "Koillection non scarica metadata automaticamente. Scegli uno scraper, indica un URL o un file HTML, poi avvia manualmente l’anteprima."
     },
     "delete": {
       "confirm": "Vuoi eliminare la collezione \"{name}\"? Questa azione è irreversibile."
@@ -199,7 +200,7 @@
       "saveAndAddAnother": "Salva e aggiungi un altro",
       "useSuggestedName": "Usa: {name}",
       "scrape": "Importa con scraper",
-      "scrapeHelp": "Anteprima dei valori da uno scraper di collezione e importazione nel form.",
+      "scrapeHelp": "Mostra l’anteprima dei valori da uno scraper oggetto e applicali solo quando avvii l’anteprima.",
       "scraper": "Raschietto",
       "noScraper": "Nessuno scraper",
       "scrapeUrl": "URL da importare",
@@ -212,7 +213,8 @@
       "displayModes": {
         "list": "Lista",
         "pill": "Badge"
-      }
+      },
+      "scrapeManualNotice": "Koillection non scarica metadata automaticamente. Scegli uno scraper, indica un URL o un file HTML, poi avvia manualmente l’anteprima."
     },
     "delete": {
       "confirm": "Vuoi eliminare l'oggetto \"{name}\"? Questa azione è irreversibile."
@@ -661,7 +663,8 @@
       "removeHeader": "Rimuovi intestazione",
       "headerName": "Intestazione",
       "headerValue": "Valore",
-      "saveFailed": "Impossibile salvare il raschietto."
+      "saveFailed": "Impossibile salvare il raschietto.",
+      "manualFlow": "Gli scraper sono regole definite dall’utente. Vengono eseguiti solo quando avvii manualmente l’anteprima/import da un form collezione o oggetto."
     },
     "delete": {
       "confirm": "Vuoi eliminare lo scraper \"{name}\"? Questa azione è irreversibile."

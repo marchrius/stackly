@@ -106,7 +106,7 @@
       "noDataFields": "Ainda não há campos personalizados.",
       "saveFailed": "Não foi possível salvar a coleção.",
       "scrape": "Coleta de raspagem",
-      "scrapeHelp": "Visualize os valores de um raspador de coleção e importe-os para este formulário.",
+      "scrapeHelp": "Pré-visualize valores de um scraper de coleção e aplique-os apenas quando iniciar a pré-visualização.",
       "scraper": "Raspador",
       "noScraper": "Sem raspador",
       "scrapeUrl": "URL para raspar",
@@ -137,7 +137,8 @@
       "showNumberOfItems": "Mostrar número de itens",
       "showItemQuantities": "Mostrar quantidades de itens",
       "numberOfChildren": "Número de filhos",
-      "numberOfItems": "Número de itens"
+      "numberOfItems": "Número de itens",
+      "scrapeManualNotice": "O Koillection não baixa metadados automaticamente. Escolha um scraper, informe uma URL ou arquivo HTML e inicie a pré-visualização manualmente."
     },
     "delete": {
       "confirm": "Deseja excluir a coleção \"{name}\"? Esta ação é irreversível."
@@ -199,7 +200,7 @@
       "saveAndAddAnother": "Salve e adicione outro",
       "useSuggestedName": "Uso: {name}",
       "scrape": "Raspar item",
-      "scrapeHelp": "Visualize os valores de um raspador de item e importe-os para este formulário.",
+      "scrapeHelp": "Pré-visualize valores de um scraper de item e aplique-os apenas quando iniciar a pré-visualização.",
       "scraper": "Raspador",
       "noScraper": "Sem raspador",
       "scrapeUrl": "URL para raspar",
@@ -212,7 +213,8 @@
       "displayModes": {
         "list": "Lista",
         "pill": "Pílula"
-      }
+      },
+      "scrapeManualNotice": "O Koillection não baixa metadados automaticamente. Escolha um scraper, informe uma URL ou arquivo HTML e inicie a pré-visualização manualmente."
     },
     "delete": {
       "confirm": "Deseja excluir o item \"{name}\"? Esta ação é irreversível."
@@ -661,7 +663,8 @@
       "removeHeader": "Remover cabeçalho",
       "headerName": "Cabeçalho",
       "headerValue": "Valor",
-      "saveFailed": "Não foi possível salvar o raspador."
+      "saveFailed": "Não foi possível salvar o raspador.",
+      "manualFlow": "Scrapers são regras definidas pelo usuário. Eles rodam apenas quando você pré-visualiza/importa dados manualmente em um formulário de coleção ou item."
     },
     "delete": {
       "confirm": "Deseja excluir o raspador \"{name}\"? Esta ação é irreversível."
