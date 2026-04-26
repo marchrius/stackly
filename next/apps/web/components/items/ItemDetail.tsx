@@ -11,6 +11,7 @@ import { useMemo, useState } from "react";
 import { buildItemMediaEntries, getDisplayData, mergeRelatedItems } from "@/lib/item-detail";
 import { getChoiceListDisplayMode, limitChoiceValues, parseChoiceListValues } from "@/lib/choice-lists";
 import { formatCountryValue, formatDateValue, formatPriceValue, parseListValues, renderRatingValue } from "@/lib/datum-format";
+import { getUploadUrl } from "@stackly/lib";
 
 type DatumWithChoiceList = Datum & {
   choiceList: { id: string; name: string; displayMode: string | null; selectionMode: string | null } | null;
@@ -203,7 +204,7 @@ export function ItemDetail({ item, previousItem, nextItem }: { item: ItemWithRel
                     <p className="whitespace-pre-line break-words text-sm">{datum.value ?? tCommon("none")}</p>
                   ) : datum.type === "file" && datum.file ? (
                     <a
-                      href={`/uploads/${datum.file}`}
+                      href={getUploadUrl(datum.file) ?? ""}
                       target="_blank"
                       rel="noreferrer"
                       download={datum.originalFilename ?? undefined}
@@ -248,7 +249,7 @@ export function ItemDetail({ item, previousItem, nextItem }: { item: ItemWithRel
                 <div className="relative aspect-[10/13] bg-muted flex items-center justify-center overflow-hidden">
                   {relatedItem.imageSmallThumbnail ? (
                     <img
-                      src={`/uploads/${relatedItem.imageSmallThumbnail}`}
+                      src={getUploadUrl(relatedItem.imageSmallThumbnail) ?? ""}
                       alt={relatedItem.name}
                       loading="lazy"
                       className="max-h-full max-w-full object-contain transition-transform group-hover:scale-105"

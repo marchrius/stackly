@@ -7,6 +7,7 @@ import { ChevronRight, Edit, ExternalLink, Heart } from "lucide-react";
 import { deleteWish } from "@/lib/actions/wish.actions";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { useTranslations } from "next-intl";
+import { getUploadUrl } from "@stackly/lib";
 
 interface Ancestor {
   id: string;
@@ -93,7 +94,7 @@ export function WishDetail({ wish }: { wish: WishWithWishlist }) {
 
       <div className="overflow-hidden rounded-xl border bg-muted">
         {wish.image ? (
-          <img src={`/uploads/${wish.image}`} alt={wish.name} className="w-full max-h-[70vh] object-contain" />
+          <img src={getUploadUrl(wish.image) ?? ""} alt={wish.name} className="w-full max-h-[70vh] object-contain" />
         ) : (
           <div className="flex h-64 items-center justify-center text-muted-foreground">
             <div className="flex flex-col items-center gap-3">

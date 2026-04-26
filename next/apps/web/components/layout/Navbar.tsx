@@ -6,6 +6,7 @@ import { Button } from "@stackly/ui";
 import { Settings, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { getUploadUrl } from "@stackly/lib";
 
 interface NavbarProps {
   user: Session["user"];
@@ -24,7 +25,7 @@ export function Navbar({ user }: NavbarProps) {
           <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border bg-muted text-xs font-semibold text-muted-foreground">
             {user.image ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={user.image} alt={user.name ?? ""} className="h-full w-full object-cover" />
+              <img src={getUploadUrl(user.image) ?? ""} alt={user.name ?? ""} className="h-full w-full object-cover" />
             ) : (
               <span>{getInitials(user.name)}</span>
             )}

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ChoiceList, Datum, Field, Item, Tag, Template } from "@stackly/db";
-import { CURRENCIES } from "@stackly/lib";
+import { CURRENCIES, getUploadUrl } from "@stackly/lib";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -602,13 +602,13 @@ export function ItemForm({
           <div className="space-y-3">
             {getMediaPath(field) ? (
               field.type === "video" ? (
-                <video controls className="max-h-64 w-full rounded-lg border bg-black" src={field.video ? `/uploads/${field.video}` : field.previewUrl ?? undefined}>
+                <video controls className="max-h-64 w-full rounded-lg border bg-black" src={getUploadUrl(field.video) ?? field.previewUrl ?? undefined}>
                   <track kind="captions" />
                 </video>
               ) : field.type === "file" ? (
                 <div className="rounded-lg border border-dashed p-3 text-sm">{field.originalFilename ?? field.file ?? t("unknownFile")}</div>
               ) : (
-                <img src={field.previewUrl ?? (field.image ? `/uploads/${field.image}` : undefined)} alt={fieldTitle} className="max-h-64 rounded-lg border object-contain" />
+                <img src={field.previewUrl ?? getUploadUrl(field.image) ?? undefined} alt={fieldTitle} className="max-h-64 rounded-lg border object-contain" />
               )
             ) : (
               <p className="text-sm text-muted-foreground">{tCommon("none")}</p>
@@ -827,7 +827,7 @@ export function ItemForm({
             <div className="flex flex-wrap items-start gap-4">
               <div className="relative flex h-56 w-44 items-center justify-center overflow-hidden rounded-lg border bg-muted">
                 {mainImagePreview ? (
-                  <img src={mainImagePreview.startsWith("blob:") ? mainImagePreview : `/uploads/${mainImagePreview}`} alt={name || tCommon("noImage")} className="max-h-full max-w-full object-contain" />
+                  <img src={getUploadUrl(mainImagePreview) ?? ""} alt={name || tCommon("noImage")} className="max-h-full max-w-full object-contain" />
                 ) : (
                   <span className="px-4 text-center text-sm text-muted-foreground">{tCommon("noImage")}</span>
                 )}

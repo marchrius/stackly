@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@stackly/ui";
 import { createAlbum, updateAlbum } from "@/lib/actions/media.actions";
-import { VISIBILITY_OPTIONS } from "@stackly/lib";
+import { getUploadUrl, VISIBILITY_OPTIONS } from "@stackly/lib";
 
 interface ParentOption {
   id: string;
@@ -32,8 +32,7 @@ function normalizeColor(value: string | null | undefined): string {
 }
 
 function toUploadUrl(p: string | null | undefined): string | null {
-  if (!p) return null;
-  return p.startsWith("/") ? p : `/uploads/${p}`;
+  return getUploadUrl(p);
 }
 
 export function AlbumForm({ album, parentOptions = [], parentId }: AlbumFormProps) {
@@ -234,6 +233,5 @@ export function AlbumForm({ album, parentOptions = [], parentId }: AlbumFormProp
     </form>
   );
 }
-
 
 

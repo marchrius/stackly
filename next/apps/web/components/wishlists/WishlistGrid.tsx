@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@stackly/ui";
 import { Heart, Layers } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { getUploadUrl } from "@stackly/lib";
 
 type WishlistWithCount = Wishlist & { _count: { children: number; wishes: number } };
 
@@ -35,7 +36,7 @@ export function WishlistGrid({ wishlists, basePath = "/wishlists" }: WishlistGri
             >
               {wl.image ? (
                 <img
-                  src={`/uploads/${wl.image}`}
+                  src={getUploadUrl(wl.image) ?? ""}
                   alt={wl.name}
                   loading="lazy"
                   className="max-h-full max-w-full object-contain"

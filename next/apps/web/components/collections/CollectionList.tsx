@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 import { deleteCollection } from "@/lib/actions/collection.actions";
 import { CollectionIndexCollection, getCollectionCounter, getCollectionDatumDisplayValue, sortCollectionsForDisplay } from "@/lib/collection-index-display";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
+import { getUploadUrl } from "@stackly/lib";
 
 interface CollectionListProps {
   collections: CollectionIndexCollection[];
@@ -96,7 +97,7 @@ export function CollectionList({ collections, displayConfiguration, basePath = "
                     >
                       {collection.image ? (
                         <img
-                          src={`/uploads/${collection.image}`}
+                          src={getUploadUrl(collection.image) ?? ""}
                           alt={collection.title}
                           loading="lazy"
                           className="max-h-full max-w-full object-contain"

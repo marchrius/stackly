@@ -71,7 +71,11 @@ export function normalizeSymfonyPassword(hash: string): string {
 
 export function getUploadUrl(path: string | null | undefined): string | null {
   if (!path) return null;
-  if (path.startsWith("http")) return path;
-  return `/uploads/${path}`;
+  const normalized = path.trim().replace(/\\/g, "/");
+  if (!normalized) return null;
+  if (/^(https?:|blob:|data:)/i.test(normalized)) return normalized;
+  const withoutLeadingSlash = normalized.replace(/^\/+/, "");
+  const withoutPublic = withoutLeadingSlash.replace(/^public\/+/i, "");
+  const withoutUploads = withoutPublic.replace(/^uploads\/+/i, "");
+  return `/uploads/${withoutUploads}`;
 }
-

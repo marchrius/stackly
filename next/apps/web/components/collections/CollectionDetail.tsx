@@ -14,6 +14,7 @@ import { getCollectionCachedSummary } from "@/lib/collection-detail";
 import { limitChoiceValues, parseChoiceListValues } from "@/lib/choice-lists";
 import { formatCountryValue, formatCurrencyAmount, formatDateValue, formatPriceValue, parseListValues, renderRatingValue } from "@/lib/datum-format";
 import { CollectionItemsGrid } from "./CollectionItemsGrid";
+import { getUploadUrl } from "@stackly/lib";
 
 type DatumWithChoiceList = Datum & {
   choiceList: { id: string; name: string; displayMode: string | null; selectionMode: string | null } | null;
@@ -191,7 +192,7 @@ export function CollectionDetail({ collection, ancestors }: CollectionDetailProp
                   <p className="whitespace-pre-line break-words text-sm">{datum.value ?? tCommon("none")}</p>
                 ) : datum.type === "file" && datum.file ? (
                   <a
-                    href={`/uploads/${datum.file}`}
+                    href={getUploadUrl(datum.file) ?? ""}
                     target="_blank"
                     rel="noreferrer"
                     download={datum.originalFilename ?? undefined}

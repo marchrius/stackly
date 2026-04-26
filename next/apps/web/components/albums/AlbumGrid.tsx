@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@stackly/ui";
 import { Image, Layers } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { getUploadUrl } from "@stackly/lib";
 
 type AlbumWithCount = Album & { _count: { children: number; photos: number } };
 
@@ -30,7 +31,7 @@ export function AlbumGrid({ albums }: { albums: AlbumWithCount[] }) {
             >
               {album.image ? (
                 <img
-                  src={`/uploads/${album.image}`}
+                  src={getUploadUrl(album.image) ?? ""}
                   alt={album.title}
                   loading="lazy"
                   className="max-h-full max-w-full object-contain"

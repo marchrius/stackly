@@ -14,7 +14,7 @@ import {
   Textarea,
 } from "@stackly/ui";
 import { createPhoto, updatePhoto } from "@/lib/actions/photo.actions";
-import { VISIBILITY_OPTIONS } from "@stackly/lib";
+import { getUploadUrl, VISIBILITY_OPTIONS } from "@stackly/lib";
 
 interface AlbumOption {
   id: string;
@@ -29,8 +29,7 @@ interface PhotoFormProps {
 }
 
 function toUploadUrl(p: string | null | undefined): string | null {
-  if (!p) return null;
-  return p.startsWith("/") ? p : `/uploads/${p}`;
+  return getUploadUrl(p);
 }
 
 function formatDateForInput(date: Date | string | null | undefined): string {
@@ -214,4 +213,3 @@ export function PhotoForm({ photo, albums, albumId }: PhotoFormProps) {
     </form>
   );
 }
-

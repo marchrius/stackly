@@ -22,7 +22,7 @@ import {
   RESERVED_SORTING_VALUES,
 } from "@/lib/collection-display-config";
 import { isSingleChoiceList, limitChoiceValues, normalizeChoiceValues, parseChoiceListValues } from "@/lib/choice-lists";
-import { VISIBILITY_OPTIONS } from "@stackly/lib";
+import { getUploadUrl, VISIBILITY_OPTIONS } from "@stackly/lib";
 import { useTranslations } from "next-intl";
 
 type ChoiceListOption = Pick<ChoiceList, "id" | "name" | "choices" | "displayMode" | "selectionMode">;
@@ -75,8 +75,7 @@ function normalizeColorValue(value: string | null | undefined): string {
 }
 
 function toUploadUrl(path: string | null): string | null {
-  if (!path) return null;
-  return path.startsWith("/") ? path : `/uploads/${path}`;
+  return getUploadUrl(path);
 }
 
 function buildManagedFields(collection: CollectionWithData | undefined, choiceLists: ChoiceListOption[]) {

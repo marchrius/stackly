@@ -6,6 +6,7 @@ import { Card, CardContent } from "@stackly/ui";
 import { Box, Layers } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslations } from "next-intl";
+import { getUploadUrl } from "@stackly/lib";
 import { type CollectionIndexCollection, getCollectionCounter, sortCollectionsForDisplay } from "@/lib/collection-index-display";
 
 interface CollectionGridProps {
@@ -54,7 +55,7 @@ export function CollectionGrid({ collections, basePath = "/collections", display
               >
                 {col.image ? (
                   <img
-                    src={`/uploads/${col.image}`}
+                    src={getUploadUrl(col.image) ?? ""}
                     alt={col.title}
                     loading="lazy"
                     className="max-h-full max-w-full object-contain"

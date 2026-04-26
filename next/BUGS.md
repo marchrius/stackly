@@ -16,6 +16,53 @@ Nessun bug aperto al momento.
 
 ## Bug risolti
 
+### 0. Immagine Docker standalone mancava dipendenze runtime del CLI Prisma
+
+- Stato: completato (risolto)
+- Area: `Dockerfile` · runtime container · Prisma migrations
+- Gravità: alta
+
+**Descrizione**
+
+Dopo l'ottimizzazione dell'immagine Docker con output standalone, il runtime copiava il CLI Prisma e `@prisma/*` ma non tutte le dipendenze transitive necessarie al comando `prisma migrate deploy`.
+
+**Comportamento atteso**
+
+Il container deve poter applicare le migration Prisma all'avvio senza copiare l'intera `node_modules` di build.
+
+**Comportamento osservato**
+
+L'entrypoint falliva con `Cannot find module 'effect'` importato da `@prisma/config`.
+
+**Note tecniche**
+
+- Correzione applicata in `Dockerfile`.
+- Copiate nel runtime standalone le dipendenze transitive del CLI Prisma necessarie a `@prisma/config` e ai loader usati da `prisma migrate deploy`.
+
+### 0. URL upload legacy con prefisso duplicato nelle immagini
+
+- Stato: completato (risolto)
+- Area: `apps/web` · rendering immagini upload · migrazione legacy
+- Gravità: alta
+
+**Descrizione**
+
+Le immagini migrate dal legacy potevano non caricarsi nella UI perché i path salvati nel database includevano gia' il prefisso `uploads/`, mentre molti componenti aggiungevano sempre `/uploads/` durante il rendering.
+
+**Comportamento atteso**
+
+I path upload devono essere normalizzati in modo unico, accettando sia valori nuovi come `<user>/<file>` sia valori legacy come `uploads/<user>/<file>` o `/uploads/<user>/<file>`.
+
+**Comportamento osservato**
+
+La UI generava URL come `/uploads/uploads/...`, causando immagini rotte per cover, thumbnail, media item e avatar utente.
+
+**Note tecniche**
+
+- Correzione applicata in `packages/lib/src/utils/index.ts` centralizzando la normalizzazione in `getUploadUrl`.
+- Aggiornati componenti e helper web che costruivano manualmente URL upload.
+- Aggiunta copertura regressiva in `apps/web/test/lib/item-detail.test.ts` per i path legacy con prefisso `uploads/`.
+
 ### 0. Docker build non generava il client Prisma prima di `next build`
 
 - Stato: completato (risolto)

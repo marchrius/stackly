@@ -4,7 +4,7 @@ import type { Wishlist } from "@stackly/db";
 import { useMemo, useRef, useState } from "react";
 import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@stackly/ui";
 import { createWishlist, updateWishlist } from "@/lib/actions/media.actions";
-import { VISIBILITY_OPTIONS } from "@stackly/lib";
+import { getUploadUrl, VISIBILITY_OPTIONS } from "@stackly/lib";
 
 interface ParentOption {
   id: string;
@@ -23,8 +23,7 @@ function normalizeColor(value: string | null | undefined): string {
 }
 
 function toUploadUrl(path: string | null | undefined): string | null {
-  if (!path) return null;
-  return path.startsWith("/") ? path : `/uploads/${path}`;
+  return getUploadUrl(path);
 }
 
 export function WishlistForm({ wishlist, parentOptions = [], parentId }: WishlistFormProps) {
@@ -180,4 +179,3 @@ export function WishlistForm({ wishlist, parentOptions = [], parentId }: Wishlis
     </form>
   );
 }
-

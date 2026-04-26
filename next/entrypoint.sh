@@ -41,8 +41,8 @@ else
 fi
 
 cd /app/packages/db
-npx prisma migrate deploy
+node /app/node_modules/prisma/build/index.js migrate deploy --schema /app/packages/db/prisma/schema.prisma
 cd /app
 
 echo "[entrypoint] Launching Next.js..."
-exec npm run start --workspace=@stackly/web
+exec node /app/apps/web/server.js

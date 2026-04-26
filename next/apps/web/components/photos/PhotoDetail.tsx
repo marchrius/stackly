@@ -7,6 +7,7 @@ import { Edit, ChevronRight, MapPin, Calendar } from "lucide-react";
 import { deletePhoto } from "@/lib/actions/photo.actions";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { useTranslations } from "next-intl";
+import { getUploadUrl } from "@stackly/lib";
 
 interface Ancestor {
   id: string;
@@ -89,7 +90,7 @@ export function PhotoDetail({ photo }: { photo: PhotoWithAlbum }) {
       {/* Immagine principale */}
       <div className="overflow-hidden rounded-xl border bg-muted">
         {photo.image ? (
-          <img src={`/uploads/${photo.image}`} alt={photo.title} className="w-full max-h-[70vh] object-contain" />
+          <img src={getUploadUrl(photo.image) ?? ""} alt={photo.title} className="w-full max-h-[70vh] object-contain" />
         ) : (
           <div className="flex h-64 items-center justify-center text-muted-foreground">{tCommon("noImage")}</div>
         )}

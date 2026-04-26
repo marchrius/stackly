@@ -41,6 +41,22 @@ describe("item detail helpers", () => {
     ]);
   });
 
+  it("does not duplicate the uploads prefix for migrated legacy paths", () => {
+    const entries = buildItemMediaEntries({
+      id: "item-1",
+      name: "Watchmen",
+      image: "uploads/covers/watchmen.jpg",
+      imageSmallThumbnail: "public/uploads/covers/watchmen_small.jpg",
+      imageLargeThumbnail: "/uploads/covers/watchmen_large.jpg",
+      data: [],
+    });
+
+    expect(entries[0]).toMatchObject({
+      src: "/uploads/covers/watchmen_large.jpg",
+      thumbnailSrc: "/uploads/covers/watchmen_small.jpg",
+    });
+  });
+
   it("filters out media datum entries from the textual display block", () => {
     const data = getDisplayData([
       { id: "d1", type: "text" },

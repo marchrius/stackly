@@ -8,6 +8,7 @@ import { Edit, Plus, ChevronRight } from "lucide-react";
 import { deleteAlbum } from "@/lib/actions/media.actions";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { useTranslations } from "next-intl";
+import { getUploadUrl } from "@stackly/lib";
 
 interface Ancestor {
   id: string;
@@ -52,7 +53,7 @@ export function AlbumDetail({ album }: { album: AlbumWithRelations }) {
         <div className="flex items-center gap-3">
           {album.image ? (
             <img
-              src={`/uploads/${album.image}`}
+              src={getUploadUrl(album.image) ?? ""}
               alt={album.title}
               className="h-14 w-14 rounded-lg object-cover border"
             />
@@ -138,7 +139,7 @@ export function AlbumDetail({ album }: { album: AlbumWithRelations }) {
                 <div className="relative aspect-[10/13] bg-muted flex items-center justify-center overflow-hidden">
                   {photo.imageSmallThumbnail ? (
                     <img
-                      src={`/uploads/${photo.imageSmallThumbnail}`}
+                      src={getUploadUrl(photo.imageSmallThumbnail) ?? ""}
                       alt={photo.title}
                       loading="lazy"
                       className="max-h-full max-w-full object-contain transition-transform group-hover:scale-105"
@@ -160,4 +161,3 @@ export function AlbumDetail({ album }: { album: AlbumWithRelations }) {
     </div>
   );
 }
-

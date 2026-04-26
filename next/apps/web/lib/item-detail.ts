@@ -1,3 +1,5 @@
+import { getUploadUrl } from "@stackly/lib";
+
 export interface ItemMediaDatumLike {
   id: string;
   type: string;
@@ -30,21 +32,17 @@ export interface ItemMediaEntry {
   thumbnailSrc: string | null;
 }
 
-function toUploadUrl(filePath: string | null | undefined) {
-  return filePath ? `/uploads/${filePath}` : null;
-}
-
 export function buildItemMediaEntries(item: ItemDetailLike): ItemMediaEntry[] {
   const entries: ItemMediaEntry[] = [];
 
-  const mainImageSrc = toUploadUrl(item.imageLargeThumbnail ?? item.image);
+  const mainImageSrc = getUploadUrl(item.imageLargeThumbnail ?? item.image);
   if (mainImageSrc) {
     entries.push({
       id: `item-${item.id}`,
       label: "main",
       kind: "image",
       src: mainImageSrc,
-      thumbnailSrc: toUploadUrl(item.imageSmallThumbnail ?? item.image),
+      thumbnailSrc: getUploadUrl(item.imageSmallThumbnail ?? item.image),
     });
   }
 
@@ -54,15 +52,15 @@ export function buildItemMediaEntries(item: ItemDetailLike): ItemMediaEntry[] {
         id: datum.id,
         label: datum.label ?? "",
         kind: "image",
-        src: toUploadUrl(datum.image) ?? "",
-        thumbnailSrc: toUploadUrl(datum.imageSmallThumbnail ?? datum.image),
+        src: getUploadUrl(datum.image) ?? "",
+        thumbnailSrc: getUploadUrl(datum.imageSmallThumbnail ?? datum.image),
       });
     } else if (datum.type === "video" && datum.video) {
       entries.push({
         id: datum.id,
         label: datum.label ?? "",
         kind: "video",
-        src: toUploadUrl(datum.video) ?? "",
+        src: getUploadUrl(datum.video) ?? "",
         thumbnailSrc: null,
       });
     }

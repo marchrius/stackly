@@ -13,7 +13,7 @@ import {
   SelectValue,
   Textarea,
 } from "@stackly/ui";
-import { CURRENCIES, VISIBILITY_OPTIONS } from "@stackly/lib";
+import { CURRENCIES, getUploadUrl, VISIBILITY_OPTIONS } from "@stackly/lib";
 import { createWish, updateWish } from "@/lib/actions/wish.actions";
 
 interface WishlistOption {
@@ -28,8 +28,7 @@ interface WishFormProps {
 }
 
 function toUploadUrl(path: string | null | undefined): string | null {
-  if (!path) return null;
-  return path.startsWith("/") ? path : `/uploads/${path}`;
+  return getUploadUrl(path);
 }
 
 export function WishForm({ wish, wishlists, wishlistId }: WishFormProps) {
@@ -231,4 +230,3 @@ export function WishForm({ wish, wishlists, wishlistId }: WishFormProps) {
     </form>
   );
 }
-

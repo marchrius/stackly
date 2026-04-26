@@ -8,6 +8,7 @@ import { Edit, ExternalLink, Heart, ChevronRight, Plus } from "lucide-react";
 import { deleteWishlist } from "@/lib/actions/media.actions";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { useTranslations } from "next-intl";
+import { getUploadUrl } from "@stackly/lib";
 
 interface Ancestor {
   id: string;
@@ -53,7 +54,7 @@ export function WishlistDetail({ wishlist, readOnly = false, basePath = "/wishli
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           {wishlist.image ? (
-            <img src={`/uploads/${wishlist.image}`} alt={wishlist.name} className="h-14 w-14 rounded-lg object-cover border" />
+            <img src={getUploadUrl(wishlist.image) ?? ""} alt={wishlist.name} className="h-14 w-14 rounded-lg object-cover border" />
           ) : (
             <div className="h-14 w-14 rounded-lg flex items-center justify-center text-2xl font-bold text-white" style={{ backgroundColor: wishlist.color ? `#${wishlist.color}` : "#ec4899" }}>
               {wishlist.name.charAt(0).toUpperCase()}
@@ -110,7 +111,7 @@ export function WishlistDetail({ wishlist, readOnly = false, basePath = "/wishli
                 <div className="group cursor-pointer rounded-lg border bg-card overflow-hidden hover:shadow-md transition-shadow">
                   <div className="relative aspect-[10/13] bg-muted flex items-center justify-center overflow-hidden">
                     {wish.imageSmallThumbnail ? (
-                      <img src={`/uploads/${wish.imageSmallThumbnail}`} alt={wish.name} loading="lazy" className="max-h-full max-w-full object-contain" />
+                      <img src={getUploadUrl(wish.imageSmallThumbnail) ?? ""} alt={wish.name} loading="lazy" className="max-h-full max-w-full object-contain" />
                     ) : (
                       <Heart className="h-8 w-8 text-secondary opacity-60" />
                     )}

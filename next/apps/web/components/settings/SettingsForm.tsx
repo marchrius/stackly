@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { SUPPORTED_LOCALES } from "@/i18n/locales";
 import { ThemePicker } from "@/components/settings/ThemePicker";
 import { normalizeTheme } from "@/lib/theme/themes";
+import { getUploadUrl } from "@stackly/lib";
 
 export function SettingsForm({ user }: { user: User }) {
   const t = useTranslations("settings");
@@ -15,7 +16,7 @@ export function SettingsForm({ user }: { user: User }) {
   const [pwLoading, setPwLoading] = useState(false);
   const [pwError, setPwError] = useState("");
   const [pwSuccess, setPwSuccess] = useState(false);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(user.avatar ? `/uploads/${user.avatar}` : null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(getUploadUrl(user.avatar));
   const [avatarRemoved, setAvatarRemoved] = useState(false);
   const [avatarFileName, setAvatarFileName] = useState("");
 

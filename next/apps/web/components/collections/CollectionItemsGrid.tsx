@@ -3,6 +3,7 @@
 import type { Item } from "@stackly/db";
 import Link from "next/link";
 import { Box } from "lucide-react";
+import { getUploadUrl } from "@stackly/lib";
 
 type CollectionGridItem = Pick<Item, "id" | "name" | "quantity" | "imageSmallThumbnail">;
 
@@ -22,7 +23,7 @@ export function CollectionItemsGrid({ items }: CollectionItemsGridProps) {
             <div className="relative aspect-[10/13] flex items-center justify-center overflow-hidden bg-muted">
               {item.imageSmallThumbnail ? (
                 <img
-                  src={`/uploads/${item.imageSmallThumbnail}`}
+                  src={getUploadUrl(item.imageSmallThumbnail) ?? ""}
                   alt={item.name}
                   loading="lazy"
                   className="max-h-full max-w-full object-contain"
