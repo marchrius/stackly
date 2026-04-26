@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -11,14 +11,32 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  applicationName: "Stackly",
   title: {
     template: "%s | Stackly",
     default: "Stackly",
   },
-  description: "Gestisci le tue collezioni personali",
+  description: "Self-hosted collection manager for physical collections, metadata, wishlists, albums, and loans.",
+  manifest: "/manifest.webmanifest",
   icons: {
     icon: "/favicon.ico",
+    apple: "/icons/apple-touch-icon.svg",
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Stackly",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
+    { media: "(prefers-color-scheme: dark)", color: "#111827" },
+  ],
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

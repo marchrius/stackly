@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Stackly">
+  <rect width="512" height="512" rx="112" fill="#111827"/>
+  <path d="M125 144c0-23.564 19.103-42.667 42.667-42.667h176.666C367.897 101.333 387 120.436 387 144v224c0 23.564-19.103 42.667-42.667 42.667H167.667C144.103 410.667 125 391.564 125 368V144Z" fill="#f8fafc"/>
+  <path d="M184 181h144v37H184v-37Zm0 75h144v37H184v-37Zm0 75h96v37h-96v-37Z" fill="#111827"/>
+  <path d="M360 128v256" stroke="#38bdf8" stroke-width="27" stroke-linecap="round"/>
+</svg>
