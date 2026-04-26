@@ -6,7 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "dotenv -e .env -- turbo run build",
+    "build": "dotenv -e .env -- sh -c 'NODE_ENV=production turbo run build'",
     "dev": "dotenv -e .env -- turbo run dev db:studio",
     "lint": "dotenv -e .env -- turbo run lint",
     "maintenance:refresh-cached-values": "dotenv -e .env -- node scripts/refresh-cached-values.mjs",

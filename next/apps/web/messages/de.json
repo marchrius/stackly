@@ -742,5 +742,13 @@
     "copyLink": "Öffentlichen Link kopieren",
     "copiedLink": "Link kopiert",
     "openPublicView": "Öffentliche Ansicht öffnen"
+  },
+  "errors": {
+    "notFoundTitle": "Seite nicht gefunden",
+    "notFoundDescription": "Die Ressource existiert nicht oder ist mit deiner aktuellen Sichtbarkeit nicht verfügbar.",
+    "goHome": "Zum Dashboard",
+    "globalTitle": "Etwas ist schiefgelaufen",
+    "globalDescription": "Lade die Seite neu. Wenn das Problem bestehen bleibt, prüfe die Serverlogs.",
+    "reload": "Neu laden"
   }
 }

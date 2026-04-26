@@ -742,5 +742,13 @@
     "copyLink": "复制公开链接",
     "copiedLink": "链接已复制",
     "openPublicView": "打开公开视图"
+  },
+  "errors": {
+    "notFoundTitle": "页面未找到",
+    "notFoundDescription": "资源不存在，或在当前可见性下不可访问。",
+    "goHome": "前往仪表盘",
+    "globalTitle": "出现问题",
+    "globalDescription": "请尝试重新加载页面。如果问题仍然存在，请检查服务器日志。",
+    "reload": "重新加载"
   }
 }

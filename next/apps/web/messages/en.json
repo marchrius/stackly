@@ -742,5 +742,13 @@
     "copyLink": "Copy public link",
     "copiedLink": "Link copied",
     "openPublicView": "Open public view"
+  },
+  "errors": {
+    "notFoundTitle": "Page not found",
+    "notFoundDescription": "The resource does not exist or is not available with your current visibility.",
+    "goHome": "Go to dashboard",
+    "globalTitle": "Something went wrong",
+    "globalDescription": "Try reloading the page. If the problem continues, check the server logs.",
+    "reload": "Reload"
   }
 }

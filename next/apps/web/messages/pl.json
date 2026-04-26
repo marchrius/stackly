@@ -742,5 +742,13 @@
     "copyLink": "Kopiuj link publiczny",
     "copiedLink": "Link skopiowany",
     "openPublicView": "Otwórz widok publiczny"
+  },
+  "errors": {
+    "notFoundTitle": "Nie znaleziono strony",
+    "notFoundDescription": "Zasób nie istnieje albo nie jest dostępny przy bieżącej widoczności.",
+    "goHome": "Przejdź do panelu",
+    "globalTitle": "Coś poszło nie tak",
+    "globalDescription": "Spróbuj odświeżyć stronę. Jeśli problem będzie się powtarzał, sprawdź logi serwera.",
+    "reload": "Odśwież"
   }
 }

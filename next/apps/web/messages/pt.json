@@ -742,5 +742,13 @@
     "copyLink": "Copiar link público",
     "copiedLink": "Link copiado",
     "openPublicView": "Abrir vista pública"
+  },
+  "errors": {
+    "notFoundTitle": "Página não encontrada",
+    "notFoundDescription": "O recurso não existe ou não está disponível com a visibilidade atual.",
+    "goHome": "Ir para o painel",
+    "globalTitle": "Algo correu mal",
+    "globalDescription": "Tente recarregar a página. Se o problema continuar, verifique os logs do servidor.",
+    "reload": "Recarregar"
   }
 }

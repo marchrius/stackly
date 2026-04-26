@@ -742,5 +742,13 @@
     "copyLink": "Openbare link kopiëren",
     "copiedLink": "Link gekopieerd",
     "openPublicView": "Openbare weergave openen"
+  },
+  "errors": {
+    "notFoundTitle": "Pagina niet gevonden",
+    "notFoundDescription": "De resource bestaat niet of is niet beschikbaar met je huidige zichtbaarheid.",
+    "goHome": "Naar dashboard",
+    "globalTitle": "Er ging iets mis",
+    "globalDescription": "Probeer de pagina opnieuw te laden. Als het probleem blijft, controleer dan de serverlogs.",
+    "reload": "Opnieuw laden"
   }
 }

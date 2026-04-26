@@ -742,5 +742,13 @@
     "copyLink": "Kopiér offentligt link",
     "copiedLink": "Link kopieret",
     "openPublicView": "Åbn offentlig visning"
+  },
+  "errors": {
+    "notFoundTitle": "Siden blev ikke fundet",
+    "notFoundDescription": "Ressourcen findes ikke, eller den er ikke tilgængelig med din aktuelle synlighed.",
+    "goHome": "Gå til dashboard",
+    "globalTitle": "Noget gik galt",
+    "globalDescription": "Prøv at genindlæse siden. Hvis problemet fortsætter, skal du kontrollere serverloggene.",
+    "reload": "Genindlæs"
   }
 }

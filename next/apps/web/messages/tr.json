@@ -742,5 +742,13 @@
     "copyLink": "Herkese açık bağlantıyı kopyala",
     "copiedLink": "Bağlantı kopyalandı",
     "openPublicView": "Herkese açık görünümü aç"
+  },
+  "errors": {
+    "notFoundTitle": "Sayfa bulunamadı",
+    "notFoundDescription": "Kaynak yok veya mevcut görünürlükle kullanılamıyor.",
+    "goHome": "Panoya git",
+    "globalTitle": "Bir şeyler ters gitti",
+    "globalDescription": "Sayfayı yeniden yüklemeyi deneyin. Sorun sürerse sunucu günlüklerini kontrol edin.",
+    "reload": "Yeniden yükle"
   }
 }

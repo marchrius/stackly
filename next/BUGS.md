@@ -16,6 +16,30 @@ Nessun bug aperto al momento.
 
 ## Bug risolti
 
+### 0. Build Next falliva durante il prerender delle pagine 404/500
+
+- Stato: completato (risolto)
+- Area: `apps/web` · App Router · build produzione
+- Gravità: alta
+
+**Descrizione**
+
+Durante `npm run build`, Next.js tentava di prerenderizzare le pagine di errore e falliva con `Error: <Html> should not be imported outside of pages/_document`.
+
+**Comportamento atteso**
+
+La build produzione deve completare anche per le route di errore/not-found dell'App Router.
+
+**Comportamento osservato**
+
+La build si interrompeva su `/_error` durante il prerender di `/404` o `/500`.
+
+**Note tecniche**
+
+- Causa individuata: `dotenv` caricava `NODE_ENV="development"` da `next/.env` anche durante `next build`.
+- Correzione applicata forzando `NODE_ENV=production` negli script `build` root/web dopo il caricamento dell'ambiente.
+- Aggiunte anche pagine App Router dedicate per `not-found` e `global-error`, così la UI di errore resta controllata e localizzata.
+
 ### 0. Preview scraper item ignorava gli header HTTP personalizzati
 
 - Stato: completato (risolto)
