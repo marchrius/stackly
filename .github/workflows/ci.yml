@@ -1,216 +1,72 @@
-name: Koillection CI
+name: Next CI
+
 on:
   workflow_dispatch:
   push:
-  release:
+    paths:
+      - "next/**"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    paths:
+      - "next/**"
+      - ".github/workflows/ci.yml"
 
 jobs:
-  build_docker_ci_container:
-    name: Build Docker CI container
+  validate:
+    name: Validate Next workspace
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: next
+
+    env:
+      DATABASE_URL: postgresql://stackly:stackly@localhost:5432/stackly
+      NEXTAUTH_SECRET: ci-secret
+      NEXTAUTH_URL: http://localhost:3000
+      UPLOAD_DIR: ./public/uploads
+      OIDC_ENABLED: "false"
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: stackly
+          POSTGRES_USER: stackly
+          POSTGRES_PASSWORD: stackly
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U stackly -d stackly"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Container
-        uses: docker/build-push-action@v7
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
         with:
-          file: Dockerfile
-          tags: ci-image
-          push: false
-          outputs: type=docker,dest=/tmp/ci-container.tar
+          node-version: 24
+          cache: npm
+          cache-dependency-path: next/package-lock.json
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: ci-container
-          path: /tmp/ci-container.tar
+      - name: Install dependencies
+        run: npm ci
 
-  remove_docker_ci_container:
-    name: Remove Docker CI container
-    if: always()
-    runs-on: ubuntu-latest
-    needs: [ build_docker_ci_container, phpunit_mysql, phpunit_mariadb, phpunit_postgres, doctrine_schema_validator ]
-    steps:
-      - uses: geekyeggo/delete-artifact@v5
-        with:
-          name: ci-container
+      - name: Generate Prisma client
+        run: npm run db:generate
 
-  security_checker:
-    name: Security checker
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/cache@v5
-        id: cache-db
-        with:
-          path: ~/.symfony/cache
-          key: db
-      - uses: symfonycorp/security-checker-action@v5
+      - name: Validate translations
+        run: npm run i18n:validate
 
-  doctrine_schema_validator:
-    name: Doctrine schema validator
-    runs-on: ubuntu-latest
-    needs: [ build_docker_ci_container ]
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v7
-        with:
-          name: ci-container
-          path: /tmp
-
-      - name: Load image
-        run: docker load --input /tmp/ci-container.tar
-
-      - name: Run doctrine schema validator
-        uses: addnab/docker-run-action@v3
-        with:
-          image: ci-image
-          run: |
-            bin/console doctrine:schema:validate --skip-sync
-
-  phpunit_mysql:
-    name: PHPUnit tests with Mysql ${{ matrix.mysql }}
-    runs-on: ubuntu-latest
-    needs: [ build_docker_ci_container ]
-    strategy:
-      matrix:
-        mysql: [ 8, 9 ]
-    services:
-      mysql:
-        image: mysql:${{ matrix.mysql }}
-        env:
-          MYSQL_ROOT_PASSWORD: root
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v7
-        with:
-          name: ci-container
-          path: /tmp
-          
-      - name: Load image
-        run: docker load --input /tmp/ci-container.tar
+      - name: Type check
+        run: npm run type-check
 
       - name: Run tests
-        uses: addnab/docker-run-action@v3
-        with:
-          image: ci-image
-          options: |
-            --add-host=host.docker.internal:host-gateway
-          run: |
-            sed -i "s|APP_ENV=.*|APP_ENV=test|i" ".env"
-            sed -i "s|APP_DEBUG=.*|APP_DEBUG=1|i" ".env"
-            sed -i "s|APP_SECRET=.*|APP_SECRET=aRandomSecret|i" ".env"
-            sed -i "s|DB_DRIVER=.*|DB_DRIVER=pdo_mysql|i" ".env"
-            sed -i "s|DB_NAME=.*|DB_NAME=koillection|i" ".env"
-            sed -i "s|DB_HOST=.*|DB_HOST=host.docker.internal|i" ".env"
-            sed -i "s|DB_PORT=.*|DB_PORT=3306|i" ".env"
-            sed -i "s|DB_USER=.*|DB_USER=root|i" ".env"
-            sed -i "s|DB_PASSWORD=.*|DB_PASSWORD=root|i" ".env"
-            sed -i "s|DB_VERSION=.*|DB_VERSION=${{ matrix.mysql }}|i" ".env"
-            bin/console lexik:jwt:generate-keypair
-            bin/console doctrine:database:create
-            bin/console doctrine:migration:migrate --no-interaction --allow-no-migration            
-            php -d memory_limit=512M ./vendor/bin/paratest --runner=WrapperRunner --passthru-php='-d memory_limit=512M'
+        run: npm run test
 
-  phpunit_mariadb:
-    name: PHPUnit tests with MariaDB ${{ matrix.mariadb }}
-    needs: [ build_docker_ci_container ]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        mariadb: [ 10, 11 ]
-    services:
-      mysql:
-        image: mariadb:${{ matrix.mariadb }}
-        env:
-          MYSQL_ROOT_PASSWORD: root
-        ports:
-          - 3306:3306
-        options: --health-cmd="mariadb-admin ping" --health-interval=10s --health-timeout=5s --health-retries=5
-    
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v7
-        with:
-          name: ci-container
-          path: /tmp
-
-      - name: Load image
-        run: docker load --input /tmp/ci-container.tar
-
-      - name: Run tests
-        uses: addnab/docker-run-action@v3
-        with:
-          image: ci-image
-          options: |
-            --add-host=host.docker.internal:host-gateway
-          run: |
-            sed -i "s|APP_ENV=.*|APP_ENV=test|i" ".env"
-            sed -i "s|APP_DEBUG=.*|APP_DEBUG=1|i" ".env"
-            sed -i "s|APP_SECRET=.*|APP_SECRET=aRandomSecret|i" ".env"
-            sed -i "s|DB_DRIVER=.*|DB_DRIVER=pdo_mysql|i" ".env"
-            sed -i "s|DB_NAME=.*|DB_NAME=koillection|i" ".env"
-            sed -i "s|DB_HOST=.*|DB_HOST=host.docker.internal|i" ".env"
-            sed -i "s|DB_PORT=.*|DB_PORT=3306|i" ".env"
-            sed -i "s|DB_USER=.*|DB_USER=root|i" ".env"
-            sed -i "s|DB_PASSWORD=.*|DB_PASSWORD=root|i" ".env"
-            sed -i "s|DB_VERSION=.*|DB_VERSION=${{ matrix.mariadb }}|i" ".env"
-            bin/console lexik:jwt:generate-keypair
-            bin/console doctrine:database:create
-            bin/console doctrine:migration:migrate --no-interaction --allow-no-migration            
-            php -d memory_limit=512M ./vendor/bin/paratest --runner=WrapperRunner --passthru-php='-d memory_limit=512M'
-
-  phpunit_postgres:
-    name: PHPUnit tests with Postgres ${{ matrix.postgres }}
-    needs: [ build_docker_ci_container ]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        postgres: [ 10, 11, 12, 13, 14, 15, 16, 17, 18 ]
-    services:
-      postgres:
-        image: postgres:${{ matrix.postgres }}
-        env:
-          POSTGRES_PASSWORD: root
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval=10s --health-timeout=5s --health-retries=5
-    
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v7
-        with:
-          name: ci-container
-          path: /tmp
-
-      - name: Load image
-        run: docker load --input /tmp/ci-container.tar
-
-      - name: Run tests
-        uses: addnab/docker-run-action@v3
-        with:
-          image: ci-image
-          options: |
-            --add-host=host.docker.internal:host-gateway
-          run: |
-            sed -i "s|APP_ENV=.*|APP_ENV=test|i" ".env"
-            sed -i "s|APP_DEBUG=.*|APP_DEBUG=1|i" ".env"
-            sed -i "s|APP_SECRET=.*|APP_SECRET=aRandomSecret|i" ".env"
-            sed -i "s|DB_DRIVER=.*|DB_DRIVER=pdo_pgsql|i" ".env"
-            sed -i "s|DB_NAME=.*|DB_NAME=koillection|i" ".env"
-            sed -i "s|DB_HOST=.*|DB_HOST=host.docker.internal|i" ".env"
-            sed -i "s|DB_PORT=.*|DB_PORT=5432|i" ".env"
-            sed -i "s|DB_USER=.*|DB_USER=postgres|i" ".env"
-            sed -i "s|DB_PASSWORD=.*|DB_PASSWORD=root|i" ".env"
-            sed -i "s|DB_VERSION=.*|DB_VERSION=${{ matrix.postgres }}|i" ".env"
-            bin/console lexik:jwt:generate-keypair 
-            bin/console doctrine:database:create
-            bin/console doctrine:migration:migrate --no-interaction --allow-no-migration            
-            php -d memory_limit=512M ./vendor/bin/paratest --runner=WrapperRunner --passthru-php='-d memory_limit=512M'
+      - name: Build
+        run: npm run build

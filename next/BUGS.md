@@ -10,9 +10,31 @@ Known bug register for the `next/` project.
 
 ---
 
-## Open Bugs (none)
+## Open Bugs
 
-No open bugs at the moment.
+### 4. Next Docker images cannot currently target 32-bit ARM platforms
+
+- Status: open
+- Area: `Dockerfile` / `Dockerfile.scratch` · Docker multi-platform build
+- Severity: medium
+
+**Description**
+
+The requested Docker image matrix includes all ARM variants, but the current `node:24-alpine` base image used by both Next Dockerfiles only publishes `linux/amd64`, `linux/arm64/v8`, and `linux/s390x` manifests. It does not provide `linux/arm/v6` or `linux/arm/v7`.
+
+**Expected Behavior**
+
+The Docker release workflow should build every requested platform, including 32-bit ARM variants, if the runtime stack supports them.
+
+**Observed Behavior**
+
+The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Adding `linux/arm/v6` or `linux/arm/v7` would fail during base image resolution unless the Dockerfiles switch to a compatible base/build strategy.
+
+**Technical Notes**
+
+- Verified with `docker buildx imagetools inspect node:24-alpine`.
+- `alpine:latest` publishes ARMv6/ARMv7 manifests, but `node:24-alpine` does not.
+- To support 32-bit ARM, evaluate a different Node base image or a custom runtime build before extending the workflow platform list.
 
 ## Fixed Bugs
 

@@ -1,0 +1,80 @@
+name: Build Next Docker images
+
+on:
+  workflow_dispatch:
+    inputs:
+      push_image:
+        description: Push images to the registry
+        required: true
+        default: true
+        type: boolean
+  release:
+    types: [published]
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }}-next
+  PLATFORMS: linux/amd64,linux/arm64
+
+jobs:
+  build:
+    name: Build ${{ matrix.variant }} image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - variant: default
+            dockerfile: Dockerfile
+            tag_suffix: ""
+            latest_tag: latest
+          - variant: scratch
+            dockerfile: Dockerfile.scratch
+            tag_suffix: "-scratch"
+            latest_tag: scratch
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Read package version
+        id: package
+        working-directory: next
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          if [ -z "$VERSION" ]; then
+            echo "Missing version in next/package.json" >&2
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        if: ${{ github.event_name == 'release' || inputs.push_image }}
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        uses: docker/build-push-action@v7
+        with:
+          context: next
+          file: next/${{ matrix.dockerfile }}
+          platforms: ${{ env.PLATFORMS }}
+          push: ${{ github.event_name == 'release' || inputs.push_image }}
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ steps.package.outputs.version }}${{ matrix.tag_suffix }}
+            ${{ env.IMAGE_NAME }}:${{ matrix.latest_tag }}
+          labels: |
+            org.opencontainers.image.title=Next ${{ matrix.variant }}
+            org.opencontainers.image.version=${{ steps.package.outputs.version }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
