@@ -840,7 +840,7 @@ Defined in `next/.env`, with a template in `next/.env.example`.
 |---|---|---|---|
 | `DATABASE_URL` | ✅ | PostgreSQL connection string | none |
 | `NEXTAUTH_SECRET` | ✅ | NextAuth JWT secret, at least 32 chars | none |
-| `NEXTAUTH_URL` | ✅ in production | Public app URL | none |
+| `NEXTAUTH_URL` | ✅ in production | Public app URL. Required to be non-local when OIDC is enabled in production. | none |
 | `UPLOAD_DIR` | ❌ | Absolute or relative upload directory | `./public/uploads` |
 | `NODE_ENV` | ❌ | Runtime mode | development locally; build scripts force production |
 | `OIDC_ENABLED` | ❌ | Enables OIDC login | `false` |

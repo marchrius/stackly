@@ -85,7 +85,7 @@ Do not create `apps/web/.env` or `packages/db/.env`: all workspace scripts read 
 |---|---|---|
 | `DATABASE_URL` | PostgreSQL DSN | `postgresql://user:pass@localhost:5432/stackly` |
 | `NEXTAUTH_SECRET` | JWT session secret, random 32 bytes | `openssl rand -base64 32` |
-| `NEXTAUTH_URL` | App base URL | `http://localhost:3000` |
+| `NEXTAUTH_URL` | App base URL. In production, and especially with OIDC, use the public site URL. | `https://koillection.example.com` |
 | `UPLOAD_DIR` | File upload directory | `./public/uploads` |
 
 ## Legacy Database Compatibility
@@ -139,6 +139,7 @@ docker compose up -d
 - Database operations run at startup through `entrypoint.sh`: it creates the database if it does not exist, then runs `prisma migrate deploy`
 - The production build uses Next.js standalone output; the entrypoint starts `apps/web/server.js`
 - `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, and `UPLOAD_DIR` must be set at runtime
+- With OIDC enabled, the registered callback URL in the identity provider must match the public site domain: `<NEXTAUTH_URL>/api/auth/callback/oidc`.
 - `maintenance:*` commands can be run inside the same application container
 
 ## PWA

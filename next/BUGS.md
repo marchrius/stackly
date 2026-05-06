@@ -38,6 +38,32 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 5. OIDC redirect URI could use localhost in production when the auth base URL was misconfigured
+
+- Status: completed (fixed)
+- Area: `apps/web` · Auth.js / OIDC · environment configuration
+- Severity: high
+
+**Description**
+
+OIDC login could build the provider `redirect_uri` from a local base URL such as `http://localhost:3000` when the auth base URL was copied from development configuration into a deployed environment.
+
+**Expected Behavior**
+
+When OIDC is enabled in production, the callback URL sent to the identity provider must use the public site domain, for example `https://example.com/api/auth/callback/oidc`, never `localhost:3000`.
+
+**Observed Behavior**
+
+The environment examples documented `NEXTAUTH_URL="http://localhost:3000"`, and there was no guard preventing that local URL from being used with OIDC in production.
+
+**Technical Notes**
+
+- Fixed in `apps/web/lib/auth-url.ts` and `apps/web/auth.ts`.
+- Auth.js base URL is now normalized into both `AUTH_URL` and `NEXTAUTH_URL` before initializing NextAuth.
+- In production, if a public app URL is available through `AUTH_URL`, `NEXTAUTH_URL`, `NEXT_PUBLIC_APP_URL`, `PUBLIC_APP_URL`, or `APP_URL`, localhost candidates are skipped.
+- If OIDC is enabled in production and the resolved auth URL is still local, startup fails with an explicit configuration error.
+- Added regression coverage in `apps/web/test/lib/auth-url.test.ts`.
+
 ### 0. Next build failed while prerendering 404/500 pages
 
 - Status: completed (fixed)

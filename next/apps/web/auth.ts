@@ -9,6 +9,7 @@ import { normalizeSymfonyPassword } from "@stackly/lib";
 import { z } from "zod";
 import { getOidcProviderConfig } from "@/lib/oidc-config";
 import { resolveUserForOidcSignIn } from "@/lib/auth/oidc-signin";
+import { configureAuthBaseUrlEnv, validateOidcAuthBaseUrl } from "@/lib/auth-url";
 
 const loginSchema = z.object({
   username: z.string().min(1),
@@ -16,8 +17,11 @@ const loginSchema = z.object({
 });
 
 const oidcProvider = getOidcProviderConfig();
+configureAuthBaseUrlEnv();
+validateOidcAuthBaseUrl();
 
 const config: NextAuthConfig = {
+  trustHost: true,
   providers: [
     Credentials({
       credentials: {
