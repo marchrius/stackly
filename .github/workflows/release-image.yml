@@ -51,8 +51,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract Docker metadata
-        id: meta
+      - name: Extract Docker metadata for scratch image
+        id: meta-scratch
         uses: docker/metadata-action@v5
         with:
           images: ${{ steps.package.outputs.image }}
@@ -63,15 +63,42 @@ jobs:
           labels: |
             org.opencontainers.image.title=Stackly
             org.opencontainers.image.version=${{ steps.package.outputs.version }}
+            org.opencontainers.image.ref.name=scratch
 
-      - name: Build and push
+      - name: Extract Docker metadata for Alpine image
+        id: meta-alpine
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ steps.package.outputs.image }}
+          tags: |
+            type=raw,value=${{ steps.package.outputs.version }}-alpine
+            type=raw,value=v${{ steps.package.outputs.version }}-alpine
+            type=sha,format=short,suffix=-alpine
+          labels: |
+            org.opencontainers.image.title=Stackly Alpine
+            org.opencontainers.image.version=${{ steps.package.outputs.version }}
+            org.opencontainers.image.ref.name=alpine
+
+      - name: Build and push scratch image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile.scratch
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-scratch.outputs.tags }}
+          labels: ${{ steps.meta-scratch.outputs.labels }}
+          cache-from: type=gha,scope=scratch
+          cache-to: type=gha,mode=max,scope=scratch
+
+      - name: Build and push Alpine image
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          tags: ${{ steps.meta-alpine.outputs.tags }}
+          labels: ${{ steps.meta-alpine.outputs.labels }}
+          cache-from: type=gha,scope=alpine
+          cache-to: type=gha,mode=max,scope=alpine
