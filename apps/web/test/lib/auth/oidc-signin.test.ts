@@ -134,4 +134,120 @@ describe("resolveUserForOidcSignIn", () => {
     );
     expect(cookieState.delete).toHaveBeenCalledWith("stackly_oidc_link");
   });
+
+  it("links the signed-in user from settings even when the OIDC email is different", async () => {
+    prismaMock.oAuthProvider.findUnique.mockResolvedValue(null);
+    prismaMock.user.findUnique
+      .mockResolvedValueOnce({
+        id: "u1",
+        username: "local-user",
+        email: "local@example.com",
+        avatar: null,
+        enabled: true,
+        roles: ["ROLE_USER"],
+        currency: "EUR",
+        locale: "en",
+        theme: "auto",
+        dateFormat: "Y-m-d",
+        primaryAuthMethod: "credentials",
+      })
+      .mockResolvedValueOnce(null);
+    cookieState.value = await createOidcLinkCookieValue("u1", "test-secret", 300);
+
+    const result = await resolveUserForOidcSignIn({
+      account: {
+        type: "oidc",
+        provider: "oidc",
+        providerAccountId: "sub-4",
+        issuer: "https://issuer.example",
+      } as any,
+      profile: { sub: "sub-4", iss: "https://issuer.example" } as any,
+      user: { email: "external@example.com", name: "External User", image: null },
+    });
+
+    expect((result as any)?.status).toBe("ok");
+    expect(prismaMock.oAuthProvider.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          userId: "u1",
+          subject: "sub-4",
+          email: "external@example.com",
+          displayName: "External User",
+        }),
+      }),
+    );
+    expect(prismaMock.user.update).toHaveBeenCalledWith({
+      where: { id: "u1" },
+      data: { primaryAuthMethod: "oidc" },
+    });
+  });
+
+  it("rejects a settings link when the OIDC email belongs to another user", async () => {
+    prismaMock.oAuthProvider.findUnique.mockResolvedValue(null);
+    prismaMock.user.findUnique
+      .mockResolvedValueOnce({
+        id: "u1",
+        username: "local-user",
+        email: "local@example.com",
+        enabled: true,
+        primaryAuthMethod: "credentials",
+      })
+      .mockResolvedValueOnce({
+        id: "u2",
+        username: "other-user",
+        email: "external@example.com",
+        enabled: true,
+      });
+    cookieState.value = await createOidcLinkCookieValue("u1", "test-secret", 300);
+
+    const result = await resolveUserForOidcSignIn({
+      account: {
+        type: "oidc",
+        provider: "oidc",
+        providerAccountId: "sub-5",
+        issuer: "https://issuer.example",
+      } as any,
+      profile: { sub: "sub-5", iss: "https://issuer.example" } as any,
+      user: { email: "external@example.com", name: "External User", image: null },
+    });
+
+    expect(result).toEqual({ status: "link_forbidden" });
+    expect(prismaMock.oAuthProvider.create).not.toHaveBeenCalled();
+    expect(cookieState.delete).toHaveBeenCalledWith("stackly_oidc_link");
+    expect(cookieState.delete).toHaveBeenCalledWith("koillection_oidc_link");
+  });
+
+  it("rejects a settings link when the OIDC subject is already linked to another user", async () => {
+    prismaMock.oAuthProvider.findUnique.mockResolvedValue({
+      id: "provider-1",
+      userId: "u2",
+      email: "other@example.com",
+      displayName: "Other User",
+      picture: null,
+      refreshToken: null,
+      user: {
+        id: "u2",
+        username: "other-user",
+        email: "other@example.com",
+        enabled: true,
+      },
+    });
+    cookieState.value = await createOidcLinkCookieValue("u1", "test-secret", 300);
+
+    const result = await resolveUserForOidcSignIn({
+      account: {
+        type: "oidc",
+        provider: "oidc",
+        providerAccountId: "sub-6",
+        issuer: "https://issuer.example",
+      } as any,
+      profile: { sub: "sub-6", iss: "https://issuer.example" } as any,
+      user: { email: "other@example.com", name: "Other User", image: null },
+    });
+
+    expect(result).toEqual({ status: "link_forbidden" });
+    expect(prismaMock.oAuthProvider.update).not.toHaveBeenCalled();
+    expect(cookieState.delete).toHaveBeenCalledWith("stackly_oidc_link");
+    expect(cookieState.delete).toHaveBeenCalledWith("koillection_oidc_link");
+  });
 });

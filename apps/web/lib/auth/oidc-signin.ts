@@ -52,6 +52,11 @@ async function generateUniqueUsername(seed: string): Promise<string> {
   }
 }
 
+function clearOidcLinkCookies(cookieStore: Awaited<ReturnType<typeof cookies>>) {
+  cookieStore.delete(OIDC_LINK_COOKIE_NAME);
+  cookieStore.delete(LEGACY_OIDC_LINK_COOKIE_NAME);
+}
+
 export async function resolveUserForOidcSignIn(input: {
   account: Account | null;
   profile?: Profile;
@@ -88,6 +93,11 @@ export async function resolveUserForOidcSignIn(input: {
   const isLinkRequest = Boolean(linkContext);
 
   if (linkedProvider) {
+    if (isLinkRequest && linkContext!.userId !== linkedProvider.userId) {
+      clearOidcLinkCookies(cookieStore);
+      return { status: "link_forbidden" as const };
+    }
+
     const linkedUser = linkedProvider.user;
     if (!linkedUser.enabled) return null;
 
@@ -103,7 +113,7 @@ export async function resolveUserForOidcSignIn(input: {
     });
 
     if (isLinkRequest) {
-      cookieStore.delete(OIDC_LINK_COOKIE_NAME);
+      clearOidcLinkCookies(cookieStore);
     }
 
     return {
@@ -121,6 +131,65 @@ export async function resolveUserForOidcSignIn(input: {
   }
 
   const email = user?.email ?? null;
+
+  if (isLinkRequest) {
+    const targetUser = await prisma.user.findUnique({
+      where: { id: linkContext!.userId },
+    });
+
+    if (!targetUser?.enabled) {
+      clearOidcLinkCookies(cookieStore);
+      return { status: "link_forbidden" as const };
+    }
+
+    if (email) {
+      const emailUser = await prisma.user.findUnique({
+        where: { email },
+      });
+
+      if (emailUser && emailUser.id !== targetUser.id) {
+        clearOidcLinkCookies(cookieStore);
+        return { status: "link_forbidden" as const };
+      }
+    }
+
+    await prisma.oAuthProvider.create({
+      data: {
+        userId: targetUser.id,
+        issuer,
+        providerName: account.provider,
+        subject,
+        email,
+        displayName: user?.name ?? targetUser.username,
+        picture: user?.image ?? null,
+        accessTokenExpiry: account.expires_at ? new Date(account.expires_at * 1000) : null,
+        refreshToken: account.refresh_token ?? null,
+      },
+    });
+
+    if (targetUser.primaryAuthMethod !== "oidc") {
+      await prisma.user.update({
+        where: { id: targetUser.id },
+        data: { primaryAuthMethod: "oidc" },
+      });
+    }
+
+    clearOidcLinkCookies(cookieStore);
+
+    return {
+      status: "ok" as const,
+      id: targetUser.id,
+      name: targetUser.username,
+      email: targetUser.email,
+      image: targetUser.avatar ?? null,
+      roles: normalizeRoles(targetUser.roles),
+      currency: targetUser.currency,
+      locale: targetUser.locale,
+      theme: targetUser.theme,
+      dateFormat: targetUser.dateFormat,
+    };
+  }
+
   if (!email) return null;
 
   const existingUser = await prisma.user.findUnique({
@@ -132,12 +201,6 @@ export async function resolveUserForOidcSignIn(input: {
 
     if (existingUser.primaryAuthMethod === "credentials" && !isLinkRequest) {
       return { status: "link_required" as const };
-    }
-
-    if (isLinkRequest && linkContext!.userId !== existingUser.id) {
-      cookieStore.delete(OIDC_LINK_COOKIE_NAME);
-      cookieStore.delete(LEGACY_OIDC_LINK_COOKIE_NAME);
-      return { status: "link_forbidden" as const };
     }
 
     await prisma.oAuthProvider.create({
@@ -161,11 +224,6 @@ export async function resolveUserForOidcSignIn(input: {
       });
     }
 
-    if (isLinkRequest) {
-      cookieStore.delete(OIDC_LINK_COOKIE_NAME);
-      cookieStore.delete(LEGACY_OIDC_LINK_COOKIE_NAME);
-    }
-
     return {
       status: "ok" as const,
       id: existingUser.id,
@@ -178,12 +236,6 @@ export async function resolveUserForOidcSignIn(input: {
       theme: existingUser.theme,
       dateFormat: existingUser.dateFormat,
     };
-  }
-
-  if (isLinkRequest) {
-    cookieStore.delete(OIDC_LINK_COOKIE_NAME);
-    cookieStore.delete(LEGACY_OIDC_LINK_COOKIE_NAME);
-    return { status: "link_forbidden" as const };
   }
 
   const usernameSeed = user?.name ?? email.split("@")[0] ?? "user";
@@ -211,11 +263,6 @@ export async function resolveUserForOidcSignIn(input: {
       },
     },
   });
-
-  if (isLinkRequest) {
-    cookieStore.delete(OIDC_LINK_COOKIE_NAME);
-    cookieStore.delete(LEGACY_OIDC_LINK_COOKIE_NAME);
-  }
 
   return {
     status: "ok" as const,

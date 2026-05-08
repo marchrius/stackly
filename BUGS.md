@@ -38,6 +38,31 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 6. OIDC account linking from settings could be rejected as an invalid linking request
+
+- Status: completed (fixed)
+- Area: `apps/web` · Auth.js / OIDC · account linking · settings
+- Severity: high
+
+**Description**
+
+After signing in with username/password, starting OIDC connection from settings could redirect back to login with `oidc_link_forbidden`, shown to the user as "This linking request is no longer valid. Start the connection from settings again."
+
+**Expected Behavior**
+
+An authenticated user should be able to connect an OIDC provider from settings. The temporary link request must survive the OIDC round trip and be accepted only for the same signed-in user.
+
+**Observed Behavior**
+
+The OIDC callback used the OIDC profile email as the linking target even during an explicit settings link request. If the OIDC email differed from the signed-in credentials account email and was not already a local user, the request was treated as invalid.
+
+**Technical Notes**
+
+- Fixed in `apps/web/lib/auth/oidc-signin.ts`.
+- During a valid link request, the signed `stackly_oidc_link` cookie now chooses the target user; OIDC email is stored on the provider record but no longer has to match the local account email.
+- The flow still rejects linking if the OIDC subject is already linked to another user or if the OIDC email belongs to a different local user.
+- Added regression coverage in `apps/web/test/lib/auth/oidc-signin.test.ts`.
+
 ### 5. OIDC redirect URI could use localhost in production when the auth base URL was misconfigured
 
 - Status: completed (fixed)
