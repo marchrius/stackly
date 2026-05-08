@@ -45,6 +45,36 @@ describe("collection-index-display", () => {
     expect(sorted.map((collection) => collection.title)).toEqual(["Beta", "Alpha"]);
   });
 
+  it("sorts default collection titles by embedded numbers", () => {
+    const collections = [
+      makeCollection({ title: "Volume 1" }),
+      makeCollection({ title: "Volume 10" }),
+      makeCollection({ title: "Volume 2" }),
+      makeCollection({ title: "Volume 12" }),
+      makeCollection({ title: "Volume 3" }),
+    ];
+
+    const sorted = sortCollectionsForDisplay(collections);
+
+    expect(sorted.map((collection) => collection.title)).toEqual(["Volume 1", "Volume 2", "Volume 3", "Volume 10", "Volume 12"]);
+  });
+
+  it("sorts textual datum values by embedded numbers", () => {
+    const collections = [
+      makeCollection({ title: "A", data: [{ id: "1", type: "text", label: "Volume", value: "10", currency: null, file: null, originalFilename: null, displayMode: "list" }] }),
+      makeCollection({ title: "B", data: [{ id: "2", type: "text", label: "Volume", value: "2", currency: null, file: null, originalFilename: null, displayMode: "list" }] }),
+      makeCollection({ title: "C", data: [{ id: "3", type: "text", label: "Volume", value: "1", currency: null, file: null, originalFilename: null, displayMode: "list" }] }),
+    ];
+
+    const sorted = sortCollectionsForDisplay(collections, {
+      sortingProperty: "Volume",
+      sortingType: "text",
+      sortingDirection: "ASC",
+    });
+
+    expect(sorted.map((collection) => collection.title)).toEqual(["C", "B", "A"]);
+  });
+
   it("sorts by datum values", () => {
     const collections = [
       makeCollection({ title: "Comics", data: [{ id: "1", type: "text", label: "Author", value: "Zeta", currency: null, file: null, originalFilename: null, displayMode: "list" }] }),

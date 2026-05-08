@@ -10,6 +10,7 @@ import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { useTranslations } from "next-intl";
 import { getUploadUrl } from "@stackly/lib";
 import { CopyPublicLinkButton } from "@/components/public/CopyPublicLinkButton";
+import { sortByNaturalText } from "@/lib/natural-sort";
 
 interface Ancestor {
   id: string;
@@ -27,6 +28,7 @@ export function AlbumDetail({ album }: { album: AlbumWithRelations }) {
   const t = useTranslations("albums");
   const tCommon = useTranslations("common");
   const ancestors = album.ancestors ?? [];
+  const sortedPhotos = sortByNaturalText(album.photos, (photo) => photo.title);
 
   return (
     <div className="space-y-6">
@@ -132,7 +134,7 @@ export function AlbumDetail({ album }: { album: AlbumWithRelations }) {
             className="grid gap-x-2.5 gap-y-4"
             style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}
           >
-            {album.photos.map((photo) => (
+            {sortedPhotos.map((photo) => (
               <Link
                 key={photo.id}
                 href={`/photos/${photo.id}`}

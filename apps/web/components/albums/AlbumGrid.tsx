@@ -6,11 +6,13 @@ import { Card, CardContent } from "@stackly/ui";
 import { Image, Layers } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { getUploadUrl } from "@stackly/lib";
+import { sortByNaturalText } from "@/lib/natural-sort";
 
 type AlbumWithCount = Album & { _count: { children: number; photos: number } };
 
 export function AlbumGrid({ albums }: { albums: AlbumWithCount[] }) {
   const t = useTranslations("albums");
+  const sortedAlbums = sortByNaturalText(albums, (album) => album.title);
 
   if (albums.length === 0) {
     return (
@@ -22,7 +24,7 @@ export function AlbumGrid({ albums }: { albums: AlbumWithCount[] }) {
   }
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-      {albums.map((album) => (
+      {sortedAlbums.map((album) => (
         <Link key={album.id} href={`/albums/${album.id}`}>
           <Card className="group overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
             <div

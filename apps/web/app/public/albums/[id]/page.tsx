@@ -8,6 +8,7 @@ import { PublicCollectionCard, PublicCount, PublicGrid, PublicPhotoCard } from "
 import { PublicShell } from "@/components/public/PublicShell";
 import { getPublicAlbum, getPublicAlbumAncestors } from "@/lib/public/public-queries";
 import { getUploadUrl } from "@stackly/lib";
+import { sortByNaturalText } from "@/lib/natural-sort";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -31,6 +32,8 @@ export default async function PublicAlbumPage({ params }: Props) {
 
   const ancestors = await getPublicAlbumAncestors(album.parentId);
   const imageUrl = getUploadUrl(album.image);
+  const sortedChildren = sortByNaturalText(album.children, (child) => child.title);
+  const sortedPhotos = sortByNaturalText(album.photos, (photo) => photo.title);
 
   return (
     <PublicShell eyebrow={tPublic("eyebrow")} title={album.title}>
@@ -71,7 +74,7 @@ export default async function PublicAlbumPage({ params }: Props) {
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">{tAlbums("subAlbums")}</h2>
             <PublicGrid>
-              {album.children.map((child) => (
+              {sortedChildren.map((child) => (
                 <PublicCollectionCard
                   key={child.id}
                   href={`/public/albums/${child.id}`}
@@ -89,7 +92,7 @@ export default async function PublicAlbumPage({ params }: Props) {
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">{tAlbums("photos")}</h2>
             <PublicGrid>
-              {album.photos.map((photo) => (
+              {sortedPhotos.map((photo) => (
                 <PublicPhotoCard key={photo.id} title={photo.title} image={photo.imageSmallThumbnail ?? photo.image} />
               ))}
             </PublicGrid>

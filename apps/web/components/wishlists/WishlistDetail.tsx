@@ -10,6 +10,7 @@ import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { useTranslations } from "next-intl";
 import { getUploadUrl } from "@stackly/lib";
 import { CopyPublicLinkButton } from "@/components/public/CopyPublicLinkButton";
+import { sortByNaturalText } from "@/lib/natural-sort";
 
 interface Ancestor {
   id: string;
@@ -35,6 +36,7 @@ export function WishlistDetail({ wishlist, readOnly = false, basePath = "/wishli
   const ancestors = wishlist.ancestors ?? [];
   const visibleChildrenCount = wishlist.children.length;
   const visibleWishesCount = wishlist.wishes.length;
+  const sortedWishes = sortByNaturalText(wishlist.wishes, (wish) => wish.name);
 
   return (
     <div className="space-y-6">
@@ -108,7 +110,7 @@ export function WishlistDetail({ wishlist, readOnly = false, basePath = "/wishli
         </div>
         {wishlist.wishes.length > 0 ? (
           <div className="grid gap-x-2.5 gap-y-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}>
-            {wishlist.wishes.map((wish) => (
+            {sortedWishes.map((wish) => (
               <Link key={wish.id} href={`/wishes/${wish.id}`}>
                 <div className="group cursor-pointer rounded-lg border bg-card overflow-hidden hover:shadow-md transition-shadow">
                   <div className="relative aspect-[10/13] bg-muted flex items-center justify-center overflow-hidden">

@@ -38,6 +38,29 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 7. Volume-like names were ordered lexicographically instead of naturally
+
+- Status: completed (fixed)
+- Area: `apps/web` · list/grid ordering · collections, items, albums, photos, wishlists, wishes
+- Severity: medium
+
+**Description**
+
+Lists containing numeric volume names such as `1`, `2`, `3`, and `12` could be shown in lexicographic order, producing sequences like `1`, `10`, `11`, `12`, `2`, `3`.
+
+**Expected Behavior**
+
+User-facing collection, item, album, photo, wishlist, and wish lists should compare embedded numbers as integers, so volume-like names are ordered `1`, `2`, `3`, `4`, ..., `12`.
+
+**Observed Behavior**
+
+Several views relied on database string ordering or unsorted arrays for `name`/`title` fields.
+
+**Technical Notes**
+
+- Fixed by adding `apps/web/lib/natural-sort.ts` and using it in the main private/public grids, detail sections, search results, and collection display sorting fallback.
+- Added regression coverage in `apps/web/test/lib/natural-sort.test.ts` and `apps/web/test/lib/collection-index-display.test.ts`.
+
 ### 6. OIDC account linking from settings could be rejected as an invalid linking request
 
 - Status: completed (fixed)

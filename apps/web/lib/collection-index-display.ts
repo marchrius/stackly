@@ -2,6 +2,7 @@ import type { Collection, Datum, DisplayConfiguration } from "@stackly/db";
 import { RESERVED_SORTING_VALUES } from "@/lib/collection-display-config";
 import { getCollectionCachedSummary } from "@/lib/collection-detail";
 import { formatCountryValue, formatPriceValue, parseListValues, renderRatingValue } from "@/lib/datum-format";
+import { compareNaturalText } from "@/lib/natural-sort";
 
 type CollectionIndexDatum = Pick<Datum, "id" | "label" | "type" | "value" | "currency" | "originalFilename" | "file" | "displayMode">;
 
@@ -9,8 +10,6 @@ export type CollectionIndexCollection = Collection & {
   data?: CollectionIndexDatum[];
   _count: { children: number; items: number };
 };
-
-const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
 
 export function sortCollectionsForDisplay(
   collections: CollectionIndexCollection[],
@@ -21,7 +20,7 @@ export function sortCollectionsForDisplay(
   const sortingType = displayConfiguration?.sortingType ?? null;
 
   return [...collections].sort((left, right) => {
-    const fallback = collator.compare(left.title, right.title);
+    const fallback = compareNaturalText(left.title, right.title);
     if (!sortingProperty) {
       return fallback * direction;
     }
@@ -118,5 +117,5 @@ function compareSortValues(left: unknown, right: unknown, type: string | null) {
     }
   }
 
-  return collator.compare(String(left), String(right));
+  return compareNaturalText(String(left), String(right));
 }

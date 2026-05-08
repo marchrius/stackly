@@ -8,6 +8,7 @@ import { PublicCollectionCard, PublicCount, PublicGrid, PublicWishCard } from "@
 import { PublicShell } from "@/components/public/PublicShell";
 import { getPublicWishlist, getPublicWishlistAncestors } from "@/lib/public/public-queries";
 import { getUploadUrl } from "@stackly/lib";
+import { sortByNaturalText } from "@/lib/natural-sort";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -31,6 +32,8 @@ export default async function PublicWishlistPage({ params }: Props) {
 
   const ancestors = await getPublicWishlistAncestors(wishlist.parentId);
   const imageUrl = getUploadUrl(wishlist.image);
+  const sortedChildren = sortByNaturalText(wishlist.children, (child) => child.name);
+  const sortedWishes = sortByNaturalText(wishlist.wishes, (wish) => wish.name);
 
   return (
     <PublicShell eyebrow={tPublic("eyebrow")} title={wishlist.name}>
@@ -71,7 +74,7 @@ export default async function PublicWishlistPage({ params }: Props) {
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">{tWishlists("subWishlists")}</h2>
             <PublicGrid>
-              {wishlist.children.map((child) => (
+              {sortedChildren.map((child) => (
                 <PublicCollectionCard
                   key={child.id}
                   href={`/public/wishlists/${child.id}`}
@@ -89,7 +92,7 @@ export default async function PublicWishlistPage({ params }: Props) {
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">{tWishlists("wishes")}</h2>
             <PublicGrid>
-              {wishlist.wishes.map((wish) => (
+              {sortedWishes.map((wish) => (
                 <PublicWishCard
                   key={wish.id}
                   name={wish.name}

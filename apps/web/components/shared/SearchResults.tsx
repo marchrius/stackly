@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Badge } from "@stackly/ui";
 import { Box, Heart, Layers, Tag as TagIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { sortByNaturalText } from "@/lib/natural-sort";
 
 type WishWithWishlist = Wish & { wishlist?: { id: string; name: string } | null };
 
@@ -24,6 +25,11 @@ export function SearchResults({ items, collections, tags, wishlists, wishes, que
   const tItems = useTranslations("items");
   const tWishes = useTranslations("wishes");
   const total = items.length + collections.length + tags.length + wishlists.length + wishes.length;
+  const sortedCollections = sortByNaturalText(collections, (collection) => collection.title);
+  const sortedWishlists = sortByNaturalText(wishlists, (wishlist) => wishlist.name);
+  const sortedItems = sortByNaturalText(items, (item) => item.name);
+  const sortedWishes = sortByNaturalText(wishes, (wish) => wish.name);
+  const sortedTags = sortByNaturalText(tags, (tag) => tag.label);
 
   if (total === 0) {
     return <p className="text-muted-foreground">{query ? t("noResultsFor", { query }) : t("noResults")}</p>;
@@ -41,7 +47,7 @@ export function SearchResults({ items, collections, tags, wishlists, wishes, que
             <Layers className="h-4 w-4" /> {tNav("collections")} ({collections.length})
           </h2>
           <div className="space-y-1">
-            {collections.map((c) => (
+            {sortedCollections.map((c) => (
               <Link key={c.id} href={`/collections/${c.id}`} className="flex items-center gap-2 rounded-md p-2 hover:bg-accent text-sm">
                 <Layers className="h-4 w-4 text-primary shrink-0" />
                 {c.title}
@@ -57,7 +63,7 @@ export function SearchResults({ items, collections, tags, wishlists, wishes, que
             <Heart className="h-4 w-4" /> {tNav("wishlists")} ({wishlists.length})
           </h2>
           <div className="space-y-1">
-            {wishlists.map((wishlist) => (
+            {sortedWishlists.map((wishlist) => (
               <Link key={wishlist.id} href={`/wishlists/${wishlist.id}`} className="flex items-center gap-2 rounded-md p-2 hover:bg-accent text-sm">
                 <Heart className="h-4 w-4 text-secondary shrink-0" />
                 {wishlist.name}
@@ -73,7 +79,7 @@ export function SearchResults({ items, collections, tags, wishlists, wishes, que
             <Box className="h-4 w-4" /> {tItems("title")} ({items.length})
           </h2>
           <div className="space-y-1">
-            {items.map((item) => (
+            {sortedItems.map((item) => (
               <Link key={item.id} href={`/items/${item.id}`} className="flex items-center gap-2 rounded-md p-2 hover:bg-accent text-sm">
                 <Box className="h-4 w-4 text-primary shrink-0" />
                 {item.name}
@@ -90,7 +96,7 @@ export function SearchResults({ items, collections, tags, wishlists, wishes, que
             <Heart className="h-4 w-4" /> {tWishes("title")} ({wishes.length})
           </h2>
           <div className="space-y-1">
-            {wishes.map((wish) => (
+            {sortedWishes.map((wish) => (
               <Link key={wish.id} href={`/wishes/${wish.id}`} className="flex items-center gap-2 rounded-md p-2 hover:bg-accent text-sm">
                 <Heart className="h-4 w-4 text-secondary shrink-0" />
                 <span className="truncate">{wish.name}</span>
@@ -109,7 +115,7 @@ export function SearchResults({ items, collections, tags, wishlists, wishes, que
             <TagIcon className="h-4 w-4" /> {tNav("tags")} ({tags.length})
           </h2>
           <div className="flex flex-wrap gap-2">
-            {tags.map((tag) => (
+            {sortedTags.map((tag) => (
               <Link key={tag.id} href={`/tags/${tag.id}`}>
                 <Badge variant="outline" className="cursor-pointer hover:bg-accent">{tag.label}</Badge>
               </Link>

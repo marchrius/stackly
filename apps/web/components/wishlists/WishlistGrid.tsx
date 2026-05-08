@@ -6,6 +6,7 @@ import { Card, CardContent } from "@stackly/ui";
 import { Heart, Layers } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { getUploadUrl } from "@stackly/lib";
+import { sortByNaturalText } from "@/lib/natural-sort";
 
 type WishlistWithCount = Wishlist & { _count: { children: number; wishes: number } };
 
@@ -16,6 +17,7 @@ interface WishlistGridProps {
 
 export function WishlistGrid({ wishlists, basePath = "/wishlists" }: WishlistGridProps) {
   const t = useTranslations("wishlists");
+  const sortedWishlists = sortByNaturalText(wishlists, (wishlist) => wishlist.name);
 
   if (wishlists.length === 0) {
     return (
@@ -27,7 +29,7 @@ export function WishlistGrid({ wishlists, basePath = "/wishlists" }: WishlistGri
   }
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-      {wishlists.map((wl) => (
+      {sortedWishlists.map((wl) => (
         <Link key={wl.id} href={`${basePath}/${wl.id}`}>
           <Card className="group overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
             <div

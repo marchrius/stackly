@@ -9,6 +9,7 @@ import { PublicDatumList } from "@/components/public/PublicDatumList";
 import { PublicShell } from "@/components/public/PublicShell";
 import { getPublicCollection, getPublicCollectionAncestors } from "@/lib/public/public-queries";
 import { getUploadUrl } from "@stackly/lib";
+import { sortByNaturalText } from "@/lib/natural-sort";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -34,6 +35,8 @@ export default async function PublicCollectionPage({ params }: Props) {
 
   const ancestors = await getPublicCollectionAncestors(collection.parentId);
   const imageUrl = getUploadUrl(collection.image);
+  const sortedChildren = sortByNaturalText(collection.children, (child) => child.title);
+  const sortedItems = sortByNaturalText(collection.items, (item) => item.name);
 
   return (
     <PublicShell eyebrow={tPublic("eyebrow")} title={collection.title}>
@@ -85,7 +88,7 @@ export default async function PublicCollectionPage({ params }: Props) {
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">{tCollections("subCollections")}</h2>
             <PublicGrid>
-              {collection.children.map((child) => (
+              {sortedChildren.map((child) => (
                 <PublicCollectionCard
                   key={child.id}
                   href={`/public/collections/${child.id}`}
@@ -103,7 +106,7 @@ export default async function PublicCollectionPage({ params }: Props) {
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">{tCollections("items")}</h2>
             <PublicGrid>
-              {collection.items.map((item) => (
+              {sortedItems.map((item) => (
                 <PublicItemCard
                   key={item.id}
                   href={`/public/items/${item.id}`}
