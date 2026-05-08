@@ -7,9 +7,15 @@ import { Box, Edit, Layers } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { deleteCollection } from "@/lib/actions/collection.actions";
-import { CollectionIndexCollection, getCollectionCounter, getCollectionDatumDisplayValue, sortCollectionsForDisplay } from "@/lib/collection-index-display";
+import {
+  CollectionIndexCollection,
+  getCollectionCounter,
+  getCollectionDatumDisplayValue,
+  sortCollectionsForDisplay,
+} from "@/lib/collection-index-display";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { getUploadUrl } from "@stackly/lib";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 interface CollectionListProps {
   collections: CollectionIndexCollection[];
@@ -34,7 +40,11 @@ function asHexColor(color: string | null): string {
   return color.startsWith("#") ? color : `#${color}`;
 }
 
-export function CollectionList({ collections, displayConfiguration, basePath = "/collections" }: CollectionListProps) {
+export function CollectionList({
+  collections,
+  displayConfiguration,
+  basePath = "/collections",
+}: CollectionListProps) {
   const t = useTranslations("collections");
   const tCommon = useTranslations("common");
   const tVisibility = useTranslations("visibility");
@@ -43,16 +53,18 @@ export function CollectionList({ collections, displayConfiguration, basePath = "
     [collections, displayConfiguration],
   );
   const columns = Array.isArray(displayConfiguration?.columns)
-    ? displayConfiguration.columns.filter((column): column is string => typeof column === "string")
+    ? displayConfiguration.columns.filter(
+        (column): column is string => typeof column === "string",
+      )
     : [];
 
   if (collections.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
-        <Layers className="mb-4 h-12 w-12 opacity-30" />
-        <p className="text-lg font-medium">{t("empty")}</p>
-        <p className="text-sm">{t("emptyHint")}</p>
-      </div>
+      <EmptyState
+        icon={Layers}
+        title={t("empty")}
+        description={t("emptyHint")}
+      />
     );
   }
 
@@ -62,23 +74,33 @@ export function CollectionList({ collections, displayConfiguration, basePath = "
         <thead className="bg-muted/40">
           <tr>
             <th className="w-20 px-3 py-2 text-left font-medium"></th>
-            <th className="px-3 py-2 text-left font-medium">{tCommon("name")}</th>
+            <th className="px-3 py-2 text-left font-medium">
+              {tCommon("name")}
+            </th>
             {columns.map((column) => (
               <th key={column} className="px-3 py-2 text-left font-medium">
                 {column}
               </th>
             ))}
             {displayConfiguration?.showNumberOfChildren && (
-              <th className="px-3 py-2 text-center font-medium">{t("form.numberOfChildren")}</th>
+              <th className="px-3 py-2 text-center font-medium">
+                {t("form.numberOfChildren")}
+              </th>
             )}
             {displayConfiguration?.showNumberOfItems && (
-              <th className="px-3 py-2 text-center font-medium">{t("form.numberOfItems")}</th>
+              <th className="px-3 py-2 text-center font-medium">
+                {t("form.numberOfItems")}
+              </th>
             )}
             {displayConfiguration?.showVisibility && (
-              <th className="px-3 py-2 text-center font-medium">{tCommon("visibility")}</th>
+              <th className="px-3 py-2 text-center font-medium">
+                {tCommon("visibility")}
+              </th>
             )}
             {displayConfiguration?.showActions && (
-              <th className="px-3 py-2 text-center font-medium">{tCommon("actions")}</th>
+              <th className="px-3 py-2 text-center font-medium">
+                {tCommon("actions")}
+              </th>
             )}
           </tr>
         </thead>
@@ -88,12 +110,19 @@ export function CollectionList({ collections, displayConfiguration, basePath = "
             const itemsCount = getCollectionCounter(collection, "items");
 
             return (
-              <tr key={collection.id} className="align-middle hover:bg-muted/20">
+              <tr
+                key={collection.id}
+                className="align-middle hover:bg-muted/20"
+              >
                 <td className="px-3 py-2">
                   <Link href={`${basePath}/${collection.id}`} className="block">
                     <div
                       className="relative flex aspect-[10/13] w-14 items-center justify-center overflow-hidden rounded-md bg-muted"
-                      style={{ backgroundColor: collection.color ? `${asHexColor(collection.color)}22` : undefined }}
+                      style={{
+                        backgroundColor: collection.color
+                          ? `${asHexColor(collection.color)}22`
+                          : undefined,
+                      }}
                     >
                       {collection.image ? (
                         <img
@@ -105,7 +134,9 @@ export function CollectionList({ collections, displayConfiguration, basePath = "
                       ) : (
                         <div
                           className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white"
-                          style={{ backgroundColor: asHexColor(collection.color) }}
+                          style={{
+                            backgroundColor: asHexColor(collection.color),
+                          }}
                         >
                           {collection.title.charAt(0).toUpperCase()}
                         </div>
@@ -114,12 +145,18 @@ export function CollectionList({ collections, displayConfiguration, basePath = "
                   </Link>
                 </td>
                 <td className="px-3 py-2 font-medium">
-                  <Link href={`${basePath}/${collection.id}`} className="hover:text-primary">
+                  <Link
+                    href={`${basePath}/${collection.id}`}
+                    className="hover:text-primary"
+                  >
                     {collection.title}
                   </Link>
                 </td>
                 {columns.map((column) => (
-                  <td key={`${collection.id}-${column}`} className="px-3 py-2 text-muted-foreground">
+                  <td
+                    key={`${collection.id}-${column}`}
+                    className="px-3 py-2 text-muted-foreground"
+                  >
                     {getCollectionDatumDisplayValue(collection, column) ?? "-"}
                   </td>
                 ))}
@@ -141,7 +178,14 @@ export function CollectionList({ collections, displayConfiguration, basePath = "
                 )}
                 {displayConfiguration?.showVisibility && (
                   <td className="px-3 py-2 text-center">
-                    <Badge variant="outline">{tVisibility(collection.finalVisibility as "public" | "internal" | "private")}</Badge>
+                    <Badge variant="outline">
+                      {tVisibility(
+                        collection.finalVisibility as
+                          | "public"
+                          | "internal"
+                          | "private",
+                      )}
+                    </Badge>
                   </td>
                 )}
                 {displayConfiguration?.showActions && (
@@ -155,7 +199,9 @@ export function CollectionList({ collections, displayConfiguration, basePath = "
                           </Link>
                         </Button>
                         <DeleteConfirmDialog
-                          description={t("delete.confirm", { name: collection.title })}
+                          description={t("delete.confirm", {
+                            name: collection.title,
+                          })}
                           onConfirm={deleteCollection.bind(null, collection.id)}
                           size="icon"
                         />

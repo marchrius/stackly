@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@stackly/db";
 import { Badge } from "@stackly/ui";
+import { Clock } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { PageHeader } from "@/components/shared/PageHeader";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("history");
@@ -35,24 +38,30 @@ export default async function HistoryPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">{t("pageTitle")}</h1>
-      <div className="space-y-2">
-        {logs.map((log: LogEntry) => {
-          const logType = log.type ?? "update";
+      <PageHeader title={t("pageTitle")} />
+      {logs.length > 0 ? (
+        <div className="space-y-2">
+          {logs.map((log: LogEntry) => {
+            const logType = log.type ?? "update";
 
-          return (
-          <div key={log.id} className="flex items-center gap-3 rounded-lg border p-3 text-sm">
-            <Badge variant={getLogBadgeVariant(logType)}>{logType}</Badge>
-            <span className="font-medium">{log.objectLabel}</span>
-            <span className="text-muted-foreground">{log.objectClass}</span>
-            <span className="ml-auto text-muted-foreground">
-              {log.loggedAt ? new Date(log.loggedAt).toLocaleString() : "-"}
-            </span>
-          </div>
-          );
-        })}
-        {logs.length === 0 && <p className="py-8 text-center text-muted-foreground">{t("noActivity")}</p>}
-      </div>
+            return (
+              <div
+                key={log.id}
+                className="flex items-center gap-3 rounded-lg border p-3 text-sm"
+              >
+                <Badge variant={getLogBadgeVariant(logType)}>{logType}</Badge>
+                <span className="font-medium">{log.objectLabel}</span>
+                <span className="text-muted-foreground">{log.objectClass}</span>
+                <span className="ml-auto text-muted-foreground">
+                  {log.loggedAt ? new Date(log.loggedAt).toLocaleString() : "-"}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <EmptyState icon={Clock} title={t("noActivity")} />
+      )}
     </div>
   );
 }

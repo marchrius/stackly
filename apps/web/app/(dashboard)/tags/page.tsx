@@ -6,6 +6,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { TagList } from "@/components/tags/TagList";
 import { getTranslations } from "next-intl/server";
+import { PageHeader } from "@/components/shared/PageHeader";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("tags");
@@ -30,20 +31,23 @@ export default async function TagsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
-          <p className="text-muted-foreground">{t("count", { count: tags.length })}</p>
-        </div>
-        <div className="flex gap-2">
-          <Button asChild variant="outline">
-            <Link href="/tags/categories">{t("manageCategories")}</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/tags/new"><Plus className="mr-2 h-4 w-4" />{t("new")}</Link>
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title={t("title")}
+        description={<p>{t("count", { count: tags.length })}</p>}
+        actions={
+          <>
+            <Button asChild variant="outline">
+              <Link href="/tags/categories">{t("manageCategories")}</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/tags/new">
+                <Plus className="mr-2 h-4 w-4" />
+                {t("new")}
+              </Link>
+            </Button>
+          </>
+        }
+      />
       <TagList tags={tags} categories={categories} />
     </div>
   );

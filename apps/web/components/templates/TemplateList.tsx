@@ -3,19 +3,22 @@ import Link from "next/link";
 import { Badge, Card, CardContent, CardHeader, CardTitle } from "@stackly/ui";
 import { FileText, Layers } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { EmptyState } from "@/components/shared/EmptyState";
 
-type TemplateWithRelations = Template & { fields: Field[]; _count: { collections: number } };
+type TemplateWithRelations = Template & {
+  fields: Field[];
+  _count: { collections: number };
+};
 
-export function TemplateList({ templates }: { templates: TemplateWithRelations[] }) {
+export function TemplateList({
+  templates,
+}: {
+  templates: TemplateWithRelations[];
+}) {
   const t = useTranslations("templates");
 
   if (templates.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
-        <FileText className="h-12 w-12 mb-4 opacity-30" />
-        <p className="text-lg font-medium">{t("empty")}</p>
-      </div>
-    );
+    return <EmptyState icon={FileText} title={t("empty")} />;
   }
 
   return (
@@ -41,9 +44,15 @@ export function TemplateList({ templates }: { templates: TemplateWithRelations[]
               </div>
               <div className="flex flex-wrap gap-1 mt-2">
                 {tmpl.fields.slice(0, 5).map((f) => (
-                  <Badge key={f.id} variant="secondary" className="text-xs">{f.name}</Badge>
+                  <Badge key={f.id} variant="secondary" className="text-xs">
+                    {f.name}
+                  </Badge>
                 ))}
-                {tmpl.fields.length > 5 && <Badge variant="outline" className="text-xs">+{tmpl.fields.length - 5}</Badge>}
+                {tmpl.fields.length > 5 && (
+                  <Badge variant="outline" className="text-xs">
+                    +{tmpl.fields.length - 5}
+                  </Badge>
+                )}
               </div>
             </CardContent>
           </Card>

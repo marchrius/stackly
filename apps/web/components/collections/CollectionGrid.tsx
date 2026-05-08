@@ -7,12 +7,20 @@ import { Box, Layers } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { getUploadUrl } from "@stackly/lib";
-import { type CollectionIndexCollection, getCollectionCounter, sortCollectionsForDisplay } from "@/lib/collection-index-display";
+import {
+  type CollectionIndexCollection,
+  getCollectionCounter,
+  sortCollectionsForDisplay,
+} from "@/lib/collection-index-display";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 interface CollectionGridProps {
   collections: CollectionIndexCollection[];
   basePath?: string;
-  displayConfiguration?: Pick<DisplayConfiguration, "sortingProperty" | "sortingType" | "sortingDirection"> | null;
+  displayConfiguration?: Pick<
+    DisplayConfiguration,
+    "sortingProperty" | "sortingType" | "sortingDirection"
+  > | null;
 }
 
 function asHexColor(color: string | null): string {
@@ -20,7 +28,11 @@ function asHexColor(color: string | null): string {
   return color.startsWith("#") ? color : `#${color}`;
 }
 
-export function CollectionGrid({ collections, basePath = "/collections", displayConfiguration }: CollectionGridProps) {
+export function CollectionGrid({
+  collections,
+  basePath = "/collections",
+  displayConfiguration,
+}: CollectionGridProps) {
   const t = useTranslations("collections");
   const sortedCollections = useMemo(
     () => sortCollectionsForDisplay(collections, displayConfiguration),
@@ -29,11 +41,11 @@ export function CollectionGrid({ collections, basePath = "/collections", display
 
   if (collections.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
-        <Layers className="mb-4 h-12 w-12 opacity-30" />
-        <p className="text-lg font-medium">{t("empty")}</p>
-        <p className="text-sm">{t("emptyHint")}</p>
-      </div>
+      <EmptyState
+        icon={Layers}
+        title={t("empty")}
+        description={t("emptyHint")}
+      />
     );
   }
 
@@ -51,7 +63,11 @@ export function CollectionGrid({ collections, basePath = "/collections", display
             <Card className="group cursor-pointer overflow-hidden transition-shadow hover:shadow-md">
               <div
                 className="relative flex aspect-[10/13] items-center justify-center overflow-hidden bg-muted"
-                style={{ backgroundColor: col.color ? `${asHexColor(col.color)}22` : undefined }}
+                style={{
+                  backgroundColor: col.color
+                    ? `${asHexColor(col.color)}22`
+                    : undefined,
+                }}
               >
                 {col.image ? (
                   <img

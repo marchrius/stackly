@@ -6,6 +6,7 @@ import { WishlistGrid } from "@/components/wishlists/WishlistGrid";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { PageHeader } from "@/components/shared/PageHeader";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("wishlists");
@@ -24,20 +25,22 @@ export default async function WishlistsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
-          <p className="text-muted-foreground">
+      <PageHeader
+        title={t("title")}
+        description={
+          <p>
             {wishlists.length} {t("title").toLowerCase()}
           </p>
-        </div>
-        <Button asChild>
-          <Link href="/wishlists/new">
-            <Plus className="mr-2 h-4 w-4" />
-            {t("new")}
-          </Link>
-        </Button>
-      </div>
+        }
+        actions={
+          <Button asChild>
+            <Link href="/wishlists/new">
+              <Plus className="mr-2 h-4 w-4" />
+              {t("new")}
+            </Link>
+          </Button>
+        }
+      />
       <WishlistGrid wishlists={wishlists} />
     </div>
   );

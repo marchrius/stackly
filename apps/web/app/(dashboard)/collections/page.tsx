@@ -7,7 +7,12 @@ import { Button } from "@stackly/ui";
 import { Plus, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { getCollectionCounter, sortCollectionsForDisplay, type CollectionIndexCollection } from "@/lib/collection-index-display";
+import {
+  getCollectionCounter,
+  sortCollectionsForDisplay,
+  type CollectionIndexCollection,
+} from "@/lib/collection-index-display";
+import { PageHeader } from "@/components/shared/PageHeader";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("collections");
@@ -33,16 +38,26 @@ export default async function CollectionsPage() {
   ]);
 
   const displayConfiguration = user?.collectionsDisplayConfiguration ?? null;
-  const sortedCollections = sortCollectionsForDisplay(collections as CollectionIndexCollection[], displayConfiguration);
-  const collectionsCounter = sortedCollections.reduce((total, collection) => total + 1 + getCollectionCounter(collection, "children"), 0);
-  const itemsCounter = sortedCollections.reduce((total, collection) => total + getCollectionCounter(collection, "items"), 0);
+  const sortedCollections = sortCollectionsForDisplay(
+    collections as CollectionIndexCollection[],
+    displayConfiguration,
+  );
+  const collectionsCounter = sortedCollections.reduce(
+    (total, collection) =>
+      total + 1 + getCollectionCounter(collection, "children"),
+    0,
+  );
+  const itemsCounter = sortedCollections.reduce(
+    (total, collection) => total + getCollectionCounter(collection, "items"),
+    0,
+  );
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
-          <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+      <PageHeader
+        title={t("title")}
+        description={
+          <div className="flex flex-wrap items-center gap-3">
             <span>
               {collectionsCounter} {t("title").toLowerCase()}
             </span>
@@ -50,28 +65,35 @@ export default async function CollectionsPage() {
               {itemsCounter} {t("items").toLowerCase()}
             </span>
           </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Button asChild variant="outline">
-            <Link href="/collections/edit">
-              <Settings2 className="mr-2 h-4 w-4" />
-              {t("editIndex")}
-            </Link>
-          </Button>
-          <Button asChild>
-            <Link href="/collections/new">
-              <Plus className="mr-2 h-4 w-4" />
-              {t("new")}
-            </Link>
-          </Button>
-        </div>
-      </div>
+        }
+        actions={
+          <>
+            <Button asChild variant="outline">
+              <Link href="/collections/edit">
+                <Settings2 className="mr-2 h-4 w-4" />
+                {t("editIndex")}
+              </Link>
+            </Button>
+            <Button asChild>
+              <Link href="/collections/new">
+                <Plus className="mr-2 h-4 w-4" />
+                {t("new")}
+              </Link>
+            </Button>
+          </>
+        }
+      />
 
       {displayConfiguration?.displayMode === "list" ? (
-        <CollectionList collections={collections as CollectionIndexCollection[]} displayConfiguration={displayConfiguration} />
+        <CollectionList
+          collections={collections as CollectionIndexCollection[]}
+          displayConfiguration={displayConfiguration}
+        />
       ) : (
-        <CollectionGrid collections={collections as CollectionIndexCollection[]} displayConfiguration={displayConfiguration} />
+        <CollectionGrid
+          collections={collections as CollectionIndexCollection[]}
+          displayConfiguration={displayConfiguration}
+        />
       )}
     </div>
   );
