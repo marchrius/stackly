@@ -62,6 +62,7 @@ jobs:
             type=sha,format=short
           labels: |
             org.opencontainers.image.title=Stackly
+            org.opencontainers.image.description=Self-hosted collection manager for physical collections, metadata, wishlists, albums, and loans.
             org.opencontainers.image.version=${{ steps.package.outputs.version }}
             org.opencontainers.image.ref.name=scratch
 
@@ -76,6 +77,7 @@ jobs:
             type=sha,format=short,suffix=-alpine
           labels: |
             org.opencontainers.image.title=Stackly Alpine
+            org.opencontainers.image.description=Self-hosted collection manager for physical collections, metadata, wishlists, albums, and loans.
             org.opencontainers.image.version=${{ steps.package.outputs.version }}
             org.opencontainers.image.ref.name=alpine
 

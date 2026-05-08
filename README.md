@@ -2,7 +2,9 @@
 
 Stackly is a self-hosted collection manager for keeping track of physical collections of any kind: books, DVDs, comics, vinyl records, stamps, games, photo albums, wishlists, and more.
 
-This repository now contains the full-stack Next.js version of Stackly. It keeps the product scope of the legacy Koillection application while replacing the Symfony/Twig runtime with a Turborepo monorepo based on Next.js App Router, React, Prisma, shadcn/ui, Tailwind CSS, NextAuth.js v5, and PostgreSQL.
+This repository contains the full-stack Next.js version of Stackly, built as a Turborepo monorepo based on Next.js App Router, React, Prisma, shadcn/ui, Tailwind CSS, NextAuth.js v5, and PostgreSQL.
+
+Stackly was born from Koillection.
 
 Stackly does not ship with automatic metadata download for a specific collection type. Users can define their own custom fields, templates, choice lists, tags, and manual HTML scrapers, then import metadata only through explicit preview/import actions.
 
@@ -31,7 +33,7 @@ Stackly does not ship with automatic metadata download for a specific collection
 
 ## Screenshots
 
-The interface has been rebuilt for v2, but the functional coverage matches the same workflows shown by the legacy Koillection project.
+The interface has been rebuilt for v2, while keeping the same core collection-management workflows.
 
 <p align="center">
     <img width="400px" src="https://user-images.githubusercontent.com/20560781/168048241-cfcb71ce-c296-4f1b-bbb8-ecfea1e31048.png">
@@ -312,9 +314,7 @@ Back up the database and uploaded files before applying application updates, esp
 
 ## Contributing and Translations
 
-Stackly is MIT licensed. Contributions, bug reports, and translation fixes are welcome.
-
-The legacy translation project is available at <https://crowdin.com/project/koillection>. The Next.js stack stores its translations in `apps/web/messages/*.json`.
+Stackly is MIT licensed. Contributions, bug reports, and translation fixes are welcome. Translation files are stored in `apps/web/messages/*.json`.
 
 ## Licensing
 
