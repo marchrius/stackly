@@ -1,48 +1,37 @@
-<p align="center">
-    <img src="https://user-images.githubusercontent.com/20560781/80213166-0e560e00-8639-11ea-944e-4f79fdbcef55.png" width="75" height="75">
-</p>
+# Stackly — Next.js v2
 
-<p align="center">
-    <img src="https://img.shields.io/github/v/release/koillection/koillection" />
-    <img src="https://img.shields.io/github/license/koillection/koillection" />    
-    <img src="https://img.shields.io/github/actions/workflow/status/koillection/koillection/ci.yml" />
-    <img src="https://img.shields.io/scrutinizer/g/koillection/koillection/1.4" />    
-</p>
-<p align="center">
-    <img src="https://img.shields.io/packagist/php-v/koillection/koillection" />
-    <img src="https://img.shields.io/badge/postgresql->=10.0-blue" />            
-    <img src="https://img.shields.io/badge/mariadb->=10.0-blue" />
-    <img src="https://img.shields.io/badge/mysql->=8.0-blue" />
-<p>
+Stackly is a self-hosted collection manager for keeping track of physical collections of any kind: books, DVDs, comics, vinyl records, stamps, games, photo albums, wishlists, and more.
 
-# Koillection
+This repository now contains the full-stack Next.js version of Stackly. It keeps the product scope of the legacy Koillection application while replacing the Symfony/Twig runtime with a Turborepo monorepo based on Next.js App Router, React, Prisma, shadcn/ui, Tailwind CSS, NextAuth.js v5, and PostgreSQL.
 
-Koillection is a self-hosted collection manager created to keep track of physical (mostly) collections of any kind like books, DVDs, stamps, games... 
-Koillection is meant to be used for any kind of collections and doesn't come with pre-built metadata download. But you can tailor your own HTML scraper, or you can add your own metadata freely.
-    
-You can find detailed information in the <a href="https://github.com/koillection/koillection/wiki">wiki</a> (under construction)
+Stackly does not ship with automatic metadata download for a specific collection type. Users can define their own custom fields, templates, choice lists, tags, and manual HTML scrapers, then import metadata only through explicit preview/import actions.
 
-## Installation
-See the <a href="https://github.com/koillection/koillection/wiki/Installation">Installation page</a> in the wiki
+## Product Features
 
-## Updating
-See the <a href="https://github.com/koillection/koillection/wiki/Updating">Updating page</a> in the wiki
-
-## Scraping
-See the <a href="https://github.com/koillection/koillection/wiki/Scraping">Scraping page</a> in the wiki
-
-## Demo
-
-Gitpod will run a new and temporary instance for you.
-
-When Gitpod has finished loading, select :
-
-    More actions -> Open in browser
-
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/koillection/koillection-gitpod)
+| Feature | Status |
+|---|---|
+| Collections, sub-collections, and item management | Implemented |
+| Album, sub-album, and photo management | Implemented |
+| Wishlist, sub-wishlist, and wish management | Implemented |
+| Custom item metadata (`Datum`) | Implemented |
+| Templates, fields, and choice lists | Implemented |
+| Tags and tag categories | Implemented |
+| Image and file uploads with thumbnail generation | Implemented |
+| Public sharing for collections, items, albums, wishlists, and public user wishlists | Implemented |
+| Full-text search across the main resources | Implemented |
+| History/log view | Implemented |
+| Statistics dashboard | Implemented |
+| Inventories and loans | Implemented |
+| Manual/configurable HTML scrapers | Implemented |
+| Multi-user support with user/admin roles | Implemented |
+| User settings, themes, and dark mode | Implemented |
+| Multi-language i18n | Implemented |
+| REST API route handlers | Implemented |
+| Installable PWA manifest and icons | Implemented |
 
 ## Screenshots
+
+The interface has been rebuilt for v2, but the functional coverage matches the same workflows shown by the legacy Koillection project.
 
 <p align="center">
     <img width="400px" src="https://user-images.githubusercontent.com/20560781/168048241-cfcb71ce-c296-4f1b-bbb8-ecfea1e31048.png">
@@ -60,36 +49,273 @@ When Gitpod has finished loading, select :
     <img height="215px" src="https://user-images.githubusercontent.com/20560781/177819299-048ea3ad-fa0a-463d-b5b7-1607773553e4.png">
 </p>
 
-## Warning
+## Database Compatibility
 
-Please back up your database, especially when updating to a new version. I do my best to test new versions, especially when they contains data migrations but some edge cases may escape my vigilance.
+Stackly v2 uses PostgreSQL through Prisma. MySQL and MariaDB support from the legacy Symfony application is not part of the current conversion cycle.
 
-Please do back up your database.
+The Prisma schema uses the new target table names (`stk_*`). Legacy PostgreSQL databases using `koi_*` tables can be migrated with the `legacy:migrate`, `legacy:validate`, and `legacy:uploads:*` scripts.
 
-## Support Koillection
+Legacy Symfony bcrypt hashes using `$2y$` are supported by normalizing them to `$2b$` for `bcryptjs`.
 
-There are a few things you can do to support Koillection :
-    
-* If you like Koillection please consider leaving a ⭐, it gives additional motivation to continue working on the project
-* Report any bug or error you see
-* English is not my first language, it would be a huge help if you could report any mistakes in both Koillection or the wiki.
+## Repository Structure
 
-You can contribute and edit translations here: https://crowdin.com/project/koillection. 
-If you wish to contribute to a new language, please open a discussion on GitHub or Crowdin and I'll gladly add it. 
-You are also welcome if you want to proofread existing translations.
+```text
+.
+├── apps/
+│   └── web/                  # Next.js app: frontend + API route handlers
+│       ├── app/
+│       │   ├── (auth)/       # Login and registration
+│       │   ├── (dashboard)/  # Authenticated application pages
+│       │   └── api/          # REST API route handlers
+│       ├── components/       # React components by domain
+│       ├── i18n/             # next-intl configuration and locale source of truth
+│       ├── messages/         # Translations
+│       ├── lib/              # Server actions, auth helpers, app utilities
+│       ├── auth.ts           # NextAuth.js v5 configuration
+│       └── middleware.ts     # Route protection and locale handling
+├── packages/
+│   ├── db/                   # Prisma schema and shared client
+│   ├── lib/                  # Shared types and utilities
+│   └── ui/                   # Shared shadcn/ui components
+└── legacy/                   # Archived Symfony/PHP application
+```
 
-### Translations status
-<!-- CROWDIN-TRANSLATIONS-PROGRESS-ACTION-START -->
+## Requirements
 
+- Node.js >= 20
+- npm >= 10
+- PostgreSQL
 
-#### Available
+## Setup
 
-<table><tr><td align="center" valign="top"><img width="30px" height="30px" title="Dutch" alt="Dutch" src="https://raw.githubusercontent.com/benjaminjonard/crowdin-translations-progress-action/1.0/flags/nl.png"></div><div align="center" valign="top">100%</td><td align="center" valign="top"><img width="30px" height="30px" title="English" alt="English" src="https://raw.githubusercontent.com/benjaminjonard/crowdin-translations-progress-action/1.0/flags/en.png"></div><div align="center" valign="top">100%</td><td align="center" valign="top"><img width="30px" height="30px" title="French" alt="French" src="https://raw.githubusercontent.com/benjaminjonard/crowdin-translations-progress-action/1.0/flags/fr.png"></div><div align="center" valign="top">100%</td><td align="center" valign="top"><img width="30px" height="30px" title="German" alt="German" src="https://raw.githubusercontent.com/benjaminjonard/crowdin-translations-progress-action/1.0/flags/de.png"></div><div align="center" valign="top">100%</td><td align="center" valign="top"><img width="30px" height="30px" title="Italian" alt="Italian" src="https://raw.githubusercontent.com/benjaminjonard/crowdin-translations-progress-action/1.0/flags/it.png"></div><div align="center" valign="top">100%</td><td align="center" valign="top"><img width="30px" height="30px" title="Portuguese" alt="Portuguese" src="https://raw.githubusercontent.com/benjaminjonard/crowdin-translations-progress-action/1.0/flags/pt-PT.png"></div><div align="center" valign="top">100%</td><td align="center" valign="top"><img width="30px" height="30px" title="Portuguese, Brazilian" alt="Portuguese, Brazilian" src="https://raw.githubusercontent.com/benjaminjonard/crowdin-translations-progress-action/1.0/flags/pt-BR.png"></div><div align="center" valign="top">100%</td><td align="center" valign="top"><img width="30px" height="30px" title="Spanish" alt="Spanish" src="https://raw.githubusercontent.com/benjaminjonard/crowdin-translations-progress-action/1.0/flags/es-ES.png"></div><div align="center" valign="top">100%</td><td align="center" valign="top"><img width="30px" height="30px" title="Polish" alt="Polish" src="https://raw.githubusercontent.com/benjaminjonard/crowdin-translations-progress-action/1.0/flags/pl.png"></div><div align="center" valign="top">99%</td><td align="center" valign="top"><img width="30px" height="30px" title="Russian" alt="Russian" src="https://raw.githubusercontent.com/benjaminjonard/crowdin-translations-progress-action/1.0/flags/ru.png"></div><div align="center" valign="top">97%</td></tr><tr><td align="center" valign="top"><img width="30px" height="30px" title="Chinese Simplified" alt="Chinese Simplified" src="https://raw.githubusercontent.com/benjaminjonard/crowdin-translations-progress-action/1.0/flags/zh-CN.png"></div><div align="center" valign="top">95%</td></table>
+```bash
+npm install
+cp .env.example .env
+# Edit DATABASE_URL and NEXTAUTH_SECRET in .env
+npm run db:generate
+npm run db:push
+npm run dev
+```
 
-#### In progress
+## Environment Variables
 
-<table><tr><td align="center" valign="top"><img width="30px" height="30px" title="Danish" alt="Danish" src="https://raw.githubusercontent.com/benjaminjonard/crowdin-translations-progress-action/1.0/flags/da.png"></div><div align="center" valign="top">75%</td><td align="center" valign="top"><img width="30px" height="30px" title="Turkish" alt="Turkish" src="https://raw.githubusercontent.com/benjaminjonard/crowdin-translations-progress-action/1.0/flags/tr.png"></div><div align="center" valign="top">30%</td><td align="center" valign="top"><img width="30px" height="30px" title="Ukrainian" alt="Ukrainian" src="https://raw.githubusercontent.com/benjaminjonard/crowdin-translations-progress-action/1.0/flags/uk.png"></div><div align="center" valign="top">2%</td></tr></table>
-<!-- CROWDIN-TRANSLATIONS-PROGRESS-ACTION-END -->
+Use one central environment file: `.env`.
+
+| Variable | Description | Example |
+|---|---|---|
+| `DATABASE_URL` | PostgreSQL DSN | `postgresql://user:pass@localhost:5432/stackly` |
+| `NEXTAUTH_SECRET` | JWT session secret, random 32 bytes | `openssl rand -base64 32` |
+| `NEXTAUTH_URL` | Public app base URL in production | `https://stackly.example.com` |
+| `UPLOAD_DIR` | File upload directory | `./public/uploads` |
+
+Do not create `apps/web/.env` or `packages/db/.env`: workspace scripts read the root `.env`.
+
+## Commands
+
+Run commands from this directory.
+
+```bash
+npm run dev           # Start development with Turbopack
+npm run build         # Production build
+npm run start         # Start the production Next.js server
+npm run lint          # Lint
+npm run type-check    # TypeScript check
+npm run test          # Test suite
+npm run i18n:validate # Validate messages/*.json schema/placeholders
+npm run db:generate   # Regenerate Prisma client
+npm run db:push       # Sync schema to the database in development
+npm run db:migrate    # Create/apply Prisma migrations
+npm run db:studio     # Open Prisma Studio
+npm run db:seed       # Seed base data
+npm run db:seed:demo  # Seed demo data
+npm run maintenance:refresh-cached-values
+npm run maintenance:regenerate-logs
+npm run maintenance:regenerate-thumbnails
+npm run legacy:migrate
+npm run legacy:validate
+npm run legacy:uploads:audit
+npm run legacy:uploads:copy
+```
+
+All `maintenance:*` commands support `--help` and `--dry-run`.
+
+For the PostgreSQL legacy-to-Prisma migration path, see `LEGACY_DB_MIGRATION.md`.
+
+## Deployment
+
+The new stack includes its own container configuration:
+
+- `Dockerfile` for the standard monorepo build/runtime container
+- `Dockerfile.scratch` for the minimal runtime variant
+- `docker-compose.yml` for the app and PostgreSQL
+- `entrypoint.sh` for startup database preparation and Prisma migration deployment
+
+```bash
+docker compose up -d
+```
+
+Runtime notes:
+
+- Mount persistent uploads at `/var/lib/stackly/uploads`; the container links that path to `apps/web/public/uploads`.
+- Set `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, and `UPLOAD_DIR` in production.
+- With OIDC enabled, the provider callback URL must match `<NEXTAUTH_URL>/api/auth/callback/oidc`.
+- The production build uses Next.js standalone output and starts `apps/web/server.js`.
+
+## Internationalization
+
+Stackly v2 uses `next-intl` with a cookie-based locale strategy.
+
+Locale source of truth: `apps/web/i18n/locales.ts`.
+
+Supported locale files:
+
+| Code | Language |
+|---|---|
+| `da` | Danish |
+| `de` | German |
+| `en` | English (default) |
+| `es` | Spanish |
+| `fr` | French |
+| `it` | Italian |
+| `nl` | Dutch |
+| `pl` | Polish |
+| `pt` | Portuguese |
+| `pt_BR` | Portuguese (Brazil) |
+| `ru` | Russian |
+| `tr` | Turkish |
+| `uk` | Ukrainian |
+| `zh` | Chinese |
+
+Before changing user-visible text, update every `messages/*.json` file and run:
+
+```bash
+npm run i18n:validate
+```
+
+## Available Routes
+
+### Authentication and Dashboard
+
+| Route | Description |
+|---|---|
+| `/login` | Sign in |
+| `/register` | Register a user |
+| `/` | Dashboard with quick statistics |
+| `/settings` | User profile, preferences, locale, and theme |
+| `/settings/admin` | Admin configuration |
+
+### Collections and Items
+
+| Route | Description |
+|---|---|
+| `/collections` | Collections index |
+| `/collections/new` | Create a collection |
+| `/collections/[id]` | Collection detail with nested collections and items |
+| `/collections/edit?id=...` | Edit a collection |
+| `/items/new` | Create an item |
+| `/items/[id]` | Item detail with custom data |
+
+### Albums and Photos
+
+| Route | Description |
+|---|---|
+| `/albums` | Albums index |
+| `/albums/new` | Create an album |
+| `/albums/[id]` | Album detail with nested albums and photos |
+| `/photos/[id]` | Photo detail |
+
+### Wishlists and Wishes
+
+| Route | Description |
+|---|---|
+| `/wishlists` | Wishlists index |
+| `/wishlists/new` | Create a wishlist |
+| `/wishlists/[id]` | Wishlist detail with nested wishlists and wishes |
+| `/wishes/[id]` | Wish detail |
+
+### Public Sharing
+
+| Route | Description |
+|---|---|
+| `/public/collections/[id]` | Public collection/sub-collection view |
+| `/public/items/[id]` | Public item view |
+| `/public/albums/[id]` | Public album/sub-album view |
+| `/public/wishlists/[id]` | Public wishlist/sub-wishlist view |
+| `/user/[username]/wishlists` | Public user wishlists compatibility route |
+
+### Secondary Features
+
+| Route | Description |
+|---|---|
+| `/tags` | Tags |
+| `/tags/categories` | Tag categories |
+| `/templates` | Item templates and fields |
+| `/choice-lists` | Reusable value lists |
+| `/inventories` | Inventories |
+| `/loans` | Loans |
+| `/scrapers` | Manual scraper configuration |
+| `/history` | Change history |
+| `/statistics` | Statistics |
+| `/search` | Search |
+
+## REST API
+
+| Endpoint | Methods | Description |
+|---|---|---|
+| `/api/auth/[...nextauth]` | GET, POST | Auth.js session/login/logout handlers |
+| `/api/collections` | GET, POST | List and create collections |
+| `/api/collections/[id]` | GET, PATCH, DELETE | Collection CRUD |
+| `/api/collections/[id]/item-form` | GET | Collection item form metadata |
+| `/api/items` | GET, POST | List and create items |
+| `/api/items/[id]` | GET, PATCH, DELETE | Item CRUD |
+| `/api/albums` | GET, POST | List and create albums |
+| `/api/albums/[id]` | GET, PATCH, DELETE | Album CRUD |
+| `/api/photos` | GET, POST | List and create photos |
+| `/api/photos/[id]` | GET, PATCH, DELETE | Photo CRUD |
+| `/api/wishlists` | GET, POST | List and create wishlists |
+| `/api/wishlists/[id]` | GET, PATCH, DELETE | Wishlist CRUD |
+| `/api/wishlists/[id]/children` | GET | Wishlist children |
+| `/api/wishlists/[id]/parent` | PATCH | Change wishlist parent |
+| `/api/wishlists/[id]/wishes` | GET | Wishlist wishes |
+| `/api/wishes` | GET, POST | List and create wishes |
+| `/api/wishes/[id]` | GET, PATCH, DELETE | Wish CRUD |
+| `/api/wishes/[id]/wishlist` | PATCH | Move a wish to another wishlist |
+| `/api/tags` | GET, POST | List and create tags |
+| `/api/tags/[id]` | GET, PATCH, DELETE | Tag CRUD |
+| `/api/tag-categories` | GET, POST | List and create tag categories |
+| `/api/tag-categories/[id]` | GET, PATCH, DELETE | Tag category CRUD |
+| `/api/templates` | GET, POST | List and create templates |
+| `/api/templates/[id]` | GET, PATCH, DELETE | Template CRUD |
+| `/api/choice-lists` | GET, POST | List and create choice lists |
+| `/api/choice-lists/[id]` | GET, PATCH, DELETE | Choice list CRUD |
+| `/api/inventories` | GET, POST | List and create inventories |
+| `/api/inventories/[id]` | GET, PATCH, DELETE | Inventory CRUD |
+| `/api/loans` | GET, POST | List and create loans |
+| `/api/loans/[id]` | GET, PATCH, DELETE | Loan CRUD |
+| `/api/scrapers` | GET, POST | List and create scrapers |
+| `/api/scrapers/[id]` | GET, PATCH, DELETE | Scraper CRUD |
+| `/api/scrapers/collection-preview` | POST | Preview/import collection metadata |
+| `/api/scrapers/item-preview` | POST | Preview/import item metadata |
+| `/api/search` | GET | Search |
+| `/api/upload` | POST | Upload with thumbnail generation |
+| `/api/logs` | GET | Change history |
+
+## PWA
+
+The app includes an installable manifest (`/manifest.webmanifest`) and application icons in `apps/web/public/icons/`.
+
+Authenticated pages and private data are not cached offline by an aggressive service worker by default.
+
+## Updating and Backups
+
+Back up the database and uploaded files before applying application updates, especially when Prisma migrations or legacy migration scripts are involved.
+
+## Contributing and Translations
+
+Stackly is MIT licensed. Contributions, bug reports, and translation fixes are welcome.
+
+The legacy translation project is available at <https://crowdin.com/project/koillection>. The Next.js stack stores its translations in `apps/web/messages/*.json`.
 
 ## Licensing
-Koillection is an Open Source software, released under the MIT License. 
+
+Stackly is open source software released under the MIT License.

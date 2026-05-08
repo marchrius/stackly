@@ -1,6 +1,6 @@
 # Legacy PostgreSQL DB Migration
 
-This document describes the supported migration path from a Koillection legacy PostgreSQL database using `koi_*` tables to the Next.js/Prisma PostgreSQL schema using `stk_*` tables.
+This document describes the supported migration path from a legacy Koillection PostgreSQL database using `koi_*` tables to the Stackly Next.js/Prisma PostgreSQL schema using `stk_*` tables.
 
 The migration is intentionally copy-based: keep the legacy database read-only, create a fresh target database, apply Prisma migrations, then copy data from source to target.
 
@@ -8,8 +8,8 @@ The migration is intentionally copy-based: keep the legacy database read-only, c
 
 - PostgreSQL source database with legacy `koi_*` tables
 - Empty PostgreSQL target database
-- `next/.env` configured with `DATABASE_URL` pointing at the target database
-- Optional `LEGACY_DATABASE_URL` in `next/.env`, or pass `--source` explicitly
+- `.env` configured with `DATABASE_URL` pointing at the target database
+- Optional `LEGACY_DATABASE_URL` in `.env`, or pass `--source` explicitly
 
 ## Workflow
 
@@ -32,24 +32,23 @@ pg_dump --format=custom --file=koillection_legacy.dump koillection
 createdb koillection_legacy_snapshot
 pg_restore --dbname=koillection_legacy_snapshot koillection_legacy.dump
 
-createdb koillection_next
+createdb stackly
 
-cd next
-DATABASE_URL="postgresql://user:pass@localhost:5432/koillection_next" npm run db:migrate
+DATABASE_URL="postgresql://user:pass@localhost:5432/stackly" npm run db:migrate
 
 npm run legacy:migrate -- \
   --source "postgresql://user:pass@localhost:5432/koillection_legacy_snapshot" \
-  --target "postgresql://user:pass@localhost:5432/koillection_next" \
+  --target "postgresql://user:pass@localhost:5432/stackly" \
   --dry-run
 
 npm run legacy:migrate -- \
   --source "postgresql://user:pass@localhost:5432/koillection_legacy_snapshot" \
-  --target "postgresql://user:pass@localhost:5432/koillection_next" \
+  --target "postgresql://user:pass@localhost:5432/stackly" \
   --execute
 
 npm run legacy:validate -- \
   --source "postgresql://user:pass@localhost:5432/koillection_legacy_snapshot" \
-  --target "postgresql://user:pass@localhost:5432/koillection_next"
+  --target "postgresql://user:pass@localhost:5432/stackly"
 
 npm run maintenance:refresh-cached-values
 npm run maintenance:regenerate-logs -- --dry-run
@@ -127,7 +126,7 @@ Audit first:
 npm run legacy:uploads:audit -- \
   --database "postgresql://stackly:stackly@localhost:5432/stackly_transfer" \
   --source "/path/to/legacy/uploads" \
-  --target "/path/to/next/uploads"
+  --target "/path/to/stackly/uploads"
 ```
 
 Copy with dry-run first:
@@ -136,7 +135,7 @@ Copy with dry-run first:
 npm run legacy:uploads:copy -- \
   --database "postgresql://stackly:stackly@localhost:5432/stackly_transfer" \
   --source "/path/to/legacy/uploads" \
-  --target "/path/to/next/uploads" \
+  --target "/path/to/stackly/uploads" \
   --dry-run
 ```
 
@@ -146,7 +145,7 @@ Copy for real:
 npm run legacy:uploads:copy -- \
   --database "postgresql://stackly:stackly@localhost:5432/stackly_transfer" \
   --source "/path/to/legacy/uploads" \
-  --target "/path/to/next/uploads" \
+  --target "/path/to/stackly/uploads" \
   --execute
 ```
 

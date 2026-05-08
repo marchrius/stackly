@@ -1,122 +1,71 @@
-FROM dunglas/frankenphp:php8.5 AS koillection-base
+FROM node:24-alpine AS base
 
-# Environment variables
-ENV APP_ENV=prod
-ENV PUID=1001
-ENV PGID=1001
-ENV USER=koillection
-ENV FRANKENPHP_CONFIG="worker /app/public/public/index.php"
-ENV FRANKENPHP_SERVER_NAME=":80"
-ENV APP_RUNTIME="Symfony\\Component\\Runtime\\SymfonyRuntime"
-ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV PANTHER_CHROME_BINARY=/usr/bin/chromium
-ENV PANTHER_CHROME_DRIVER_BINARY=/usr/bin/chromedriver
-ENV PANTHER_NO_SANDBOX=1
-
-COPY ./ /app/public
-COPY ./docker/Caddyfile /etc/caddy/Caddyfile
-
-# Install some basics dependencies
-RUN set -eux ; \
-    # Add User and Group \
-    addgroup --gid "$PGID" "$USER" ; \
-    adduser --gecos '' --no-create-home --disabled-password --uid "$PUID" --gid "$PGID" "$USER" ; \
-    # Install packages \
-    apt-get update -qq ; \
-    apt-get install -qqy --no-install-recommends \
-    chromium \
-    chromium-driver \
-    curl \
-    gnupg2 \
-    libnss3 \
-    nss-plugin-pem \
-    ca-certificates \
-    git \
-    unzip \
-    openssl ; \
-    # Install PHP extensions \
-    install-php-extensions opcache pdo_pgsql pdo_mysql intl gd zip apcu curl ; \
-    #Install composer dependencies \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer ; \
-    cd /app/public ; \
-    COMPOSER_MEMORY_LIMIT=-1 composer install --classmap-authoritative ; \
-    COMPOSER_MEMORY_LIMIT=-1 composer clearcache ; \
-    # Dump translation files for javascript \
-    cd /app/public ; \
-    php bin/console app:translations:dump ; \
-    # Clean up \
-    apt-get purge -y git ca-certificates gnupg2 unzip ; \
-    apt-get autoremove -y ; \
-    apt-get clean ; \
-    rm -rf /var/lib/apt/lists/* ; \
-    rm -rf /usr/local/bin/composer ; \
-    # Set permissions \
-    chown -R "$USER":"$USER" /app/public ; \
-    chmod +x /app/public/docker/entrypoint.sh ; \
-    mkdir /run/php ; \
-    # Add PHP config files \
-    cp /app/public/docker/php.ini /usr/local/etc/php/conf.d/php.ini
-
-FROM node:24-bookworm AS build-node
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
 WORKDIR /app
 
-COPY ./assets/ ./assets
-COPY --from=koillection-base /app/public/assets/js/translations /app/assets/js/translations
+FROM base AS deps
 
-WORKDIR /app/assets
+COPY package.json package-lock.json turbo.json ./
+COPY apps/web/package.json apps/web/package.json
+COPY packages/db/package.json packages/db/package.json
+COPY packages/lib/package.json packages/lib/package.json
+COPY packages/ui/package.json packages/ui/package.json
 
-RUN set -eux ; \
-    mkdir -p /app/public/build/ ; \
-    corepack enable ; \
-    yarn --version ; \
-    yarn install ; \
-    yarn build ;
+RUN npm ci --include=dev
 
-FROM curlimages/curl:8.18.0 AS download-env
+FROM deps AS builder
 
-# renovate: datasource=github-releases depName=lwthiker/curl-impersonate packageName=lwthiker/curl-impersonate
-ENV CURL_IMPERSONATE_VERSION="0.6.1"
+COPY . .
 
-WORKDIR /opt
+RUN cd packages/db && npx prisma generate
+RUN cd apps/web && npx next build
 
-USER root
+FROM base AS runner
 
-RUN set -eux ; \
-    # Determine architecture \
-    ARCHITECTURE="$(uname -m)" ; \
-    case $ARCHITECTURE in \
-    x86_64) ARCHITECTURE="x86_64" ;; \
-    aarch64 | armv8* | arm64) ARCHITECTURE="aarch64" ;; \
-    arm | armv7*) ARCHITECTURE="arm" ;; \
-    *) \
-    echo "(!) Architecture $ARCHITECTURE unsupported" \
-    exit 1 \
-    ;; \
-    esac ;\
-    FILE_NAME="libcurl-impersonate-v${CURL_IMPERSONATE_VERSION}.${ARCHITECTURE}-linux-gnu.tar.gz" ; \
-    curl \
-    --fail \
-    --location \
-    --output /tmp/${FILE_NAME} \
-    --show-error \
-    --silent \
-    "https://github.com/lwthiker/curl-impersonate/releases/download/v${CURL_IMPERSONATE_VERSION}/${FILE_NAME}" \
-    ; \
-    tar xvzf /tmp/${FILE_NAME} -C /opt/
+RUN apk add --no-cache postgresql-client
 
-FROM koillection-base AS koillection-final
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+ENV UPLOAD_DIR=/var/lib/stackly/uploads
 
-COPY --from=build-node /app/public/build/ /app/public/public/build/
-COPY --from=download-env /opt/libcurl-impersonate* /opt/
+COPY --from=builder /app/apps/web/.next/standalone ./
+COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder /app/apps/web/public ./apps/web/public
+COPY --from=builder /app/packages/db/prisma ./packages/db/prisma
+COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/node_modules/@standard-schema ./node_modules/@standard-schema
+COPY --from=builder /app/node_modules/c12 ./node_modules/c12
+COPY --from=builder /app/node_modules/chokidar ./node_modules/chokidar
+COPY --from=builder /app/node_modules/confbox ./node_modules/confbox
+COPY --from=builder /app/node_modules/deepmerge-ts ./node_modules/deepmerge-ts
+COPY --from=builder /app/node_modules/defu ./node_modules/defu
+COPY --from=builder /app/node_modules/destr ./node_modules/destr
+COPY --from=builder /app/node_modules/dotenv ./node_modules/dotenv
+COPY --from=builder /app/node_modules/effect ./node_modules/effect
+COPY --from=builder /app/node_modules/empathic ./node_modules/empathic
+COPY --from=builder /app/node_modules/exsolve ./node_modules/exsolve
+COPY --from=builder /app/node_modules/fast-check ./node_modules/fast-check
+COPY --from=builder /app/node_modules/giget ./node_modules/giget
+COPY --from=builder /app/node_modules/jiti ./node_modules/jiti
+COPY --from=builder /app/node_modules/node-fetch-native ./node_modules/node-fetch-native
+COPY --from=builder /app/node_modules/nypm ./node_modules/nypm
+COPY --from=builder /app/node_modules/ohash ./node_modules/ohash
+COPY --from=builder /app/node_modules/pathe ./node_modules/pathe
+COPY --from=builder /app/node_modules/perfect-debounce ./node_modules/perfect-debounce
+COPY --from=builder /app/node_modules/pkg-types ./node_modules/pkg-types
+COPY --from=builder /app/node_modules/pure-rand ./node_modules/pure-rand
+COPY --from=builder /app/node_modules/rc9 ./node_modules/rc9
+COPY --from=builder /app/node_modules/readdirp ./node_modules/readdirp
+COPY --from=builder /app/node_modules/tinyexec ./node_modules/tinyexec
+COPY entrypoint.sh /entrypoint.sh
 
-VOLUME /uploads
+RUN chmod +x /entrypoint.sh && mkdir -p /var/lib/stackly/uploads
 
-EXPOSE 80
-EXPOSE 443
+VOLUME ["/var/lib/stackly/uploads"]
 
-WORKDIR /app/public
+EXPOSE 3000
 
-HEALTHCHECK CMD curl --fail http://localhost:80/ || exit 1
-
-ENTRYPOINT ["sh", "/app/public/docker/entrypoint.sh" ]
+ENTRYPOINT ["/entrypoint.sh"]
