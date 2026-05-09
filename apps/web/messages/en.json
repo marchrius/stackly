@@ -236,6 +236,7 @@
     "newSub": "New sub-album",
     "edit": "Edit Album",
     "empty": "No albums",
+    "emptyHint": "Start by creating your first album.",
     "subAlbums": "Sub-albums",
     "photos": "Photos",
     "addPhoto": "Add photo",
@@ -298,6 +299,7 @@
     "newSub": "New sub-wishlist",
     "edit": "Edit Wishlist",
     "empty": "No wishlists",
+    "emptyHint": "Start by creating your first wishlist.",
     "subWishlists": "Sub-wishlists",
     "wishes": "Wishes",
     "addWish": "Add wish",
@@ -437,7 +439,8 @@
   "history": {
     "title": "History",
     "pageTitle": "Change History",
-    "noActivity": "No activity recorded."
+    "noActivity": "No activity recorded.",
+    "noActivityHint": "Changes will appear here after you create, update, or delete content."
   },
   "statistics": {
     "title": "Statistics"
@@ -471,6 +474,7 @@
     "edit": "Edit Tag",
     "count": "{count} tags",
     "empty": "No tags",
+    "emptyHint": "Start by creating your first tag.",
     "uncategorized": "Uncategorized",
     "itemCount": "{count} items",
     "taggedItems": "Items with this tag",
@@ -513,6 +517,7 @@
     "edit": "Edit Template",
     "count": "{count} templates",
     "empty": "No templates",
+    "emptyHint": "Start by creating a template for your collections.",
     "fieldsCount": "{count} fields",
     "collectionsCount": "{count} collections",
     "noFields": "No fields configured yet.",
@@ -558,6 +563,7 @@
     "title": "Choice Lists",
     "count": "{count} choice lists",
     "empty": "No choice lists",
+    "emptyHint": "Start by creating a reusable choice list.",
     "choicesCount": "{count} choices",
     "fieldsCount": "{count} linked fields",
     "dataCount": "{count} linked values",
@@ -593,6 +599,7 @@
     "title": "Inventories",
     "count": "{count} inventories",
     "empty": "No inventories",
+    "emptyHint": "Start by creating your first inventory.",
     "entriesCount": "{count} entries",
     "updatedAt": "Updated {date}",
     "new": "New Inventory",
@@ -614,6 +621,7 @@
     "title": "Scrapers",
     "count": "{count} scrapers",
     "empty": "No scrapers",
+    "emptyHint": "Start by creating a scraper configuration.",
     "type": "Type: {type}",
     "pathsCount": "{count} paths",
     "new": "New Scraper",

@@ -65,7 +65,11 @@ export default async function ChoiceListsPage() {
           })}
         </div>
       ) : (
-        <EmptyState icon={List} title={t("empty")} />
+        <EmptyState
+          icon={List}
+          title={t("empty")}
+          description={t("emptyHint")}
+        />
       )}
     </div>
   );

@@ -236,6 +236,7 @@
     "newSub": "Nouvel sous-album",
     "edit": "Modifier l’album",
     "empty": "Aucun album",
+    "emptyHint": "Commencez par créer votre premier album.",
     "subAlbums": "Sous-albums",
     "photos": "Photographies",
     "addPhoto": "Ajouter une photo",
@@ -298,6 +299,7 @@
     "newSub": "Nouvelle sous-liste de souhaits",
     "edit": "Modifier la liste de souhaits",
     "empty": "Aucune liste de souhaits",
+    "emptyHint": "Commencez par créer votre première liste de souhaits.",
     "subWishlists": "Sous-listes de souhaits",
     "wishes": "Souhaits",
     "addWish": "Ajouter un souhait",
@@ -437,7 +439,8 @@
   "history": {
     "title": "Historique",
     "pageTitle": "Historique des modifications",
-    "noActivity": "Aucune activité enregistrée."
+    "noActivity": "Aucune activité enregistrée.",
+    "noActivityHint": "Les modifications apparaîtront ici après la création, la mise à jour ou la suppression de contenu."
   },
   "statistics": {
     "title": "Statistiques"
@@ -471,6 +474,7 @@
     "edit": "Modifier la balise",
     "count": "Balises {count}",
     "empty": "Aucune balise",
+    "emptyHint": "Commencez par créer votre première balise.",
     "uncategorized": "Non classé",
     "itemCount": "Articles {count}",
     "taggedItems": "Articles avec cette balise",
@@ -513,6 +517,7 @@
     "edit": "Modifier le modèle",
     "count": "Modèles {count}",
     "empty": "Aucun modèle",
+    "emptyHint": "Commencez par créer un modèle pour vos collections.",
     "fieldsCount": "Champs {count}",
     "collectionsCount": "Collections {count}",
     "noFields": "Aucun champ configuré pour l'instant.",
@@ -558,6 +563,7 @@
     "title": "Listes de choix",
     "count": "Listes de choix {count}",
     "empty": "Aucune liste de choix",
+    "emptyHint": "Commencez par créer une liste de choix réutilisable.",
     "choicesCount": "Choix {count}",
     "fieldsCount": "Champs liés {count}",
     "dataCount": "Valeurs liées {count}",
@@ -593,6 +599,7 @@
     "title": "Inventaires",
     "count": "Inventaires {count}",
     "empty": "Aucun inventaire",
+    "emptyHint": "Commencez par créer votre premier inventaire.",
     "entriesCount": "Entrées {count}",
     "updatedAt": "{date} mis à jour",
     "new": "Nouvel inventaire",
@@ -614,6 +621,7 @@
     "title": "Grattoirs",
     "count": "Grattoirs {count}",
     "empty": "Pas de grattoirs",
+    "emptyHint": "Commencez par créer une configuration de scraping.",
     "type": "Type : {type}",
     "pathsCount": "Chemins {count}",
     "new": "Nouveau grattoir",

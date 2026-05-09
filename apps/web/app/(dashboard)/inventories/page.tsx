@@ -56,7 +56,11 @@ export default async function InventoriesPage() {
           ))}
         </div>
       ) : (
-        <EmptyState icon={Package} title={t("empty")} />
+        <EmptyState
+          icon={Package}
+          title={t("empty")}
+          description={t("emptyHint")}
+        />
       )}
     </div>
   );

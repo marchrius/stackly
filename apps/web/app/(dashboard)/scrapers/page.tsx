@@ -53,7 +53,11 @@ export default async function ScrapersPage() {
           ))}
         </div>
       ) : (
-        <EmptyState icon={Wrench} title={t("empty")} />
+        <EmptyState
+          icon={Wrench}
+          title={t("empty")}
+          description={t("emptyHint")}
+        />
       )}
     </div>
   );

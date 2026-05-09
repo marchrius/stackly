@@ -236,6 +236,7 @@
     "newSub": "新建子相册",
     "edit": "编辑相册",
     "empty": "没有相册",
+    "emptyHint": "从创建你的第一个相册开始。",
     "subAlbums": "子相册",
     "photos": "照片",
     "addPhoto": "添加照片",
@@ -298,6 +299,7 @@
     "newSub": "新建子愿望清单",
     "edit": "编辑愿望清单",
     "empty": "没有愿望清单",
+    "emptyHint": "从创建你的第一个愿望清单开始。",
     "subWishlists": "子愿望清单",
     "wishes": "愿望",
     "addWish": "添加愿望",
@@ -437,7 +439,8 @@
   "history": {
     "title": "历史",
     "pageTitle": "变更历史",
-    "noActivity": "没有记录任何活动。"
+    "noActivity": "没有记录任何活动。",
+    "noActivityHint": "创建、更新或删除内容后，更改会显示在这里。"
   },
   "statistics": {
     "title": "统计"
@@ -471,6 +474,7 @@
     "edit": "编辑标签",
     "count": "{count} 的标签",
     "empty": "没有标签",
+    "emptyHint": "从创建你的第一个标签开始。",
     "uncategorized": "未分类",
     "itemCount": "{count} 项目",
     "taggedItems": "带有此标签的商品",
@@ -513,6 +517,7 @@
     "edit": "编辑模板",
     "count": "{count} 模板",
     "empty": "没有模板",
+    "emptyHint": "从为你的收藏创建模板开始。",
     "fieldsCount": "{count} 字段",
     "collectionsCount": "{count} 收藏",
     "noFields": "尚未配置任何字段。",
@@ -558,6 +563,7 @@
     "title": "选择列表",
     "count": "{count} 选择列表",
     "empty": "没有选择列表",
+    "emptyHint": "从创建可复用的选择列表开始。",
     "choicesCount": "{count}选择",
     "fieldsCount": "{count} 链接字段",
     "dataCount": "{count} 链接值",
@@ -593,6 +599,7 @@
     "title": "库存",
     "count": "{count} 库存",
     "empty": "没有库存",
+    "emptyHint": "从创建你的第一个库存开始。",
     "entriesCount": "{count} 条目",
     "updatedAt": "更新了{date}",
     "new": "新库存",
@@ -614,6 +621,7 @@
     "title": "刮刀",
     "count": "{count}刮刀",
     "empty": "无刮刀",
+    "emptyHint": "从创建一个抓取器配置开始。",
     "type": "型号：{type}",
     "pathsCount": "{count} 路径",
     "new": "新刮刀",

@@ -236,6 +236,7 @@
     "newSub": "Nuovo sub-album",
     "edit": "Modifica Album",
     "empty": "Nessun album",
+    "emptyHint": "Inizia creando il tuo primo album.",
     "subAlbums": "Sub-album",
     "photos": "Foto",
     "addPhoto": "Aggiungi foto",
@@ -298,6 +299,7 @@
     "newSub": "Nuova sub-wishlist",
     "edit": "Modifica Wishlist",
     "empty": "Nessuna wishlist",
+    "emptyHint": "Inizia creando la tua prima wishlist.",
     "subWishlists": "Sub-wishlist",
     "wishes": "Desideri",
     "addWish": "Aggiungi desiderio",
@@ -437,7 +439,8 @@
   "history": {
     "title": "Storico",
     "pageTitle": "Storico Modifiche",
-    "noActivity": "Nessuna attività registrata."
+    "noActivity": "Nessuna attività registrata.",
+    "noActivityHint": "Le modifiche appariranno qui dopo che crei, aggiorni o elimini contenuti."
   },
   "statistics": {
     "title": "Statistiche"
@@ -471,6 +474,7 @@
     "edit": "Modifica etichetta",
     "count": "Tag {count}",
     "empty": "Nessun tag",
+    "emptyHint": "Inizia creando il tuo primo tag.",
     "uncategorized": "Senza categoria",
     "itemCount": "Articoli {count}",
     "taggedItems": "Articoli con questo tag",
@@ -513,6 +517,7 @@
     "edit": "Modifica modello",
     "count": "Modelli {count}",
     "empty": "Nessun modello",
+    "emptyHint": "Inizia creando un modello per le tue collezioni.",
     "fieldsCount": "Campi {count}",
     "collectionsCount": "Collezioni {count}",
     "noFields": "Nessun campo ancora configurato.",
@@ -558,6 +563,7 @@
     "title": "Lista scelte",
     "count": "{count} lista di scelte",
     "empty": "Nessuna lista di scelte",
+    "emptyHint": "Inizia creando una lista di scelte riutilizzabile.",
     "choicesCount": "Scelte {count}",
     "fieldsCount": "{count} campi collegati",
     "dataCount": "{count} valori collegati",
@@ -593,6 +599,7 @@
     "title": "Inventari",
     "count": "Inventari {count}",
     "empty": "Nessun inventario",
+    "emptyHint": "Inizia creando il tuo primo inventario.",
     "entriesCount": "Voci {count}",
     "updatedAt": "{date} aggiornato",
     "new": "Nuovo inventario",
@@ -614,6 +621,7 @@
     "title": "Raschiatori",
     "count": "Raschiatori {count}",
     "empty": "Nessun raschietto",
+    "emptyHint": "Inizia creando una configurazione di scraping.",
     "type": "Tipo: {type}",
     "pathsCount": "Percorsi {count}",
     "new": "Nuovo raschiatore",

@@ -236,6 +236,7 @@
     "newSub": "Nieuw subalbum",
     "edit": "Album bewerken",
     "empty": "Geen albums",
+    "emptyHint": "Begin met het aanmaken van je eerste album.",
     "subAlbums": "Subalbums",
     "photos": "Foto’s",
     "addPhoto": "Foto toevoegen",
@@ -298,6 +299,7 @@
     "newSub": "Nieuwe subverlanglijst",
     "edit": "Verlanglijst bewerken",
     "empty": "Geen verlanglijsten",
+    "emptyHint": "Begin met het aanmaken van je eerste verlanglijst.",
     "subWishlists": "Subverlanglijsten",
     "wishes": "Wensen",
     "addWish": "Wens toevoegen",
@@ -437,7 +439,8 @@
   "history": {
     "title": "Geschiedenis",
     "pageTitle": "Wijzigingsgeschiedenis",
-    "noActivity": "Geen activiteit geregistreerd."
+    "noActivity": "Geen activiteit geregistreerd.",
+    "noActivityHint": "Wijzigingen verschijnen hier nadat je inhoud hebt gemaakt, bijgewerkt of verwijderd."
   },
   "statistics": {
     "title": "Statistieken"
@@ -471,6 +474,7 @@
     "edit": "Tag bewerken",
     "count": "{count}-tags",
     "empty": "Geen labels",
+    "emptyHint": "Begin met het aanmaken van je eerste label.",
     "uncategorized": "Niet gecategoriseerd",
     "itemCount": "{count}-artikelen",
     "taggedItems": "Artikelen met deze tag",
@@ -513,6 +517,7 @@
     "edit": "Sjabloon bewerken",
     "count": "{count}-sjablonen",
     "empty": "Geen sjablonen",
+    "emptyHint": "Begin met het aanmaken van een sjabloon voor je collecties.",
     "fieldsCount": "{count}-velden",
     "collectionsCount": "{count}-collecties",
     "noFields": "Nog geen velden geconfigureerd.",
@@ -558,6 +563,7 @@
     "title": "Keuzelijsten",
     "count": "{count} keuzelijsten",
     "empty": "Geen keuzelijsten",
+    "emptyHint": "Begin met het aanmaken van een herbruikbare keuzelijst.",
     "choicesCount": "{count}-keuzes",
     "fieldsCount": "{count} gekoppelde velden",
     "dataCount": "{count} gekoppelde waarden",
@@ -593,6 +599,7 @@
     "title": "Voorraden",
     "count": "{count}-inventarisaties",
     "empty": "Geen inventarissen",
+    "emptyHint": "Begin met het aanmaken van je eerste inventaris.",
     "entriesCount": "{count}-invoer",
     "updatedAt": "{date} bijgewerkt",
     "new": "Nieuwe inventaris",
@@ -614,6 +621,7 @@
     "title": "Schrapers",
     "count": "{count}-schrapers",
     "empty": "Geen schrapers",
+    "emptyHint": "Begin met het aanmaken van een scraperconfiguratie.",
     "type": "Gegevenstype: {type}",
     "pathsCount": "{count}-paden",
     "new": "Nieuwe schraper",

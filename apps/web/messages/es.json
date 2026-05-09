@@ -236,6 +236,7 @@
     "newSub": "Nuevo subálbum",
     "edit": "Editar álbum",
     "empty": "No hay álbumes",
+    "emptyHint": "Empieza creando tu primer álbum.",
     "subAlbums": "Subálbumes",
     "photos": "Fotos",
     "addPhoto": "Añadir foto",
@@ -298,6 +299,7 @@
     "newSub": "Nueva sublista de deseos",
     "edit": "Editar lista de deseos",
     "empty": "No hay listas de deseos",
+    "emptyHint": "Empieza creando tu primera lista de deseos.",
     "subWishlists": "Sublistas de deseos",
     "wishes": "Deseos",
     "addWish": "Añadir deseo",
@@ -437,7 +439,8 @@
   "history": {
     "title": "Historial",
     "pageTitle": "Historial de cambios",
-    "noActivity": "No se ha registrado actividad."
+    "noActivity": "No se ha registrado actividad.",
+    "noActivityHint": "Los cambios aparecerán aquí después de crear, actualizar o eliminar contenido."
   },
   "statistics": {
     "title": "Estadísticas"
@@ -471,6 +474,7 @@
     "edit": "Editar etiqueta",
     "count": "Etiquetas {count}",
     "empty": "Sin etiquetas",
+    "emptyHint": "Empieza creando tu primera etiqueta.",
     "uncategorized": "Sin categoría",
     "itemCount": "Artículos {count}",
     "taggedItems": "Artículos con esta etiqueta",
@@ -513,6 +517,7 @@
     "edit": "Editar plantilla",
     "count": "Plantillas {count}",
     "empty": "Sin plantillas",
+    "emptyHint": "Empieza creando una plantilla para tus colecciones.",
     "fieldsCount": "Campos {count}",
     "collectionsCount": "Colecciones {count}",
     "noFields": "Aún no hay campos configurados.",
@@ -558,6 +563,7 @@
     "title": "Listas de elección",
     "count": "Listas de opciones {count}",
     "empty": "Sin listas de opciones",
+    "emptyHint": "Empieza creando una lista de opciones reutilizable.",
     "choicesCount": "Opciones de {count}",
     "fieldsCount": "Campos vinculados {count}",
     "dataCount": "Valores vinculados {count}",
@@ -593,6 +599,7 @@
     "title": "Inventarios",
     "count": "inventarios {count}",
     "empty": "Sin inventarios",
+    "emptyHint": "Empieza creando tu primer inventario.",
     "entriesCount": "Entradas {count}",
     "updatedAt": "Actualizado {date}",
     "new": "Nuevo inventario",
@@ -614,6 +621,7 @@
     "title": "Rascadores",
     "count": "Rascadores {count}",
     "empty": "Sin raspadores",
+    "emptyHint": "Empieza creando una configuración de raspador.",
     "type": "Tipo: {type}",
     "pathsCount": "Rutas {count}",
     "new": "Nuevo raspador",

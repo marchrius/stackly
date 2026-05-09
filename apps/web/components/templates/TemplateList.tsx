@@ -18,7 +18,13 @@ export function TemplateList({
   const t = useTranslations("templates");
 
   if (templates.length === 0) {
-    return <EmptyState icon={FileText} title={t("empty")} />;
+    return (
+      <EmptyState
+        icon={FileText}
+        title={t("empty")}
+        description={t("emptyHint")}
+      />
+    );
   }
 
   return (

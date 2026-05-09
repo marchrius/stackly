@@ -236,6 +236,7 @@
     "newSub": "Neues Unteralbum",
     "edit": "Album bearbeiten",
     "empty": "Keine Alben",
+    "emptyHint": "Beginnen Sie mit Ihrem ersten Album.",
     "subAlbums": "Unteralben",
     "photos": "Fotos",
     "addPhoto": "Foto hinzufügen",
@@ -298,6 +299,7 @@
     "newSub": "Neue Unterwunschliste",
     "edit": "Wunschliste bearbeiten",
     "empty": "Keine Wunschlisten",
+    "emptyHint": "Beginnen Sie mit Ihrer ersten Wunschliste.",
     "subWishlists": "Unterwunschlisten",
     "wishes": "Wünsche",
     "addWish": "Wunsch hinzufügen",
@@ -437,7 +439,8 @@
   "history": {
     "title": "Verlauf",
     "pageTitle": "Änderungsverlauf",
-    "noActivity": "Keine Aktivität aufgezeichnet."
+    "noActivity": "Keine Aktivität aufgezeichnet.",
+    "noActivityHint": "Änderungen erscheinen hier, nachdem Sie Inhalte erstellt, aktualisiert oder gelöscht haben."
   },
   "statistics": {
     "title": "Statistiken"
@@ -471,6 +474,7 @@
     "edit": "Tag bearbeiten",
     "count": "{count}-Tags",
     "empty": "Keine Tags",
+    "emptyHint": "Beginnen Sie mit Ihrem ersten Tag.",
     "uncategorized": "Nicht kategorisiert",
     "itemCount": "{count}-Artikel",
     "taggedItems": "Artikel mit diesem Tag",
@@ -513,6 +517,7 @@
     "edit": "Vorlage bearbeiten",
     "count": "{count}-Vorlagen",
     "empty": "Keine Vorlagen",
+    "emptyHint": "Beginnen Sie mit einer Vorlage für Ihre Sammlungen.",
     "fieldsCount": "{count}-Felder",
     "collectionsCount": "{count}-Kollektionen",
     "noFields": "Noch keine Felder konfiguriert.",
@@ -558,6 +563,7 @@
     "title": "Auswahllisten",
     "count": "{count}-Auswahllisten",
     "empty": "Keine Auswahllisten",
+    "emptyHint": "Beginnen Sie mit einer wiederverwendbaren Auswahlliste.",
     "choicesCount": "{count}-Auswahl",
     "fieldsCount": "{count} verknüpfte Felder",
     "dataCount": "{count} verknüpfte Werte",
@@ -593,6 +599,7 @@
     "title": "Vorräte",
     "count": "{count}-Bestände",
     "empty": "Keine Lagerbestände",
+    "emptyHint": "Beginnen Sie mit Ihrem ersten Inventar.",
     "entriesCount": "{count}-Einträge",
     "updatedAt": "{date} aktualisiert",
     "new": "Neues Inventar",
@@ -614,6 +621,7 @@
     "title": "Schaber",
     "count": "{count} Schaber",
     "empty": "Keine Schaber",
+    "emptyHint": "Beginnen Sie mit einer Scraper-Konfiguration.",
     "type": "Typ: {type}",
     "pathsCount": "{count}-Pfade",
     "new": "Neuer Schaber",

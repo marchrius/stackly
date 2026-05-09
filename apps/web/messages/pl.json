@@ -236,6 +236,7 @@
     "newSub": "Nowy podalbum",
     "edit": "Edytuj album",
     "empty": "Brak albumów",
+    "emptyHint": "Zacznij od utworzenia swojego pierwszego albumu.",
     "subAlbums": "Podalbumy",
     "photos": "Zdjęcia",
     "addPhoto": "Dodaj zdjęcie",
@@ -298,6 +299,7 @@
     "newSub": "Nowa podlista życzeń",
     "edit": "Edytuj listę życzeń",
     "empty": "Brak list życzeń",
+    "emptyHint": "Zacznij od utworzenia swojej pierwszej listy życzeń.",
     "subWishlists": "Podlisty życzeń",
     "wishes": "Życzenia",
     "addWish": "Dodaj życzenie",
@@ -437,7 +439,8 @@
   "history": {
     "title": "Historia",
     "pageTitle": "Historia zmian",
-    "noActivity": "Nie zarejestrowano żadnej aktywności."
+    "noActivity": "Nie zarejestrowano żadnej aktywności.",
+    "noActivityHint": "Zmiany pojawią się tutaj po utworzeniu, zaktualizowaniu lub usunięciu treści."
   },
   "statistics": {
     "title": "Statystyki"
@@ -471,6 +474,7 @@
     "edit": "Edytuj tag",
     "count": "Tagi {count}",
     "empty": "Brak tagów",
+    "emptyHint": "Zacznij od utworzenia swojego pierwszego tagu.",
     "uncategorized": "Bez kategorii",
     "itemCount": "Elementy {count}",
     "taggedItems": "Przedmioty z tym tagiem",
@@ -513,6 +517,7 @@
     "edit": "Edytuj szablon",
     "count": "Szablony {count}",
     "empty": "Brak szablonów",
+    "emptyHint": "Zacznij od utworzenia szablonu dla swoich kolekcji.",
     "fieldsCount": "Pola {count}",
     "collectionsCount": "Kolekcje {count}",
     "noFields": "Nie skonfigurowano jeszcze żadnych pól.",
@@ -558,6 +563,7 @@
     "title": "Listy wyboru",
     "count": "Listy wyboru {count}",
     "empty": "Brak list wyboru",
+    "emptyHint": "Zacznij od utworzenia listy wyboru wielokrotnego użytku.",
     "choicesCount": "Opcje {count}",
     "fieldsCount": "Pola połączone {count}",
     "dataCount": "Wartości powiązane {count}",
@@ -593,6 +599,7 @@
     "title": "Zapasy",
     "count": "Zapasy {count}",
     "empty": "Brak zapasów",
+    "emptyHint": "Zacznij od utworzenia swojego pierwszego zapasu.",
     "entriesCount": "Wpisy {count}",
     "updatedAt": "Zaktualizowano {date}",
     "new": "Nowy inwentarz",
@@ -614,6 +621,7 @@
     "title": "Skrobaki",
     "count": "Zgarniaki {count}",
     "empty": "Żadnych skrobaków",
+    "emptyHint": "Zacznij od utworzenia konfiguracji scrapera.",
     "type": "Typ: {type}",
     "pathsCount": "Ścieżki {count}",
     "new": "Nowy skrobak",

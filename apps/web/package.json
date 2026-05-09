@@ -1,6 +1,6 @@
 {
   "name": "@stackly/web",
-  "version": "2.0.0-alpha-3",
+  "version": "2.0.0-alpha-4",
   "private": true,
   "scripts": {
     "dev": "dotenv -e ../../.env -- next dev --turbopack",

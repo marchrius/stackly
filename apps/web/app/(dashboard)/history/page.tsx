@@ -60,7 +60,11 @@ export default async function HistoryPage() {
           })}
         </div>
       ) : (
-        <EmptyState icon={Clock} title={t("noActivity")} />
+        <EmptyState
+          icon={Clock}
+          title={t("noActivity")}
+          description={t("noActivityHint")}
+        />
       )}
     </div>
   );

@@ -236,6 +236,7 @@
     "newSub": "Yeni alt albüm",
     "edit": "Albümü düzenle",
     "empty": "Albüm yok",
+    "emptyHint": "İlk albümünüzü oluşturarak başlayın.",
     "subAlbums": "Alt albümler",
     "photos": "Fotoğraflar",
     "addPhoto": "Fotoğraf ekle",
@@ -298,6 +299,7 @@
     "newSub": "Yeni alt istek listesi",
     "edit": "İstek listesini düzenle",
     "empty": "İstek listesi yok",
+    "emptyHint": "İlk istek listenizi oluşturarak başlayın.",
     "subWishlists": "Alt istek listeleri",
     "wishes": "İstekler",
     "addWish": "İstek ekle",
@@ -437,7 +439,8 @@
   "history": {
     "title": "Geçmiş",
     "pageTitle": "Değişiklik geçmişi",
-    "noActivity": "Kayıtlı etkinlik yok."
+    "noActivity": "Kayıtlı etkinlik yok.",
+    "noActivityHint": "İçerik oluşturduktan, güncelledikten veya sildikten sonra değişiklikler burada görünür."
   },
   "statistics": {
     "title": "İstatistikler"
@@ -471,6 +474,7 @@
     "edit": "Etiketi Düzenle",
     "count": "{count} etiketleri",
     "empty": "Etiket yok",
+    "emptyHint": "İlk etiketinizi oluşturarak başlayın.",
     "uncategorized": "Kategorize edilmemiş",
     "itemCount": "{count} öğeleri",
     "taggedItems": "Bu etikete sahip öğeler",
@@ -513,6 +517,7 @@
     "edit": "Şablonu Düzenle",
     "count": "{count} şablonları",
     "empty": "Şablon yok",
+    "emptyHint": "Koleksiyonlarınız için bir şablon oluşturarak başlayın.",
     "fieldsCount": "{count} alanları",
     "collectionsCount": "{count} koleksiyonları",
     "noFields": "Henüz yapılandırılmış alan yok.",
@@ -558,6 +563,7 @@
     "title": "Seçim Listeleri",
     "count": "{count} seçim listeleri",
     "empty": "Seçim listesi yok",
+    "emptyHint": "Yeniden kullanılabilir bir seçim listesi oluşturarak başlayın.",
     "choicesCount": "{count} seçenekleri",
     "fieldsCount": "{count} bağlantılı alanlar",
     "dataCount": "{count} bağlantılı değerler",
@@ -593,6 +599,7 @@
     "title": "Envanterler",
     "count": "{count} stokları",
     "empty": "Stok yok",
+    "emptyHint": "İlk stoğunuzu oluşturarak başlayın.",
     "entriesCount": "{count} girişleri",
     "updatedAt": "{date} güncellendi",
     "new": "Yeni Envanter",
@@ -614,6 +621,7 @@
     "title": "Kazıyıcılar",
     "count": "{count} sıyırıcılar",
     "empty": "Kazıyıcı yok",
+    "emptyHint": "Bir kazıyıcı yapılandırması oluşturarak başlayın.",
     "type": "Tür: {type}",
     "pathsCount": "{count} yolları",
     "new": "Yeni Kazıyıcı",

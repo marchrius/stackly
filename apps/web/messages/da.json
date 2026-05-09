@@ -236,6 +236,7 @@
     "newSub": "Nyt underalbum",
     "edit": "Rediger album",
     "empty": "Ingen album",
+    "emptyHint": "Start med at oprette dit første album.",
     "subAlbums": "Underalbum",
     "photos": "Fotos",
     "addPhoto": "Tilføj foto",
@@ -298,6 +299,7 @@
     "newSub": "Ny underønskeliste",
     "edit": "Rediger ønskeliste",
     "empty": "Ingen ønskelister",
+    "emptyHint": "Start med at oprette din første ønskeliste.",
     "subWishlists": "Underønskelister",
     "wishes": "Ønsker",
     "addWish": "Tilføj ønske",
@@ -437,7 +439,8 @@
   "history": {
     "title": "Historik",
     "pageTitle": "Ændringshistorik",
-    "noActivity": "Ingen aktivitet registreret."
+    "noActivity": "Ingen aktivitet registreret.",
+    "noActivityHint": "Ændringer vises her, når du opretter, opdaterer eller sletter indhold."
   },
   "statistics": {
     "title": "Statistik"
@@ -471,6 +474,7 @@
     "edit": "Rediger tag",
     "count": "{count} mærker",
     "empty": "Ingen tags",
+    "emptyHint": "Start med at oprette dit første tag.",
     "uncategorized": "Ikke kategoriseret",
     "itemCount": "{count} genstande",
     "taggedItems": "Varer med dette tag",
@@ -513,6 +517,7 @@
     "edit": "Rediger skabelon",
     "count": "{count} skabeloner",
     "empty": "Ingen skabeloner",
+    "emptyHint": "Start med at oprette en skabelon til dine samlinger.",
     "fieldsCount": "{count} felter",
     "collectionsCount": "{count} samlinger",
     "noFields": "Ingen felter er konfigureret endnu.",
@@ -558,6 +563,7 @@
     "title": "Valglister",
     "count": "{count} valglister",
     "empty": "Ingen valglister",
+    "emptyHint": "Start med at oprette en genanvendelig valgliste.",
     "choicesCount": "{count} valg",
     "fieldsCount": "{count} linkede felter",
     "dataCount": "{count} forbundne værdier",
@@ -593,6 +599,7 @@
     "title": "Varebeholdninger",
     "count": "{count} beholdninger",
     "empty": "Ingen varebeholdninger",
+    "emptyHint": "Start med at oprette din første varebeholdning.",
     "entriesCount": "{count} poster",
     "updatedAt": "Opdateret {date}",
     "new": "Nyt inventar",
@@ -614,6 +621,7 @@
     "title": "Skrabere",
     "count": "{count} skrabere",
     "empty": "Ingen skrabere",
+    "emptyHint": "Start med at oprette en skraberkonfiguration.",
     "type": "Datatype: {type}",
     "pathsCount": "{count} stier",
     "new": "Ny skraber",

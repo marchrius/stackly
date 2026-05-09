@@ -29,7 +29,13 @@ export function WishlistGrid({
   );
 
   if (wishlists.length === 0) {
-    return <EmptyState icon={Heart} title={t("empty")} />;
+    return (
+      <EmptyState
+        icon={Heart}
+        title={t("empty")}
+        description={t("emptyHint")}
+      />
+    );
   }
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">

@@ -11,7 +11,13 @@ export function TagList({ tags, categories }: { tags: TagWithRelations[]; catego
   const t = useTranslations("tags");
 
   if (tags.length === 0) {
-    return <EmptyState icon={TagIcon} title={t("empty")} />;
+    return (
+      <EmptyState
+        icon={TagIcon}
+        title={t("empty")}
+        description={t("emptyHint")}
+      />
+    );
   }
 
   // Raggruppa per categoria
