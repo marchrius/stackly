@@ -8,6 +8,7 @@ import {
 } from "@/lib/configuration";
 import { prisma } from "@stackly/db";
 import { ROLES } from "@stackly/lib";
+import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -16,6 +17,14 @@ const adminConfigurationSchema = z.object({
   customLightThemeCss: z.string().default(""),
   customDarkThemeCss: z.string().default(""),
   enableMetrics: z.enum(["true", "false"]).default("false"),
+});
+
+const adminUserSchema = z.object({
+  username: z.string().trim().min(1, "Username is required.").max(32),
+  email: z.string().trim().email("A valid email is required."),
+  password: z.string().min(8, "Password must be at least 8 characters."),
+  isAdmin: z.enum(["on"]).optional(),
+  enabled: z.enum(["on"]).optional(),
 });
 
 export async function updateAdminConfiguration(formData: FormData) {
@@ -70,8 +79,45 @@ export async function updateAdminConfiguration(formData: FormData) {
   return { success: true };
 }
 
-export async function updateUserAdminRole(userId: string, formData: FormData): Promise<void> {
+export async function createAdminUser(formData: FormData) {
   await requireAdmin();
+
+  const parsed = adminUserSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Invalid payload." };
+  }
+
+  const roles: string[] = [ROLES.USER];
+  if (parsed.data.isAdmin === "on") roles.push(ROLES.ADMIN);
+
+  try {
+    const user = await prisma.user.create({
+      data: {
+        username: parsed.data.username,
+        email: parsed.data.email,
+        password: await bcrypt.hash(parsed.data.password, 12),
+        enabled: parsed.data.enabled === "on",
+        roles,
+      },
+      select: { id: true },
+    });
+
+    revalidatePath("/settings/admin");
+    revalidatePath("/settings/admin/users");
+    revalidatePath("/", "layout");
+
+    return { success: true, id: user.id };
+  } catch {
+    return { error: "Unable to create the user. Check that username and email are unique." };
+  }
+}
+
+export async function updateUserAdminRole(userId: string, formData: FormData): Promise<void> {
+  const session = await requireAdmin();
+
+  if (userId === session.user.id) {
+    return;
+  }
 
   const isAdmin = formData.get("isAdmin") === "on";
   const user = await prisma.user.findUnique({
@@ -94,8 +140,36 @@ export async function updateUserAdminRole(userId: string, formData: FormData): P
   });
 
   revalidatePath("/settings/admin");
+  revalidatePath("/settings/admin/users");
   revalidatePath("/", "layout");
 
+}
+
+export async function updateUserEnabled(userId: string, formData: FormData): Promise<void> {
+  const session = await requireAdmin();
+
+  if (userId === session.user.id) {
+    return;
+  }
+
+  const enabled = formData.get("enabled") === "on";
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { id: true },
+  });
+
+  if (!user) {
+    throw new Error("User not found.");
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { enabled },
+  });
+
+  revalidatePath("/settings/admin");
+  revalidatePath("/settings/admin/users");
+  revalidatePath("/", "layout");
 }
 
 function normalizeTextConfiguration(value: string): string | null {

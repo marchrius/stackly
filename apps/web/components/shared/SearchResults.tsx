@@ -6,11 +6,13 @@ import { Badge } from "@stackly/ui";
 import { Box, Heart, Layers, Tag as TagIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { sortByNaturalText } from "@/lib/natural-sort";
+import { getUploadUrl } from "@stackly/lib";
 
 type WishWithWishlist = Wish & { wishlist?: { id: string; name: string } | null };
+type ItemWithCollection = Item & { collection?: { id: string; title: string } | null };
 
 interface SearchResultsProps {
-  items: Item[];
+  items: ItemWithCollection[];
   collections: Collection[];
   tags: Tag[];
   wishlists: Wishlist[];
@@ -81,8 +83,22 @@ export function SearchResults({ items, collections, tags, wishlists, wishes, que
           <div className="space-y-1">
             {sortedItems.map((item) => (
               <Link key={item.id} href={`/items/${item.id}`} className="flex items-center gap-2 rounded-md p-2 hover:bg-accent text-sm">
-                <Box className="h-4 w-4 text-primary shrink-0" />
-                {item.name}
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-muted">
+                  {getUploadUrl(item.imageSmallThumbnail ?? item.image) ? (
+                    <img
+                      src={getUploadUrl(item.imageSmallThumbnail ?? item.image) ?? ""}
+                      alt={item.name}
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <Box className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </span>
+                <span className="min-w-0 truncate">
+                  {item.name}
+                  {item.collection?.title ? <span className="text-muted-foreground"> ({item.collection.title})</span> : null}
+                </span>
                 {item.quantity > 1 && <Badge variant="secondary" className="text-xs">×{item.quantity}</Badge>}
               </Link>
             ))}

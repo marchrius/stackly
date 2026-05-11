@@ -7,6 +7,11 @@ const { mockRequireAdmin, mockRevalidatePath, mockPrisma } = vi.hoisted(() => ({
     configuration: {
       upsert: vi.fn(),
     },
+    user: {
+      create: vi.fn(),
+      findUnique: vi.fn(),
+      update: vi.fn(),
+    },
     $transaction: vi.fn(),
   },
 }));
@@ -23,10 +28,17 @@ vi.mock("@stackly/db", () => ({
   prisma: mockPrisma,
 }));
 
-import { updateAdminConfiguration } from "@/lib/actions/admin.actions";
+vi.mock("bcryptjs", () => ({
+  default: {
+    hash: vi.fn(async () => "hashed-password"),
+  },
+}));
+
+import { createAdminUser, updateAdminConfiguration, updateUserAdminRole, updateUserEnabled } from "@/lib/actions/admin.actions";
 
 describe("updateAdminConfiguration", () => {
   beforeEach(() => {
+    mockRequireAdmin.mockResolvedValue({ user: { id: "admin-1" } });
     mockPrisma.configuration.upsert.mockImplementation((payload: unknown) => payload);
     mockPrisma.$transaction.mockImplementation(async (operations: unknown[]) => operations);
   });
@@ -75,5 +87,66 @@ describe("updateAdminConfiguration", () => {
 
     expect(result).toHaveProperty("error");
     expect(mockPrisma.configuration.upsert).not.toHaveBeenCalled();
+  });
+});
+
+describe("admin user actions", () => {
+  beforeEach(() => {
+    mockRequireAdmin.mockResolvedValue({ user: { id: "admin-1" } });
+    mockPrisma.user.create.mockResolvedValue({ id: "user-2" });
+    mockPrisma.user.findUnique.mockResolvedValue({ id: "user-2", roles: ["ROLE_USER"] });
+    mockPrisma.user.update.mockResolvedValue({});
+  });
+
+  it("creates an enabled admin user with a hashed password", async () => {
+    const formData = new FormData();
+    formData.set("username", "newuser");
+    formData.set("email", "new@example.com");
+    formData.set("password", "temporary-password");
+    formData.set("enabled", "on");
+    formData.set("isAdmin", "on");
+
+    const result = await createAdminUser(formData);
+
+    expect(result).toEqual({ success: true, id: "user-2" });
+    expect(mockPrisma.user.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        username: "newuser",
+        email: "new@example.com",
+        password: "hashed-password",
+        enabled: true,
+        roles: ["ROLE_USER", "ROLE_ADMIN"],
+      }),
+      select: { id: true },
+    });
+    expect(mockRevalidatePath).toHaveBeenCalledWith("/settings/admin/users");
+  });
+
+  it("does not change the current user's own admin role", async () => {
+    const formData = new FormData();
+    formData.set("isAdmin", "");
+
+    await updateUserAdminRole("admin-1", formData);
+
+    expect(mockPrisma.user.update).not.toHaveBeenCalled();
+  });
+
+  it("does not disable the current user", async () => {
+    const formData = new FormData();
+
+    await updateUserEnabled("admin-1", formData);
+
+    expect(mockPrisma.user.update).not.toHaveBeenCalled();
+  });
+
+  it("disables another user", async () => {
+    const formData = new FormData();
+
+    await updateUserEnabled("user-2", formData);
+
+    expect(mockPrisma.user.update).toHaveBeenCalledWith({
+      where: { id: "user-2" },
+      data: { enabled: false },
+    });
   });
 });

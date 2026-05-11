@@ -5,6 +5,7 @@ import { prisma } from "@stackly/db";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@stackly/ui";
 import { DeleteResourceButton } from "@/components/shared/DeleteResourceButton";
 import { getTranslations } from "next-intl/server";
+import { Plus } from "lucide-react";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("scrapers");
@@ -25,9 +26,17 @@ export default async function AdminScrapersPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("count", { count: scrapers.length })}</p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+          <p className="text-muted-foreground">{t("count", { count: scrapers.length })}</p>
+        </div>
+        <Button asChild>
+          <Link href="/scrapers/new">
+            <Plus className="mr-2 h-4 w-4" />
+            {t("new")}
+          </Link>
+        </Button>
       </div>
 
       {scrapers.length > 0 ? (

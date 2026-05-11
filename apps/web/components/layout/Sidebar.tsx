@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   Library, Image, Heart, Tag, FileText, List,
-  BarChart2, Clock, Package, Wrench, Search, Shield,
+  BarChart2, Clock, Package, Wrench, Search, Shield, FileCode,
 } from "lucide-react";
 import { cn } from "@stackly/ui";
 
@@ -20,6 +20,7 @@ export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
     { href: "/tags", label: t("tags"), icon: Tag },
     { href: "/templates", label: t("templates"), icon: FileText },
     { href: "/choice-lists", label: t("choiceLists"), icon: List },
+    { href: "/scrapers", label: t("scrapers"), icon: FileCode },
     { href: "/inventories", label: t("inventories"), icon: Package },
     { href: "/loans", label: t("loans"), icon: Wrench },
     { href: "/history", label: t("history"), icon: Clock },

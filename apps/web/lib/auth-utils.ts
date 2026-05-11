@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { prisma } from "@stackly/db";
 import { ROLES } from "@stackly/lib";
 import { redirect } from "next/navigation";
 
@@ -26,6 +27,16 @@ export async function requireAuth(): Promise<AuthSession> {
   if (!session?.user?.id) {
     redirect("/login");
   }
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { enabled: true },
+  });
+
+  if (!user?.enabled) {
+    redirect("/login");
+  }
+
   return session as AuthSession;
 }
 
