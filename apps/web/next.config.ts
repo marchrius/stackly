@@ -29,9 +29,6 @@ const nextConfig: NextConfig = {
     // Ignora errori TypeScript durante il build (da rimuovere a stabilizzazione)
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
 };
 
 export default withNextIntl(nextConfig);

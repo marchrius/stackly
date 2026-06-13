@@ -4,7 +4,9 @@ Stackly is a self-hosted collection manager for keeping track of physical collec
 
 This repository contains the full-stack Next.js version of Stackly, built as a Turborepo monorepo based on Next.js App Router, React, Prisma, shadcn/ui, Tailwind CSS, NextAuth.js v5, and PostgreSQL.
 
-Stackly was born from Koillection.
+## Credits & Origins
+
+Stackly is a full rewrite of the original [Koillection](https://koillection.github.io/) project, which was written in PHP/Symfony. I extend my warmest thanks and credit to the original author for their work on the initial concept, core workflows, and excellent features that inspired this modern Next.js/React stack implementation.
 
 Stackly does not ship with automatic metadata download for a specific collection type. Users can define their own custom fields, templates, choice lists, tags, and manual HTML scrapers, then import metadata only through explicit preview/import actions.
 

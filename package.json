@@ -1,6 +1,6 @@
 {
   "name": "stackly",
-  "version": "2.0.0-alpha-5",
+  "version": "2.0.0-alpha-6",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -33,7 +33,7 @@
     "dotenv-cli": "^8.0.0",
     "eslint": "^9.18.0",
     "prettier": "^3.4.2",
-    "turbo": "^2.3.3",
+    "turbo": "^2.9.18",
     "typescript": "^5.7.3"
   },
   "packageManager": "npm@10.9.2",
