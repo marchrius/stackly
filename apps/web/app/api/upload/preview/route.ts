@@ -12,9 +12,26 @@ export async function POST(req: NextRequest) {
     if (!file) return NextResponse.json({ error: "Nessun file" }, { status: 400 });
 
     const buffer = Buffer.from(await file.arrayBuffer());
+    const isHeic = file.type === "image/heic" || file.type === "image/heif" || file.name.toLowerCase().endsWith(".heic") || file.name.toLowerCase().endsWith(".heif");
 
-    // Convert HEIC/HEIF to a lightweight JPEG for instant client-side preview
-    const convertedBuffer = await sharp(buffer)
+    let sharpInstance: sharp.Sharp;
+
+    if (isHeic) {
+      const heicDecode = (await import("heic-decode")).default;
+      const { width, height, data } = await heicDecode({ buffer });
+      sharpInstance = sharp(Buffer.from(data), {
+        raw: {
+          width,
+          height,
+          channels: 4,
+        },
+      });
+    } else {
+      sharpInstance = sharp(buffer);
+    }
+
+    // Convert to a lightweight JPEG for instant client-side preview
+    const convertedBuffer = await sharpInstance
       .resize(800, 800, { fit: "inside", withoutEnlargement: true })
       .jpeg({ quality: 80 })
       .toBuffer();

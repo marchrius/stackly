@@ -53,7 +53,7 @@ export async function saveUploadedAsset({
   const dir = join(UPLOAD_DIR, userId, entity);
   await mkdir(dir, { recursive: true });
 
-  const buffer = Buffer.from(await file.arrayBuffer());
+  const buffer = Buffer.from(await file.arrayBuffer()) as Buffer;
   const uuid = randomUUID();
   const base = `${userId}/${entity}`;
 
@@ -75,29 +75,44 @@ export async function saveUploadedAsset({
   });
   const formatSetting = config?.value ?? "keep-original";
 
-  // Determina formato e estensione di destinazione
-  const { format, ext } = getTargetFormatAndExtension(file.type, file.name, formatSetting);
+  const originalExt = extname(file.name).toLowerCase() || getExtensionFromMime(file.type);
+  const isHeic = file.type === "image/heic" || file.type === "image/heif" || originalExt === ".heic" || originalExt === ".heif";
 
-  const filename = `${uuid}${ext}`;
+  let finalBuffer = buffer;
+  let finalFormat: keyof sharp.FormatEnum | null = null;
+  let finalExt = originalExt;
+
+  if (isHeic) {
+    const converted = await convertHeicBuffer(buffer, formatSetting);
+    finalBuffer = converted.buffer;
+    finalFormat = converted.format;
+    finalExt = converted.ext;
+  } else {
+    const { format, ext } = getTargetFormatAndExtension(file.type, file.name, formatSetting);
+    finalFormat = format;
+    finalExt = ext;
+  }
+
+  const filename = `${uuid}${finalExt}`;
   const filepath = join(dir, filename);
 
   // Converti e salva immagine originale
-  let sharpOriginal = sharp(buffer);
-  if (format) {
-    sharpOriginal = sharpOriginal.toFormat(format);
+  let sharpOriginal = sharp(finalBuffer);
+  if (finalFormat) {
+    sharpOriginal = sharpOriginal.toFormat(finalFormat);
   }
   await sharpOriginal.toFile(filepath);
 
   // Converti e salva miniature
-  const smallPath = join(dir, `${uuid}_small${ext}`);
-  const largePath = join(dir, `${uuid}_large${ext}`);
+  const smallPath = join(dir, `${uuid}_small${finalExt}`);
+  const largePath = join(dir, `${uuid}_large${finalExt}`);
 
-  let sharpSmall = sharp(buffer).resize(200, 200, { fit: "cover" });
-  let sharpLarge = sharp(buffer).resize(600, 600, { fit: "inside", withoutEnlargement: true });
+  let sharpSmall = sharp(finalBuffer).resize(200, 200, { fit: "cover" });
+  let sharpLarge = sharp(finalBuffer).resize(600, 600, { fit: "inside", withoutEnlargement: true });
 
-  if (format) {
-    sharpSmall = sharpSmall.toFormat(format);
-    sharpLarge = sharpLarge.toFormat(format);
+  if (finalFormat) {
+    sharpSmall = sharpSmall.toFormat(finalFormat);
+    sharpLarge = sharpLarge.toFormat(finalFormat);
   }
 
   await sharpSmall.toFile(smallPath);
@@ -105,10 +120,33 @@ export async function saveUploadedAsset({
 
   return {
     path: `${base}/${filename}`,
-    smallThumbnail: `${base}/${uuid}_small${ext}`,
-    largeThumbnail: `${base}/${uuid}_large${ext}`,
+    smallThumbnail: `${base}/${uuid}_small${finalExt}`,
+    largeThumbnail: `${base}/${uuid}_large${finalExt}`,
     originalFilename: file.name || null,
   };
+}
+
+async function convertHeicBuffer(
+  buffer: Buffer,
+  formatSetting: string
+): Promise<{ buffer: Buffer; format: keyof sharp.FormatEnum; ext: string }> {
+  const heicDecode = (await import("heic-decode")).default;
+  const { width, height, data } = await heicDecode({ buffer });
+
+  const format = (formatSetting === "keep-original" ? "webp" : formatSetting) as keyof sharp.FormatEnum;
+  const ext = format === "jpeg" ? ".jpg" : `.${format}`;
+
+  const converted = await sharp(Buffer.from(data), {
+    raw: {
+      width,
+      height,
+      channels: 4,
+    },
+  })
+    .toFormat(format)
+    .toBuffer();
+
+  return { buffer: converted, format, ext };
 }
 
 function getTargetFormatAndExtension(
