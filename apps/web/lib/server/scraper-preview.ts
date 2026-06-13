@@ -39,27 +39,69 @@ export async function previewScrape({
 function extract(template: string | null, type: string, document: Document, sourceUrl: string | null) {
   if (!template) return null;
 
-  const xpaths = [...template.matchAll(/#(.*?)#/g)].map((match) => match[1]);
-  if (xpaths.length === 0) {
+  const expressions = [...template.matchAll(/#(.*?)#/g)].map((match) => match[1]);
+  if (expressions.length === 0) {
     return formatValues([template], type, sourceUrl);
   }
 
   let values: string[] = [];
 
-  for (const xpath of xpaths) {
-    const results = evaluateXPath(document, xpath);
+  for (const expr of expressions) {
+    let results: string[] = [];
+    if (expr.startsWith("css:")) {
+      results = evaluateCSS(document, expr.slice(4));
+    } else {
+      results = evaluateXPath(document, expr);
+    }
+
     if (results.length === 0) {
-      values = values.length === 0 ? [template.replace(`#${xpath}#`, "")] : values.map((value) => value.replace(`#${xpath}#`, ""));
+      values = values.length === 0 ? [template.replace(`#${expr}#`, "")] : values.map((value) => value.replace(`#${expr}#`, ""));
       continue;
     }
 
     values = results.map((result, index) => {
       const current = values[index] ?? template;
-      return current.replace(`#${xpath}#`, result);
+      return current.replace(`#${expr}#`, result);
     });
   }
 
   return formatValues(values, type, sourceUrl);
+}
+
+function evaluateCSS(document: Document, cssExpression: string) {
+  let selector = cssExpression;
+  let attribute: string | null = null;
+
+  let bracketDepth = 0;
+  let lastAtSignIndex = -1;
+  for (let i = 0; i < cssExpression.length; i++) {
+    const char = cssExpression[i];
+    if (char === "[") bracketDepth++;
+    else if (char === "]") bracketDepth--;
+    else if (char === "@" && bracketDepth === 0) {
+      lastAtSignIndex = i;
+    }
+  }
+
+  if (lastAtSignIndex !== -1) {
+    selector = cssExpression.slice(0, lastAtSignIndex);
+    attribute = cssExpression.slice(lastAtSignIndex + 1);
+  }
+
+  const elements = document.querySelectorAll(selector);
+  const values: string[] = [];
+  elements.forEach((el) => {
+    if (attribute) {
+      const attrVal = el.getAttribute(attribute);
+      if (attrVal !== null) {
+        values.push(attrVal);
+      }
+    } else {
+      values.push(el.textContent ?? "");
+    }
+  });
+
+  return values.map((value) => value.trim()).filter(Boolean);
 }
 
 function evaluateXPath(document: Document, xpath: string) {

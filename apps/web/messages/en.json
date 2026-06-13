@@ -661,7 +661,7 @@
       "pricePath": "Price path",
       "typeHint": "Type-specific fields",
       "dataPaths": "Data paths",
-      "dataPathsHelp": "Configure the extracted data paths for collection and item scrapers.",
+      "dataPathsHelp": "Configure the extracted data paths. Expressions must be enclosed in #. Use XPath (e.g. #//span[@class='publisher']#) or CSS selectors prefixed with css: (e.g. #css:span.publisher# or attributes like #css:a@href#).",
       "addPath": "Add path",
       "removePath": "Remove path",
       "pathName": "Path name",
