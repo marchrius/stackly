@@ -24,6 +24,7 @@ import {
   parseChoiceListValues,
 } from "@/lib/choice-lists";
 import { useTranslations } from "next-intl";
+import { getPreviewUrl } from "@/lib/image-preview";
 
 type ItemWithRelations = Item & {
   data: Datum[];
@@ -541,7 +542,7 @@ export function ItemForm({
     if (!file) return;
     setRemoveImage(false);
     setMainImageRemoteUrl("");
-    setMainImagePreview(URL.createObjectURL(file));
+    void getPreviewUrl(file).then(setMainImagePreview);
   }
 
   function clearMainImage() {
@@ -621,12 +622,14 @@ export function ItemForm({
               onChange={(event) => {
                 const file = event.target.files?.[0];
                 if (!file) return;
-                updateField(field.key, (current) => ({
-                  ...current,
-                  previewUrl: current.type === "image" || current.type === "sign" ? URL.createObjectURL(file) : current.previewUrl,
-                  originalFilename: file.name,
-                  remoteUrl: null,
-                }));
+                void getPreviewUrl(file).then((url) => {
+                  updateField(field.key, (current) => ({
+                    ...current,
+                    previewUrl: current.type === "image" || current.type === "sign" ? url : current.previewUrl,
+                    originalFilename: file.name,
+                    remoteUrl: null,
+                  }));
+                });
               }}
             />
 

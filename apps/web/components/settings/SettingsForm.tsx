@@ -9,6 +9,7 @@ import { SUPPORTED_LOCALES } from "@/i18n/locales";
 import { ThemePicker } from "@/components/settings/ThemePicker";
 import { normalizeTheme } from "@/lib/theme/themes";
 import { getUploadUrl } from "@stackly/lib";
+import { getPreviewUrl } from "@/lib/image-preview";
 
 export function SettingsForm({ user }: { user: User }) {
   const t = useTranslations("settings");
@@ -127,7 +128,7 @@ export function SettingsForm({ user }: { user: User }) {
 
                     setAvatarRemoved(false);
                     setAvatarFileName(file.name);
-                    setAvatarPreview(URL.createObjectURL(file));
+                    void getPreviewUrl(file).then(setAvatarPreview);
                   }}
                 />
                 <input type="hidden" name="removeAvatar" value={avatarRemoved ? "1" : ""} />
