@@ -141,7 +141,7 @@ export function WishForm({ wish, wishlists, wishlistId }: WishFormProps) {
             ref={fileInputRef}
             id="imageFile"
             type="file"
-            accept="image/png,image/jpeg,image/webp,image/gif,image/avif"
+            accept="image/png,image/jpeg,image/webp,image/gif,image/avif,image/heic,image/heif,.heic,.heif"
             className="hidden"
             onChange={(e) => {
               const file = e.target.files?.[0];
