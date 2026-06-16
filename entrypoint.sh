@@ -10,13 +10,16 @@ echo "[entrypoint] Starting Stackly container..."
 
 APP_UPLOADS_DIR="/app/apps/web/public/uploads"
 
-mkdir -p "$UPLOAD_DIR"
-mkdir -p "$(dirname "$APP_UPLOADS_DIR")"
-
-if [ -L "$APP_UPLOADS_DIR" ] || [ -d "$APP_UPLOADS_DIR" ]; then
-  rm -rf "$APP_UPLOADS_DIR"
+if [ "$UPLOAD_DIR" != "$APP_UPLOADS_DIR" ]; then
+  mkdir -p "$UPLOAD_DIR"
+  mkdir -p "$(dirname "$APP_UPLOADS_DIR")"
+  if [ -L "$APP_UPLOADS_DIR" ] || [ -d "$APP_UPLOADS_DIR" ]; then
+    rm -rf "$APP_UPLOADS_DIR"
+  fi
+  ln -s "$UPLOAD_DIR" "$APP_UPLOADS_DIR"
+else
+  mkdir -p "$APP_UPLOADS_DIR"
 fi
-ln -s "$UPLOAD_DIR" "$APP_UPLOADS_DIR"
 
 DB_NAME="$(node -e 'const u=new URL(process.env.DATABASE_URL); console.log((u.pathname || "").replace(/^\//, ""))')"
 DB_ADMIN_URL="$(node -e 'const u=new URL(process.env.DATABASE_URL); u.pathname="/postgres"; u.search=""; console.log(u.toString())')"

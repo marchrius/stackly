@@ -6,6 +6,8 @@ on:
       - develop
       - main
       - master
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 permissions:
@@ -20,7 +22,7 @@ jobs:
   build-and-push:
     name: Build and push image
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[do-release]')
+    if: github.event_name == 'workflow_dispatch' || github.ref_type == 'tag' || contains(github.event.head_commit.message, '[do-release]')
 
     steps:
       - name: Checkout
