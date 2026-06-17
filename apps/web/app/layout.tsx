@@ -19,7 +19,10 @@ export const metadata: Metadata = {
   description: "Self-hosted collection manager for physical collections, metadata, wishlists, albums, and loans.",
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.png", type: "image/png" },
+      { url: "/icons/apple-touch-icon.svg", type: "image/svg+xml" }
+    ],
     apple: "/icons/apple-touch-icon.svg",
   },
   appleWebApp: {
