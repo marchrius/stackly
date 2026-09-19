@@ -12,6 +12,33 @@ Known bug register for the `next/` project.
 
 ## Open Bugs
 
+### 5. The web lint script is incompatible with the current Next.js CLI
+
+- Status: open
+- Area: `apps/web` · npm scripts · linting
+- Severity: low
+
+**Description**
+
+Running `npm run lint` fails before ESLint checks any source files because the
+web workspace still invokes the removed `next lint` command.
+
+**Expected Behavior**
+
+The lint script should run ESLint against the web application and report source
+issues normally.
+
+**Observed Behavior**
+
+The current Next.js CLI treats `lint` as a project directory and exits with
+`Invalid project directory provided .../apps/web/lint`.
+
+**Technical Notes**
+
+- Reproduced while validating the quick-edit feature.
+- Replace the workspace script with a direct ESLint command and migrate any
+  remaining Next-specific lint configuration.
+
 ### 4. Next Docker images cannot currently target 32-bit ARM platforms
 
 - Status: open

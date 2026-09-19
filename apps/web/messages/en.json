@@ -79,6 +79,7 @@
     "tags": "Tags"
   },
   "collections": {
+    "quickEdit": "Quick edit",
     "title": "Collections",
     "new": "New Collection",
     "newSub": "New sub-collection",
@@ -800,6 +801,7 @@
     "copiedLink": "Link copied",
     "openPublicView": "Open public view"
   },
+  "quickEdit": {"collectionsTitle":"Quick edit collections","itemsTitle":"Quick edit items in {collection}","description":"Edit {count} rows in a compact table. Custom columns are created from all fields in this list.","titleColumn":"Title","color":"Color","public":"Public","private":"Private","readOnly":"Read only","unsupportedHint":"This field requires a dedicated editor.","saved":"Changes saved.","saveFailed":"Unable to save changes."},
   "errors": {
     "notFoundTitle": "Page not found",
     "notFoundDescription": "The resource does not exist or is not available with your current visibility.",

@@ -6,7 +6,7 @@ import { requireAuth } from "@/lib/auth-utils";
 import { notFound } from "next/navigation";
 import { getCollectionAncestors } from "@/lib/collections-tree";
 import { CollectionItemsGrid } from "@/components/collections/CollectionItemsGrid";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, TableProperties } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 interface Props {
@@ -89,9 +89,10 @@ export default async function CollectionItemsPage({ params, searchParams }: Prop
             {items.length} / {collection._count.items} {t("items").toLowerCase()}
           </p>
         </div>
-        <Button asChild variant="outline">
-          <Link href={`/collections/${collection.id}`}>{tCommon("back")}</Link>
-        </Button>
+        <div className="flex gap-2">
+          {items.length > 0 && <Button asChild variant="outline"><Link href={`/collections/${collection.id}/items/quick-edit`}><TableProperties className="mr-2 h-4 w-4" />{t("quickEdit")}</Link></Button>}
+          <Button asChild variant="outline"><Link href={`/collections/${collection.id}`}>{tCommon("back")}</Link></Button>
+        </div>
       </div>
 
       <form className="max-w-sm">

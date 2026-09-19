@@ -79,6 +79,7 @@
     "tags": "Schlagworte"
   },
   "collections": {
+    "quickEdit": "Schnellbearbeitung",
     "title": "Sammlungen",
     "new": "Neue Sammlung",
     "newSub": "Neue Untersammlung",
@@ -800,6 +801,7 @@
     "copiedLink": "Link kopiert",
     "openPublicView": "Öffentliche Ansicht öffnen"
   },
+  "quickEdit": {"collectionsTitle":"Sammlungen schnell bearbeiten","itemsTitle":"Elemente in {collection} schnell bearbeiten","description":"{count} Zeilen in einer kompakten Tabelle bearbeiten. Benutzerdefinierte Spalten werden aus allen Feldern dieser Liste erstellt.","titleColumn":"Titel","color":"Farbe","public":"Öffentlich","private":"Privat","readOnly":"Schreibgeschützt","unsupportedHint":"Dieses Feld benötigt einen eigenen Editor.","saved":"Änderungen gespeichert.","saveFailed":"Änderungen konnten nicht gespeichert werden."},
   "errors": {
     "notFoundTitle": "Seite nicht gefunden",
     "notFoundDescription": "Die Ressource existiert nicht oder ist mit deiner aktuellen Sichtbarkeit nicht verfügbar.",

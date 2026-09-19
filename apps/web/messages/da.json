@@ -79,6 +79,7 @@
     "tags": "Mærker"
   },
   "collections": {
+    "quickEdit": "Hurtig redigering",
     "title": "Samlinger",
     "new": "Ny samling",
     "newSub": "Ny undersamling",
@@ -800,6 +801,7 @@
     "copiedLink": "Link kopieret",
     "openPublicView": "Åbn offentlig visning"
   },
+  "quickEdit": {"collectionsTitle":"Hurtig redigering af samlinger","itemsTitle":"Hurtig redigering af elementer i {collection}","description":"Rediger {count} rækker i en kompakt tabel. Brugerdefinerede kolonner oprettes fra alle felter i listen.","titleColumn":"Titel","color":"Farve","public":"Offentlig","private":"Privat","readOnly":"Skrivebeskyttet","unsupportedHint":"Dette felt kræver en særlig editor.","saved":"Ændringer gemt.","saveFailed":"Ændringerne kunne ikke gemmes."},
   "errors": {
     "notFoundTitle": "Siden blev ikke fundet",
     "notFoundDescription": "Ressourcen findes ikke, eller den er ikke tilgængelig med din aktuelle synlighed.",
