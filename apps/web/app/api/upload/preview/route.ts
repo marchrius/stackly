@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import sharp from "sharp";
+import sharp, { type Sharp } from "sharp";
 
 export async function POST(req: NextRequest) {
   const session = await auth();
@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
     const isHeic = file.type === "image/heic" || file.type === "image/heif" || file.name.toLowerCase().endsWith(".heic") || file.name.toLowerCase().endsWith(".heif");
 
-    let sharpInstance: sharp.Sharp;
+    let sharpInstance: Sharp;
 
     if (isHeic) {
       const heicDecode = (await import("heic-decode")).default;
