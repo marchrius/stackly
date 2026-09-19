@@ -79,6 +79,7 @@
     "tags": "标签"
   },
   "collections": {
+    "quickEdit": "快速编辑",
     "title": "收藏",
     "new": "新建收藏",
     "newSub": "新建子收藏",
@@ -800,6 +801,7 @@
     "copiedLink": "链接已复制",
     "openPublicView": "打开公开视图"
   },
+  "quickEdit": {"collectionsTitle":"快速编辑收藏集","itemsTitle":"快速编辑 {collection} 中的项目","description":"在紧凑表格中编辑 {count} 行。自定义列来自此列表中的所有字段。","titleColumn":"标题","color":"颜色","public":"公开","private":"私密","readOnly":"只读","unsupportedHint":"此字段需要专用编辑器。","saved":"更改已保存。","saveFailed":"无法保存更改。"},
   "errors": {
     "notFoundTitle": "页面未找到",
     "notFoundDescription": "资源不存在，或在当前可见性下不可访问。",

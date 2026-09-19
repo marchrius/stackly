@@ -561,7 +561,7 @@ export function ItemForm({
           <div className="flex flex-wrap items-center gap-2">
             <p className="text-sm font-medium">{fieldTitle}</p>
             <Badge variant="outline" className="rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wide">
-              {t(`fieldTypes.${field.type}` as never)}
+              {tTemplates(`fieldTypes.${field.type}` as never)}
             </Badge>
           </div>
           <div className="flex flex-wrap gap-2">

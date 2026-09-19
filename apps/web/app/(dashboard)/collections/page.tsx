@@ -3,7 +3,7 @@ import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@stackly/db";
 import { CollectionIndex } from "@/components/collections/CollectionIndex";
 import { Button } from "@stackly/ui";
-import { Plus, Settings2 } from "lucide-react";
+import { Plus, Settings2, TableProperties } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import {
@@ -89,6 +89,12 @@ export default async function CollectionsPage() {
         }
         actions={
           <>
+            {collections.length > 0 && <Button asChild variant="outline">
+              <Link href="/collections/quick-edit">
+                <TableProperties className="mr-2 h-4 w-4" />
+                {t("quickEdit")}
+              </Link>
+            </Button>}
             <Button asChild variant="outline">
               <Link href="/collections/edit">
                 <Settings2 className="mr-2 h-4 w-4" />

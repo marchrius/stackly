@@ -4,7 +4,7 @@ import type { Collection, Datum, Item } from "@stackly/db";
 import Link from "next/link";
 import { Badge, Button } from "@stackly/ui";
 import { CollectionGrid } from "./CollectionGrid";
-import { Box, ChevronRight, Edit, FileDown, Layers, Plus } from "lucide-react";
+import { Box, ChevronRight, Edit, FileDown, Layers, Plus, TableProperties } from "lucide-react";
 import { deleteCollection } from "@/lib/actions/collection.actions";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { useTranslations } from "next-intl";
@@ -239,7 +239,7 @@ export function CollectionDetail({
 
       {collection.children.length > 0 && (
         <section>
-          <h2 className="mb-3 text-lg font-semibold">{t("subCollections")}</h2>
+          <div className="mb-3 flex items-center justify-between gap-3"><h2 className="text-lg font-semibold">{t("subCollections")}</h2><Button asChild variant="ghost" size="sm"><Link href={`/collections/quick-edit?parentId=${collection.id}`}><TableProperties className="mr-2 h-4 w-4" />{t("quickEdit")}</Link></Button></div>
           <CollectionGrid
             collections={collection.children}
             counterOverrides={childCounters}
@@ -251,11 +251,7 @@ export function CollectionDetail({
         <section>
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 className="text-lg font-semibold">{t("items")}</h2>
-            {collection._count.items > collection.items.length && (
-              <Button asChild variant="ghost" size="sm">
-                <Link href={`/collections/${collection.id}/items`}>{t("items")}</Link>
-              </Button>
-            )}
+            <div className="flex gap-2"><Button asChild variant="ghost" size="sm"><Link href={`/collections/${collection.id}/items/quick-edit`}><TableProperties className="mr-2 h-4 w-4" />{t("quickEdit")}</Link></Button>{collection._count.items > collection.items.length && <Button asChild variant="ghost" size="sm"><Link href={`/collections/${collection.id}/items`}>{t("items")}</Link></Button>}</div>
           </div>
           <CollectionItemsGrid items={collection.items} />
         </section>

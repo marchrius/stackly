@@ -79,6 +79,7 @@
     "tags": "Labels"
   },
   "collections": {
+    "quickEdit": "Snel bewerken",
     "title": "Collecties",
     "new": "Nieuwe collectie",
     "newSub": "Nieuwe subcollectie",
@@ -800,6 +801,7 @@
     "copiedLink": "Link gekopieerd",
     "openPublicView": "Openbare weergave openen"
   },
+  "quickEdit": {"collectionsTitle":"Collecties snel bewerken","itemsTitle":"Items in {collection} snel bewerken","description":"Bewerk {count} rijen in een compacte tabel. Aangepaste kolommen worden gemaakt van alle velden in deze lijst.","titleColumn":"Titel","color":"Kleur","public":"Openbaar","private":"Privé","readOnly":"Alleen-lezen","unsupportedHint":"Dit veld vereist een aparte editor.","saved":"Wijzigingen opgeslagen.","saveFailed":"Wijzigingen konden niet worden opgeslagen."},
   "errors": {
     "notFoundTitle": "Pagina niet gevonden",
     "notFoundDescription": "De resource bestaat niet of is niet beschikbaar met je huidige zichtbaarheid.",

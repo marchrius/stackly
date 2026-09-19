@@ -79,6 +79,7 @@
     "tags": "Tagi"
   },
   "collections": {
+    "quickEdit": "Szybka edycja",
     "title": "Kolekcje",
     "new": "Nowa kolekcja",
     "newSub": "Nowa podkolekcja",
@@ -800,6 +801,7 @@
     "copiedLink": "Link skopiowany",
     "openPublicView": "Otwórz widok publiczny"
   },
+  "quickEdit": {"collectionsTitle":"Szybka edycja kolekcji","itemsTitle":"Szybka edycja elementów w {collection}","description":"Edytuj {count} wierszy w zwartej tabeli. Kolumny niestandardowe powstają ze wszystkich pól tej listy.","titleColumn":"Tytuł","color":"Kolor","public":"Publiczna","private":"Prywatna","readOnly":"Tylko do odczytu","unsupportedHint":"To pole wymaga dedykowanego edytora.","saved":"Zmiany zapisano.","saveFailed":"Nie udało się zapisać zmian."},
   "errors": {
     "notFoundTitle": "Nie znaleziono strony",
     "notFoundDescription": "Zasób nie istnieje albo nie jest dostępny przy bieżącej widoczności.",

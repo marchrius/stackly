@@ -79,6 +79,7 @@
     "tags": "Etiquetas"
   },
   "collections": {
+    "quickEdit": "Edição rápida",
     "title": "Coleções",
     "new": "Nova coleção",
     "newSub": "Nova subcoleção",
@@ -800,6 +801,7 @@
     "copiedLink": "Link copiado",
     "openPublicView": "Abrir visualização pública"
   },
+  "quickEdit": {"collectionsTitle":"Edição rápida de coleções","itemsTitle":"Edição rápida de itens em {collection}","description":"Edite {count} linhas em uma tabela compacta. As colunas personalizadas são criadas a partir de todos os campos desta lista.","titleColumn":"Título","color":"Cor","public":"Pública","private":"Privada","readOnly":"Somente leitura","unsupportedHint":"Este campo requer um editor dedicado.","saved":"Alterações salvas.","saveFailed":"Não foi possível salvar as alterações."},
   "errors": {
     "notFoundTitle": "Página não encontrada",
     "notFoundDescription": "O recurso não existe ou não está disponível com a visibilidade atual.",

@@ -1,7 +1,34 @@
 import { describe, expect, it } from "vitest";
-import { buildItemMediaEntries, getDisplayData, mergeRelatedItems } from "@/lib/item-detail";
+import { buildItemMediaEntries, getAdjacentItems, getDisplayData, mergeRelatedItems } from "@/lib/item-detail";
 
 describe("item detail helpers", () => {
+  it("finds previous and next volumes using natural numeric ordering", () => {
+    const items = [
+      { id: "2", name: "Vol. 2" },
+      { id: "20", name: "Vol. 20" },
+      { id: "3", name: "Vol. 3" },
+      { id: "21", name: "Vol. 21" },
+      { id: "19", name: "Vol. 19" },
+    ];
+
+    expect(getAdjacentItems(items, "20")).toEqual({
+      previousItem: { id: "19", name: "Vol. 19" },
+      nextItem: { id: "21", name: "Vol. 21" },
+    });
+  });
+
+  it("returns no next item for the last naturally sorted volume", () => {
+    const items = [
+      { id: "19", name: "Vol. 19" },
+      { id: "20", name: "Vol. 20" },
+    ];
+
+    expect(getAdjacentItems(items, "20")).toEqual({
+      previousItem: { id: "19", name: "Vol. 19" },
+      nextItem: null,
+    });
+  });
+
   it("builds a media gallery from the main image plus image/video datum entries", () => {
     const entries = buildItemMediaEntries({
       id: "item-1",

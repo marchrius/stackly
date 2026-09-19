@@ -79,6 +79,7 @@
     "tags": "Etiketler"
   },
   "collections": {
+    "quickEdit": "Hızlı düzenle",
     "title": "Koleksiyonlar",
     "new": "Yeni koleksiyon",
     "newSub": "Yeni alt koleksiyon",
@@ -800,6 +801,7 @@
     "copiedLink": "Bağlantı kopyalandı",
     "openPublicView": "Herkese açık görünümü aç"
   },
+  "quickEdit": {"collectionsTitle":"Koleksiyonları hızlı düzenle","itemsTitle":"{collection} içindeki öğeleri hızlı düzenle","description":"{count} satırı kompakt bir tabloda düzenleyin. Özel sütunlar bu listedeki tüm alanlardan oluşturulur.","titleColumn":"Başlık","color":"Renk","public":"Herkese açık","private":"Özel","readOnly":"Salt okunur","unsupportedHint":"Bu alan özel bir düzenleyici gerektirir.","saved":"Değişiklikler kaydedildi.","saveFailed":"Değişiklikler kaydedilemedi."},
   "errors": {
     "notFoundTitle": "Sayfa bulunamadı",
     "notFoundDescription": "Kaynak yok veya mevcut görünürlükle kullanılamıyor.",

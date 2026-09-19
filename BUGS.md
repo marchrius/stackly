@@ -12,6 +12,33 @@ Known bug register for the `next/` project.
 
 ## Open Bugs
 
+### 5. The web lint script is incompatible with the current Next.js CLI
+
+- Status: open
+- Area: `apps/web` · npm scripts · linting
+- Severity: low
+
+**Description**
+
+Running `npm run lint` fails before ESLint checks any source files because the
+web workspace still invokes the removed `next lint` command.
+
+**Expected Behavior**
+
+The lint script should run ESLint against the web application and report source
+issues normally.
+
+**Observed Behavior**
+
+The current Next.js CLI treats `lint` as a project directory and exits with
+`Invalid project directory provided .../apps/web/lint`.
+
+**Technical Notes**
+
+- Reproduced while validating the quick-edit feature.
+- Replace the workspace script with a direct ESLint command and migrate any
+  remaining Next-specific lint configuration.
+
 ### 4. Next Docker images cannot currently target 32-bit ARM platforms
 
 - Status: open
@@ -37,6 +64,118 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 - To support 32-bit ARM, evaluate a different Node base image or a custom runtime build before extending the workflow platform list.
 
 ## Fixed Bugs
+
+### 12. Item form resolved field-type labels from the wrong translation namespace
+
+- Status: completed (fixed)
+- Area: `apps/web` · item form · internationalization
+- Severity: medium
+
+**Description**
+
+Rendering an item custom field raised `MISSING_MESSAGE` because its type label
+was requested from `items.fieldTypes`, while the catalog defines these labels
+under `templates.fieldTypes`.
+
+**Expected Behavior**
+
+Every custom-field badge should resolve its translated type without producing
+runtime errors in Turbopack.
+
+**Technical Notes**
+
+- Fixed `ItemForm` to use the existing `templates` translator, consistently
+  with the field-add controls and the collection form.
+- The i18n schema validator confirms that all 14 locales contain the same set
+  of field-type keys.
+
+### 11. Item detail previous/next navigation used lexicographic ordering
+
+- Status: completed (fixed)
+- Area: `apps/web` · `/items/[id]` · previous/next navigation
+- Severity: medium
+
+**Description**
+
+The previous and next links on an item detail page did not follow natural
+numeric ordering for volume-like names.
+
+**Expected Behavior**
+
+For an item named `Vol. 20`, the previous item should be `Vol. 19` and the next
+item should be `Vol. 21` when those items exist.
+
+**Observed Behavior**
+
+For `Vol. 20`, the detail page identified `Vol. 2` as previous and `Vol. 3` as
+next because the sibling query used PostgreSQL string ordering.
+
+**Technical Notes**
+
+- Fixed by applying the shared natural-text comparator before selecting the
+  adjacent siblings.
+- Creation time and ID provide a deterministic source order for equal names.
+- Added regression coverage for both `Vol. 19 → Vol. 20 → Vol. 21` and the
+  absence of a next item after `Vol. 20`.
+- Reported with item `52771769-89b7-44a0-9a4f-4c9fe171ba83`.
+
+### 10. Navbar account controls shifted to the left on desktop
+
+- Status: completed (fixed)
+- Area: `apps/web` · dashboard navbar · responsive layout
+- Severity: medium
+
+**Description**
+
+The username, avatar, settings, and logout controls moved from the right side
+of the top navbar to the left on desktop.
+
+**Expected Behavior**
+
+Account information and actions should remain right-aligned at every viewport
+size, regardless of whether the mobile application version is visible.
+
+**Observed Behavior**
+
+The mobile version label replaced the navbar's empty left spacer and is hidden
+at the `md` breakpoint. On desktop this left only one visible flex child, so
+`justify-between` placed the account controls at the start of the navbar.
+
+**Technical Notes**
+
+- Fixed by applying `ml-auto` directly to the account-controls group.
+- Alignment no longer depends on a visible spacer or on the responsive state of
+  the version label.
+
+### 9. Logout button did not end the authenticated session
+
+- Status: completed (fixed)
+- Area: `apps/web` · dashboard navbar · Auth.js sign-out
+- Severity: high
+
+**Description**
+
+Clicking the logout icon in the authenticated navbar produced no visible
+result. The user remained on the current page and appeared to stay signed in.
+
+**Expected Behavior**
+
+The logout action should invalidate the Auth.js session and redirect the user
+to `/login`.
+
+**Observed Behavior**
+
+The navbar depended on the client-side `next-auth/react` `signOut` helper and
+its deprecated `callbackUrl` option. A failed client request had no UI feedback,
+leaving the logout icon apparently inactive.
+
+**Technical Notes**
+
+- Fixed by exposing Auth.js server-side `signOut` and invoking it through a
+  dedicated Server Action.
+- The navbar now submits a form that invalidates the session on the server and
+  redirects with `redirectTo: "/login"`.
+- `/api/auth/*` remains excluded from the proxy matcher.
 
 ### 8. Sub-collection item totals were not refreshed on collection detail pages
 

@@ -4,6 +4,7 @@ import { prisma } from "@stackly/db";
 import { notFound } from "next/navigation";
 import { ItemDetail } from "@/components/items/ItemDetail";
 import { getTranslations } from "next-intl/server";
+import { getAdjacentItems } from "@/lib/item-detail";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("items");
@@ -44,12 +45,10 @@ export default async function ItemDetailPage({ params }: Props) {
     const siblings = await prisma.item.findMany({
       where: { collectionId: item.collectionId, ownerId: session.user.id },
       select: { id: true, name: true },
-      orderBy: [{ name: "asc" }, { createdAt: "asc" }],
+      orderBy: [{ createdAt: "asc" }, { id: "asc" }],
     });
 
-    const currentIndex = siblings.findIndex((sibling) => sibling.id === item.id);
-    previousItem = currentIndex > 0 ? siblings[currentIndex - 1] : null;
-    nextItem = currentIndex >= 0 && currentIndex < siblings.length - 1 ? siblings[currentIndex + 1] : null;
+    ({ previousItem, nextItem } = getAdjacentItems(siblings, item.id));
   }
 
   return <ItemDetail item={item} previousItem={previousItem} nextItem={nextItem} />;

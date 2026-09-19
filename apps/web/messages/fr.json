@@ -79,6 +79,7 @@
     "tags": "Balises"
   },
   "collections": {
+    "quickEdit": "Modification rapide",
     "title": "Collections personnelles",
     "new": "Nouvelle collection",
     "newSub": "Nouvelle sous-collection",
@@ -800,6 +801,7 @@
     "copiedLink": "Lien copié",
     "openPublicView": "Ouvrir la vue publique"
   },
+  "quickEdit": {"collectionsTitle":"Modification rapide des collections","itemsTitle":"Modification rapide des éléments de {collection}","description":"Modifiez {count} lignes dans un tableau compact. Les colonnes personnalisées proviennent de tous les champs de cette liste.","titleColumn":"Titre","color":"Couleur","public":"Publique","private":"Privée","readOnly":"Lecture seule","unsupportedHint":"Ce champ nécessite un éditeur dédié.","saved":"Modifications enregistrées.","saveFailed":"Impossible d’enregistrer les modifications."},
   "errors": {
     "notFoundTitle": "Page introuvable",
     "notFoundDescription": "La ressource n’existe pas ou n’est pas disponible avec votre visibilité actuelle.",

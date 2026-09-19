@@ -79,6 +79,7 @@
     "tags": "Tag"
   },
   "collections": {
+    "quickEdit": "Modifica rapida",
     "title": "Collezioni",
     "new": "Nuova Collezione",
     "newSub": "Nuova sotto-collezione",
@@ -800,6 +801,7 @@
     "copiedLink": "Link copiato",
     "openPublicView": "Apri vista pubblica"
   },
+  "quickEdit": {"collectionsTitle":"Modifica rapida collezioni","itemsTitle":"Modifica rapida degli item in {collection}","description":"Modifica {count} righe in una tabella compatta. Le colonne personalizzate derivano da tutti i campi presenti nella lista.","titleColumn":"Titolo","color":"Colore","public":"Pubblica","private":"Privata","readOnly":"Sola lettura","unsupportedHint":"Questo campo richiede un editor dedicato.","saved":"Modifiche salvate.","saveFailed":"Impossibile salvare le modifiche."},
   "errors": {
     "notFoundTitle": "Pagina non trovata",
     "notFoundDescription": "La risorsa non esiste oppure non è disponibile con la visibilità corrente.",
