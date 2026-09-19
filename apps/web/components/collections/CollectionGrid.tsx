@@ -13,6 +13,7 @@ import {
   sortCollectionsForDisplay,
 } from "@/lib/collection-index-display";
 import { EmptyState } from "@/components/shared/EmptyState";
+import type { CollectionAggregateCounters } from "@/lib/collection-detail";
 
 interface CollectionGridProps {
   collections: CollectionIndexCollection[];
@@ -21,6 +22,7 @@ interface CollectionGridProps {
     DisplayConfiguration,
     "sortingProperty" | "sortingType" | "sortingDirection"
   > | null;
+  counterOverrides?: Record<string, CollectionAggregateCounters>;
 }
 
 function asHexColor(color: string | null): string {
@@ -32,6 +34,7 @@ export function CollectionGrid({
   collections,
   basePath = "/collections",
   displayConfiguration,
+  counterOverrides,
 }: CollectionGridProps) {
   const t = useTranslations("collections");
   const sortedCollections = useMemo(
@@ -55,8 +58,12 @@ export function CollectionGrid({
       style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}
     >
       {sortedCollections.map((col) => {
-        const childrenCount = getCollectionCounter(col, "children");
-        const itemsCount = getCollectionCounter(col, "items");
+        const childrenCount =
+          counterOverrides?.[col.id]?.children ??
+          getCollectionCounter(col, "children");
+        const itemsCount =
+          counterOverrides?.[col.id]?.items ??
+          getCollectionCounter(col, "items");
 
         return (
           <Link key={col.id} href={`${basePath}/${col.id}`}>

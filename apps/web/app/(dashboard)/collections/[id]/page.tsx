@@ -5,6 +5,7 @@ import { prisma } from "@stackly/db";
 import { notFound } from "next/navigation";
 import { CollectionDetail } from "@/components/collections/CollectionDetail";
 import { getTranslations } from "next-intl/server";
+import { getAggregateCollectionCounters } from "@/lib/collection-detail";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("collections");
@@ -19,28 +20,60 @@ export default async function CollectionDetailPage({ params }: Props) {
   const { id } = await params;
   const session = await requireAuth();
 
-  const collection = await prisma.collection.findFirst({
-    where: { id, ownerId: session.user.id },
-    include: {
-      children: {
-        include: { _count: { select: { children: true, items: true } } },
-        orderBy: { title: "asc" },
+  const [collection, collectionCounterNodes] = await Promise.all([
+    prisma.collection.findFirst({
+      where: { id, ownerId: session.user.id },
+      include: {
+        children: {
+          include: { _count: { select: { children: true, items: true } } },
+          orderBy: { title: "asc" },
+        },
+        items: {
+          orderBy: { name: "asc" },
+          take: 50,
+        },
+        data: {
+          orderBy: { position: "asc" },
+          include: { choiceList: { select: { id: true, name: true, displayMode: true, selectionMode: true } } },
+        },
+        _count: { select: { children: true, items: true } },
       },
-      items: {
-        orderBy: { name: "asc" },
-        take: 50,
+    }),
+    prisma.collection.findMany({
+      where: { ownerId: session.user.id },
+      select: {
+        id: true,
+        parentId: true,
+        _count: { select: { items: true } },
       },
-       data: {
-         orderBy: { position: "asc" },
-         include: { choiceList: { select: { id: true, name: true, displayMode: true, selectionMode: true } } },
-       },
-      _count: { select: { children: true, items: true } },
-    },
-  });
+    }),
+  ]);
 
   if (!collection) notFound();
 
   const ancestors = await getCollectionAncestors(session.user.id, collection.parentId);
+  const aggregateCounters = getAggregateCollectionCounters(
+    collectionCounterNodes.map((node) => ({
+      id: node.id,
+      parentId: node.parentId,
+      directItems: node._count.items,
+    })),
+  );
+  const childCounters = Object.fromEntries(
+    collection.children.map((child) => [
+      child.id,
+      aggregateCounters[child.id] ?? {
+        children: child._count.children,
+        items: child._count.items,
+      },
+    ]),
+  );
 
-  return <CollectionDetail collection={collection} ancestors={ancestors} />;
+  return (
+    <CollectionDetail
+      collection={collection}
+      ancestors={ancestors}
+      childCounters={childCounters}
+    />
+  );
 }

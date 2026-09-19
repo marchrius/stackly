@@ -10,7 +10,10 @@ import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { getDisplayData } from "@/lib/item-detail";
-import { getCollectionCachedSummary } from "@/lib/collection-detail";
+import {
+  getCollectionCachedSummary,
+  type CollectionAggregateCounters,
+} from "@/lib/collection-detail";
 import { limitChoiceValues, parseChoiceListValues } from "@/lib/choice-lists";
 import { formatCountryValue, formatCurrencyAmount, formatDateValue, formatPriceValue, parseListValues, renderRatingValue } from "@/lib/datum-format";
 import { CollectionItemsGrid } from "./CollectionItemsGrid";
@@ -31,6 +34,7 @@ type CollectionWithRelations = Collection & {
 interface CollectionDetailProps {
   collection: CollectionWithRelations;
   ancestors: { id: string; title: string }[];
+  childCounters: Record<string, CollectionAggregateCounters>;
 }
 
 function asHexColor(color: string | null): string {
@@ -38,7 +42,11 @@ function asHexColor(color: string | null): string {
   return color.startsWith("#") ? color : `#${color}`;
 }
 
-export function CollectionDetail({ collection, ancestors }: CollectionDetailProps) {
+export function CollectionDetail({
+  collection,
+  ancestors,
+  childCounters,
+}: CollectionDetailProps) {
   const t = useTranslations("collections");
   const tCommon = useTranslations("common");
   const tItems = useTranslations("items");
@@ -232,7 +240,10 @@ export function CollectionDetail({ collection, ancestors }: CollectionDetailProp
       {collection.children.length > 0 && (
         <section>
           <h2 className="mb-3 text-lg font-semibold">{t("subCollections")}</h2>
-          <CollectionGrid collections={collection.children} />
+          <CollectionGrid
+            collections={collection.children}
+            counterOverrides={childCounters}
+          />
         </section>
       )}
 

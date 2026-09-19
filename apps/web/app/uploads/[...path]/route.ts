@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { join, resolve } from "path";
 import { readFile } from "fs/promises";
 import { existsSync } from "fs";
+import { resolveUploadPath } from "@/lib/server/upload-paths";
 
 interface Params {
   params: Promise<{ path: string[] }>;
@@ -26,9 +26,12 @@ export async function GET(_request: NextRequest, { params }: Params) {
     return new NextResponse("Forbidden", { status: 403 });
   }
 
-  const uploadDirSetting = process.env.UPLOAD_DIR ?? "./public/uploads";
-  const uploadDir = resolve(process.cwd(), uploadDirSetting);
-  const filePath = join(uploadDir, ...pathSegments);
+  let filePath: string;
+  try {
+    filePath = resolveUploadPath(...pathSegments);
+  } catch {
+    return new NextResponse("Forbidden", { status: 403 });
+  }
 
   if (!existsSync(filePath)) {
     return new NextResponse("Not Found", { status: 404 });

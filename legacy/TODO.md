@@ -1,6 +1,10 @@
-# TODO - Remaining `next/` migration backlog
+# TODO - Historical `next/` migration backlog
 
-This file intentionally lists **only the work still behind** after the P0-P7 batches already completed in `next/`.
+> This file is retained as migration history and is no longer the active source
+> of truth. The current plan lives in the root [`ROADMAP.md`](../ROADMAP.md).
+
+This file reflects the repository state before the Next.js monorepo was moved
+from `next/` to the repository root. Some items below have since been completed.
 
 Completed slices have been removed on purpose so this backlog stays actionable and reflects the current repository state instead of historical scaffolding.
 
@@ -11,7 +15,7 @@ This section is the **repo-persisted handoff plan** to continue work from anothe
 ### How to resume safely
 
 1. Start from the first still-open item in `Priority 1`.
-2. Keep `TODO.md` as the committed source of truth for active backlog and next execution steps.
+2. Keep root `ROADMAP.md` as the committed source of truth for active backlog and next execution steps.
 3. After any Prisma change, run:
    - `cd next/packages/db && npm run db:generate`
 4. After any app change, run:

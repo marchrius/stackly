@@ -16,6 +16,7 @@ import {
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
 import { getUploadUrl } from "@stackly/lib";
 import { EmptyState } from "@/components/shared/EmptyState";
+import type { CollectionAggregateCounters } from "@/lib/collection-detail";
 
 interface CollectionListProps {
   collections: CollectionIndexCollection[];
@@ -33,6 +34,7 @@ interface CollectionListProps {
     | "columns"
   > | null;
   basePath?: string;
+  counterOverrides?: Record<string, CollectionAggregateCounters>;
 }
 
 function asHexColor(color: string | null): string {
@@ -44,6 +46,7 @@ export function CollectionList({
   collections,
   displayConfiguration,
   basePath = "/collections",
+  counterOverrides,
 }: CollectionListProps) {
   const t = useTranslations("collections");
   const tCommon = useTranslations("common");
@@ -106,8 +109,12 @@ export function CollectionList({
         </thead>
         <tbody className="divide-y divide-border">
           {sortedCollections.map((collection) => {
-            const childrenCount = getCollectionCounter(collection, "children");
-            const itemsCount = getCollectionCounter(collection, "items");
+            const childrenCount =
+              counterOverrides?.[collection.id]?.children ??
+              getCollectionCounter(collection, "children");
+            const itemsCount =
+              counterOverrides?.[collection.id]?.items ??
+              getCollectionCounter(collection, "items");
 
             return (
               <tr
