@@ -21,6 +21,33 @@ interface Props {
   save: (payload: string) => Promise<QuickEditResult>;
 }
 
+function normalizeColor(value: string | null | undefined) {
+  if (!value) return "";
+  const color = value.startsWith("#") ? value : `#${value}`;
+  return /^#[0-9a-f]{6}$/i.test(color) ? color : "";
+}
+
+function ColorCell({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const pickerValue = normalizeColor(value) || "#6366f1";
+  return (
+    <div className="flex items-center gap-1">
+      <input
+        type="color"
+        value={pickerValue}
+        onChange={(event) => onChange(event.target.value)}
+        className="h-8 w-10 shrink-0 cursor-pointer rounded border border-input bg-background p-0.5"
+      />
+      <Input
+        className="h-8 min-w-24 font-mono"
+        value={value}
+        placeholder="#6366f1"
+        maxLength={7}
+        onChange={(event) => onChange(event.target.value)}
+      />
+    </div>
+  );
+}
+
 export function QuickEditTable({ kind, rows, save }: Props) {
   const t = useTranslations("quickEdit");
   const tCommon = useTranslations("common");
@@ -29,7 +56,7 @@ export function QuickEditTable({ kind, rows, save }: Props) {
   const [values, setValues] = useState(() => rows.map((row) => ({
     id: row.id,
     name: row.name,
-    color: row.color ?? null,
+    color: normalizeColor(row.color),
     quantity: row.quantity,
     visibility: row.visibility,
     cells: columns.map((column) => ({
@@ -77,7 +104,7 @@ export function QuickEditTable({ kind, rows, save }: Props) {
             {values.map((row, rowIndex) => (
               <tr key={row.id} className="even:bg-muted/25">
                 <td className="sticky left-0 z-[5] border-b border-r bg-background p-1"><Input className="h-8" value={row.name} onChange={(event) => update(rowIndex, "name", event.target.value)} /></td>
-                <td className="border-b border-r p-1"><Input className="h-8" type={kind === "collections" ? "text" : "number"} min={kind === "items" ? 0 : undefined} value={kind === "collections" ? row.color ?? "" : row.quantity ?? 0} onChange={(event) => update(rowIndex, kind === "collections" ? "color" : "quantity", kind === "collections" ? event.target.value : Number(event.target.value))} /></td>
+                <td className="border-b border-r p-1">{kind === "collections" ? <ColorCell value={row.color ?? ""} onChange={(value) => update(rowIndex, "color", value)} /> : <Input className="h-8" type="number" min={0} value={row.quantity ?? 0} onChange={(event) => update(rowIndex, "quantity", Number(event.target.value))} />}</td>
                 <td className="border-b border-r p-1">
                   <select className="h-8 w-full rounded-md border bg-background px-2" value={row.visibility} onChange={(event) => update(rowIndex, "visibility", event.target.value)}>
                     <option value="public">{tVisibility("public")}</option><option value="internal">{tVisibility("internal")}</option><option value="private">{tVisibility("private")}</option>
@@ -88,7 +115,8 @@ export function QuickEditTable({ kind, rows, save }: Props) {
                   return <td key={column.key} className="border-b border-r p-1">
                     {column.editable ? column.type === "checkbox" ? (
                       <div className="flex h-8 items-center justify-center"><input type="checkbox" checked={cell.value === "1" || cell.value === "true"} onChange={(event) => updateCell(rowIndex, column.key, event.target.checked ? "1" : "0")} /></div>
-                    ) : <Input className="h-8" type={column.type === "number" || column.type === "price" || column.type === "rating" ? "number" : column.type === "date" ? "date" : "text"} value={cell.value} onChange={(event) => updateCell(rowIndex, column.key, event.target.value)} />
+                    ) : column.type === "color" ? <ColorCell value={cell.value} onChange={(value) => updateCell(rowIndex, column.key, value)} />
+                    : <Input className="h-8" type={column.type === "number" || column.type === "price" || column.type === "rating" ? "number" : column.type === "date" ? "date" : "text"} value={cell.value} onChange={(event) => updateCell(rowIndex, column.key, event.target.value)} />
                     : <span className="block px-2 text-xs text-muted-foreground" title={t("unsupportedHint")}>{t("readOnly")}</span>}
                   </td>;
                 })}

@@ -65,6 +65,30 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 12. Item form resolved field-type labels from the wrong translation namespace
+
+- Status: completed (fixed)
+- Area: `apps/web` · item form · internationalization
+- Severity: medium
+
+**Description**
+
+Rendering an item custom field raised `MISSING_MESSAGE` because its type label
+was requested from `items.fieldTypes`, while the catalog defines these labels
+under `templates.fieldTypes`.
+
+**Expected Behavior**
+
+Every custom-field badge should resolve its translated type without producing
+runtime errors in Turbopack.
+
+**Technical Notes**
+
+- Fixed `ItemForm` to use the existing `templates` translator, consistently
+  with the field-add controls and the collection form.
+- The i18n schema validator confirms that all 14 locales contain the same set
+  of field-type keys.
+
 ### 11. Item detail previous/next navigation used lexicographic ordering
 
 - Status: completed (fixed)

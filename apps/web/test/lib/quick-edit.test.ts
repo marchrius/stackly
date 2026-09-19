@@ -28,4 +28,8 @@ describe("quick edit", () => {
   it("treats blank custom values as absent", () => {
     expect(normalizeQuickEditValue("text", "   ")).toBeNull();
   });
+
+  it("preserves color values selected by the browser picker", () => {
+    expect(normalizeQuickEditValue("color", "#12abEF")).toBe("#12abEF");
+  });
 });

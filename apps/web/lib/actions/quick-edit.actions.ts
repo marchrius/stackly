@@ -11,7 +11,7 @@ const cellSchema = z.object({ key: z.string().min(1), value: z.string().max(1000
 const rowSchema = z.object({
   id: z.string().uuid(),
   name: z.string().trim().min(1).max(255),
-  color: z.string().max(7).nullable().optional(),
+  color: z.union([z.string().regex(/^#?[0-9a-fA-F]{6}$/), z.literal("")]).nullable().optional(),
   quantity: z.coerce.number().int().min(0).max(999999).optional(),
   visibility: z.enum(["public", "internal", "private"]),
   cells: z.array(cellSchema).max(250),
@@ -46,7 +46,7 @@ export async function saveQuickEditCollections(parentId: string | null, payload:
       for (const row of rows) {
         const entity = existing.find((entry) => entry.id === row.id)!;
         const finalVisibility = computeFinalVisibility(row.visibility, parentVisibility);
-        await tx.collection.update({ where: { id: row.id }, data: { title: row.name, color: row.color || null, visibility: row.visibility, parentVisibility, finalVisibility, updatedAt: new Date() } });
+        await tx.collection.update({ where: { id: row.id }, data: { title: row.name, color: row.color?.replace(/^#/, "") || null, visibility: row.visibility, parentVisibility, finalVisibility, updatedAt: new Date() } });
         await syncCells(tx, entity.data, prototypes, row.cells, { collectionId: row.id, itemId: null }, finalVisibility);
         await tx.log.create({ data: { type: "update", loggedAt: new Date(), objectId: row.id, objectLabel: row.name, objectClass: "Collection", ownerId: session.user.id } });
         if (entity.finalVisibility !== finalVisibility) visibilityChanges.push({ id: row.id, finalVisibility });
