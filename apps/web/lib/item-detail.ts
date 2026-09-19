@@ -1,4 +1,5 @@
 import { getUploadUrl } from "@stackly/lib";
+import { sortByNaturalText } from "@/lib/natural-sort";
 
 export interface ItemMediaDatumLike {
   id: string;
@@ -22,6 +23,11 @@ export interface RelatedItemLike {
   id: string;
   name: string;
   imageSmallThumbnail: string | null;
+}
+
+export interface SiblingItemLike {
+  id: string;
+  name: string;
 }
 
 export interface ItemMediaEntry {
@@ -83,4 +89,20 @@ export function mergeRelatedItems(primary: RelatedItemLike[], secondary: Related
   }
 
   return [...merged.values()].sort((left, right) => left.name.localeCompare(right.name));
+}
+
+export function getAdjacentItems<T extends SiblingItemLike>(
+  items: readonly T[],
+  currentItemId: string,
+) {
+  const sortedItems = sortByNaturalText(items, (item) => item.name);
+  const currentIndex = sortedItems.findIndex((item) => item.id === currentItemId);
+
+  return {
+    previousItem: currentIndex > 0 ? sortedItems[currentIndex - 1] : null,
+    nextItem:
+      currentIndex >= 0 && currentIndex < sortedItems.length - 1
+        ? sortedItems[currentIndex + 1]
+        : null,
+  };
 }

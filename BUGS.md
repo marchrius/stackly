@@ -38,6 +38,36 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 11. Item detail previous/next navigation used lexicographic ordering
+
+- Status: completed (fixed)
+- Area: `apps/web` · `/items/[id]` · previous/next navigation
+- Severity: medium
+
+**Description**
+
+The previous and next links on an item detail page did not follow natural
+numeric ordering for volume-like names.
+
+**Expected Behavior**
+
+For an item named `Vol. 20`, the previous item should be `Vol. 19` and the next
+item should be `Vol. 21` when those items exist.
+
+**Observed Behavior**
+
+For `Vol. 20`, the detail page identified `Vol. 2` as previous and `Vol. 3` as
+next because the sibling query used PostgreSQL string ordering.
+
+**Technical Notes**
+
+- Fixed by applying the shared natural-text comparator before selecting the
+  adjacent siblings.
+- Creation time and ID provide a deterministic source order for equal names.
+- Added regression coverage for both `Vol. 19 → Vol. 20 → Vol. 21` and the
+  absence of a next item after `Vol. 20`.
+- Reported with item `52771769-89b7-44a0-9a4f-4c9fe171ba83`.
+
 ### 10. Navbar account controls shifted to the left on desktop
 
 - Status: completed (fixed)
