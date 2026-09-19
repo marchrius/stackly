@@ -65,6 +65,31 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 13. Next.js and Auth.js dependencies contained critical vulnerabilities
+
+- Status: completed (fixed)
+- Area: `apps/web` · framework and authentication dependencies
+- Severity: critical
+
+**Description**
+
+The dependency audit reported three critical packages: Next.js, NextAuth.js,
+and the transitive Auth.js core package.
+
+**Expected Behavior**
+
+Production framework and authentication dependencies should use patched
+versions with no known critical advisories in the active lockfile.
+
+**Technical Notes**
+
+- Updated Next.js and `eslint-config-next` from 16.2.9 to 16.3.5.
+- Updated `next-auth` from 5.0.0-beta.31 to 5.0.0-beta.32, which resolves
+  `@auth/core` to 0.41.3.
+- `npm audit` now reports zero critical vulnerabilities; 8 high and 3 moderate
+  findings remain for separate remediation.
+- Type-check, 67 tests, i18n validation, and the production build pass.
+
 ### 12. Item form resolved field-type labels from the wrong translation namespace
 
 - Status: completed (fixed)

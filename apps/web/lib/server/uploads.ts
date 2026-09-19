@@ -3,7 +3,7 @@ import { mkdir, writeFile } from "fs/promises";
 import { extname } from "path";
 import { prisma } from "@stackly/db";
 import { CONFIGURATION_LABELS } from "../configuration";
-import sharp from "sharp";
+import sharp, { type Sharp } from "sharp";
 import { resolveUploadPath } from "./upload-paths";
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
@@ -19,6 +19,7 @@ const IMAGE_TYPES = [
   "image/heif"
 ];
 const VIDEO_TYPES = ["video/mp4", "video/webm", "video/ogg", "video/quicktime"];
+type OutputFormat = "jpeg" | "png" | "webp" | "avif" | "gif" | "tiff";
 
 export type UploadKind = "image" | "file" | "video";
 
@@ -79,7 +80,7 @@ export async function saveUploadedAsset({
   const isHeic = file.type === "image/heic" || file.type === "image/heif" || originalExt === ".heic" || originalExt === ".heif";
 
   let finalBuffer = buffer;
-  let finalFormat: keyof sharp.FormatEnum | null = null;
+  let finalFormat: OutputFormat | null = null;
   let finalExt = originalExt;
 
   if (isHeic) {
@@ -97,7 +98,7 @@ export async function saveUploadedAsset({
   const filepath = resolveUploadPath(userId, entity, filename);
 
   // Converti e salva immagine originale
-  let sharpOriginal = sharp(finalBuffer);
+  let sharpOriginal: Sharp = sharp(finalBuffer);
   if (finalFormat) {
     sharpOriginal = sharpOriginal.toFormat(finalFormat);
   }
@@ -129,11 +130,11 @@ export async function saveUploadedAsset({
 async function convertHeicBuffer(
   buffer: Buffer,
   formatSetting: string
-): Promise<{ buffer: Buffer; format: keyof sharp.FormatEnum; ext: string }> {
+): Promise<{ buffer: Buffer; format: OutputFormat; ext: string }> {
   const heicDecode = (await import("heic-decode")).default;
   const { width, height, data } = await heicDecode({ buffer });
 
-  const format = (formatSetting === "keep-original" ? "webp" : formatSetting) as keyof sharp.FormatEnum;
+  const format = (formatSetting === "keep-original" ? "webp" : formatSetting) as OutputFormat;
   const ext = format === "jpeg" ? ".jpg" : `.${format}`;
 
   const converted = await sharp(Buffer.from(data), {
@@ -153,14 +154,14 @@ function getTargetFormatAndExtension(
   fileType: string,
   fileName: string,
   formatSetting: string
-): { format: keyof sharp.FormatEnum | null; ext: string } {
+): { format: OutputFormat | null; ext: string } {
   const originalExt = extname(fileName).toLowerCase() || getExtensionFromMime(fileType);
 
   if (formatSetting !== "keep-original") {
     if (formatSetting === "jpeg") {
       return { format: "jpeg", ext: ".jpg" };
     }
-    return { format: formatSetting as keyof sharp.FormatEnum, ext: `.${formatSetting}` };
+    return { format: formatSetting as OutputFormat, ext: `.${formatSetting}` };
   }
 
   // Converti HEIC/HEIF in WebP se keep-original è attivo
