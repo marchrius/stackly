@@ -8,6 +8,7 @@ import {
   BarChart2, Clock, Package, Wrench, Search, Shield, FileCode,
 } from "lucide-react";
 import { cn } from "@stackly/ui";
+import { AppVersion } from "@/components/shared/AppVersion";
 
 export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
@@ -57,6 +58,7 @@ export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
           ))}
         </ul>
       </nav>
+      <AppVersion variant="sidebar" />
     </aside>
   );
 }

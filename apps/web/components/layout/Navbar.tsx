@@ -7,6 +7,7 @@ import { Settings, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { getUploadUrl } from "@stackly/lib";
+import { AppVersion } from "@/components/shared/AppVersion";
 
 interface NavbarProps {
   user: Session["user"];
@@ -17,7 +18,7 @@ export function Navbar({ user }: NavbarProps) {
 
   return (
     <header className="flex h-14 items-center justify-between border-b bg-card px-6">
-      <div className="flex items-center gap-2" />
+      <AppVersion variant="compact" className="md:hidden" />
 
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-2">
