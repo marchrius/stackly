@@ -163,6 +163,7 @@ declare module "next-auth" {
 }
 
 export const handlers = authConfig.handlers;
+export const signOut = authConfig.signOut;
 // @ts-ignore TS2742: next-auth v5 — auth type not nominable without internal module reference
 // Tracked: https://github.com/nextauthjs/next-auth/issues/9504
 export const auth = authConfig.auth as any;

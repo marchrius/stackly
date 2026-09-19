@@ -38,6 +38,64 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 10. Navbar account controls shifted to the left on desktop
+
+- Status: completed (fixed)
+- Area: `apps/web` · dashboard navbar · responsive layout
+- Severity: medium
+
+**Description**
+
+The username, avatar, settings, and logout controls moved from the right side
+of the top navbar to the left on desktop.
+
+**Expected Behavior**
+
+Account information and actions should remain right-aligned at every viewport
+size, regardless of whether the mobile application version is visible.
+
+**Observed Behavior**
+
+The mobile version label replaced the navbar's empty left spacer and is hidden
+at the `md` breakpoint. On desktop this left only one visible flex child, so
+`justify-between` placed the account controls at the start of the navbar.
+
+**Technical Notes**
+
+- Fixed by applying `ml-auto` directly to the account-controls group.
+- Alignment no longer depends on a visible spacer or on the responsive state of
+  the version label.
+
+### 9. Logout button did not end the authenticated session
+
+- Status: completed (fixed)
+- Area: `apps/web` · dashboard navbar · Auth.js sign-out
+- Severity: high
+
+**Description**
+
+Clicking the logout icon in the authenticated navbar produced no visible
+result. The user remained on the current page and appeared to stay signed in.
+
+**Expected Behavior**
+
+The logout action should invalidate the Auth.js session and redirect the user
+to `/login`.
+
+**Observed Behavior**
+
+The navbar depended on the client-side `next-auth/react` `signOut` helper and
+its deprecated `callbackUrl` option. A failed client request had no UI feedback,
+leaving the logout icon apparently inactive.
+
+**Technical Notes**
+
+- Fixed by exposing Auth.js server-side `signOut` and invoking it through a
+  dedicated Server Action.
+- The navbar now submits a form that invalidates the session on the server and
+  redirects with `redirectTo: "/login"`.
+- `/api/auth/*` remains excluded from the proxy matcher.
+
 ### 8. Sub-collection item totals were not refreshed on collection detail pages
 
 - Status: completed (fixed)
