@@ -13,6 +13,59 @@ type CollectionCachedSummary = {
   prices: CollectionPriceGroup[];
 };
 
+export type CollectionAggregateCounters = {
+  children: number;
+  items: number;
+};
+
+type CollectionCounterNode = {
+  id: string;
+  parentId: string | null;
+  directItems: number;
+};
+
+export function getAggregateCollectionCounters(
+  collections: CollectionCounterNode[],
+): Record<string, CollectionAggregateCounters> {
+  const nodesById = new Map(collections.map((collection) => [collection.id, collection]));
+  const childrenByParent = new Map<string, CollectionCounterNode[]>();
+
+  for (const collection of collections) {
+    if (!collection.parentId || !nodesById.has(collection.parentId)) continue;
+    const children = childrenByParent.get(collection.parentId) ?? [];
+    children.push(collection);
+    childrenByParent.set(collection.parentId, children);
+  }
+
+  const counters: Record<string, CollectionAggregateCounters> = {};
+  const visiting = new Set<string>();
+
+  function visit(collection: CollectionCounterNode): CollectionAggregateCounters {
+    if (counters[collection.id]) return counters[collection.id];
+    if (visiting.has(collection.id)) {
+      return { children: 0, items: collection.directItems };
+    }
+
+    visiting.add(collection.id);
+    const directChildren = childrenByParent.get(collection.id) ?? [];
+    const result = directChildren.reduce<CollectionAggregateCounters>(
+      (total, child) => {
+        const childCounters = visit(child);
+        total.children += 1 + childCounters.children;
+        total.items += childCounters.items;
+        return total;
+      },
+      { children: 0, items: collection.directItems },
+    );
+    visiting.delete(collection.id);
+    counters[collection.id] = result;
+    return result;
+  }
+
+  for (const collection of collections) visit(collection);
+  return counters;
+}
+
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value !== null && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
 }

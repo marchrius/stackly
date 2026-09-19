@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { RESERVED_SORTING_VALUES } from "@/lib/collection-display-config";
-import { getCollectionCounter, getCollectionDatumDisplayValue, sortCollectionsForDisplay, type CollectionIndexCollection } from "@/lib/collection-index-display";
+import { filterCollectionsByTitle, getCollectionCounter, getCollectionDatumDisplayValue, sortCollectionsForDisplay, type CollectionIndexCollection } from "@/lib/collection-index-display";
 
 function makeCollection(overrides: Partial<CollectionIndexCollection>): CollectionIndexCollection {
   return {
@@ -30,6 +30,18 @@ function makeCollection(overrides: Partial<CollectionIndexCollection>): Collecti
 }
 
 describe("collection-index-display", () => {
+  it("filters collection titles case-insensitively and ignores surrounding whitespace", () => {
+    const collections = [
+      makeCollection({ title: "Graphic Novels" }),
+      makeCollection({ title: "Vinyl Records" }),
+    ];
+
+    expect(filterCollectionsByTitle(collections, "  GRAPHIC ")).toEqual([
+      collections[0],
+    ]);
+    expect(filterCollectionsByTitle(collections, "   ")).toBe(collections);
+  });
+
   it("sorts by reserved item counters", () => {
     const collections = [
       makeCollection({ title: "Alpha", _count: { children: 0, items: 1 } }),

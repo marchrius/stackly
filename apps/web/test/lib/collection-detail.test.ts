@@ -1,7 +1,26 @@
 import { describe, expect, it } from "vitest";
-import { getCollectionCachedSummary } from "@/lib/collection-detail";
+import {
+  getAggregateCollectionCounters,
+  getCollectionCachedSummary,
+} from "@/lib/collection-detail";
 
 describe("collection detail helpers", () => {
+  it("computes fresh recursive item totals for sub-collections", () => {
+    expect(
+      getAggregateCollectionCounters([
+        { id: "root", parentId: null, directItems: 1 },
+        { id: "child", parentId: "root", directItems: 2 },
+        { id: "grandchild", parentId: "child", directItems: 3 },
+        { id: "sibling", parentId: "root", directItems: 4 },
+      ]),
+    ).toEqual({
+      grandchild: { children: 0, items: 3 },
+      child: { children: 1, items: 5 },
+      sibling: { children: 0, items: 4 },
+      root: { children: 3, items: 10 },
+    });
+  });
+
   it("merges counters and price buckets from all visibility levels", () => {
     expect(getCollectionCachedSummary({
       counters: {

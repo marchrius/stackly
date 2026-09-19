@@ -1,11 +1,11 @@
 import { randomUUID } from "crypto";
 import { mkdir, writeFile } from "fs/promises";
-import { extname, join } from "path";
+import { extname } from "path";
 import { prisma } from "@stackly/db";
 import { CONFIGURATION_LABELS } from "../configuration";
 import sharp from "sharp";
+import { resolveUploadPath } from "./upload-paths";
 
-const UPLOAD_DIR = process.env.UPLOAD_DIR ?? "./public/uploads";
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 const IMAGE_TYPES = [
@@ -50,7 +50,7 @@ export async function saveUploadedAsset({
     validateBinary(file, kind);
   }
 
-  const dir = join(UPLOAD_DIR, userId, entity);
+  const dir = resolveUploadPath(userId, entity);
   await mkdir(dir, { recursive: true });
 
   const buffer = Buffer.from(await file.arrayBuffer()) as Buffer;
@@ -60,7 +60,7 @@ export async function saveUploadedAsset({
   if (kind !== "image") {
     const ext = getExtension(file, kind);
     const filename = `${uuid}${ext}`;
-    const filepath = join(dir, filename);
+    const filepath = resolveUploadPath(userId, entity, filename);
     await writeFile(filepath, buffer);
 
     return {
@@ -94,7 +94,7 @@ export async function saveUploadedAsset({
   }
 
   const filename = `${uuid}${finalExt}`;
-  const filepath = join(dir, filename);
+  const filepath = resolveUploadPath(userId, entity, filename);
 
   // Converti e salva immagine originale
   let sharpOriginal = sharp(finalBuffer);
@@ -104,8 +104,8 @@ export async function saveUploadedAsset({
   await sharpOriginal.toFile(filepath);
 
   // Converti e salva miniature
-  const smallPath = join(dir, `${uuid}_small${finalExt}`);
-  const largePath = join(dir, `${uuid}_large${finalExt}`);
+  const smallPath = resolveUploadPath(userId, entity, `${uuid}_small${finalExt}`);
+  const largePath = resolveUploadPath(userId, entity, `${uuid}_large${finalExt}`);
 
   let sharpSmall = sharp(finalBuffer).resize(200, 200, { fit: "cover" });
   let sharpLarge = sharp(finalBuffer).resize(600, 600, { fit: "inside", withoutEnlargement: true });

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@stackly/db";
-import { CollectionGrid } from "@/components/collections/CollectionGrid";
-import { CollectionList } from "@/components/collections/CollectionList";
+import { CollectionIndex } from "@/components/collections/CollectionIndex";
 import { Button } from "@stackly/ui";
 import { Plus, Settings2 } from "lucide-react";
 import Link from "next/link";
@@ -13,6 +12,7 @@ import {
   type CollectionIndexCollection,
 } from "@/lib/collection-index-display";
 import { PageHeader } from "@/components/shared/PageHeader";
+import { getAggregateCollectionCounters } from "@/lib/collection-detail";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("collections");
@@ -23,7 +23,7 @@ export default async function CollectionsPage() {
   const session = await requireAuth();
   const t = await getTranslations("collections");
 
-  const [user, collections] = await Promise.all([
+  const [user, collections, collectionCounterNodes] = await Promise.all([
     prisma.user.findUnique({
       where: { id: session.user.id },
       include: { collectionsDisplayConfiguration: true },
@@ -35,6 +35,14 @@ export default async function CollectionsPage() {
         data: true,
       },
     }),
+    prisma.collection.findMany({
+      where: { ownerId: session.user.id },
+      select: {
+        id: true,
+        parentId: true,
+        _count: { select: { items: true } },
+      },
+    }),
   ]);
 
   const displayConfiguration = user?.collectionsDisplayConfiguration ?? null;
@@ -42,13 +50,26 @@ export default async function CollectionsPage() {
     collections as CollectionIndexCollection[],
     displayConfiguration,
   );
+  const aggregateCounters = getAggregateCollectionCounters(
+    collectionCounterNodes.map((node) => ({
+      id: node.id,
+      parentId: node.parentId,
+      directItems: node._count.items,
+    })),
+  );
   const collectionsCounter = sortedCollections.reduce(
     (total, collection) =>
-      total + 1 + getCollectionCounter(collection, "children"),
+      total +
+      1 +
+      (aggregateCounters[collection.id]?.children ??
+        getCollectionCounter(collection, "children")),
     0,
   );
   const itemsCounter = sortedCollections.reduce(
-    (total, collection) => total + getCollectionCounter(collection, "items"),
+    (total, collection) =>
+      total +
+      (aggregateCounters[collection.id]?.items ??
+        getCollectionCounter(collection, "items")),
     0,
   );
 
@@ -84,17 +105,11 @@ export default async function CollectionsPage() {
         }
       />
 
-      {displayConfiguration?.displayMode === "list" ? (
-        <CollectionList
-          collections={collections as CollectionIndexCollection[]}
-          displayConfiguration={displayConfiguration}
-        />
-      ) : (
-        <CollectionGrid
-          collections={collections as CollectionIndexCollection[]}
-          displayConfiguration={displayConfiguration}
-        />
-      )}
+      <CollectionIndex
+        collections={collections as CollectionIndexCollection[]}
+        displayConfiguration={displayConfiguration}
+        counterOverrides={aggregateCounters}
+      />
     </div>
   );
 }

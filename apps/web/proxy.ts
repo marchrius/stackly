@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 import { DEFAULT_LOCALE } from "./i18n/locales";
 import { STACKLY_LOCALE_COOKIE_NAME } from "@/lib/cookies";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // Prima esegui l'auth check
   const authResult = await (auth as any)(request);
 

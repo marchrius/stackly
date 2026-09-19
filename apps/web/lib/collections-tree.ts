@@ -1,10 +1,9 @@
 import { rm } from "fs/promises";
 import path from "path";
 import { prisma } from "@stackly/db";
+import { resolveUploadPath as resolveConfiguredUploadPath } from "@/lib/server/upload-paths";
 
 const VISIBILITY_ORDER = ["public", "internal", "private"] as const;
-const UPLOAD_DIR = process.env.UPLOAD_DIR ?? "./public/uploads";
-const UPLOAD_BASE_DIR = path.resolve(process.cwd(), UPLOAD_DIR);
 
 type Visibility = (typeof VISIBILITY_ORDER)[number];
 
@@ -132,15 +131,12 @@ export async function syncCollectionDescendantsVisibility(
   }
 }
 
-function resolveUploadPath(relativePath: string): string {
-  const normalized = relativePath.replace(/^\/+/, "");
-  const absolute = path.resolve(UPLOAD_BASE_DIR, normalized);
-
-  if (!absolute.startsWith(UPLOAD_BASE_DIR)) {
-    throw new Error("Percorso upload non valido");
-  }
-
-  return absolute;
+function resolveStoredUploadPath(relativePath: string): string {
+  const normalized = relativePath
+    .replace(/^\/+/, "")
+    .replace(/^public\/uploads\//, "")
+    .replace(/^uploads\//, "");
+  return resolveConfiguredUploadPath(normalized);
 }
 
 function getImageVariantPaths(relativePath: string): string[] {
@@ -168,11 +164,10 @@ export async function deleteUploadImageVariants(relativePath?: string | null): P
   await Promise.all(
     targets.map(async (target) => {
       try {
-        await rm(resolveUploadPath(target), { force: true });
+        await rm(resolveStoredUploadPath(target), { force: true });
       } catch {
         // Ignore cleanup errors to avoid blocking domain updates.
       }
     }),
   );
 }
-

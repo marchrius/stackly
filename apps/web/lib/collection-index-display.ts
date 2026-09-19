@@ -11,6 +11,18 @@ export type CollectionIndexCollection = Collection & {
   _count: { children: number; items: number };
 };
 
+export function filterCollectionsByTitle(
+  collections: CollectionIndexCollection[],
+  query: string,
+) {
+  const normalizedQuery = query.trim().toLocaleLowerCase();
+  if (!normalizedQuery) return collections;
+
+  return collections.filter((collection) =>
+    collection.title.toLocaleLowerCase().includes(normalizedQuery),
+  );
+}
+
 export function sortCollectionsForDisplay(
   collections: CollectionIndexCollection[],
   displayConfiguration?: Pick<DisplayConfiguration, "sortingProperty" | "sortingType" | "sortingDirection"> | null,
