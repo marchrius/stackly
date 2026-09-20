@@ -12,6 +12,43 @@ Known bug register for the `next/` project.
 
 ## Open Bugs
 
+### 6. Scraper preview crashes on CSS ID selectors
+
+- Status: open
+- Area: `apps/web` · scraper preview · selector parsing
+- Severity: medium
+
+**Description**
+
+Scraper expressions use `#...#` as delimiters, while CSS also uses `#id` for
+ID selectors. An expression such as
+`#css:#pagehead_serie_lista .titleserie#` is therefore truncated at the CSS ID
+marker. The scraper passes an empty or incomplete selector to
+`querySelectorAll()`, which throws an unhandled `SyntaxError: Invalid selector`.
+
+**Expected Behavior**
+
+The scraper expression parser should support valid CSS ID selectors without
+confusing them with expression delimiters. Invalid expressions should produce
+a clear, handled preview error instead of crashing the backend request.
+
+**Observed Behavior**
+
+Starting a collection or item import preview with a CSS ID selector causes the
+preview endpoint to fail with a DOM `SYNTAX_ERR` (`code: 12`). Using an
+equivalent attribute selector, for example
+`#css:[id="pagehead_serie_lista"] .titleserie#`, works around the problem.
+
+**Technical Notes**
+
+- The ambiguity originates in the `/#(.*?)#/g` expression parser in
+  `apps/web/lib/server/scraper-preview.ts`.
+- Reproduced with a ComicsBox collection scraper against
+  `https://www.comicsbox.it/serie/GTOPARADIS`.
+- A future fix should define an unambiguous escaping or parsing strategy,
+  preserve compatibility with existing scraper paths, catch selector parsing
+  errors, and add regression coverage for CSS IDs and malformed selectors.
+
 ### 5. The web lint script is incompatible with the current Next.js CLI
 
 - Status: open
