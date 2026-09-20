@@ -19,6 +19,26 @@
 
 Koillection is a self-hosted collection manager created to keep track of physical (mostly) collections of any kind like books, DVDs, stamps, games... 
 Koillection is meant to be used for any kind of collections and doesn't come with pre-built metadata download. But you can tailor your own HTML scraper, or you can add your own metadata freely.
+
+## Archived dependency manifests
+
+This directory is retained as a reference for feature backports and is not part of
+the active application. Its dependency manifests use the `.legacy` suffix so that
+GitHub's dependency graph does not treat this archived application as maintained
+production code.
+
+To restore the original filenames in a local working tree:
+
+```sh
+cp composer.json.legacy composer.json
+cp composer.lock.legacy composer.lock
+cp package-lock.json.legacy package-lock.json
+cp assets/package.json.legacy assets/package.json
+cp assets/yarn.lock.legacy assets/yarn.lock
+```
+
+Do not commit the restored files. Remove them after completing the comparison or
+backport.
     
 You can find detailed information in the <a href="https://github.com/koillection/koillection/wiki">wiki</a> (under construction)
 
