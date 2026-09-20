@@ -143,6 +143,17 @@ npm run legacy:uploads:copy
 
 All `maintenance:*` commands support `--help` and `--dry-run`.
 
+The production Docker images include the complete `scripts/` directory and its
+runtime dependencies. Run a script directly in an active container, for example:
+
+```bash
+docker compose exec web node /app/scripts/regenerate-thumbnails.mjs --dry-run
+docker compose exec web node /app/scripts/regenerate-thumbnails.mjs
+```
+
+Other scripts use the same `/app/scripts/<name>.mjs` path. The container already
+provides its configured database connection and persistent upload directory.
+
 For the PostgreSQL legacy-to-Prisma migration path, see `LEGACY_DB_MIGRATION.md`.
 
 ## Deployment

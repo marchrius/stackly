@@ -65,6 +65,32 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 17. Maintenance scripts were missing from production container images
+
+- Status: completed (fixed)
+- Area: `Dockerfile` · maintenance and migration scripts
+- Severity: medium
+
+**Description**
+
+The README documented the repository's maintenance commands, but the final
+Docker stages only contained the standalone Next.js application. The `scripts/`
+directory and some direct runtime dependencies were absent, so operators could
+not run maintenance tasks inside a deployed container.
+
+**Expected Behavior**
+
+Every repository script should be available as
+`node /app/scripts/<script-name>.mjs` in both the scratch and Alpine images.
+
+**Technical Notes**
+
+- The shared application-artifact stage now copies `scripts/`, the i18n source
+  files required by the validator, and the runtime dependency trees used by the
+  scripts.
+- Because both runtime targets consume the shared artifact tree, the command
+  paths are identical in the scratch and Alpine variants.
+
 ### 16. Container releases spent most of their runtime in ARM emulation and cache export
 
 - Status: completed (fixed)
