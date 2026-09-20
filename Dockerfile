@@ -37,17 +37,24 @@ RUN set -eux; \
     /out/app/node_modules; \
   cp -a apps/web/.next/static /out/app/apps/web/.next/static; \
   cp -a apps/web/public /out/app/apps/web/public; \
+  cp -a apps/web/messages /out/app/apps/web/messages; \
+  mkdir -p /out/app/apps/web/i18n; \
+  cp -a apps/web/i18n/locales.ts /out/app/apps/web/i18n/locales.ts; \
   cp -a packages/db/prisma /out/app/packages/db/prisma; \
+  cp -a scripts /out/app/scripts; \
   for module in \
+    @img \
     prisma \
     @prisma \
     @standard-schema \
+    bcryptjs \
     c12 \
     chokidar \
     confbox \
     deepmerge-ts \
     defu \
     destr \
+    detect-libc \
     dotenv \
     effect \
     empathic \
@@ -60,11 +67,27 @@ RUN set -eux; \
     ohash \
     pathe \
     perfect-debounce \
+    pg \
+    pg-cloudflare \
+    pg-connection-string \
+    pg-int8 \
+    pg-pool \
+    pg-protocol \
+    pg-types \
+    pgpass \
     pkg-types \
+    postgres-array \
+    postgres-bytea \
+    postgres-date \
+    postgres-interval \
     pure-rand \
     rc9 \
     readdirp \
-    tinyexec; \
+    semver \
+    sharp \
+    split2 \
+    tinyexec \
+    xtend; \
   do \
     mkdir -p "/out/app/node_modules/$module"; \
     cp -a "node_modules/$module/." "/out/app/node_modules/$module/"; \
