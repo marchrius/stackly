@@ -65,6 +65,37 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 16. Container releases spent most of their runtime in ARM emulation and cache export
+
+- Status: completed (fixed)
+- Area: GitHub Actions · Docker multi-platform release
+- Severity: medium
+
+**Description**
+
+The release workflow built both architectures sequentially on an AMD64 runner.
+The ARM64 dependency installation and Next.js build therefore ran through QEMU,
+while each tagged release also exported a full GitHub Actions cache. Together,
+those operations accounted for most of a roughly 16-minute release job.
+
+**Expected Behavior**
+
+AMD64 and ARM64 images should build concurrently on native runners, release tags
+should reuse caches without exporting them, and final tags should only become
+visible after every platform succeeds.
+
+**Technical Notes**
+
+- The workflow now uses `ubuntu-24.04` and `ubuntu-24.04-arm` matrix jobs.
+- Each architecture pushes immutable scratch and Alpine digests; a dependent job
+  combines them into the final multi-platform tags.
+- Full cache export only occurs for qualifying builds on `develop`, while tag
+  builds remain cache consumers.
+- A unified Dockerfile shares dependency, Prisma, Next.js, and application
+  artifact stages between the Alpine and scratch runtime targets.
+- Published manifests and both AMD64 runtime variants are verified before the
+  workflow completes.
+
 ### 15. Thumbnail regeneration rejected the keep-original setting
 
 - Status: completed (fixed)
