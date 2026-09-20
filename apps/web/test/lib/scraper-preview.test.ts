@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { previewScrape } from "@/lib/server/scraper-preview";
+import { extractScraperUrls, previewScrape } from "@/lib/server/scraper-preview";
 
 describe("previewScrape", () => {
   it("extracts collection preview data and resolves relative image urls", async () => {
@@ -91,5 +91,20 @@ describe("previewScrape", () => {
         { id: "userId", label: "User ID", type: "text", value: "1234" }
       ],
     });
+  });
+
+  it("extracts, resolves and deduplicates item urls from a collection page", () => {
+    const urls = extractScraperUrls(
+      `<a class="item" href="/items/1#details">One</a>
+       <a class="item" href="https://example.test/items/2">Two</a>
+       <a class="item" href="/items/1#other">Duplicate</a>`,
+      "#css:a.item@href#",
+      "https://example.test/collections/1",
+    );
+
+    expect(urls).toEqual([
+      "https://example.test/items/1",
+      "https://example.test/items/2",
+    ]);
   });
 });

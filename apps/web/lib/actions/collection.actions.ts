@@ -20,6 +20,7 @@ import {
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { importCollectionItems } from "@/lib/server/collection-item-import";
 
 const collectionSchema = z.object({
   title: z.string().min(1, "Il titolo è obbligatorio").max(255),
@@ -50,6 +51,10 @@ const datumPayloadSchema = z.object({
 });
 
 const datumPayloadListSchema = z.array(datumPayloadSchema);
+const itemImportPayloadSchema = z.object({
+  scraperId: z.string().min(1),
+  urls: z.array(z.string().url()).max(100),
+});
 
 const displayConfigPayloadSchema = z.object({
   label: z.preprocess((value) => (typeof value === "string" ? value : ""), z.string()),
@@ -136,9 +141,29 @@ export async function createCollection(formData: FormData) {
 
     await logAction(session.user.id, "create", collection.id, collection.title, "Collection");
 
+    const rawItemImport = formData.get("itemImportPayload");
+    let importQuery = "";
+    if (typeof rawItemImport === "string" && rawItemImport) {
+      try {
+        const itemImport = itemImportPayloadSchema.safeParse(JSON.parse(rawItemImport));
+        if (itemImport.success) {
+          const summary = await importCollectionItems({
+            ownerId: session.user.id,
+            collectionId: collection.id,
+            scraperId: itemImport.data.scraperId,
+            urls: itemImport.data.urls,
+          });
+          importQuery = `?imported=${summary.created}&skipped=${summary.skipped}&failed=${summary.failed}`;
+        }
+      } catch {
+        importQuery = "?importFailed=1";
+      }
+    }
+
     revalidatePath("/collections");
+    revalidatePath(`/collections/${collection.id}`);
     if (parent.parentId) revalidatePath(`/collections/${parent.parentId}`);
-    redirect(`/collections/${collection.id}`);
+    redirect(`/collections/${collection.id}${importQuery}`);
   } catch (error) {
     if (error instanceof TreeValidationError) {
       return { error: { parentId: [error.message] } };

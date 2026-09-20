@@ -512,10 +512,14 @@ model Scraper {
   namePath   String? @db.Text @map("name_path")
   imagePath  String? @db.Text @map("image_path")
   pricePath  String? @db.Text @map("price_path")
+  itemUrlsPath String? @db.Text @map("item_urls_path")
+  itemScraperId String? @db.Char(36) @map("item_scraper_id")
   headers    Json?   @default("[]")
 
   owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
   ownerId String? @db.Char(36) @map("owner_id")
+  itemScraper Scraper? @relation("ScraperItemScraper", fields: [itemScraperId], references: [id], onDelete: SetNull)
+  collectionScrapers Scraper[] @relation("ScraperItemScraper")
 
   dataPaths Path[]
 
@@ -523,6 +527,7 @@ model Scraper {
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   @@index([ownerId], name: "idx_scraper_owner")
+  @@index([itemScraperId], name: "idx_scraper_item_scraper")
   @@map("stk_scraper")
 }
 

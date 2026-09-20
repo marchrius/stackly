@@ -87,6 +87,18 @@ export default async function ScraperDetailPage({ params }: Props) {
                 <p className="text-muted-foreground">{scraper.pricePath || t("notConfigured")}</p>
               </div>
             )}
+            {scraper.type === "collection" && (
+              <>
+                <div>
+                  <p className="font-medium">{t("form.itemUrlsPath")}</p>
+                  <p className="text-muted-foreground">{scraper.itemUrlsPath || t("notConfigured")}</p>
+                </div>
+                <div>
+                  <p className="font-medium">{t("form.itemScraper")}</p>
+                  <p className="text-muted-foreground">{scraper.itemScraperId || t("notConfigured")}</p>
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
 

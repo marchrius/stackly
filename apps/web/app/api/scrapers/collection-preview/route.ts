@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@stackly/db";
 import { requireApiSession } from "@/lib/api-helpers";
-import { previewScrape } from "@/lib/server/scraper-preview";
+import { extractScraperUrls, previewScrape } from "@/lib/server/scraper-preview";
 
 function normalizeRemoteUrl(value: string) {
   try {
@@ -80,8 +80,22 @@ export async function POST(req: NextRequest) {
     scrapImage,
   });
 
+  const itemUrls = extractScraperUrls(
+    html,
+    scraper.itemUrlsPath,
+    typeof url === "string" ? normalizeRemoteUrl(url) : null,
+  );
+
+  const itemScraper = scraper.itemScraperId
+    ? await prisma.scraper.findFirst({
+        where: { id: scraper.itemScraperId, ownerId: result.session.user.id, type: "item" },
+        select: { id: true, name: true },
+      })
+    : null;
+
   return NextResponse.json({
     ...preview,
     scrapedUrl: typeof url === "string" ? normalizeRemoteUrl(url) : null,
+    itemImport: itemScraper && itemUrls.length > 0 ? { scraper: itemScraper, urls: itemUrls, total: itemUrls.length } : null,
   });
 }

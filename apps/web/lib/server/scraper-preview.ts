@@ -9,6 +9,34 @@ export type ScraperPreviewConfig = {
   dataPaths: ScraperPreviewPath[];
 };
 
+export function extractScraperValue(template: string | null, type: string, document: Document, sourceUrl: string | null) {
+  return extract(template, type, document, sourceUrl);
+}
+
+export function extractScraperUrls(html: string, template: string | null, sourceUrl: string | null, limit = 100): string[] {
+  if (!template || !sourceUrl) return [];
+  const sanitizedHtml = html.replace(/<(script|template|noscript)[^>]*>[\s\S]*?<\/\1>/gi, "");
+  const document = new JSDOM(sanitizedHtml).window.document;
+  const raw = extract(template, "list", document, sourceUrl);
+  if (!raw) return [];
+  try {
+    const values = JSON.parse(raw) as unknown;
+    if (!Array.isArray(values)) return [];
+    return [...new Set(values.flatMap((value) => {
+      if (typeof value !== "string" || !value.trim()) return [];
+      try {
+        const url = new URL(value, sourceUrl);
+        url.hash = "";
+        return url.protocol === "http:" || url.protocol === "https:" ? [url.toString()] : [];
+      } catch {
+        return [];
+      }
+    }))].slice(0, limit);
+  } catch {
+    return [];
+  }
+}
+
 export async function previewScrape({
   html,
   config,

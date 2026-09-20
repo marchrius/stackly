@@ -14,11 +14,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
 interface Props {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ imported?: string; skipped?: string; failed?: string; importFailed?: string }>;
 }
 
-export default async function CollectionDetailPage({ params }: Props) {
+export default async function CollectionDetailPage({ params, searchParams }: Props) {
   const { id } = await params;
+  const importResult = await searchParams;
   const session = await requireAuth();
+  const t = await getTranslations("collections");
 
   const [collection, collectionCounterNodes] = await Promise.all([
     prisma.collection.findFirst({
@@ -70,10 +73,22 @@ export default async function CollectionDetailPage({ params }: Props) {
   );
 
   return (
-    <CollectionDetail
-      collection={collection}
-      ancestors={ancestors}
-      childCounters={childCounters}
-    />
+    <div className="space-y-4">
+      {(importResult.imported || importResult.skipped || importResult.failed) && (
+        <div className="rounded-md border bg-muted/30 p-3 text-sm">
+          {t("itemImportSummary", {
+            created: Number(importResult.imported ?? 0),
+            skipped: Number(importResult.skipped ?? 0),
+            failed: Number(importResult.failed ?? 0),
+          })}
+        </div>
+      )}
+      {importResult.importFailed && <div className="rounded-md border border-destructive p-3 text-sm text-destructive">{t("itemImportFailed")}</div>}
+      <CollectionDetail
+        collection={collection}
+        ancestors={ancestors}
+        childCounters={childCounters}
+      />
+    </div>
   );
 }
