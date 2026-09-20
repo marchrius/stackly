@@ -48,6 +48,12 @@ equivalent attribute selector, for example
 - A future fix should define an unambiguous escaping or parsing strategy,
   preserve compatibility with existing scraper paths, catch selector parsing
   errors, and add regression coverage for CSS IDs and malformed selectors.
+- Consider replacing `#` with a delimiter that cannot normally occur in CSS or
+  XPath expressions. Another option is to support an explicit or dynamically
+  selected delimiter, similar to delimiter-aware expression syntaxes, so a
+  scraper author can choose one that does not conflict with the selector.
+  Either approach needs a migration or backward-compatible parser for existing
+  `#...#` paths.
 
 ### 5. The web lint script is incompatible with the current Next.js CLI
 
