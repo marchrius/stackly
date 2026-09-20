@@ -149,8 +149,7 @@ For the PostgreSQL legacy-to-Prisma migration path, see `LEGACY_DB_MIGRATION.md`
 
 The new stack includes its own container configuration:
 
-- `Dockerfile` for the standard monorepo build/runtime container
-- `Dockerfile.scratch` for the minimal runtime variant
+- `Dockerfile` with shared build stages and `runner-alpine` / `runner-scratch` runtime targets
 - `docker-compose.yml` for the app and PostgreSQL
 - `entrypoint.sh` for startup database preparation and Prisma migration deployment
 

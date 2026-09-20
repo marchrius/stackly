@@ -19,10 +19,13 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-push:
-    name: Build and push image
-    runs-on: ubuntu-latest
+  prepare:
+    name: Prepare release
+    runs-on: ubuntu-24.04
     if: github.event_name == 'workflow_dispatch' || github.ref_type == 'tag' || contains(github.event.head_commit.message, '[do-release]')
+    outputs:
+      image: ${{ steps.package.outputs.image }}
+      version: ${{ steps.package.outputs.version }}
 
     steps:
       - name: Checkout
@@ -40,8 +43,104 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "image=${REGISTRY}/${IMAGE_NAME,,}" >> "$GITHUB_OUTPUT"
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+  build:
+    name: Build ${{ matrix.arch }}
+    needs: prepare
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            platform: linux/amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push scratch image by digest
+        id: scratch
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          target: runner-scratch
+          platforms: ${{ matrix.platform }}
+          outputs: type=image,name=${{ needs.prepare.outputs.image }},push-by-digest=true,name-canonical=true,push=true
+          labels: |
+            org.opencontainers.image.title=Stackly
+            org.opencontainers.image.description=Self-hosted collection manager for physical collections, metadata, wishlists, albums, and loans.
+            org.opencontainers.image.version=${{ needs.prepare.outputs.version }}
+            org.opencontainers.image.ref.name=scratch
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+          cache-from: type=gha,scope=containers-${{ matrix.arch }}
+
+      - name: Build and push Alpine image by digest
+        id: alpine
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          target: runner-alpine
+          platforms: ${{ matrix.platform }}
+          outputs: type=image,name=${{ needs.prepare.outputs.image }},push-by-digest=true,name-canonical=true,push=true
+          labels: |
+            org.opencontainers.image.title=Stackly Alpine
+            org.opencontainers.image.description=Self-hosted collection manager for physical collections, metadata, wishlists, albums, and loans.
+            org.opencontainers.image.version=${{ needs.prepare.outputs.version }}
+            org.opencontainers.image.ref.name=alpine
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+          cache-from: type=gha,scope=containers-${{ matrix.arch }}
+          cache-to: ${{ github.ref == 'refs/heads/develop' && format('type=gha,mode=max,scope=containers-{0}', matrix.arch) || '' }}
+
+      - name: Export image digests
+        shell: bash
+        env:
+          SCRATCH_DIGEST: ${{ steps.scratch.outputs.digest }}
+          ALPINE_DIGEST: ${{ steps.alpine.outputs.digest }}
+        run: |
+          mkdir -p /tmp/stackly-digests/scratch /tmp/stackly-digests/alpine
+          touch "/tmp/stackly-digests/scratch/${SCRATCH_DIGEST#sha256:}"
+          touch "/tmp/stackly-digests/alpine/${ALPINE_DIGEST#sha256:}"
+
+      - name: Upload image digests
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-digests-${{ matrix.arch }}
+          path: /tmp/stackly-digests
+          if-no-files-found: error
+          retention-days: 1
+
+  merge:
+    name: Publish multi-platform images
+    needs:
+      - prepare
+      - build
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Download image digests
+        uses: actions/download-artifact@v4
+        with:
+          pattern: container-digests-*
+          path: /tmp/stackly-digests
+          merge-multiple: true
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -57,52 +156,72 @@ jobs:
         id: meta-scratch
         uses: docker/metadata-action@v5
         with:
-          images: ${{ steps.package.outputs.image }}
+          images: ${{ needs.prepare.outputs.image }}
           tags: |
-            type=raw,value=${{ steps.package.outputs.version }}
-            type=raw,value=v${{ steps.package.outputs.version }}
+            type=raw,value=${{ needs.prepare.outputs.version }}
+            type=raw,value=v${{ needs.prepare.outputs.version }}
             type=sha,format=short
-          labels: |
-            org.opencontainers.image.title=Stackly
-            org.opencontainers.image.description=Self-hosted collection manager for physical collections, metadata, wishlists, albums, and loans.
-            org.opencontainers.image.version=${{ steps.package.outputs.version }}
-            org.opencontainers.image.ref.name=scratch
 
       - name: Extract Docker metadata for Alpine image
         id: meta-alpine
         uses: docker/metadata-action@v5
         with:
-          images: ${{ steps.package.outputs.image }}
+          images: ${{ needs.prepare.outputs.image }}
           tags: |
-            type=raw,value=${{ steps.package.outputs.version }}-alpine
-            type=raw,value=v${{ steps.package.outputs.version }}-alpine
+            type=raw,value=${{ needs.prepare.outputs.version }}-alpine
+            type=raw,value=v${{ needs.prepare.outputs.version }}-alpine
             type=sha,format=short,suffix=-alpine
-          labels: |
-            org.opencontainers.image.title=Stackly Alpine
-            org.opencontainers.image.description=Self-hosted collection manager for physical collections, metadata, wishlists, albums, and loans.
-            org.opencontainers.image.version=${{ steps.package.outputs.version }}
-            org.opencontainers.image.ref.name=alpine
 
-      - name: Build and push scratch image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./Dockerfile.scratch
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ steps.meta-scratch.outputs.tags }}
-          labels: ${{ steps.meta-scratch.outputs.labels }}
-          cache-from: type=gha,scope=scratch
-          cache-to: type=gha,mode=max,scope=scratch
+      - name: Create scratch manifest
+        shell: bash
+        env:
+          IMAGE: ${{ needs.prepare.outputs.image }}
+          METADATA: ${{ steps.meta-scratch.outputs.json }}
+        run: |
+          mapfile -t TAGS < <(jq -r '.tags[]' <<< "$METADATA")
+          mapfile -t DIGESTS < <(find /tmp/stackly-digests/scratch -type f -printf "$IMAGE@sha256:%f\n" | sort)
+          TAG_ARGS=()
+          for tag in "${TAGS[@]}"; do
+            TAG_ARGS+=("--tag" "$tag")
+          done
+          docker buildx imagetools create "${TAG_ARGS[@]}" "${DIGESTS[@]}"
 
-      - name: Build and push Alpine image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./Dockerfile
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ steps.meta-alpine.outputs.tags }}
-          labels: ${{ steps.meta-alpine.outputs.labels }}
-          cache-from: type=gha,scope=alpine
-          cache-to: type=gha,mode=max,scope=alpine
+      - name: Create Alpine manifest
+        shell: bash
+        env:
+          IMAGE: ${{ needs.prepare.outputs.image }}
+          METADATA: ${{ steps.meta-alpine.outputs.json }}
+        run: |
+          mapfile -t TAGS < <(jq -r '.tags[]' <<< "$METADATA")
+          mapfile -t DIGESTS < <(find /tmp/stackly-digests/alpine -type f -printf "$IMAGE@sha256:%f\n" | sort)
+          TAG_ARGS=()
+          for tag in "${TAGS[@]}"; do
+            TAG_ARGS+=("--tag" "$tag")
+          done
+          docker buildx imagetools create "${TAG_ARGS[@]}" "${DIGESTS[@]}"
+
+      - name: Verify published platforms
+        shell: bash
+        env:
+          IMAGE: ${{ needs.prepare.outputs.image }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          for tag in "$VERSION" "$VERSION-alpine"; do
+            MANIFEST="$(docker buildx imagetools inspect "$IMAGE:$tag" --format '{{json .Manifest}}')"
+            jq -e '
+              [.manifests[].platform | select(.os == "linux") | .architecture]
+              | (index("amd64") != null and index("arm64") != null)
+            ' <<< "$MANIFEST" >/dev/null
+          done
+
+      - name: Smoke-test AMD64 images
+        shell: bash
+        env:
+          IMAGE: ${{ needs.prepare.outputs.image }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          for tag in "$VERSION" "$VERSION-alpine"; do
+            docker pull --platform linux/amd64 "$IMAGE:$tag"
+            docker run --rm --platform linux/amd64 --entrypoint /usr/local/bin/node "$IMAGE:$tag" --version
+            docker run --rm --platform linux/amd64 --entrypoint /usr/bin/psql "$IMAGE:$tag" --version
+          done

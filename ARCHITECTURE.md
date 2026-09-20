@@ -66,8 +66,7 @@ The Next.js v2 app is currently **PostgreSQL-only**. Legacy MySQL/MariaDB suppor
 ├── prisma.config.ts          ← Prisma CLI config
 ├── .env                      ← local environment file, not committed
 ├── .env.example              ← environment template
-├── Dockerfile                ← production standalone image
-├── Dockerfile.scratch        ← minimal scratch-based runtime variant
+├── Dockerfile                ← shared build with Alpine and scratch runtime targets
 ├── docker-compose.yml        ← app + PostgreSQL runtime
 ├── entrypoint.sh             ← runtime DB bootstrap + migration + server start
 ├── scripts/                  ← migration and maintenance scripts
@@ -788,15 +787,16 @@ Browser (CollectionForm or ItemForm)
 
 ### Docker Images
 
-`Dockerfile` builds the production standalone app:
+`Dockerfile` builds the production standalone app through shared stages:
 
 1. installs workspace dependencies,
 2. generates Prisma client,
 3. builds `apps/web`,
-4. copies standalone output and Prisma CLI runtime dependencies,
-5. runs `entrypoint.sh`.
+4. collects standalone output and Prisma CLI runtime dependencies once,
+5. packages either the `runner-alpine` or `runner-scratch` target,
+6. runs `entrypoint.sh`.
 
-`Dockerfile.scratch` creates a minimal runtime image from `scratch`. It reuses the same `entrypoint.sh` and includes only the runtime filesystem, Node binary/libraries, selected BusyBox applets, `psql`, app artifacts, and required Prisma runtime files.
+The `runner-scratch` target creates a minimal runtime image from `scratch`. It reuses the same `entrypoint.sh` and includes only the runtime filesystem, Node binary/libraries, selected BusyBox applets, `psql`, app artifacts, and required Prisma runtime files. The release workflow builds AMD64 and ARM64 on native GitHub-hosted runners, then publishes a multi-platform manifest only after both builds succeed.
 
 ### Runtime Entrypoint
 
