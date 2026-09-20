@@ -42,7 +42,7 @@ Turborepo
 | Layer | Technology |
 |---|---|
 | Framework | Next.js 15 App Router, React 19 |
-| Runtime | Node.js >= 20 |
+| Runtime | Node.js >= 24 |
 | Language | TypeScript 5, strict mode |
 | ORM | Prisma 6 |
 | Database | PostgreSQL |
