@@ -14,6 +14,7 @@ import {
 } from "./_lib/maintenance.mjs";
 
 const TARGETS = [
+  { delegate: "collection", label: "Collection", smallField: "image", largeField: null, imageStoresSmall: true },
   { delegate: "item", label: "Item", smallField: "imageSmallThumbnail", largeField: "imageLargeThumbnail" },
   { delegate: "datum", label: "Datum", smallField: "imageSmallThumbnail", largeField: null },
   { delegate: "wish", label: "Wish", smallField: "imageSmallThumbnail", largeField: null },
@@ -55,13 +56,14 @@ async function main() {
       const imagePath = row.image;
       if (!imagePath) continue;
 
-      const sourceFile = path.join(UPLOAD_DIR, imagePath);
+      const sourceImagePath = target.imageStoresSmall ? removeThumbnailSuffix(imagePath, "_small") : imagePath;
+      const sourceFile = path.join(UPLOAD_DIR, sourceImagePath);
       if (!(await fileExists(sourceFile))) {
         missingSources += 1;
         continue;
       }
 
-      const nextSmall = deriveThumbnailPath(imagePath, "_small", thumbnailFormat);
+      const nextSmall = deriveThumbnailPath(sourceImagePath, "_small", thumbnailFormat);
       const updateData = {
         [target.smallField]: nextSmall,
       };
@@ -79,7 +81,10 @@ async function main() {
           await ensureParentDir(output.absolutePath);
           const pipeline = sharp(sourceFile);
           if (output.size === "small") {
-            await applyFormat(pipeline.resize(200, 200, { fit: "cover" }), thumbnailFormat).toFile(output.absolutePath);
+            await applyFormat(
+              pipeline.resize(200, 200, { fit: "inside", withoutEnlargement: true }),
+              thumbnailFormat,
+            ).toFile(output.absolutePath);
           } else {
             await applyFormat(pipeline.resize(600, 600, { fit: "inside", withoutEnlargement: true }), thumbnailFormat).toFile(output.absolutePath);
           }
@@ -109,13 +114,19 @@ async function main() {
   }
 }
 
+function removeThumbnailSuffix(imagePath, suffix) {
+  const extension = path.extname(imagePath);
+  const base = extension ? imagePath.slice(0, -extension.length) : imagePath;
+  return `${base.endsWith(suffix) ? base.slice(0, -suffix.length) : base}${extension}`;
+}
+
 async function getThumbnailFormat() {
   const config = await prisma.configuration.findUnique({
     where: { label: "thumbnails-format" },
     select: { value: true },
   });
 
-  return config?.value || null;
+  return config?.value && config.value !== "keep-original" ? config.value : null;
 }
 
 function applyFormat(pipeline, format) {
