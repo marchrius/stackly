@@ -108,7 +108,7 @@ export async function saveUploadedAsset({
   const smallPath = resolveUploadPath(userId, entity, `${uuid}_small${finalExt}`);
   const largePath = resolveUploadPath(userId, entity, `${uuid}_large${finalExt}`);
 
-  let sharpSmall = sharp(finalBuffer).resize(200, 200, { fit: "cover" });
+  let sharpSmall = sharp(finalBuffer).resize(200, 200, { fit: "inside", withoutEnlargement: true });
   let sharpLarge = sharp(finalBuffer).resize(600, 600, { fit: "inside", withoutEnlargement: true });
 
   if (finalFormat) {

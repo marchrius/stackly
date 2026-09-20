@@ -65,6 +65,55 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 15. Thumbnail regeneration rejected the keep-original setting
+
+- Status: completed (fixed)
+- Area: `scripts/regenerate-thumbnails.mjs` · maintenance
+- Severity: medium
+
+**Description**
+
+The thumbnail regeneration task passed the configured `keep-original` value to
+Sharp as though it were an output format. Sharp does not recognize that value,
+so regeneration could fail before updating existing previews.
+
+**Expected Behavior**
+
+With `keep-original` selected, regenerated thumbnails should retain the source
+format without invoking an explicit Sharp format conversion.
+
+**Technical Notes**
+
+- `keep-original` is now normalized to `null`, which leaves the Sharp pipeline
+  in the source image format.
+
+### 14. Item and sub-collection thumbnails were cropped to a square
+
+- Status: completed (fixed)
+- Area: `apps/web` · image uploads · collection detail cards
+- Severity: medium
+
+**Description**
+
+Small image thumbnails were generated at a fixed `200×200` size with
+`fit: "cover"`. Portrait images were therefore cropped at the top and bottom
+before the card rendered them.
+
+**Expected Behavior**
+
+Item and sub-collection previews should preserve the source aspect ratio and
+fit inside the rectangular card image area without losing content.
+
+**Technical Notes**
+
+- The cards already use a portrait `10/13` container and `object-contain`.
+- The destructive crop happened in the Sharp thumbnail pipeline, not in CSS.
+- Small thumbnails now use a `200×200` bounding box with `fit: "inside"` and
+  `withoutEnlargement: true`, preserving their original width/height ratio.
+- The thumbnail maintenance task now applies the same behavior and includes
+  collection images, allowing existing item and sub-collection previews to be
+  regenerated without cropping.
+
 ### 13. Next.js and Auth.js dependencies contained critical vulnerabilities
 
 - Status: completed (fixed)
