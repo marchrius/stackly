@@ -1,6 +1,6 @@
 import { JSDOM } from "jsdom";
 
-export type ScraperPreviewPath = { id: string; name: string; type: string; path: string };
+export type ScraperPreviewPath = { id: string; name: string; type: string; path: string; inputFormat?: string | null };
 
 export type ScraperPreviewConfig = {
   url: string | null;
@@ -66,17 +66,17 @@ export async function previewScrape({
       id: path.id,
       label: path.name,
       type: path.type,
-      value: extract(path.path, path.type, document, config.url),
+      value: extract(path.path, path.type, document, config.url, path.inputFormat),
     })),
   };
 }
 
-function extract(template: string | null, type: string, document: Document, sourceUrl: string | null) {
+function extract(template: string | null, type: string, document: Document, sourceUrl: string | null, inputFormat?: string | null) {
   if (!template) return null;
 
   const expressions = parseExpressions(template);
   if (expressions.length === 0) {
-    return formatValues([template], type, sourceUrl);
+    return formatValues([template], type, sourceUrl, inputFormat);
   }
 
   let values: string[] = [];
@@ -100,7 +100,7 @@ function extract(template: string | null, type: string, document: Document, sour
     });
   }
 
-  return formatValues(values, type, sourceUrl);
+  return formatValues(values, type, sourceUrl, inputFormat);
 }
 
 function parseExpressions(template: string) {
@@ -178,7 +178,7 @@ function evaluateXPath(document: Document, xpath: string) {
   return values.map((value) => value.trim()).filter(Boolean);
 }
 
-function formatValues(values: string[], type: string, sourceUrl: string | null) {
+function formatValues(values: string[], type: string, sourceUrl: string | null, inputFormat?: string | null) {
   if (values.length === 0) return null;
 
   if (type === "text") return unique(values).join(", ");
@@ -189,9 +189,96 @@ function formatValues(values: string[], type: string, sourceUrl: string | null) 
     if (!value) return null;
     return value.length <= 3 ? value.toUpperCase() : value;
   }
+  if (type === "date") return normalizeDate(values[0], inputFormat);
+  if (type === "number") return normalizeNumber(values[0], inputFormat);
   if (type === "image" || type === "link") return guessHost(values[0], sourceUrl);
 
   return values[0] ?? null;
+}
+
+function normalizeDate(value: string | undefined, inputFormat?: string | null) {
+  const source = value?.trim();
+  if (!source) return null;
+
+  if (!inputFormat?.trim()) {
+    const isoMatch = source.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (isoMatch) return validIsoDate(Number(isoMatch[1]), Number(isoMatch[2]), Number(isoMatch[3]));
+    const parsed = new Date(source);
+    return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString().slice(0, 10);
+  }
+
+  const tokens = inputFormat.trim().match(/YYYY|yyyy|DD|dd|MM|Y|m|d|./g) ?? [];
+  const captures: Array<"year" | "month" | "day"> = [];
+  const pattern = tokens.map((token) => {
+    if (token === "YYYY" || token === "yyyy" || token === "Y") {
+      captures.push("year");
+      return "(\\d{4})";
+    }
+    if (token === "MM" || token === "m") {
+      captures.push("month");
+      return token === "MM" ? "(\\d{2})" : "(\\d{1,2})";
+    }
+    if (token === "DD" || token === "dd" || token === "d") {
+      captures.push("day");
+      return token === "DD" || token === "dd" ? "(\\d{2})" : "(\\d{1,2})";
+    }
+    return token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }).join("");
+
+  if (!captures.includes("year") || !captures.includes("month") || !captures.includes("day")) {
+    throw new ScraperExpressionError(`Invalid date input format: ${inputFormat}`);
+  }
+
+  const match = source.match(new RegExp(`^${pattern}$`));
+  if (!match) throw new ScraperExpressionError(`Date "${source}" does not match input format ${inputFormat}`);
+
+  const parts = Object.fromEntries(captures.map((part, index) => [part, Number(match[index + 1])])) as Record<"year" | "month" | "day", number>;
+  const normalized = validIsoDate(parts.year, parts.month, parts.day);
+  if (!normalized) throw new ScraperExpressionError(`Invalid date value: ${source}`);
+  return normalized;
+}
+
+function validIsoDate(year: number, month: number, day: number) {
+  const date = new Date(Date.UTC(year, month - 1, day));
+  if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) return null;
+  return `${String(year).padStart(4, "0")}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+function normalizeNumber(value: string | undefined, inputFormat?: string | null) {
+  const source = value?.trim();
+  if (!source) return null;
+
+  let candidate: string | undefined;
+  if (inputFormat?.trim()) {
+    let pattern: RegExp;
+    try {
+      pattern = new RegExp(inputFormat.trim());
+    } catch {
+      throw new ScraperExpressionError(`Invalid number extraction pattern: ${inputFormat}`);
+    }
+    const match = source.match(pattern);
+    if (!match) throw new ScraperExpressionError(`Number "${source}" does not match extraction pattern ${inputFormat}`);
+    candidate = match[1] ?? match[0];
+  } else {
+    candidate = source.match(/[+-]?(?:\d[\d\s.,']*\d|\d)/)?.[0];
+  }
+
+  if (!candidate) return null;
+  let normalized = candidate.replace(/[\s']/g, "");
+  const comma = normalized.lastIndexOf(",");
+  const dot = normalized.lastIndexOf(".");
+
+  if (comma !== -1 && dot !== -1) {
+    const decimalSeparator = comma > dot ? "," : ".";
+    const thousandsSeparator = decimalSeparator === "," ? "." : ",";
+    normalized = normalized.split(thousandsSeparator).join("").replace(decimalSeparator, ".");
+  } else if (comma !== -1) {
+    normalized = normalized.replace(/,/g, ".");
+  }
+
+  const number = Number(normalized);
+  if (!Number.isFinite(number)) throw new ScraperExpressionError(`Invalid number value: ${candidate}`);
+  return String(number);
 }
 
 function unique(values: string[]) {

@@ -133,6 +133,7 @@ export default async function ScraperDetailPage({ params }: Props) {
                   <span className="font-medium">{path.name}</span>
                   <Badge variant="outline">{t(`pathTypes.${path.type}` as never)}</Badge>
                   <span className="break-all text-muted-foreground">{path.path}</span>
+                  {path.inputFormat ? <code className="rounded bg-muted px-2 py-1 text-xs">{path.inputFormat}</code> : null}
                 </div>
               ))
             ) : (

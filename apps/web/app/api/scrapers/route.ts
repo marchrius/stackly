@@ -7,7 +7,13 @@ const pathSchema = z.object({
   name: z.string().trim().min(1, "Il nome del path è obbligatorio").max(255),
   type: z.string().trim().min(1).max(15),
   path: z.string().trim().min(1, "Il path è obbligatorio"),
+  inputFormat: z.string().trim().max(255).nullable().optional(),
   position: z.number().int().positive().optional(),
+}).superRefine((value, ctx) => {
+  if (value.type !== "number" || !value.inputFormat) return;
+  try { new RegExp(value.inputFormat); } catch {
+    ctx.addIssue({ code: "custom", path: ["inputFormat"], message: "Il pattern numerico non è una espressione regolare valida" });
+  }
 });
 
 const scraperSchema = z.object({
@@ -87,6 +93,7 @@ export async function POST(req: NextRequest) {
           name: path.name,
           type: path.type,
           path: path.path,
+          inputFormat: path.type === "date" || path.type === "number" ? path.inputFormat || null : null,
           position: path.position ?? index + 1,
           ownerId: result.session.user.id,
         })),
