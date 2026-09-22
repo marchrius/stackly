@@ -141,6 +141,41 @@ describe("previewScrape", () => {
     expect(result.data[0]?.value).toBe("2026-09-22");
   });
 
+  it("normalizes localized month names and defaults a missing day to the first", async () => {
+    const result = await previewScrape({
+      html: `<time class="published">Agosto 2003</time><time class="short">set 2026</time>`,
+      config: {
+        url: null,
+        namePath: null,
+        imagePath: null,
+        dataPaths: [
+          { id: "published", name: "Published", type: "date", path: "#css:time.published#", inputFormat: "MMMM YYYY" },
+          { id: "short", name: "Short", type: "date", path: "#css:time.short#", inputFormat: "MMM YYYY" },
+        ],
+      },
+      scrapName: false,
+      scrapImage: false,
+    });
+
+    expect(result.data.map(({ value }) => value)).toEqual(["2003-08-01", "2026-09-01"]);
+  });
+
+  it("normalizes numeric month and year values without a day", async () => {
+    const result = await previewScrape({
+      html: `<time>08/2003</time>`,
+      config: {
+        url: null,
+        namePath: null,
+        imagePath: null,
+        dataPaths: [{ id: "date", name: "Date", type: "date", path: "#css:time#", inputFormat: "MM/YYYY" }],
+      },
+      scrapName: false,
+      scrapImage: false,
+    });
+
+    expect(result.data[0]?.value).toBe("2003-08-01");
+  });
+
   it("extracts and normalizes numbers from surrounding text", async () => {
     const result = await previewScrape({
       html: `<span class="issue">Issue N. 1.234,56 copies</span><span class="volume">Volume #42</span>`,

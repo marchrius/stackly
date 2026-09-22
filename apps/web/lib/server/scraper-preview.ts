@@ -207,8 +207,8 @@ function normalizeDate(value: string | undefined, inputFormat?: string | null) {
     return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString().slice(0, 10);
   }
 
-  const tokens = inputFormat.trim().match(/YYYY|yyyy|DD|dd|MM|Y|m|d|./g) ?? [];
-  const captures: Array<"year" | "month" | "day"> = [];
+  const tokens = inputFormat.trim().match(/YYYY|yyyy|MMMM|MMM|DD|dd|MM|Y|m|d|./g) ?? [];
+  const captures: Array<"year" | "month" | "month-long" | "month-short" | "day"> = [];
   const pattern = tokens.map((token) => {
     if (token === "YYYY" || token === "yyyy" || token === "Y") {
       captures.push("year");
@@ -218,6 +218,11 @@ function normalizeDate(value: string | undefined, inputFormat?: string | null) {
       captures.push("month");
       return token === "MM" ? "(\\d{2})" : "(\\d{1,2})";
     }
+    if (token === "MMMM" || token === "MMM") {
+      const style = token === "MMMM" ? "long" : "short";
+      captures.push(token === "MMMM" ? "month-long" : "month-short");
+      return `(${monthNamePattern(style)})`;
+    }
     if (token === "DD" || token === "dd" || token === "d") {
       captures.push("day");
       return token === "DD" || token === "dd" ? "(\\d{2})" : "(\\d{1,2})";
@@ -225,17 +230,65 @@ function normalizeDate(value: string | undefined, inputFormat?: string | null) {
     return token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }).join("");
 
-  if (!captures.includes("year") || !captures.includes("month") || !captures.includes("day")) {
+  const hasMonth = captures.some((capture) => capture === "month" || capture === "month-long" || capture === "month-short");
+  if (!captures.includes("year") || !hasMonth) {
     throw new ScraperExpressionError(`Invalid date input format: ${inputFormat}`);
   }
 
-  const match = source.match(new RegExp(`^${pattern}$`));
+  const match = source.match(new RegExp(`^${pattern}$`, "iu"));
   if (!match) throw new ScraperExpressionError(`Date "${source}" does not match input format ${inputFormat}`);
 
-  const parts = Object.fromEntries(captures.map((part, index) => [part, Number(match[index + 1])])) as Record<"year" | "month" | "day", number>;
-  const normalized = validIsoDate(parts.year, parts.month, parts.day);
+  let year: number | undefined;
+  let month: number | undefined;
+  let day = 1;
+  captures.forEach((part, index) => {
+    const captured = match[index + 1];
+    if (part === "year") year = Number(captured);
+    else if (part === "day") day = Number(captured);
+    else if (part === "month") month = Number(captured);
+    else month = monthNameMap(part === "month-long" ? "long" : "short").get(normalizeMonthName(captured));
+  });
+
+  const normalized = year && month ? validIsoDate(year, month, day) : null;
   if (!normalized) throw new ScraperExpressionError(`Invalid date value: ${source}`);
   return normalized;
+}
+
+const DATE_MONTH_LOCALES = ["da", "de", "en", "es", "fr", "it", "nl", "pl", "pt", "pt-BR", "ru", "tr", "uk", "zh"];
+const monthNames = new Map<"long" | "short", Map<string, { display: string; month: number }>>();
+
+function monthNameMap(style: "long" | "short") {
+  let names = monthNames.get(style);
+  if (names) return new Map([...names].map(([key, value]) => [key, value.month]));
+
+  names = new Map();
+  for (const locale of DATE_MONTH_LOCALES) {
+    const formatter = new Intl.DateTimeFormat(locale, { month: style, timeZone: "UTC" });
+    for (let month = 1; month <= 12; month++) {
+      const display = formatter.format(new Date(Date.UTC(2020, month - 1, 1)));
+      names.set(normalizeMonthName(display), { display, month });
+    }
+  }
+  monthNames.set(style, names);
+  return new Map([...names].map(([key, value]) => [key, value.month]));
+}
+
+function monthNamePattern(style: "long" | "short") {
+  const displays = new Set<string>();
+  for (const locale of DATE_MONTH_LOCALES) {
+    const formatter = new Intl.DateTimeFormat(locale, { month: style, timeZone: "UTC" });
+    for (let month = 1; month <= 12; month++) {
+      displays.add(formatter.format(new Date(Date.UTC(2020, month - 1, 1))));
+    }
+  }
+  return [...displays]
+    .map((display) => display.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .sort((a, b) => b.length - a.length)
+    .join("|");
+}
+
+function normalizeMonthName(value: string) {
+  return value.normalize("NFD").replace(/\p{M}/gu, "").replace(/[.\s]/g, "").toLocaleLowerCase();
 }
 
 function validIsoDate(year: number, month: number, day: number) {

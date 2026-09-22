@@ -676,7 +676,7 @@
       "pathType": "Yol türü",
       "pathValue": "Seçici / yol",
       "dateInputFormat": "Input date format",
-      "dateInputFormatHelp": "Use YYYY, MM and DD tokens (or Y, m and d), for example DD/MM/YYYY. The value is stored as an ISO YYYY-MM-DD date.",
+      "dateInputFormatHelp": "Use YYYY for the year, MM for a numeric month, MMM or MMMM for a month name, and DD for the day. Examples: DD/MM/YYYY or MMMM YYYY. A missing day defaults to the first of the month; the value is stored as ISO YYYY-MM-DD.",
       "numberInputPattern": "Number extraction pattern",
       "numberInputPatternHelp": "Optional regular expression. Its first capture group is used when present. If empty, the first number is extracted automatically.",
       "headers": "Özel başlıklar",
