@@ -23,7 +23,7 @@ type ScraperHeader = {
 };
 
 type EditableScraper = Pick<Scraper, "id" | "name" | "type" | "urlPattern" | "namePath" | "imagePath" | "pricePath" | "itemUrlsPath" | "itemScraperId" | "headers"> & {
-  dataPaths: Pick<Path, "id" | "name" | "type" | "path" | "position">[];
+  dataPaths: Pick<Path, "id" | "name" | "type" | "path" | "inputFormat" | "position">[];
 };
 
 type HeaderState = {
@@ -36,6 +36,7 @@ type PathState = {
   name: string;
   type: string;
   path: string;
+  inputFormat: string;
 };
 
 const SCRAPER_TYPES = ["collection", "item", "wish"] as const;
@@ -58,6 +59,7 @@ function mapPathState(path?: EditableScraper["dataPaths"][number]): PathState {
     name: path?.name ?? "",
     type: path?.type ?? "text",
     path: path?.path ?? "",
+    inputFormat: path?.inputFormat ?? "",
   };
 }
 
@@ -113,6 +115,7 @@ export function ScraperForm({ scraper }: { scraper?: EditableScraper }) {
           name: entry.name.trim(),
           type: entry.type,
           path: entry.path.trim(),
+          inputFormat: entry.type === "date" || entry.type === "number" ? entry.inputFormat.trim() || null : null,
           position: index + 1,
         }))
         .filter((entry) => entry.name && entry.path),
@@ -320,6 +323,22 @@ export function ScraperForm({ scraper }: { scraper?: EditableScraper }) {
                     </Button>
                   </div>
                 </div>
+                {(path.type === "date" || path.type === "number") && (
+                  <div className="mt-4 space-y-2">
+                    <Label htmlFor={`path-input-format-${index}`}>
+                      {path.type === "date" ? t("form.dateInputFormat") : t("form.numberInputPattern")}
+                    </Label>
+                    <Input
+                      id={`path-input-format-${index}`}
+                      value={path.inputFormat}
+                      onChange={(event) => updatePath(index, { inputFormat: event.target.value })}
+                      placeholder={path.type === "date" ? "DD/MM/YYYY" : String.raw`N\.\s*(\d+)`}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      {path.type === "date" ? t("form.dateInputFormatHelp") : t("form.numberInputPatternHelp")}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>

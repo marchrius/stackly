@@ -125,6 +125,60 @@ describe("previewScrape", () => {
     );
   });
 
+  it("normalizes dates using the configured source format", async () => {
+    const result = await previewScrape({
+      html: `<time class="published">22/09/2026</time>`,
+      config: {
+        url: null,
+        namePath: null,
+        imagePath: null,
+        dataPaths: [{ id: "published", name: "Published", type: "date", path: "#css:time.published#", inputFormat: "DD/MM/YYYY" }],
+      },
+      scrapName: false,
+      scrapImage: false,
+    });
+
+    expect(result.data[0]?.value).toBe("2026-09-22");
+  });
+
+  it("extracts and normalizes numbers from surrounding text", async () => {
+    const result = await previewScrape({
+      html: `<span class="issue">Issue N. 1.234,56 copies</span><span class="volume">Volume #42</span>`,
+      config: {
+        url: null,
+        namePath: null,
+        imagePath: null,
+        dataPaths: [
+          { id: "copies", name: "Copies", type: "number", path: "#css:span.issue#" },
+          { id: "volume", name: "Volume", type: "number", path: "#css:span.volume#", inputFormat: "#(\\d+)" },
+        ],
+      },
+      scrapName: false,
+      scrapImage: false,
+    });
+
+    expect(result.data).toEqual([
+      { id: "copies", label: "Copies", type: "number", value: "1234.56" },
+      { id: "volume", label: "Volume", type: "number", value: "42" },
+    ]);
+  });
+
+  it("rejects dates that do not match their configured format", async () => {
+    const preview = previewScrape({
+      html: `<time>2026-09-22</time>`,
+      config: {
+        url: null,
+        namePath: null,
+        imagePath: null,
+        dataPaths: [{ id: "date", name: "Date", type: "date", path: "#css:time#", inputFormat: "DD/MM/YYYY" }],
+      },
+      scrapName: false,
+      scrapImage: false,
+    });
+
+    await expect(preview).rejects.toEqual(expect.objectContaining({ message: expect.stringContaining("does not match input format") }));
+  });
+
   it("extracts, resolves and deduplicates item urls from a collection page", () => {
     const urls = extractScraperUrls(
       `<a class="item" href="/items/1#details">One</a>

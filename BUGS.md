@@ -65,6 +65,32 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 19. Scraped date and number paths were stored as untyped text
+
+- Status: completed (fixed)
+- Area: `apps/web` · scraper data paths · value normalization
+- Severity: high
+
+**Description**
+
+Data paths marked as `date` or `number` returned the extracted source text
+unchanged. Date paths could not declare the source format, while number paths
+could not isolate a numeric value from labels, units, or surrounding text.
+
+**Technical Notes**
+
+- Added a nullable `input_format` field to scraper paths and its database
+  migration.
+- Date paths accept token-based formats such as `DD/MM/YYYY` or `d/m/Y` and
+  persist normalized ISO `YYYY-MM-DD` values after strict calendar validation.
+- Number paths automatically extract the first numeric value and normalize
+  common decimal/thousands separators. An optional regular expression can
+  select a source-specific value through its first capture group.
+- Invalid configured formats and unmatched values produce handled scraper
+  errors, which are also retained by the persistent bulk-import logs.
+- Added regression coverage for formatted dates, invalid dates, automatic
+  numeric extraction, decimal normalization, and capture patterns.
+
 ### 18. Bulk scraper imports discarded per-item failure details
 
 - Status: completed (fixed)
