@@ -93,6 +93,38 @@ describe("previewScrape", () => {
     });
   });
 
+  it("supports CSS ID selectors inside hash-delimited expressions", async () => {
+    const result = await previewScrape({
+      html: `<section id="pagehead_serie_lista"><h1 class="titleserie">Dragonero</h1></section>`,
+      config: {
+        url: null,
+        namePath: "#css:#pagehead_serie_lista .titleserie#",
+        imagePath: null,
+        dataPaths: [],
+      },
+      scrapName: true,
+      scrapImage: false,
+    });
+
+    expect(result.name).toBe("Dragonero");
+  });
+
+  it("converts malformed selectors to handled scraper errors", async () => {
+    const preview = previewScrape({
+      html: `<h1>Dragonero</h1>`,
+      config: { url: null, namePath: "#css:div[#", imagePath: null, dataPaths: [] },
+      scrapName: true,
+      scrapImage: false,
+    });
+
+    await expect(preview).rejects.toEqual(
+      expect.objectContaining({
+        name: "ScraperExpressionError",
+        message: expect.stringContaining("Invalid CSS selector"),
+      }),
+    );
+  });
+
   it("extracts, resolves and deduplicates item urls from a collection page", () => {
     const urls = extractScraperUrls(
       `<a class="item" href="/items/1#details">One</a>

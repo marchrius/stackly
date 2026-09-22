@@ -9,6 +9,13 @@ export type ScraperPreviewConfig = {
   dataPaths: ScraperPreviewPath[];
 };
 
+export class ScraperExpressionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ScraperExpressionError";
+  }
+}
+
 export function extractScraperValue(template: string | null, type: string, document: Document, sourceUrl: string | null) {
   return extract(template, type, document, sourceUrl);
 }
@@ -67,33 +74,47 @@ export async function previewScrape({
 function extract(template: string | null, type: string, document: Document, sourceUrl: string | null) {
   if (!template) return null;
 
-  const expressions = [...template.matchAll(/#(.*?)#/g)].map((match) => match[1]);
+  const expressions = parseExpressions(template);
   if (expressions.length === 0) {
     return formatValues([template], type, sourceUrl);
   }
 
   let values: string[] = [];
 
-  for (const expr of expressions) {
+  for (const { expression, token } of expressions) {
     let results: string[] = [];
-    if (expr.startsWith("css:")) {
-      results = evaluateCSS(document, expr.slice(4));
+    if (expression.startsWith("css:")) {
+      results = evaluateCSS(document, expression.slice(4));
     } else {
-      results = evaluateXPath(document, expr);
+      results = evaluateXPath(document, expression);
     }
 
     if (results.length === 0) {
-      values = values.length === 0 ? [template.replace(`#${expr}#`, "")] : values.map((value) => value.replace(`#${expr}#`, ""));
+      values = values.length === 0 ? [template.replace(token, "")] : values.map((value) => value.replace(token, ""));
       continue;
     }
 
     values = results.map((result, index) => {
       const current = values[index] ?? template;
-      return current.replace(`#${expr}#`, result);
+      return current.replace(token, result);
     });
   }
 
   return formatValues(values, type, sourceUrl);
+}
+
+function parseExpressions(template: string) {
+  // A CSS expression commonly contains `#` as its ID selector. When the
+  // expression occupies the whole template, the first and last `#` are the
+  // delimiters and every `#` in between belongs to the selector.
+  if (template.startsWith("#css:") && template.endsWith("#") && template.indexOf("#css:", 1) === -1) {
+    return [{ token: template, expression: template.slice(1, -1) }];
+  }
+
+  return [...template.matchAll(/#(.*?)#/g)].map((match) => ({
+    token: match[0],
+    expression: match[1],
+  }));
 }
 
 function evaluateCSS(document: Document, cssExpression: string) {
@@ -116,7 +137,12 @@ function evaluateCSS(document: Document, cssExpression: string) {
     attribute = cssExpression.slice(lastAtSignIndex + 1);
   }
 
-  const elements = document.querySelectorAll(selector);
+  let elements: NodeListOf<Element>;
+  try {
+    elements = document.querySelectorAll(selector);
+  } catch {
+    throw new ScraperExpressionError(`Invalid CSS selector: ${selector || "(empty)"}`);
+  }
   const values: string[] = [];
   elements.forEach((el) => {
     if (attribute) {
@@ -133,7 +159,12 @@ function evaluateCSS(document: Document, cssExpression: string) {
 }
 
 function evaluateXPath(document: Document, xpath: string) {
-  const result = document.evaluate(xpath, document, null, document.defaultView?.XPathResult.ANY_TYPE ?? 0, null);
+  let result: XPathResult;
+  try {
+    result = document.evaluate(xpath, document, null, document.defaultView?.XPathResult.ANY_TYPE ?? 0, null);
+  } catch {
+    throw new ScraperExpressionError(`Invalid XPath expression: ${xpath || "(empty)"}`);
+  }
   const values: string[] = [];
   let current = result.iterateNext();
   while (current) {

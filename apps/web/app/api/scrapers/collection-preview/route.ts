@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@stackly/db";
 import { requireApiSession } from "@/lib/api-helpers";
-import { extractScraperUrls, previewScrape } from "@/lib/server/scraper-preview";
+import { extractScraperUrls, previewScrape, ScraperExpressionError } from "@/lib/server/scraper-preview";
 
 function normalizeRemoteUrl(value: string) {
   try {
@@ -68,23 +68,32 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing source" }, { status: 400 });
   }
 
-  const preview = await previewScrape({
-    html,
-    config: {
-      url: typeof url === "string" ? normalizeRemoteUrl(url) : null,
-      namePath: scraper.namePath,
-      imagePath: scraper.imagePath,
-      dataPaths: scraper.dataPaths,
-    },
-    scrapName,
-    scrapImage,
-  });
+  let preview;
+  let itemUrls: string[];
+  try {
+    preview = await previewScrape({
+      html,
+      config: {
+        url: typeof url === "string" ? normalizeRemoteUrl(url) : null,
+        namePath: scraper.namePath,
+        imagePath: scraper.imagePath,
+        dataPaths: scraper.dataPaths,
+      },
+      scrapName,
+      scrapImage,
+    });
 
-  const itemUrls = extractScraperUrls(
-    html,
-    scraper.itemUrlsPath,
-    typeof url === "string" ? normalizeRemoteUrl(url) : null,
-  );
+    itemUrls = extractScraperUrls(
+      html,
+      scraper.itemUrlsPath,
+      typeof url === "string" ? normalizeRemoteUrl(url) : null,
+    );
+  } catch (error) {
+    if (error instanceof ScraperExpressionError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+    throw error;
+  }
 
   const itemScraper = scraper.itemScraperId
     ? await prisma.scraper.findFirst({
