@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@stackly/db";
 import { requireApiSession } from "@/lib/api-helpers";
 import { previewItemScrape } from "@/lib/server/item-scraper";
+import { ScraperExpressionError } from "@/lib/server/scraper-preview";
 
 function normalizeRemoteUrl(value: string) {
   try {
@@ -61,17 +62,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing source" }, { status: 400 });
   }
 
-  const preview = await previewItemScrape({
-    html,
-    config: {
-      url: typeof url === "string" ? url : null,
-      namePath: scraper.namePath,
-      imagePath: scraper.imagePath,
-      dataPaths: scraper.dataPaths.filter((path) => selectedPathIds.length === 0 || selectedPathIds.includes(path.id)),
-    },
-    scrapName,
-    scrapImage,
-  });
+  let preview;
+  try {
+    preview = await previewItemScrape({
+      html,
+      config: {
+        url: typeof url === "string" ? normalizeRemoteUrl(url) : null,
+        namePath: scraper.namePath,
+        imagePath: scraper.imagePath,
+        dataPaths: scraper.dataPaths.filter((path) => selectedPathIds.length === 0 || selectedPathIds.includes(path.id)),
+      },
+      scrapName,
+      scrapImage,
+    });
+  } catch (error) {
+    if (error instanceof ScraperExpressionError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+    throw error;
+  }
 
   return NextResponse.json({
     ...preview,

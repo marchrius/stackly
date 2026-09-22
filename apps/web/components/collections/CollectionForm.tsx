@@ -344,7 +344,8 @@ export function CollectionForm({
 
     const response = await fetch("/api/scrapers/collection-preview", { method: "POST", body: request });
     if (!response.ok) {
-      setError(t("form.scrapeFailed"));
+      const data = (await response.json().catch(() => null)) as { error?: string } | null;
+      setError(data?.error ?? t("form.scrapeFailed"));
       return;
     }
 

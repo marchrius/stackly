@@ -12,49 +12,6 @@ Known bug register for the `next/` project.
 
 ## Open Bugs
 
-### 6. Scraper preview crashes on CSS ID selectors
-
-- Status: open
-- Area: `apps/web` · scraper preview · selector parsing
-- Severity: medium
-
-**Description**
-
-Scraper expressions use `#...#` as delimiters, while CSS also uses `#id` for
-ID selectors. An expression such as
-`#css:#pagehead_serie_lista .titleserie#` is therefore truncated at the CSS ID
-marker. The scraper passes an empty or incomplete selector to
-`querySelectorAll()`, which throws an unhandled `SyntaxError: Invalid selector`.
-
-**Expected Behavior**
-
-The scraper expression parser should support valid CSS ID selectors without
-confusing them with expression delimiters. Invalid expressions should produce
-a clear, handled preview error instead of crashing the backend request.
-
-**Observed Behavior**
-
-Starting a collection or item import preview with a CSS ID selector causes the
-preview endpoint to fail with a DOM `SYNTAX_ERR` (`code: 12`). Using an
-equivalent attribute selector, for example
-`#css:[id="pagehead_serie_lista"] .titleserie#`, works around the problem.
-
-**Technical Notes**
-
-- The ambiguity originates in the `/#(.*?)#/g` expression parser in
-  `apps/web/lib/server/scraper-preview.ts`.
-- Reproduced with a ComicsBox collection scraper against
-  `https://www.comicsbox.it/serie/GTOPARADIS`.
-- A future fix should define an unambiguous escaping or parsing strategy,
-  preserve compatibility with existing scraper paths, catch selector parsing
-  errors, and add regression coverage for CSS IDs and malformed selectors.
-- Consider replacing `#` with a delimiter that cannot normally occur in CSS or
-  XPath expressions. Another option is to support an explicit or dynamically
-  selected delimiter, similar to delimiter-aware expression syntaxes, so a
-  scraper author can choose one that does not conflict with the selector.
-  Either approach needs a migration or backward-compatible parser for existing
-  `#...#` paths.
-
 ### 5. The web lint script is incompatible with the current Next.js CLI
 
 - Status: open
@@ -107,6 +64,32 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 - To support 32-bit ARM, evaluate a different Node base image or a custom runtime build before extending the workflow platform list.
 
 ## Fixed Bugs
+
+### 6. Scraper preview crashed on CSS ID selectors
+
+- Status: completed (fixed)
+- Area: `apps/web` · scraper preview · selector parsing
+- Severity: medium
+
+**Description**
+
+Scraper expressions use `#...#` as delimiters, while CSS also uses `#id` for
+ID selectors. An expression such as
+`#css:#pagehead_serie_lista .titleserie#` is therefore truncated at the CSS ID
+marker. The scraper passes an empty or incomplete selector to
+`querySelectorAll()`, which throws an unhandled `SyntaxError: Invalid selector`.
+
+**Technical Notes**
+
+- Reproduced with a ComicsBox collection scraper against
+  `https://www.comicsbox.it/serie/GTOPARADIS`.
+- Full-template CSS expressions now treat only the outer `#` characters as
+  delimiters, so native CSS ID selectors remain intact.
+- CSS and XPath parser failures are converted from JSDOM `DOMException`s into
+  ordinary `ScraperExpressionError`s and returned by both preview endpoints as
+  HTTP 400 responses. This also prevents Next.js from trying to overwrite the
+  getter-only `message` property on a DOM exception.
+- Regression tests cover CSS ID selectors and malformed selectors.
 
 ### 17. Maintenance scripts were missing from production container images
 
