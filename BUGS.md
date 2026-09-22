@@ -65,6 +65,27 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 20. Scraper dates could not parse localized month names or month-only dates
+
+- Status: completed (fixed)
+- Area: `apps/web` · scraper data paths · date normalization
+- Severity: medium
+
+**Description**
+
+Date paths only accepted numeric, complete dates. Values such as `Agosto 2003`
+could not be described by an input format and therefore failed during import.
+
+**Technical Notes**
+
+- Added `MMMM` and `MMM` tokens for localized full and abbreviated month names.
+- Month names are recognized deterministically across the application locales.
+- Formats containing a year and month may omit the day; these values normalize
+  to the first day of the month, for example `Agosto 2003` becomes `2003-08-01`.
+- Numeric partial dates such as `08/2003` with `MM/YYYY` follow the same rule.
+- Added regression coverage for full month names, abbreviations, and numeric
+  month/year values.
+
 ### 19. Scraped date and number paths were stored as untyped text
 
 - Status: completed (fixed)

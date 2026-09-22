@@ -676,7 +676,7 @@
       "pathType": "Tipo di percorso",
       "pathValue": "Selettore/percorso",
       "dateInputFormat": "Formato data in ingresso",
-      "dateInputFormatHelp": "Usa i token YYYY, MM e DD (oppure Y, m e d), ad esempio DD/MM/YYYY. Il valore verrà salvato come data ISO YYYY-MM-DD.",
+      "dateInputFormatHelp": "Usa YYYY per l'anno, MM per il mese numerico, MMM o MMMM per il nome del mese e DD per il giorno. Esempi: DD/MM/YYYY o MMMM YYYY. Se il giorno manca viene usato il primo del mese; il valore viene salvato come data ISO YYYY-MM-DD.",
       "numberInputPattern": "Pattern di estrazione numerica",
       "numberInputPatternHelp": "Opzionale: espressione regolare; se contiene un gruppo di cattura viene usato il primo gruppo. Se vuota, viene estratto automaticamente il primo numero.",
       "headers": "Intestazioni personalizzate",
