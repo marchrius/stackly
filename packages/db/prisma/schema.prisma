@@ -58,6 +58,7 @@ model User {
   displayConfigurations DisplayConfiguration[]
   fields                Field[]
   oauthProviders        OAuthProvider[]
+  importLogs            ImportLog[]
 
   @@map("stk_user")
 }
@@ -498,6 +499,46 @@ model Log {
   @@index([ownerId], name: "idx_log_owner")
   @@index([loggedAt], name: "idx_log_logged_at")
   @@map("stk_log")
+}
+
+model ImportLog {
+  id              String    @id @default(uuid()) @db.Char(36)
+  type            String    @db.VarChar(30)
+  status          String    @db.VarChar(12)
+  collectionId    String?   @db.Char(36) @map("collection_id")
+  collectionLabel String?   @map("collection_label")
+  scraperId       String?   @db.Char(36) @map("scraper_id")
+  scraperLabel    String?   @map("scraper_label")
+  total           Int       @default(0)
+  created         Int       @default(0)
+  skipped         Int       @default(0)
+  failed          Int       @default(0)
+  startedAt       DateTime  @default(now()) @map("started_at")
+  completedAt     DateTime? @map("completed_at")
+
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String? @db.Char(36) @map("owner_id")
+  entries ImportLogEntry[]
+
+  @@index([ownerId], name: "idx_import_log_owner")
+  @@index([startedAt], name: "idx_import_log_started_at")
+  @@map("stk_import_log")
+}
+
+model ImportLogEntry {
+  id        String   @id @default(uuid()) @db.Char(36)
+  status    String   @db.VarChar(12)
+  sourceUrl String   @db.Text @map("source_url")
+  itemId    String?  @db.Char(36) @map("item_id")
+  itemLabel String?  @map("item_label")
+  message   String?  @db.Text
+  loggedAt  DateTime @default(now()) @map("logged_at")
+
+  importLog   ImportLog @relation(fields: [importLogId], references: [id], onDelete: Cascade)
+  importLogId String    @db.Char(36) @map("import_log_id")
+
+  @@index([importLogId], name: "idx_import_log_entry_import")
+  @@map("stk_import_log_entry")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -153,7 +153,7 @@ export async function createCollection(formData: FormData) {
             scraperId: itemImport.data.scraperId,
             urls: itemImport.data.urls,
           });
-          importQuery = `?imported=${summary.created}&skipped=${summary.skipped}&failed=${summary.failed}`;
+          importQuery = `?imported=${summary.created}&skipped=${summary.skipped}&failed=${summary.failed}&importLog=${summary.logId}`;
         }
       } catch {
         importQuery = "?importFailed=1";

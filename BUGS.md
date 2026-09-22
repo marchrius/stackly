@@ -65,6 +65,33 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 18. Bulk scraper imports discarded per-item failure details
+
+- Status: completed (fixed)
+- Area: `apps/web` · collection item import · observability
+- Severity: high
+
+**Description**
+
+When a bulk collection scraper import failed, the application only reported
+aggregate counters such as `0 imported, 20 failed`. The individual exceptions
+were swallowed, so neither the source URL nor the failure reason could be
+inspected from the UI after the request completed.
+
+**Technical Notes**
+
+- Added persistent `ImportLog` and `ImportLogEntry` records, including a
+  database migration. Each source URL is recorded as created, skipped, or
+  failed with its diagnostic message.
+- Added `/history/imports`, where users can inspect the latest 100 import runs,
+  expand their per-URL results, open source pages, and navigate to created
+  items.
+- Collection import summaries link directly to the corresponding expanded log.
+- Remote HTTP failures now include the response status, while non-fatal image
+  download failures are retained as warnings on otherwise successful entries.
+- Added regression coverage proving that every failed URL is persisted and the
+  parent import receives its final status and counters.
+
 ### 6. Scraper preview crashed on CSS ID selectors
 
 - Status: completed (fixed)
