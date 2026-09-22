@@ -2,7 +2,7 @@
 
 import type { Path, Scraper } from "@stackly/db";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Button,
   Input,
@@ -22,8 +22,8 @@ type ScraperHeader = {
   value: string;
 };
 
-type EditableScraper = Pick<Scraper, "id" | "name" | "type" | "urlPattern" | "namePath" | "imagePath" | "pricePath" | "headers"> & {
-  dataPaths: Pick<Path, "id" | "name" | "type" | "path" | "position">[];
+type EditableScraper = Pick<Scraper, "id" | "name" | "type" | "urlPattern" | "namePath" | "imagePath" | "pricePath" | "itemUrlsPath" | "itemScraperId" | "headers"> & {
+  dataPaths: Pick<Path, "id" | "name" | "type" | "path" | "inputFormat" | "position">[];
 };
 
 type HeaderState = {
@@ -36,6 +36,7 @@ type PathState = {
   name: string;
   type: string;
   path: string;
+  inputFormat: string;
 };
 
 const SCRAPER_TYPES = ["collection", "item", "wish"] as const;
@@ -58,6 +59,7 @@ function mapPathState(path?: EditableScraper["dataPaths"][number]): PathState {
     name: path?.name ?? "",
     type: path?.type ?? "text",
     path: path?.path ?? "",
+    inputFormat: path?.inputFormat ?? "",
   };
 }
 
@@ -73,6 +75,9 @@ export function ScraperForm({ scraper }: { scraper?: EditableScraper }) {
   const [namePath, setNamePath] = useState(scraper?.namePath ?? "");
   const [imagePath, setImagePath] = useState(scraper?.imagePath ?? "");
   const [pricePath, setPricePath] = useState(scraper?.pricePath ?? "");
+  const [itemUrlsPath, setItemUrlsPath] = useState(scraper?.itemUrlsPath ?? "");
+  const [itemScraperId, setItemScraperId] = useState(scraper?.itemScraperId ?? "none");
+  const [itemScrapers, setItemScrapers] = useState<Array<{ id: string; name: string }>>([]);
   const [headers, setHeaders] = useState<HeaderState[]>(() => {
     const parsed = parseHeaders(scraper?.headers);
     return parsed.length > 0 ? parsed : [{ header: "", value: "" }];
@@ -89,6 +94,15 @@ export function ScraperForm({ scraper }: { scraper?: EditableScraper }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    if (type !== "collection") return;
+    void fetch("/api/scrapers?perPage=100")
+      .then((response) => response.json())
+      .then((result: { data?: Array<{ id: string; name: string; type: string | null }> }) => {
+        setItemScrapers((result.data ?? []).filter((entry) => entry.type === "item"));
+      });
+  }, [type]);
+
   const normalizedHeaders = useMemo(
     () => headers.map((entry) => ({ header: entry.header.trim(), value: entry.value.trim() })).filter((entry) => entry.header || entry.value),
     [headers],
@@ -101,6 +115,7 @@ export function ScraperForm({ scraper }: { scraper?: EditableScraper }) {
           name: entry.name.trim(),
           type: entry.type,
           path: entry.path.trim(),
+          inputFormat: entry.type === "date" || entry.type === "number" ? entry.inputFormat.trim() || null : null,
           position: index + 1,
         }))
         .filter((entry) => entry.name && entry.path),
@@ -143,6 +158,8 @@ export function ScraperForm({ scraper }: { scraper?: EditableScraper }) {
       namePath: namePath.trim() || null,
       imagePath: imagePath.trim() || null,
       pricePath: type === "wish" ? pricePath.trim() || null : null,
+      itemUrlsPath: type === "collection" ? itemUrlsPath.trim() || null : null,
+      itemScraperId: type === "collection" && itemScraperId !== "none" ? itemScraperId : null,
       headers: normalizedHeaders,
       dataPaths: type === "wish" ? [] : normalizedPaths,
     };
@@ -172,6 +189,25 @@ export function ScraperForm({ scraper }: { scraper?: EditableScraper }) {
       <div className="rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground">
         <p>{t("form.manualFlow")}</p>
       </div>
+
+      {type === "collection" && (
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="itemUrlsPath">{t("form.itemUrlsPath")}</Label>
+            <Input id="itemUrlsPath" value={itemUrlsPath} onChange={(event) => setItemUrlsPath(event.target.value)} />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="itemScraperId">{t("form.itemScraper")}</Label>
+            <Select value={itemScraperId} onValueChange={setItemScraperId}>
+              <SelectTrigger id="itemScraperId"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">{t("form.noItemScraper")}</SelectItem>
+                {itemScrapers.map((entry) => <SelectItem key={entry.id} value={entry.id}>{entry.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
@@ -287,6 +323,22 @@ export function ScraperForm({ scraper }: { scraper?: EditableScraper }) {
                     </Button>
                   </div>
                 </div>
+                {(path.type === "date" || path.type === "number") && (
+                  <div className="mt-4 space-y-2">
+                    <Label htmlFor={`path-input-format-${index}`}>
+                      {path.type === "date" ? t("form.dateInputFormat") : t("form.numberInputPattern")}
+                    </Label>
+                    <Input
+                      id={`path-input-format-${index}`}
+                      value={path.inputFormat}
+                      onChange={(event) => updatePath(index, { inputFormat: event.target.value })}
+                      placeholder={path.type === "date" ? "DD/MM/YYYY" : String.raw`N\.\s*(\d+)`}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      {path.type === "date" ? t("form.dateInputFormatHelp") : t("form.numberInputPatternHelp")}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>

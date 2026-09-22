@@ -87,6 +87,18 @@ export default async function ScraperDetailPage({ params }: Props) {
                 <p className="text-muted-foreground">{scraper.pricePath || t("notConfigured")}</p>
               </div>
             )}
+            {scraper.type === "collection" && (
+              <>
+                <div>
+                  <p className="font-medium">{t("form.itemUrlsPath")}</p>
+                  <p className="text-muted-foreground">{scraper.itemUrlsPath || t("notConfigured")}</p>
+                </div>
+                <div>
+                  <p className="font-medium">{t("form.itemScraper")}</p>
+                  <p className="text-muted-foreground">{scraper.itemScraperId || t("notConfigured")}</p>
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -121,6 +133,7 @@ export default async function ScraperDetailPage({ params }: Props) {
                   <span className="font-medium">{path.name}</span>
                   <Badge variant="outline">{t(`pathTypes.${path.type}` as never)}</Badge>
                   <span className="break-all text-muted-foreground">{path.path}</span>
+                  {path.inputFormat ? <code className="rounded bg-muted px-2 py-1 text-xs">{path.inputFormat}</code> : null}
                 </div>
               ))
             ) : (

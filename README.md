@@ -86,7 +86,7 @@ Legacy Symfony bcrypt hashes using `$2y$` are supported by normalizing them to `
 
 ## Requirements
 
-- Node.js >= 20
+- Node.js >= 24
 - npm >= 10
 - PostgreSQL
 

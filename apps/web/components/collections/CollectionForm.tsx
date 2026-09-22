@@ -32,6 +32,7 @@ type CollectionWithData = Collection & {
   itemsDisplayConfig: DisplayConfiguration | null;
 };
 type ScraperOption = { id: string; name: string };
+type ItemImportPreview = { scraper: { id: string; name: string }; urls: string[]; total: number };
 
 type ManagedCollectionDatumField = {
   key: string;
@@ -184,6 +185,8 @@ export function CollectionForm({
   const [scrapeUrl, setScrapeUrl] = useState(collection?.scrapedFromUrl ?? "");
   const [scrapeName, setScrapeName] = useState(!collection);
   const [scrapeImage, setScrapeImage] = useState(!collection);
+  const [itemImportPreview, setItemImportPreview] = useState<ItemImportPreview | null>(null);
+  const [importItemsAfterSave, setImportItemsAfterSave] = useState(true);
   const [deleteImage, setDeleteImage] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [managedFields, setManagedFields] = useState<ManagedCollectionDatumField[]>(() => buildManagedFields(collection, choiceLists));
@@ -218,6 +221,12 @@ export function CollectionForm({
     formData.set("dataPayload", JSON.stringify(managedFields.map((field, index) => serializeField(field, index))));
     formData.set("childrenDisplayConfigPayload", JSON.stringify(childrenDisplayConfig));
     formData.set("itemsDisplayConfigPayload", JSON.stringify(itemsDisplayConfig));
+    formData.set(
+      "itemImportPayload",
+      !isEdit && importItemsAfterSave && itemImportPreview
+        ? JSON.stringify({ scraperId: itemImportPreview.scraper.id, urls: itemImportPreview.urls })
+        : "",
+    );
 
     const result = isEdit
       ? await updateCollection(collection.id, formData)
@@ -335,7 +344,8 @@ export function CollectionForm({
 
     const response = await fetch("/api/scrapers/collection-preview", { method: "POST", body: request });
     if (!response.ok) {
-      setError(t("form.scrapeFailed"));
+      const data = (await response.json().catch(() => null)) as { error?: string } | null;
+      setError(data?.error ?? t("form.scrapeFailed"));
       return;
     }
 
@@ -344,7 +354,10 @@ export function CollectionForm({
       imageUrl: string | null;
       scrapedUrl: string | null;
       data: Array<{ id: string; label: string; type: string; value: string | null }>;
+      itemImport: ItemImportPreview | null;
     };
+
+    setItemImportPreview(data.itemImport);
 
     if (data.name) setTitle(data.name);
     if (data.scrapedUrl) {
@@ -661,6 +674,15 @@ export function CollectionForm({
               {t("form.previewScrape")}
             </Button>
           </div>
+          {!isEdit && itemImportPreview && (
+            <div className="rounded-md border p-3 text-sm">
+              <p>{t("form.itemImportFound", { count: itemImportPreview.total, scraper: itemImportPreview.scraper.name })}</p>
+              <label className="mt-2 flex items-center gap-2">
+                <input type="checkbox" checked={importItemsAfterSave} onChange={(event) => setImportItemsAfterSave(event.target.checked)} />
+                <span>{t("form.importItemsAfterSave")}</span>
+              </label>
+            </div>
+          )}
         </div>
       )}
 

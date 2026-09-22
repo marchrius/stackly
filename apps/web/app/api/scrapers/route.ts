@@ -7,7 +7,13 @@ const pathSchema = z.object({
   name: z.string().trim().min(1, "Il nome del path è obbligatorio").max(255),
   type: z.string().trim().min(1).max(15),
   path: z.string().trim().min(1, "Il path è obbligatorio"),
+  inputFormat: z.string().trim().max(255).nullable().optional(),
   position: z.number().int().positive().optional(),
+}).superRefine((value, ctx) => {
+  if (value.type !== "number" || !value.inputFormat) return;
+  try { new RegExp(value.inputFormat); } catch {
+    ctx.addIssue({ code: "custom", path: ["inputFormat"], message: "Il pattern numerico non è una espressione regolare valida" });
+  }
 });
 
 const scraperSchema = z.object({
@@ -17,6 +23,8 @@ const scraperSchema = z.object({
   namePath: z.string().trim().nullable().optional(),
   imagePath: z.string().trim().nullable().optional(),
   pricePath: z.string().trim().nullable().optional(),
+  itemUrlsPath: z.string().trim().nullable().optional(),
+  itemScraperId: z.string().trim().nullable().optional(),
   headers: z.unknown().default([]),
   dataPaths: z.array(pathSchema).default([]),
 });
@@ -56,6 +64,18 @@ export async function POST(req: NextRequest) {
   const parsed = scraperSchema.safeParse(await req.json());
   if (!parsed.success) return jsonError(parsed.error.issues[0]?.message ?? "Payload non valido", 400);
 
+  if (parsed.data.type === "collection" && Boolean(parsed.data.itemUrlsPath) !== Boolean(parsed.data.itemScraperId)) {
+    return jsonError("Il percorso URL e lo scraper articoli devono essere configurati insieme", 400);
+  }
+
+  if (parsed.data.type === "collection" && parsed.data.itemScraperId) {
+    const itemScraper = await prisma.scraper.findFirst({
+      where: { id: parsed.data.itemScraperId, ownerId: result.session.user.id, type: "item" },
+      select: { id: true },
+    });
+    if (!itemScraper) return jsonError("Scraper articoli non valido", 400);
+  }
+
   const scraper = await prisma.scraper.create({
     data: {
       name: parsed.data.name,
@@ -64,6 +84,8 @@ export async function POST(req: NextRequest) {
       namePath: parsed.data.namePath || null,
       imagePath: parsed.data.imagePath || null,
       pricePath: parsed.data.pricePath || null,
+      itemUrlsPath: parsed.data.type === "collection" ? parsed.data.itemUrlsPath || null : null,
+      itemScraperId: parsed.data.type === "collection" ? parsed.data.itemScraperId || null : null,
       headers: toNullableJsonValue(parsed.data.headers),
       ownerId: result.session.user.id,
       dataPaths: {
@@ -71,6 +93,7 @@ export async function POST(req: NextRequest) {
           name: path.name,
           type: path.type,
           path: path.path,
+          inputFormat: path.type === "date" || path.type === "number" ? path.inputFormat || null : null,
           position: path.position ?? index + 1,
           ownerId: result.session.user.id,
         })),

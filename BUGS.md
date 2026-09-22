@@ -65,6 +65,106 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 20. Scraper dates could not parse localized month names or month-only dates
+
+- Status: completed (fixed)
+- Area: `apps/web` · scraper data paths · date normalization
+- Severity: medium
+
+**Description**
+
+Date paths only accepted numeric, complete dates. Values such as `Agosto 2003`
+could not be described by an input format and therefore failed during import.
+
+**Technical Notes**
+
+- Added `MMMM` and `MMM` tokens for localized full and abbreviated month names.
+- Month names are recognized deterministically across the application locales.
+- Formats containing a year and month may omit the day; these values normalize
+  to the first day of the month, for example `Agosto 2003` becomes `2003-08-01`.
+- Numeric partial dates such as `08/2003` with `MM/YYYY` follow the same rule.
+- Added regression coverage for full month names, abbreviations, and numeric
+  month/year values.
+
+### 19. Scraped date and number paths were stored as untyped text
+
+- Status: completed (fixed)
+- Area: `apps/web` · scraper data paths · value normalization
+- Severity: high
+
+**Description**
+
+Data paths marked as `date` or `number` returned the extracted source text
+unchanged. Date paths could not declare the source format, while number paths
+could not isolate a numeric value from labels, units, or surrounding text.
+
+**Technical Notes**
+
+- Added a nullable `input_format` field to scraper paths and its database
+  migration.
+- Date paths accept token-based formats such as `DD/MM/YYYY` or `d/m/Y` and
+  persist normalized ISO `YYYY-MM-DD` values after strict calendar validation.
+- Number paths automatically extract the first numeric value and normalize
+  common decimal/thousands separators. An optional regular expression can
+  select a source-specific value through its first capture group.
+- Invalid configured formats and unmatched values produce handled scraper
+  errors, which are also retained by the persistent bulk-import logs.
+- Added regression coverage for formatted dates, invalid dates, automatic
+  numeric extraction, decimal normalization, and capture patterns.
+
+### 18. Bulk scraper imports discarded per-item failure details
+
+- Status: completed (fixed)
+- Area: `apps/web` · collection item import · observability
+- Severity: high
+
+**Description**
+
+When a bulk collection scraper import failed, the application only reported
+aggregate counters such as `0 imported, 20 failed`. The individual exceptions
+were swallowed, so neither the source URL nor the failure reason could be
+inspected from the UI after the request completed.
+
+**Technical Notes**
+
+- Added persistent `ImportLog` and `ImportLogEntry` records, including a
+  database migration. Each source URL is recorded as created, skipped, or
+  failed with its diagnostic message.
+- Added `/history/imports`, where users can inspect the latest 100 import runs,
+  expand their per-URL results, open source pages, and navigate to created
+  items.
+- Collection import summaries link directly to the corresponding expanded log.
+- Remote HTTP failures now include the response status, while non-fatal image
+  download failures are retained as warnings on otherwise successful entries.
+- Added regression coverage proving that every failed URL is persisted and the
+  parent import receives its final status and counters.
+
+### 6. Scraper preview crashed on CSS ID selectors
+
+- Status: completed (fixed)
+- Area: `apps/web` · scraper preview · selector parsing
+- Severity: medium
+
+**Description**
+
+Scraper expressions use `#...#` as delimiters, while CSS also uses `#id` for
+ID selectors. An expression such as
+`#css:#pagehead_serie_lista .titleserie#` is therefore truncated at the CSS ID
+marker. The scraper passes an empty or incomplete selector to
+`querySelectorAll()`, which throws an unhandled `SyntaxError: Invalid selector`.
+
+**Technical Notes**
+
+- Reproduced with a ComicsBox collection scraper against
+  `https://www.comicsbox.it/serie/GTOPARADIS`.
+- Full-template CSS expressions now treat only the outer `#` characters as
+  delimiters, so native CSS ID selectors remain intact.
+- CSS and XPath parser failures are converted from JSDOM `DOMException`s into
+  ordinary `ScraperExpressionError`s and returned by both preview endpoints as
+  HTTP 400 responses. This also prevents Next.js from trying to overwrite the
+  getter-only `message` property on a DOM exception.
+- Regression tests cover CSS ID selectors and malformed selectors.
+
 ### 17. Maintenance scripts were missing from production container images
 
 - Status: completed (fixed)

@@ -58,6 +58,7 @@ model User {
   displayConfigurations DisplayConfiguration[]
   fields                Field[]
   oauthProviders        OAuthProvider[]
+  importLogs            ImportLog[]
 
   @@map("stk_user")
 }
@@ -500,6 +501,46 @@ model Log {
   @@map("stk_log")
 }
 
+model ImportLog {
+  id              String    @id @default(uuid()) @db.Char(36)
+  type            String    @db.VarChar(30)
+  status          String    @db.VarChar(12)
+  collectionId    String?   @db.Char(36) @map("collection_id")
+  collectionLabel String?   @map("collection_label")
+  scraperId       String?   @db.Char(36) @map("scraper_id")
+  scraperLabel    String?   @map("scraper_label")
+  total           Int       @default(0)
+  created         Int       @default(0)
+  skipped         Int       @default(0)
+  failed          Int       @default(0)
+  startedAt       DateTime  @default(now()) @map("started_at")
+  completedAt     DateTime? @map("completed_at")
+
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String? @db.Char(36) @map("owner_id")
+  entries ImportLogEntry[]
+
+  @@index([ownerId], name: "idx_import_log_owner")
+  @@index([startedAt], name: "idx_import_log_started_at")
+  @@map("stk_import_log")
+}
+
+model ImportLogEntry {
+  id        String   @id @default(uuid()) @db.Char(36)
+  status    String   @db.VarChar(12)
+  sourceUrl String   @db.Text @map("source_url")
+  itemId    String?  @db.Char(36) @map("item_id")
+  itemLabel String?  @map("item_label")
+  message   String?  @db.Text
+  loggedAt  DateTime @default(now()) @map("logged_at")
+
+  importLog   ImportLog @relation(fields: [importLogId], references: [id], onDelete: Cascade)
+  importLogId String    @db.Char(36) @map("import_log_id")
+
+  @@index([importLogId], name: "idx_import_log_entry_import")
+  @@map("stk_import_log_entry")
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // SCRAPER & PATH
 // ─────────────────────────────────────────────────────────────────────────────
@@ -512,10 +553,14 @@ model Scraper {
   namePath   String? @db.Text @map("name_path")
   imagePath  String? @db.Text @map("image_path")
   pricePath  String? @db.Text @map("price_path")
+  itemUrlsPath String? @db.Text @map("item_urls_path")
+  itemScraperId String? @db.Char(36) @map("item_scraper_id")
   headers    Json?   @default("[]")
 
   owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
   ownerId String? @db.Char(36) @map("owner_id")
+  itemScraper Scraper? @relation("ScraperItemScraper", fields: [itemScraperId], references: [id], onDelete: SetNull)
+  collectionScrapers Scraper[] @relation("ScraperItemScraper")
 
   dataPaths Path[]
 
@@ -523,15 +568,17 @@ model Scraper {
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   @@index([ownerId], name: "idx_scraper_owner")
+  @@index([itemScraperId], name: "idx_scraper_item_scraper")
   @@map("stk_scraper")
 }
 
 model Path {
-  id       String @id @default(uuid()) @db.Char(36)
-  name     String
-  type     String @db.VarChar(15)
-  path     String @db.Text
-  position Int
+  id          String  @id @default(uuid()) @db.Char(36)
+  name        String
+  type        String  @db.VarChar(15)
+  path        String  @db.Text
+  inputFormat String? @db.VarChar(255) @map("input_format")
+  position    Int
 
   scraper   Scraper? @relation(fields: [scraperId], references: [id], onDelete: Cascade)
   scraperId String?  @db.Char(36) @map("scraper_id")

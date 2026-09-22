@@ -6,6 +6,8 @@ import { Clock } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { PageHeader } from "@/components/shared/PageHeader";
+import Link from "next/link";
+import { Button } from "@stackly/ui";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("history");
@@ -38,7 +40,10 @@ export default async function HistoryPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title={t("pageTitle")} />
+      <div className="flex items-center justify-between gap-3">
+        <PageHeader title={t("pageTitle")} />
+        <Button asChild variant="outline"><Link href="/history/imports">Import logs</Link></Button>
+      </div>
       {logs.length > 0 ? (
         <div className="space-y-2">
           {logs.map((log: LogEntry) => {
