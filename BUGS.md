@@ -65,6 +65,29 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 21. Quick-edit rows used lexicographic ordering for numbered titles
+
+- Status: completed (fixed)
+- Area: `apps/web` · collection and item quick edit · shared sorting
+- Severity: medium
+
+**Description**
+
+The collection and item quick-edit pages requested rows from PostgreSQL with a
+plain ascending text order. Numbered titles were therefore displayed as `1`,
+`10`, `11`, `2`, `21` instead of their natural numeric sequence.
+
+**Technical Notes**
+
+- Both quick-edit pages now apply natural, numeric-aware ordering before rows
+  reach the shared table.
+- Expanded the existing natural-sort helper into a reusable typed sorting
+  engine supporting natural text, plain text, numbers, dates, positions,
+  direction, null placement, multiple keys, and stable ordering.
+- Existing natural-sort consumers remain API-compatible.
+- Added regression coverage for numbered titles, deterministic tie breakers,
+  numeric positions, dates, descending order, and null values.
+
 ### 20. Scraper dates could not parse localized month names or month-only dates
 
 - Status: completed (fixed)
