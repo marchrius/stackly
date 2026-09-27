@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { buildObjectSocialMetadata, resolveObjectSocialPreview } from "@/lib/public/object-social-preview";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@stackly/db";
@@ -6,7 +7,15 @@ import { WishlistDetail } from "@/components/wishlists/WishlistDetail";
 import { buildFinalVisibilityWhere, getAllowedFinalVisibilities } from "@/lib/wishlist-visibility";
 import { getTranslations } from "next-intl/server";
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { username, id } = await params;
+  const publicWishlist = await prisma.wishlist.findFirst({
+    where: { id, finalVisibility: "public", owner: { username } },
+    select: { id: true },
+  });
+  if (publicWishlist) {
+    return buildObjectSocialMetadata("wishlists", id, await resolveObjectSocialPreview("wishlists", id));
+  }
   const t = await getTranslations("wishlists");
   return { title: t("sharedDetailTitle") };
 }

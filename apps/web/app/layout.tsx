@@ -6,11 +6,13 @@ import { auth } from "@/auth";
 import { prisma } from "@stackly/db";
 import { buildCustomThemeCss, CONFIGURATION_LABELS, readAdminConfiguration } from "@/lib/configuration";
 import { getThemeClass, normalizeTheme } from "@/lib/theme/themes";
+import { resolvePublicAppUrl } from "@/lib/public-app-url";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: resolvePublicAppUrl() ?? undefined,
   applicationName: "Stackly",
   title: {
     template: "%s | Stackly",
