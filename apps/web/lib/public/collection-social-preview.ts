@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
 import { prisma } from "@stackly/db";
+import { getUploadUrl } from "@stackly/lib";
+import { getPublicSocialTitle } from "./social-title";
 
 const PUBLIC_VISIBILITY = "public";
 const DEFAULT_COLLECTION_COLOR = "#6366F1";
@@ -9,6 +11,7 @@ type PreviewImageSource = "collection" | "item" | "fallback";
 export type PublicCollectionSocialPreview = {
   collectionId: string;
   title: string;
+  contextualTitle?: string;
   color: string;
   initials: string;
   imageUrl: string | null;
@@ -44,13 +47,28 @@ export function getCollectionPreviewInitials(title: string): string {
 }
 
 function selectItemImage(item: PublicItemImage | null): string | null {
-  return item?.imageLargeThumbnail ?? item?.image ?? item?.imageSmallThumbnail ?? null;
+  const image = item?.imageLargeThumbnail ?? item?.image ?? item?.imageSmallThumbnail ?? null;
+  return normalizeStoredImageUrl(image);
+}
+
+export function normalizeStoredImageUrl(image: string | null | undefined): string | null {
+  if (!image?.trim()) return null;
+
+  try {
+    const parsed = new URL(image);
+    if (["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(parsed.hostname)) {
+      return getUploadUrl(parsed.pathname);
+    }
+    return image;
+  } catch {
+    return getUploadUrl(image);
+  }
 }
 
 function createPreviewFingerprint(input: Omit<PublicCollectionSocialPreview, "fingerprint">): string {
   return createHash("sha256")
     .update(JSON.stringify({
-      version: 1,
+      version: 2,
       collectionId: input.collectionId,
       title: input.title,
       color: input.color,
@@ -120,14 +138,14 @@ export async function resolvePublicCollectionSocialPreview(
 ): Promise<PublicCollectionSocialPreview | null> {
   const collection = await prisma.collection.findFirst({
     where: { id, finalVisibility: PUBLIC_VISIBILITY },
-    select: { id: true, title: true, color: true, image: true },
+    select: { id: true, title: true, color: true, image: true, parentId: true },
   });
   if (!collection) return null;
 
   const color = normalizeCollectionPreviewColor(collection.color);
   const initials = getCollectionPreviewInitials(collection.title);
   const item = collection.image ? null : await findRecursivePublicItemImage(collection.id);
-  const imageUrl = collection.image ?? selectItemImage(item);
+  const imageUrl = normalizeStoredImageUrl(collection.image) ?? selectItemImage(item);
   const imageSource: PreviewImageSource = collection.image
     ? "collection"
     : imageUrl
@@ -137,6 +155,7 @@ export async function resolvePublicCollectionSocialPreview(
   const preview = {
     collectionId: collection.id,
     title: collection.title,
+    contextualTitle: await getPublicSocialTitle(collection.title, "collections", collection.parentId, collection.id),
     color,
     initials,
     imageUrl,

@@ -1,9 +1,9 @@
 const PUBLIC_APP_URL_ENV_KEYS = [
-  "AUTH_URL",
-  "NEXTAUTH_URL",
   "NEXT_PUBLIC_APP_URL",
   "PUBLIC_APP_URL",
   "APP_URL",
+  "NEXTAUTH_URL",
+  "AUTH_URL",
 ] as const;
 
 type PublicAppUrlEnv = NodeJS.ProcessEnv &

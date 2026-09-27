@@ -12,6 +12,7 @@ import { getUploadUrl } from "@stackly/lib";
 import { sortByNaturalText } from "@/lib/natural-sort";
 import { resolvePublicCollectionSocialPreview } from "@/lib/public/collection-social-preview";
 import { resolvePublicUrl } from "@/lib/public-app-url";
+import { getCollectionSocialDescription } from "@/lib/public/collection-social-description";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -26,10 +27,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const imagePath = `/api/public/previews/collections/${encodeURIComponent(id)}?v=${encodeURIComponent(preview.fingerprint)}`;
   const canonicalUrl = resolvePublicUrl(canonicalPath);
   const imageUrl = resolvePublicUrl(imagePath);
-  const description = `Explore ${preview.title}, a public collection on Stackly.`;
+  const description = getCollectionSocialDescription(preview.title);
+  const pageTitle = preview.contextualTitle ?? preview.title.trim();
 
   return {
-    title: preview.title,
+    title: { absolute: pageTitle },
     description,
     alternates: {
       canonical: canonicalUrl,
@@ -37,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       type: "website",
       siteName: "Stackly",
-      title: preview.title,
+      title: pageTitle,
       description,
       url: canonicalUrl,
       images: [
@@ -45,13 +47,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           url: imageUrl,
           width: 1200,
           height: 630,
+          type: "image/jpeg",
           alt: preview.title,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: preview.title,
+      title: pageTitle,
       description,
       images: [imageUrl],
     },

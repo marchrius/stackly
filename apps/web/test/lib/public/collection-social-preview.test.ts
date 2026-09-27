@@ -62,6 +62,19 @@ describe("resolvePublicCollectionSocialPreview", () => {
     expect(mocks.collectionFindMany).not.toHaveBeenCalled();
   });
 
+  it("normalizes legacy localhost image URLs to the upload route", async () => {
+    mocks.collectionFindFirst.mockResolvedValue({
+      id: "root",
+      title: "Graphic Novels",
+      color: null,
+      image: "https://localhost:3000/user/collection/cover_small.jpg",
+    });
+
+    const preview = await resolvePublicCollectionSocialPreview("root");
+
+    expect(preview?.imageUrl).toBe("/uploads/user/collection/cover_small.jpg");
+  });
+
   it("uses the first direct public item image and prefers its large thumbnail", async () => {
     mocks.collectionFindFirst.mockResolvedValue({ id: "root", title: "Comics", color: null, image: null });
     mocks.itemFindFirst.mockResolvedValue({
@@ -76,7 +89,7 @@ describe("resolvePublicCollectionSocialPreview", () => {
     expect(preview).toMatchObject({
       color: "#6366F1",
       initials: "C",
-      imageUrl: "/large.webp",
+      imageUrl: "/uploads/large.webp",
       imageSource: "item",
     });
     expect(mocks.collectionFindMany).not.toHaveBeenCalled();
@@ -108,7 +121,7 @@ describe("resolvePublicCollectionSocialPreview", () => {
 
     const preview = await resolvePublicCollectionSocialPreview("root");
 
-    expect(preview?.imageUrl).toBe("/b.webp");
+    expect(preview?.imageUrl).toBe("/uploads/b.webp");
     expect(mocks.itemFindFirst.mock.calls.map(([query]) => query.where.collectionId)).toEqual([
       "root",
       "child-a",

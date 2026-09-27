@@ -2,16 +2,16 @@ import { describe, expect, it } from "vitest";
 import { resolvePublicAppUrl, resolvePublicUrl } from "@/lib/public-app-url";
 
 describe("public app URL", () => {
-  it("uses the first valid configured URL in documented priority order", () => {
+  it("prefers the public app URL over the authentication URL", () => {
     const env = {
       NODE_ENV: "production",
       AUTH_URL: "https://auth.example.com/base/",
       NEXT_PUBLIC_APP_URL: "https://public.example.com",
     } as NodeJS.ProcessEnv;
 
-    expect(resolvePublicAppUrl(env)?.toString()).toBe("https://auth.example.com/base/");
+    expect(resolvePublicAppUrl(env)?.toString()).toBe("https://public.example.com/");
     expect(resolvePublicUrl("/public/collections/123", env)).toBe(
-      "https://auth.example.com/public/collections/123",
+      "https://public.example.com/public/collections/123",
     );
   });
 

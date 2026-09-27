@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
+import sharp from "sharp";
 
 const { mockResolvePreview, mockImageResponse } = vi.hoisted(() => ({
   mockResolvePreview: vi.fn(),
@@ -21,10 +22,8 @@ vi.mock("next/og", () => ({
   ImageResponse: mockImageResponse,
 }));
 
-import {
-  GET,
-  resolvePreviewAssetUrl,
-} from "@/app/api/public/previews/collections/[id]/route";
+import { GET } from "@/app/api/public/previews/collections/[id]/route";
+import { resolvePreviewAssetUrl } from "@/lib/public/social-image";
 
 describe("GET /api/public/previews/collections/[id]", () => {
   it("returns 404 when the collection is not public", async () => {
@@ -39,7 +38,13 @@ describe("GET /api/public/previews/collections/[id]", () => {
     expect(mockImageResponse).not.toHaveBeenCalled();
   });
 
-  it("renders a versioned 1200x630 PNG with immutable caching", async () => {
+  it("encodes a versioned 1200x630 JPEG under 1 MB with immutable caching", async () => {
+    const png = await sharp({ create: {
+      width: 1200, height: 630, channels: 3, background: "#8b5cf6",
+    } }).png().toBuffer();
+    mockImageResponse.mockImplementationOnce(function () {
+      return new Response(new Uint8Array(png));
+    });
     mockResolvePreview.mockResolvedValue({
       title: "Videogiochi",
       color: "#8b5cf6",
@@ -54,7 +59,11 @@ describe("GET /api/public/previews/collections/[id]", () => {
     );
 
     expect(response.status).toBe(200);
-    expect(response.headers.get("Content-Type")).toBe("image/png");
+    expect(response.headers.get("Content-Type")).toBe("image/jpeg");
+    const bytes = Buffer.from(await response.arrayBuffer());
+    const metadata = await sharp(bytes).metadata();
+    expect(metadata).toMatchObject({ format: "jpeg", width: 1200, height: 630 });
+    expect(bytes.length).toBeLessThan(1_000_000);
     expect(response.headers.get("Cache-Control")).toBe("public, max-age=31536000, immutable");
     expect(mockResolvePreview).toHaveBeenCalledWith("c1");
     expect(mockImageResponse).toHaveBeenCalledWith(
@@ -70,6 +79,9 @@ describe("resolvePreviewAssetUrl", () => {
   it("resolves uploaded paths from the public origin", () => {
     expect(resolvePreviewAssetUrl(request, "uploads/items/cover.jpg")).toBe(
       "https://stackly.example/uploads/items/cover.jpg",
+    );
+    expect(resolvePreviewAssetUrl(request, "uploads/items/cover.jpg", "https://stackly-dev.smil.qzz.io/")).toBe(
+      "https://stackly-dev.smil.qzz.io/uploads/items/cover.jpg",
     );
   });
 
