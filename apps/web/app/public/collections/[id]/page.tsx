@@ -10,6 +10,8 @@ import { PublicShell } from "@/components/public/PublicShell";
 import { getPublicCollection, getPublicCollectionAncestors } from "@/lib/public/public-queries";
 import { getUploadUrl } from "@stackly/lib";
 import { sortByNaturalText } from "@/lib/natural-sort";
+import { resolvePublicCollectionSocialPreview } from "@/lib/public/collection-social-preview";
+import { resolvePublicUrl } from "@/lib/public-app-url";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -17,8 +19,43 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const collection = await getPublicCollection(id);
-  return { title: collection?.title ?? "Collection" };
+  const preview = await resolvePublicCollectionSocialPreview(id);
+  if (!preview) return { title: "Collection" };
+
+  const canonicalPath = `/public/collections/${encodeURIComponent(id)}`;
+  const imagePath = `/api/public/previews/collections/${encodeURIComponent(id)}?v=${encodeURIComponent(preview.fingerprint)}`;
+  const canonicalUrl = resolvePublicUrl(canonicalPath);
+  const imageUrl = resolvePublicUrl(imagePath);
+  const description = `Explore ${preview.title}, a public collection on Stackly.`;
+
+  return {
+    title: preview.title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      type: "website",
+      siteName: "Stackly",
+      title: preview.title,
+      description,
+      url: canonicalUrl,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: preview.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: preview.title,
+      description,
+      images: [imageUrl],
+    },
+  };
 }
 
 export default async function PublicCollectionPage({ params }: Props) {
