@@ -73,6 +73,10 @@ export default async function CollectionDetailPage({ params, searchParams }: Pro
       },
     ]),
   );
+  const collectionCounters = aggregateCounters[collection.id] ?? {
+    children: collection._count.children,
+    items: collection._count.items,
+  };
 
   return (
     <div className="space-y-4">
@@ -96,6 +100,7 @@ export default async function CollectionDetailPage({ params, searchParams }: Pro
       <CollectionDetail
         collection={collection}
         ancestors={ancestors}
+        collectionCounters={collectionCounters}
         childCounters={childCounters}
       />
     </div>

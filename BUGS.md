@@ -65,6 +65,32 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 22. Parent collection totals stayed stale after nested changes
+
+- Status: completed (fixed)
+- Area: `apps/web` · collection hierarchy · aggregate counters · cache invalidation
+- Severity: high
+
+**Description**
+
+The collection detail header preferred maintenance-generated cached counters
+over current database counts. Item and sub-collection mutations also
+revalidated only the immediate collection, leaving ancestor pages stale after
+changes deeper in the hierarchy.
+
+**Technical Notes**
+
+- The authenticated collection detail now uses recursively computed live
+  counters for both the current collection and every displayed child.
+- Added hierarchy-aware path invalidation that revalidates the changed
+  collection and all of its ancestors in one database lookup.
+- Collection creation, moves and deletion, plus manual item creation, moves and
+  deletion, now invalidate every affected ancestor.
+- Bulk scraper imports performed while creating a collection are covered by
+  the same post-import hierarchy invalidation.
+- Added regression coverage for recursive totals, multi-root invalidation and
+  malformed hierarchy cycles.
+
 ### 21. Quick-edit rows used lexicographic ordering for numbered titles
 
 - Status: completed (fixed)
