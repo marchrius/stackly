@@ -17,10 +17,10 @@ import {
   getDefaultDisplayConfig,
   upsertDisplayConfiguration,
 } from "@/lib/collection-display-config";
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { importCollectionItems } from "@/lib/server/collection-item-import";
+import { revalidateCollectionHierarchy } from "@/lib/server/collection-revalidation";
 
 const collectionSchema = z.object({
   title: z.string().min(1, "Il titolo è obbligatorio").max(255),
@@ -160,9 +160,7 @@ export async function createCollection(formData: FormData) {
       }
     }
 
-    revalidatePath("/collections");
-    revalidatePath(`/collections/${collection.id}`);
-    if (parent.parentId) revalidatePath(`/collections/${parent.parentId}`);
+    await revalidateCollectionHierarchy(session.user.id, [collection.id]);
     redirect(`/collections/${collection.id}${importQuery}`);
   } catch (error) {
     if (error instanceof TreeValidationError) {
@@ -263,12 +261,7 @@ export async function updateCollection(id: string, formData: FormData) {
     await syncCollectionDescendantsVisibility(session.user.id, collection.id, finalVisibility);
     await logAction(session.user.id, "update", collection.id, collection.title, "Collection");
 
-    revalidatePath(`/collections/${id}`);
-    revalidatePath("/collections");
-    if (collection.parentId) revalidatePath(`/collections/${collection.parentId}`);
-    if (existing.parentId && existing.parentId !== collection.parentId) {
-      revalidatePath(`/collections/${existing.parentId}`);
-    }
+    await revalidateCollectionHierarchy(session.user.id, [collection.id, existing.parentId]);
     redirect(`/collections/${id}`);
   } catch (error) {
     if (error instanceof TreeValidationError) {
@@ -291,8 +284,7 @@ export async function deleteCollection(id: string) {
   await prisma.collection.delete({ where: { id } });
   await logAction(session.user.id, "delete", id, collection.title, "Collection");
 
-  revalidatePath("/collections");
-  if (collection.parentId) revalidatePath(`/collections/${collection.parentId}`);
+  await revalidateCollectionHierarchy(session.user.id, [collection.parentId]);
   redirect("/collections");
 }
 

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@stackly/db";
 import { computeFinalVisibility, resolveItemContext, syncDatumEntries, type ManagedDatumPayload } from "@/lib/item-persistence";
 import { jsonError, logApiAction, requireApiSession } from "@/lib/api-helpers";
+import { revalidateCollectionHierarchy } from "@/lib/server/collection-revalidation";
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -118,6 +119,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   });
 
   await logApiAction(result.session.user.id, "update", item.id, item.name, "Item");
+  await revalidateCollectionHierarchy(result.session.user.id, [existing.collectionId, item.collectionId]);
   return NextResponse.json(item);
 }
 
@@ -131,6 +133,7 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
 
   await prisma.item.delete({ where: { id } });
   await logApiAction(result.session.user.id, "delete", id, item.name, "Item", true);
+  await revalidateCollectionHierarchy(result.session.user.id, [item.collectionId]);
 
   return new NextResponse(null, { status: 204 });
 }

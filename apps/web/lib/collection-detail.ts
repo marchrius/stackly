@@ -24,6 +24,28 @@ type CollectionCounterNode = {
   directItems: number;
 };
 
+type CollectionHierarchyNode = Pick<CollectionCounterNode, "id" | "parentId">;
+
+export function getCollectionHierarchyIds(
+  collections: CollectionHierarchyNode[],
+  collectionIds: Array<string | null | undefined>,
+) {
+  const nodesById = new Map(collections.map((collection) => [collection.id, collection]));
+  const hierarchyIds = new Set<string>();
+
+  for (const collectionId of collectionIds) {
+    let cursor = collectionId ?? null;
+    const visiting = new Set<string>();
+    while (cursor && !visiting.has(cursor)) {
+      visiting.add(cursor);
+      hierarchyIds.add(cursor);
+      cursor = nodesById.get(cursor)?.parentId ?? null;
+    }
+  }
+
+  return [...hierarchyIds];
+}
+
 export function getAggregateCollectionCounters(
   collections: CollectionCounterNode[],
 ): Record<string, CollectionAggregateCounters> {

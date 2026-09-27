@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@stackly/db";
 import { computeFinalVisibility, resolveItemContext, syncDatumEntries, type ManagedDatumPayload } from "@/lib/item-persistence";
 import { jsonError, logApiAction, parsePagination, requireApiSession } from "@/lib/api-helpers";
+import { revalidateCollectionHierarchy } from "@/lib/server/collection-revalidation";
 
 const datumSchema = z.object({
   id: z.string().nullable().optional(),
@@ -126,6 +127,7 @@ export async function POST(req: NextRequest) {
   });
 
   await logApiAction(result.session.user.id, "create", item.id, item.name, "Item");
+  await revalidateCollectionHierarchy(result.session.user.id, [item.collectionId]);
   return NextResponse.json(item, { status: 201 });
 }
 

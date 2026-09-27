@@ -12,6 +12,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { syncCollectionDatumEntries, type ManagedCollectionDatumPayload } from "@/lib/collection-persistence";
 import { getCollectionDisplayConfigOptions, upsertDisplayConfiguration } from "@/lib/collection-display-config";
 import { downloadRemoteAsset } from "@/lib/server/uploads";
+import { revalidateCollectionHierarchy } from "@/lib/server/collection-revalidation";
 import { z } from "zod";
 
 const datumSchema = z.object({
@@ -204,6 +205,8 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       },
     });
 
+    await revalidateCollectionHierarchy(session.user.id, [collection.id, existing.parentId]);
+
     return NextResponse.json(collection);
   } catch (error) {
     if (error instanceof TreeValidationError) {
@@ -237,6 +240,8 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
       ownerId: session.user.id,
     },
   });
+
+  await revalidateCollectionHierarchy(session.user.id, [collection.parentId]);
 
   return new NextResponse(null, { status: 204 });
 }

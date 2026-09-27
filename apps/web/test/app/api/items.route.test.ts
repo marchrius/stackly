@@ -8,6 +8,7 @@ const {
   mockResolveItemContext,
   mockComputeFinalVisibility,
   mockSyncDatumEntries,
+  mockRevalidateCollectionHierarchy,
   mockPrisma,
 } = vi.hoisted(() => ({
   mockRequireApiSession: vi.fn(),
@@ -16,6 +17,7 @@ const {
   mockResolveItemContext: vi.fn(),
   mockComputeFinalVisibility: vi.fn(() => "internal"),
   mockSyncDatumEntries: vi.fn(),
+  mockRevalidateCollectionHierarchy: vi.fn(),
   mockPrisma: {
     $transaction: vi.fn(),
   },
@@ -36,6 +38,10 @@ vi.mock("@/lib/item-persistence", () => ({
 
 vi.mock("@stackly/db", () => ({
   prisma: mockPrisma,
+}));
+
+vi.mock("@/lib/server/collection-revalidation", () => ({
+  revalidateCollectionHierarchy: mockRevalidateCollectionHierarchy,
 }));
 
 import { POST } from "@/app/api/items/route";
@@ -81,6 +87,7 @@ describe("POST /api/items", () => {
         findUniqueOrThrow: vi.fn().mockResolvedValue({
           id: "item-1",
           name: "Item test",
+          collectionId: "collection-1",
           tags: [{ id: "tag-1", label: "Rare" }],
           data: [{ id: "datum-1", label: "Author", value: "Alice" }],
           collection: { id: "collection-1", title: "Collection" },
@@ -123,10 +130,12 @@ describe("POST /api/items", () => {
       [],
     );
     expect(mockLogApiAction).toHaveBeenCalledWith("user-1", "create", "item-1", "Item test", "Item");
+    expect(mockRevalidateCollectionHierarchy).toHaveBeenCalledWith("user-1", ["collection-1"]);
     expect(response.status).toBe(201);
     await expect(response.json()).resolves.toEqual({
       id: "item-1",
       name: "Item test",
+      collectionId: "collection-1",
       tags: [{ id: "tag-1", label: "Rare" }],
       data: [{ id: "datum-1", label: "Author", value: "Alice" }],
       collection: { id: "collection-1", title: "Collection" },
