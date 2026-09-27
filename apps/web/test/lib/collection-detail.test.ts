@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   getAggregateCollectionCounters,
+  getCollectionHierarchyIds,
   getCollectionCachedSummary,
 } from "@/lib/collection-detail";
 
@@ -19,6 +20,22 @@ describe("collection detail helpers", () => {
       sibling: { children: 0, items: 4 },
       root: { children: 3, items: 10 },
     });
+  });
+
+  it("finds every affected ancestor when a nested collection changes", () => {
+    expect(getCollectionHierarchyIds([
+      { id: "root", parentId: null },
+      { id: "child", parentId: "root" },
+      { id: "grandchild", parentId: "child" },
+      { id: "other", parentId: null },
+    ], ["grandchild", "other"])).toEqual(["grandchild", "child", "root", "other"]);
+  });
+
+  it("stops safely when malformed hierarchy data contains a cycle", () => {
+    expect(getCollectionHierarchyIds([
+      { id: "one", parentId: "two" },
+      { id: "two", parentId: "one" },
+    ], ["one"])).toEqual(["one", "two"]);
   });
 
   it("merges counters and price buckets from all visibility levels", () => {

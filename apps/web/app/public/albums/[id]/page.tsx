@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { buildObjectSocialMetadata, resolveObjectSocialPreview } from "@/lib/public/object-social-preview";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -16,8 +17,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const album = await getPublicAlbum(id);
-  return { title: album?.title ?? "Album" };
+  return buildObjectSocialMetadata("albums", id, await resolveObjectSocialPreview("albums", id));
 }
 
 export default async function PublicAlbumPage({ params }: Props) {

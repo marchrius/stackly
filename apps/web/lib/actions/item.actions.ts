@@ -7,6 +7,7 @@ import { downloadRemoteAsset, saveUploadedAsset } from "@/lib/server/uploads";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { revalidateCollectionHierarchy } from "@/lib/server/collection-revalidation";
 
 const itemSchema = z.object({
   name: z.string().min(1, "Item name is required").max(255),
@@ -92,7 +93,7 @@ export async function createItem(formData: FormData) {
   });
 
   await logAction(session.user.id, "create", item.id, item.name, "Item");
-  revalidateItemPaths(item.id, collectionId ?? null);
+  await revalidateItemPaths(session.user.id, item.id, collectionId ?? null);
 
   if (formData.get("saveAndAddAnother") === "1") {
     redirect(`/items/new?collectionId=${item.collectionId ?? collectionId ?? ""}`);
@@ -159,7 +160,7 @@ export async function updateItem(id: string, formData: FormData) {
   });
 
   await logAction(session.user.id, "update", item.id, item.name, "Item");
-  revalidateItemPaths(id, item.collectionId ?? existing.collectionId ?? null, existing.collectionId ?? null);
+  await revalidateItemPaths(session.user.id, id, item.collectionId ?? existing.collectionId ?? null, existing.collectionId ?? null);
   redirect(`/items/${id}`);
 }
 
@@ -173,7 +174,7 @@ export async function deleteItem(id: string) {
   await prisma.item.delete({ where: { id } });
   await logAction(session.user.id, "delete", id, item.name, "Item");
 
-  revalidatePath("/collections");
+  await revalidateCollectionHierarchy(session.user.id, [collectionId]);
   if (collectionId) redirect(`/collections/${collectionId}`);
   redirect("/collections");
 }
@@ -324,12 +325,10 @@ async function validateRelatedItemIds(ownerId: string, relatedItemIds: string[],
   return { success: true as const, ids: uniqueIds };
 }
 
-function revalidateItemPaths(itemId: string, collectionId: string | null, previousCollectionId?: string | null) {
-  revalidatePath("/collections");
+async function revalidateItemPaths(ownerId: string, itemId: string, collectionId: string | null, previousCollectionId?: string | null) {
+  await revalidateCollectionHierarchy(ownerId, [collectionId, previousCollectionId]);
   revalidatePath(`/items/${itemId}`);
   revalidatePath("/items/new");
-  if (collectionId) revalidatePath(`/collections/${collectionId}`);
-  if (previousCollectionId && previousCollectionId !== collectionId) revalidatePath(`/collections/${previousCollectionId}`);
 }
 
 async function logAction(ownerId: string, type: string, objectId: string, objectLabel: string, objectClass: string) {

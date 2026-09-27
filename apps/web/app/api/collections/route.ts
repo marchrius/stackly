@@ -5,6 +5,7 @@ import { computeFinalVisibility, resolveCollectionParent, TreeValidationError } 
 import { syncCollectionDatumEntries, type ManagedCollectionDatumPayload } from "@/lib/collection-persistence";
 import { getCollectionDisplayConfigOptions, upsertDisplayConfiguration } from "@/lib/collection-display-config";
 import { downloadRemoteAsset } from "@/lib/server/uploads";
+import { revalidateCollectionHierarchy } from "@/lib/server/collection-revalidation";
 import { z } from "zod";
 
 const datumSchema = z.object({
@@ -151,6 +152,8 @@ export async function POST(req: NextRequest) {
         ownerId: session.user.id,
       },
     });
+
+    await revalidateCollectionHierarchy(session.user.id, [collection.id]);
 
     return NextResponse.json(collection, { status: 201 });
   } catch (error) {

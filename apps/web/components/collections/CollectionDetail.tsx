@@ -34,6 +34,7 @@ type CollectionWithRelations = Collection & {
 interface CollectionDetailProps {
   collection: CollectionWithRelations;
   ancestors: { id: string; title: string }[];
+  collectionCounters: CollectionAggregateCounters;
   childCounters: Record<string, CollectionAggregateCounters>;
 }
 
@@ -45,6 +46,7 @@ function asHexColor(color: string | null): string {
 export function CollectionDetail({
   collection,
   ancestors,
+  collectionCounters,
   childCounters,
 }: CollectionDetailProps) {
   const t = useTranslations("collections");
@@ -52,8 +54,8 @@ export function CollectionDetail({
   const tItems = useTranslations("items");
   const displayData = useMemo(() => getDisplayData(collection.data), [collection.data]);
   const cachedSummary = useMemo(() => getCollectionCachedSummary(collection.cachedValues), [collection.cachedValues]);
-  const childrenCount = cachedSummary.counters.children || collection._count.children;
-  const itemsCount = cachedSummary.counters.items || collection._count.items;
+  const childrenCount = collectionCounters.children;
+  const itemsCount = collectionCounters.items;
 
   function renderChoiceListValue(datum: DatumWithChoiceList) {
     const values = limitChoiceValues(parseChoiceListValues(datum.value), datum.choiceList);

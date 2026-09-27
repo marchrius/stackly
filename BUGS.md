@@ -65,6 +65,55 @@ The new GitHub workflow can safely target `linux/amd64` and `linux/arm64`. Addin
 
 ## Fixed Bugs
 
+### 22. Parent collection totals stayed stale after nested changes
+
+- Status: completed (fixed)
+- Area: `apps/web` · collection hierarchy · aggregate counters · cache invalidation
+- Severity: high
+
+**Description**
+
+The collection detail header preferred maintenance-generated cached counters
+over current database counts. Item and sub-collection mutations also
+revalidated only the immediate collection, leaving ancestor pages stale after
+changes deeper in the hierarchy.
+
+**Technical Notes**
+
+- The authenticated collection detail now uses recursively computed live
+  counters for both the current collection and every displayed child.
+- Added hierarchy-aware path invalidation that revalidates the changed
+  collection and all of its ancestors in one database lookup.
+- Collection creation, moves and deletion, plus manual item creation, moves and
+  deletion, now invalidate every affected ancestor.
+- Bulk scraper imports performed while creating a collection are covered by
+  the same post-import hierarchy invalidation.
+- Added regression coverage for recursive totals, multi-root invalidation and
+  malformed hierarchy cycles.
+
+### 21. Quick-edit rows used lexicographic ordering for numbered titles
+
+- Status: completed (fixed)
+- Area: `apps/web` · collection and item quick edit · shared sorting
+- Severity: medium
+
+**Description**
+
+The collection and item quick-edit pages requested rows from PostgreSQL with a
+plain ascending text order. Numbered titles were therefore displayed as `1`,
+`10`, `11`, `2`, `21` instead of their natural numeric sequence.
+
+**Technical Notes**
+
+- Both quick-edit pages now apply natural, numeric-aware ordering before rows
+  reach the shared table.
+- Expanded the existing natural-sort helper into a reusable typed sorting
+  engine supporting natural text, plain text, numbers, dates, positions,
+  direction, null placement, multiple keys, and stable ordering.
+- Existing natural-sort consumers remain API-compatible.
+- Added regression coverage for numbered titles, deterministic tie breakers,
+  numeric positions, dates, descending order, and null values.
+
 ### 20. Scraper dates could not parse localized month names or month-only dates
 
 - Status: completed (fixed)
